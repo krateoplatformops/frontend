@@ -1,0 +1,36 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krateoplatformops/frontend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@stylistic/eslint-plugin": "^3.0.1",
+    "@stylistic/eslint-plugin-js": "^3.0.1",
+    "@stylistic/eslint-plugin-ts": "^3.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
+    "@typescript-eslint/parser": "^8.23.0",
+    "confusing-browser-globals": "^1.0.11",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-n": "^17.15.1",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "eslint-plugin-stylistic": "^0.0.0-0",
+    "eslint-plugin-stylistic-js": "^0.0.0-0",
+    "eslint-plugin-typescript-sort-keys": "^3.3.0",
+    "globals": "^15.14.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0"
+  }
+}
