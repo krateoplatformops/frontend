@@ -1,5 +1,5 @@
 import { Result } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 // import logo from '../../assets/images/logo_black.png'
 
 const Page404 = () => {

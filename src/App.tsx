@@ -1,6 +1,6 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { App as AntApp, Spin } from 'antd'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import InitRoutes from './components/InitRoutes/InitRoutes'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'

@@ -47,7 +47,7 @@
     "lodash": "^4.17.21",
     "react": "^19.0.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.4.0",
+    "react-router": "^7.4.0",
     "vite-plugin-svgr": "^4.3.0"
   }
 }
