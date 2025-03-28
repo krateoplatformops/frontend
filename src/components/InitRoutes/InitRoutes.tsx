@@ -1,21 +1,20 @@
-import { useEffect, useMemo } from 'react'
-import type { RouteObject } from 'react-router-dom'
+import { useEffect } from 'react'
 
-const InitRoutes = ({ updateRoutes }: { updateRoutes: (routes: RouteObject[]) => void }) => {
-  const mockedRoute: RouteObject[] = useMemo(
-    () => [
-      {
-        element: <>ciao</>,
-        index: true,
-        path: '/',
-      },
-    ],
-    []
-  )
+import { useRoutesContext } from '../../context/RoutesContext'
 
-  useEffect(() => updateRoutes(mockedRoute), [mockedRoute, updateRoutes])
+const InitRoutes = () => {
+  const { updateRoutes } = useRoutesContext()
 
-  return <></>
+  useEffect(() => {
+    const newRoutes = [
+      { element: <div>Home Page</div>, path: '/' },
+      { element: <div>About Page</div>, path: '/about' },
+    ]
+
+    updateRoutes(newRoutes)
+  }, [updateRoutes])
+
+  return null
 }
 
 export default InitRoutes
