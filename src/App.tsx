@@ -1,14 +1,23 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { App as AntApp, Spin } from 'antd'
+import { useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import InitRoutes from './components/InitRoutes/InitRoutes'
+import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
 
-const AppRouter: React.FC = () => {
-  const { routes, isLoading } = useRoutesContext()
+const AppInitializer: React.FC = () => {
+  const { routes, isLoading: isRoutesLoading } = useRoutesContext()
+  const { config, isLoading: isConfigLoading } = useConfigContext()
 
-  if (isLoading) {
+  useEffect(() => {
+    if (config) {
+      console.log('Config:', config)
+    }
+  }, [config, isConfigLoading])
+
+  if (isRoutesLoading || isConfigLoading) {
     return <Spin indicator={<LoadingOutlined />} />
   }
 
@@ -19,12 +28,14 @@ const AppRouter: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <RoutesProvider>
-      <AntApp>
-        <InitRoutes />
-        <AppRouter />
-      </AntApp>
-    </RoutesProvider>
+    <ConfigProvider>
+      <RoutesProvider>
+        <AntApp>
+          <InitRoutes />
+          <AppInitializer />
+        </AntApp>
+      </RoutesProvider>
+    </ConfigProvider>
   )
 }
 
