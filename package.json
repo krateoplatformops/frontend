@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "ajv": "^8.17.1",
     "antd": "^5.24.0",
     "eslint-plugin-import-x": "^4.6.1",
     "eslint-plugin-sort-keys": "^2.3.5",
