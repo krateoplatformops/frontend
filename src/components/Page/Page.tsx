@@ -1,20 +1,20 @@
 import Ajv from 'ajv'
 import { useEffect, useState } from 'react'
 
-import paragraphSchema from '../../schemas/Paragraph.schema.json'
-import type { ParagraphSchema } from '../../types/Paragraph.schema'
-import Paragraph from '../../widgets/Paragraph'
+import buttonSchema from '../../schemas/Button.schema.json'
+import type { ButtonSchema } from '../../types/Button.schema'
+import Button from '../../widgets/Button'
 
 const Page: React.FC = () => {
-  const [props, setProps] = useState<ParagraphSchema | null>(null)
+  const [props, setProps] = useState<ButtonSchema | null>(null)
 
   useEffect(() => {
     const getComponent = async () => {
-      const schemaFile = await fetch('/config/Paragraph.json')
-      const mockData = (await schemaFile.json()) as ParagraphSchema
+      const schemaFile = await fetch('/mock/Button.mock.json')
+      const mockData = (await schemaFile.json()) as ButtonSchema
 
       const ajv = new Ajv()
-      const validate = ajv.compile(paragraphSchema)
+      const validate = ajv.compile(buttonSchema)
       const valid = validate(mockData)
 
       if (!valid) {
@@ -33,7 +33,7 @@ const Page: React.FC = () => {
   return (
     <>
       <div>Welcome to the Page component!</div>
-      {props ? <Paragraph {...props?.widgetData} /> : <>ciao</>}
+      {props ? <Button {...props?.spec.widgetData} /> : <>ciao</>}
     </>
   )
 }

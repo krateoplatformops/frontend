@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "kubernetes api version",
+      "type": "string",
+      "const": "widgets.templates.krateo.io/v1alpha1"
+    },
+    "Kind": {
+      "type": "string",
+      "const": "Button",
+      "description": "name of the k8s Custom Resource"
+    },
+    "metadata": {
+      "description": "kubernetes metadata",
+      "type": "object",
+      "properties": {
+        "namespace": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "required": ["namespace", "name"],
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": ["widgetData"],
+      "properties": {
+        "widgetData": {
+          "description": "the data that will be passed to the widget on the frontend",
+          "type": "object",
+          "properties": {
+            "label": {
+              "description": "the label of the button",
+              "type": "string"
+            },
+            "icon": {
+              "description": "the icon of the button (font awesome icon name eg: 'fa-inbox')",
+              "type": "string"
+            },
+            "type": {
+              "description": "the visual style of the button",
+              "type": "string",
+              "enum": ["default", "text", "link", "primary", "dashed"]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["apiVersion", "Kind", "metadata", "spec"],
+  "additionalProperties": false
+}
