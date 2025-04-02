@@ -2,23 +2,46 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "kind": {
-      "type": "string",
-      "const": "Paragraph"
-    },
     "apiVersion": {
+      "description": "kubernetes api version",
       "type": "string",
-      "const": "templates.krateo.io/v1alpha1"
+      "const": "widgets.templates.krateo.io/v1alpha1"
     },
-    "widgetData": {
+    "Kind": {
+      "type": "string",
+      "const": "Paragraph",
+      "description": "name of the k8s Custom Resource"
+    },
+    "metadata": {
+      "description": "kubernetes metadata",
       "type": "object",
       "properties": {
-        "text": { "type": "string" }
+        "namespace": { "type": "string" },
+        "name": { "type": "string" }
       },
-      "required": ["text"],
+      "required": ["namespace", "name"],
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": ["widgetData"],
+      "properties": {
+        "widgetData": {
+          "description": "the data that will be passed to the widget on the frontend",
+          "type": "object",
+          "properties": {
+            "text": {
+              "description": "the content of the paragraph",
+              "type": "string"
+            }
+          },
+          "required": ["text"],
+          "additionalProperties": false
+        }
+      },
       "additionalProperties": false
     }
   },
-  "required": ["kind", "apiVersion", "widgetData"],
+  "required": ["apiVersion", "Kind", "metadata", "spec"],
   "additionalProperties": false
 }

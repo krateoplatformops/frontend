@@ -6,9 +6,30 @@
  */
 
 export interface ParagraphSchema {
-  kind: "Paragraph";
-  apiVersion: "templates.krateo.io/v1alpha1";
-  widgetData: {
-    text: string;
+  /**
+   * kubernetes api version
+   */
+  apiVersion: "widgets.templates.krateo.io/v1alpha1";
+  /**
+   * name of the k8s Custom Resource
+   */
+  Kind: "Paragraph";
+  /**
+   * kubernetes metadata
+   */
+  metadata: {
+    namespace: string;
+    name: string;
+  };
+  spec: {
+    /**
+     * the data that will be passed to the widget on the frontend
+     */
+    widgetData: {
+      /**
+       * the content of the paragraph
+       */
+      text: string;
+    };
   };
 }
