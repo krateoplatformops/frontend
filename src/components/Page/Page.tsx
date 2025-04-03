@@ -6,7 +6,7 @@ import type { ButtonSchema } from '../../types/Button.schema'
 import Button from '../../widgets/Button'
 
 const Page: React.FC = () => {
-  const [props, setProps] = useState<ButtonSchema | null>(null)
+  const [schema, setSchema] = useState<ButtonSchema | null>(null)
 
   useEffect(() => {
     const getComponent = async () => {
@@ -22,7 +22,7 @@ const Page: React.FC = () => {
         return
       }
 
-      setProps(mockData)
+      setSchema(mockData)
     }
 
     getComponent().catch((error) => {
@@ -33,7 +33,7 @@ const Page: React.FC = () => {
   return (
     <>
       <div>Welcome to the Page component!</div>
-      {props ? <Button {...props?.spec.widgetData} /> : <>ciao</>}
+      {schema ? <Button {...schema?.spec} /> : <>ciao</>}
     </>
   )
 }

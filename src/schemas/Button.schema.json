@@ -45,6 +45,24 @@
             }
           },
           "additionalProperties": false
+        },
+        "actions": {
+          "description": "the actions of the button",
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "const": "onClick" },
+                "type": { "const": "navigate" },
+                "url": { "type": "string" },
+                "requireConfirmation": { "type": "boolean" },
+                "loading": { "enum": ["global", "inline", "none"] }
+              },
+              "required": ["name", "type", "url"],
+              "additionalProperties": false
+            }
+          ]
         }
       },
       "additionalProperties": false

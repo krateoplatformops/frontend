@@ -39,5 +39,19 @@ export interface ButtonSchema {
        */
       type?: "default" | "text" | "link" | "primary" | "dashed";
     };
+    /**
+     * the actions of the button
+     */
+    actions?:
+      | []
+      | [
+          {
+            name: "onClick";
+            type: "navigate";
+            url: string;
+            requireConfirmation?: boolean;
+            loading?: "global" | "inline" | "none";
+          }
+        ];
   };
 }
