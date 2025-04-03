@@ -1,47 +1,20 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntButton } from 'antd'
-import { useNavigate } from 'react-router'
+import { useMemo } from 'react'
 
 import type { ButtonSchema } from '../../types/Button.schema'
+import type { Action } from '../../utils/types'
+import { getActionsMap } from '../../utils/utils'
 
 interface Props {
   widgetData: ButtonSchema['spec']['widgetData']
-  actions?: ButtonSchema['spec']['actions']
+  actions?: Action[]
 }
 
-const getActions = (actions: ButtonSchema['spec']['actions'] = [], navigate: ReturnType<typeof useNavigate>) => {
-  return actions.reduce(
-    (acc, action) => {
-      if (!action.name) {
-        return acc
-      }
-
-      switch (action.type) {
-        case 'navigate':
-          if (action.url) {
-            acc[action.name] = () => {
-              void navigate(action.url)
-            }
-          }
-          break
-        default:
-          acc[action.name] = () => {
-            console.warn(`Action type "${action.type}" non gestito.`)
-          }
-      }
-
-      return acc
-    },
-    {} as Record<string, () => void>
-  )
-}
-
-const Button: React.FC<Props> = ({ widgetData, actions }) => {
-  const navigate = useNavigate()
-
-  const { label, icon, type } = widgetData
-  const actionsMap = getActions(actions, navigate)
+const Button: React.FC<Props> = ({ widgetData: data, actions }) => {
+  const { label, icon, type } = data
+  const actionsMap = useMemo(() => getActionsMap(actions), [actions])
 
   return (
     <AntButton
