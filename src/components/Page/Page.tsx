@@ -10,7 +10,15 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     const getComponent = async () => {
-      const schemaFile = await fetch('/mock/Button.mock.json')
+      const schemaFile = await fetch(
+        'http://localhost:30080/call?resource=buttons&apiVersion=widgets.templates.krateo.io/v1beta1&name=my-button&namespace=krateo-system',
+        {
+          headers: {
+            'X-krateo-groups': 'admins',
+            'X-krateo-user': 'admin',
+          },
+        }
+      )
       const mockData = (await schemaFile.json()) as ButtonSchema
 
       const ajv = new Ajv()
