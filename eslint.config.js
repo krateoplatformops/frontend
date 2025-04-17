@@ -69,7 +69,7 @@ export default tsEslint.config(
       '@stylistic/js/key-spacing': 'error',
       '@stylistic/js/keyword-spacing': 'error',
       '@stylistic/js/line-comment-position': 'error',
-      '@stylistic/js/linebreak-style': ['error', 'unix'],
+      // '@stylistic/js/linebreak-style': ['error', 'unix'],
       '@stylistic/js/lines-around-comment': 'off',
       '@stylistic/js/max-statements-per-line': ['error', { max: 2 }],
       '@stylistic/js/new-parens': 'error',
