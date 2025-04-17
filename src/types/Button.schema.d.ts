@@ -29,7 +29,7 @@ export interface ButtonSchema {
       /**
        * the label of the button
        */
-      label?: string;
+      label: string;
       /**
        * the icon of the button (font awesome icon name eg: 'fa-inbox')
        */
@@ -38,20 +38,54 @@ export interface ButtonSchema {
        * the visual style of the button
        */
       type?: "default" | "text" | "link" | "primary" | "dashed";
+      /**
+       * the id of the action to be executed when the button is clicked
+       */
+      clickActionId: string;
     };
     /**
      * the actions of the button
      */
-    actions?:
-      | []
-      | [
-          {
-            name: "onClick";
-            type: "navigate";
-            url: string;
-            requireConfirmation?: boolean;
-            loading?: "global" | "inline" | "none";
-          }
-        ];
+    actions: {
+      rest?: {
+        type: "rest";
+        id: string;
+        name: string;
+        verb: "GET" | "POST" | "DELETE";
+        backendEndpointId: string;
+        requireConfirmation?: boolean;
+        onSuccessNavigateTo?: string;
+        loading?: "global" | "inline" | "none";
+      }[];
+      navigate?: {
+        id: string;
+        type: "navigate";
+        name: string;
+        backendEndpointId: string;
+        requireConfirmation?: boolean;
+        loading?: "global" | "inline" | "none";
+      }[];
+      openDrawer?: {
+        id: string;
+        type: "openDrawer";
+        name: string;
+        contentWidgetRef: string;
+        requireConfirmation?: boolean;
+        loading?: "global" | "inline" | "none";
+      }[];
+      openModal?: {
+        id: string;
+        type: "openModal";
+        name: string;
+        contentWidgetRef: string;
+        requireConfirmation?: boolean;
+        loading?: "global" | "inline" | "none";
+      }[];
+    };
+    backendEndpoints: {
+      id: string;
+      endpoint: string;
+      verb: "GET" | "POST" | "DELETE";
+    }[];
   };
 }
