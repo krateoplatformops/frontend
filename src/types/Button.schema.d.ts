@@ -27,6 +27,10 @@ export interface ButtonSchema {
      */
     widgetData: {
       /**
+       * the color of the button
+       */
+      color?: "default" | "primary" | "success" | "warning" | "danger" | "info";
+      /**
        * the label of the button
        */
       label: string;
@@ -34,6 +38,10 @@ export interface ButtonSchema {
        * the icon of the button (font awesome icon name eg: 'fa-inbox')
        */
       icon?: string;
+      /**
+       * the size of the button
+       */
+      size?: "small" | "middle" | "large";
       /**
        * the visual style of the button
        */
