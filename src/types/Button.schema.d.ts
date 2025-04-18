@@ -29,7 +29,23 @@ export interface ButtonSchema {
       /**
        * the color of the button
        */
-      color?: "default" | "primary" | "success" | "warning" | "danger" | "info";
+      color?:
+        | "default"
+        | "primary"
+        | "danger"
+        | "blue"
+        | "purple"
+        | "cyan"
+        | "green"
+        | "magenta"
+        | "pink"
+        | "red"
+        | "orange"
+        | "yellow"
+        | "volcano"
+        | "geekblue"
+        | "lime"
+        | "gold";
       /**
        * the label of the button
        */

@@ -4,6 +4,7 @@ import { Button as AntButton } from 'antd'
 import { useNavigate } from 'react-router'
 
 import type { ButtonSchema } from '../../types/Button.schema'
+import { Action } from '../../utils/types'
 
 interface Props {
   widgetData: ButtonSchema['spec']['widgetData']
@@ -11,63 +12,48 @@ interface Props {
   backendEndpoints: ButtonSchema['spec']['backendEndpoints']
 }
 
-type NavigateActionType = NonNullable<ButtonSchema['spec']['actions']['navigate']>[number]
-type OpenDrawerActionType = NonNullable<ButtonSchema['spec']['actions']['openDrawer']>[number]
-type OpenModalActionType = NonNullable<ButtonSchema['spec']['actions']['openModal']>[number]
-type RestActionType = NonNullable<ButtonSchema['spec']['actions']['rest']>[number]
+const getEndpointUrl = (backendEndpointId: string, backendEndpoints: ButtonSchema['spec']['backendEndpoints']) => {
+  if (!backendEndpoints || backendEndpoints.length === 0) {
+    throw new Error('cannot find backend endpoints')
+  }
 
-type AllActionsType = NavigateActionType | OpenDrawerActionType | OpenModalActionType | RestActionType
+  const backendEndpoint = backendEndpoints.find((endpoint) => {
+    return endpoint.id === backendEndpointId
+  })
+
+  if (!backendEndpoint) {
+    throw new Error('cannot find backend endpoint for navigate action')
+  }
+
+  return backendEndpoint.endpoint
+}
 
 const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }) => {
-  const { label, icon, type } = data
+  const { color, clickActionId, label, icon, size, type } = data
   const navigate = useNavigate()
 
-  const allActions: AllActionsType[] = [
-    ...(actions.navigate ?? []),
-    ...(actions.openDrawer ?? []),
-    ...(actions.openModal ?? []),
-    ...(actions.rest ?? []),
-  ]
+  const onClick = async () => {
+    const buttonAction = Object.values(actions as Action[]).find(({ id }) => id === clickActionId)
 
-  const buttonAction = allActions.find((action) => action.id === data.clickActionId)
-  if (!buttonAction) {
-    throw new Error(`Actions with id ${data.clickActionId} not found`)
-  }
-
-  function getEndpointUrl(backendEndpointId: string, backendEndpoints: ButtonSchema['spec']['backendEndpoints']) {
-    if (!backendEndpoints || backendEndpoints.length === 0) {
-      throw new Error('cannot find backend endpoints')
-    }
-
-    const backendEndpoint = backendEndpoints.find((endpoint) => {
-      return endpoint.id === backendEndpointId
-    })
-
-    if (!backendEndpoint) {
-      throw new Error('cannot find backend endpoint for navigate action')
-    }
-
-    return backendEndpoint.endpoint
-  }
-
-  async function onClick() {
     if (buttonAction) {
-      switch (buttonAction.type) {
+      const { backendEndpointId, requireConfirmation, type, verb } = buttonAction
+
+      switch (type) {
         case 'navigate': {
-          if (buttonAction.requireConfirmation) {
+          if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(buttonAction.backendEndpointId, backendEndpoints)
+              const url = getEndpointUrl(backendEndpointId, backendEndpoints)
               await navigate(url)
             }
           }
           break
         }
         case 'rest': {
-          if (buttonAction.requireConfirmation) {
+          if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(buttonAction.backendEndpointId, backendEndpoints)
+              const url = getEndpointUrl(backendEndpointId, backendEndpoints)
               await fetch(url, {
-                method: buttonAction.verb,
+                method: verb,
               })
             }
           }
@@ -84,11 +70,19 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
         default:
           throw new Error(`Unsupported action type}`)
       }
+    } else {
+      throw new Error(`Actions with id ${clickActionId} not found`)
     }
   }
 
   return (
-    <AntButton icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined} onClick={onClick} type={type}>
+    <AntButton
+      color={color || 'default'}
+      icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
+      onClick={onClick}
+      size={size || 'middle'}
+      type={type || 'primary'}
+    >
       {label}
     </AntButton>
   )

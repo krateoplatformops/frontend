@@ -37,7 +37,24 @@
             "color": {
               "description": "the color of the button",
               "type": "string",
-              "enum": ["default", "primary", "success", "warning", "danger", "info"]
+              "enum": [
+                "default",
+                "primary",
+                "danger",
+                "blue",
+                "purple",
+                "cyan",
+                "green",
+                "magenta",
+                "pink",
+                "red",
+                "orange",
+                "yellow",
+                "volcano",
+                "geekblue",
+                "lime",
+                "gold"
+              ]
             },
             "label": {
               "description": "the label of the button",
