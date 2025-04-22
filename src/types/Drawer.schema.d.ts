@@ -22,38 +22,44 @@ export interface DrawerSchema {
     name: string;
   };
   spec: {
+    widgetData: {
+      /**
+       * the widgets to be displayed inside the drawer
+       */
+      content: {
+        type: "Button";
+        props: {};
+      }[];
+      /**
+       * extra widgets to be displayed in the drawer header
+       */
+      extra?: {
+        type: "Button";
+        props: {};
+      }[];
+      /**
+       * widgets to be displayed in the drawer footer
+       */
+      footer?: {
+        type: "Button";
+        props: {};
+      }[];
+      /**
+       * the size of the drawer
+       */
+      size: "default" | "large";
+      /**
+       * the title of the drawer
+       */
+      title: string;
+      /**
+       * the width of the drawer in pixels
+       */
+      width?: number;
+    };
     /**
-     * the widgets to be displayed inside the drawer
+     * the actions of the button
      */
-    content: {
-      type: "Button";
-      props: {};
-    }[];
-    /**
-     * extra widgets to be displayed in the drawer header
-     */
-    extra?: {
-      type: "Button";
-      props: {};
-    }[];
-    /**
-     * widgets to be displayed in the drawer footer
-     */
-    footer?: {
-      type: "Button";
-      props: {};
-    }[];
-    /**
-     * the size of the drawer
-     */
-    size: "default" | "large";
-    /**
-     * the title of the drawer
-     */
-    title: string;
-    /**
-     * the width of the drawer in pixels
-     */
-    width?: number;
+    actions: {};
   };
 }

@@ -24,65 +24,77 @@
     },
     "spec": {
       "type": "object",
-      "required": ["content", "size", "title"],
+      "required": ["widgetData", "actions"],
       "properties": {
-        "content": {
-          "description": "the widgets to be displayed inside the drawer",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "type": { "type": "string", "enum": ["Button"] },
-              "props": {
+        "widgetData": {
+          "required": ["content", "size", "title"],
+          "properties": {
+            "content": {
+              "description": "the widgets to be displayed inside the drawer",
+              "type": "array",
+              "items": {
                 "type": "object",
+                "properties": {
+                  "type": { "type": "string", "enum": ["Button"] },
+                  "props": {
+                    "type": "object",
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["type", "props"],
                 "additionalProperties": false
               }
             },
-            "required": ["type", "props"],
-            "additionalProperties": false
-          }
-        },
-        "extra": {
-          "description": "extra widgets to be displayed in the drawer header",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "type": { "type": "string", "enum": ["Button"] },
-              "props": {
+            "extra": {
+              "description": "extra widgets to be displayed in the drawer header",
+              "type": "array",
+              "items": {
                 "type": "object",
+                "properties": {
+                  "type": { "type": "string", "enum": ["Button"] },
+                  "props": {
+                    "type": "object",
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["type", "props"],
                 "additionalProperties": false
               }
             },
-            "required": ["type", "props"],
-            "additionalProperties": false
-          }
-        },
-        "footer": {
-          "description": "widgets to be displayed in the drawer footer",
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "type": { "type": "string", "enum": ["Button"] },
-              "props": { "type": "object", "additionalProperties": false }
+            "footer": {
+              "description": "widgets to be displayed in the drawer footer",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": { "type": "string", "enum": ["Button"] },
+                  "props": { "type": "object", "additionalProperties": false }
+                },
+                "required": ["type", "props"],
+                "additionalProperties": false
+              }
             },
-            "required": ["type", "props"],
-            "additionalProperties": false
-          }
+            "size": {
+              "description": "the size of the drawer",
+              "type": "string",
+              "enum": ["default", "large"]
+            },
+            "title": {
+              "description": "the title of the drawer",
+              "type": "string"
+            },
+            "width": {
+              "description": "the width of the drawer in pixels",
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
         },
-        "size": {
-          "description": "the size of the drawer",
-          "type": "string",
-          "enum": ["default", "large"]
-        },
-        "title": {
-          "description": "the title of the drawer",
-          "type": "string"
-        },
-        "width": {
-          "description": "the width of the drawer in pixels",
-          "type": "number"
+        "actions": {
+          "description": "the actions of the button",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
