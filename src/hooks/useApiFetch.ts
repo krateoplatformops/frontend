@@ -1,6 +1,6 @@
-import type { AxiosRequestConfig, Method, AxiosError } from 'axios'
+import type { AxiosError, AxiosRequestConfig, Method } from 'axios'
 import axios from 'axios'
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type FetchState<T> = {
   data: T | null
@@ -16,14 +16,9 @@ type UseApiFetchParams = {
   endpoint: string
   config?: AxiosRequestConfig
   autoFetch?: boolean
-};
+}
 
-function useApiFetch<T>({
-  method = 'GET',
-  endpoint,
-  config,
-  autoFetch = true,
-}: UseApiFetchParams): FetchState<T> {
+function useApiFetch<T>({ method = 'GET', endpoint, config, autoFetch = true }: UseApiFetchParams): FetchState<T> {
   const [data, setData] = useState<T | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
