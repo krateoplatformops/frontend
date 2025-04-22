@@ -5,10 +5,9 @@ import type { DrawerSchema } from '../../types/Drawer.schema'
 
 interface Props {
   widgetData: DrawerSchema['spec']['widgetData']
-  actions: DrawerSchema['spec']['actions']
 }
 
-const Drawer: React.FC<Props> = ({ widgetData: data, actions }) => {
+const Drawer: React.FC<Props> = ({ widgetData: data }) => {
   const { content, extra, footer, size, title, width } = data
 
   const [isOpen, setIsOpen] = useState(false)

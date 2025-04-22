@@ -24,42 +24,29 @@ export interface DrawerSchema {
   spec: {
     widgetData: {
       /**
-       * the widgets to be displayed inside the drawer
+       * The widgets to be displayed inside the drawer
        */
-      content: {
-        type: "Button";
-        props: {};
-      }[];
+      content: React.ReactNode;
       /**
-       * extra widgets to be displayed in the drawer header
+       * Extra widgets to be displayed in the drawer header
        */
-      extra?: {
-        type: "Button";
-        props: {};
-      }[];
+      extra?: React.ReactNode;
       /**
-       * widgets to be displayed in the drawer footer
+       * Widgets to be displayed in the drawer footer
        */
-      footer?: {
-        type: "Button";
-        props: {};
-      }[];
+      footer?: React.ReactNode;
       /**
-       * the size of the drawer
+       * The size of the drawer
        */
       size: "default" | "large";
       /**
-       * the title of the drawer
+       * The title of the drawer
        */
       title: string;
       /**
-       * the width of the drawer in pixels
+       * The width of the drawer in pixels
        */
       width?: number;
     };
-    /**
-     * the actions of the button
-     */
-    actions: {};
   };
 }

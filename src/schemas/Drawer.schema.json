@@ -24,76 +24,91 @@
     },
     "spec": {
       "type": "object",
-      "required": ["widgetData", "actions"],
+      "required": ["widgetData"],
       "properties": {
         "widgetData": {
           "required": ["content", "size", "title"],
           "properties": {
             "content": {
-              "description": "the widgets to be displayed inside the drawer",
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "type": { "type": "string", "enum": ["Button"] },
-                  "props": {
+              "description": "The widgets to be displayed inside the drawer",
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
                     "type": "object",
+                    "properties": {
+                      "type": { "type": "string", "enum": ["Button"] },
+                      "props": {
+                        "type": "object",
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["type", "props"],
                     "additionalProperties": false
                   }
-                },
-                "required": ["type", "props"],
-                "additionalProperties": false
-              }
+                }
+              },
+              "tsType": "React.ReactNode"
             },
             "extra": {
-              "description": "extra widgets to be displayed in the drawer header",
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "type": { "type": "string", "enum": ["Button"] },
-                  "props": {
+              "description": "Extra widgets to be displayed in the drawer header",
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
                     "type": "object",
+                    "properties": {
+                      "type": { "type": "string", "enum": ["Button"] },
+                      "props": {
+                        "type": "object",
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["type", "props"],
                     "additionalProperties": false
                   }
-                },
-                "required": ["type", "props"],
-                "additionalProperties": false
-              }
+                }
+              },
+              "tsType": "React.ReactNode"
             },
             "footer": {
-              "description": "widgets to be displayed in the drawer footer",
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "type": { "type": "string", "enum": ["Button"] },
-                  "props": { "type": "object", "additionalProperties": false }
-                },
-                "required": ["type", "props"],
-                "additionalProperties": false
-              }
+              "description": "Widgets to be displayed in the drawer footer",
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string", "enum": ["Button"] },
+                      "props": {
+                        "type": "object",
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["type", "props"],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "tsType": "React.ReactNode"
             },
             "size": {
-              "description": "the size of the drawer",
+              "description": "The size of the drawer",
               "type": "string",
               "enum": ["default", "large"]
             },
             "title": {
-              "description": "the title of the drawer",
+              "description": "The title of the drawer",
               "type": "string"
             },
             "width": {
-              "description": "the width of the drawer in pixels",
+              "description": "The width of the drawer in pixels",
               "type": "number"
             }
           },
-          "additionalProperties": false
-        },
-        "actions": {
-          "description": "the actions of the button",
-          "type": "object",
-          "properties": {},
           "additionalProperties": false
         }
       },
