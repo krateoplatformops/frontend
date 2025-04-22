@@ -4,7 +4,7 @@ import { Button as AntButton } from 'antd'
 import { useNavigate } from 'react-router'
 
 import type { ButtonSchema } from '../../types/Button.schema'
-import { Action } from '../../utils/types'
+import type { Action } from '../../utils/types'
 
 interface Props {
   widgetData: ButtonSchema['spec']['widgetData']
@@ -75,11 +75,17 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
     }
   }
 
+  const handleClick = () => {
+    onClick().catch((error) => {
+      console.error('Error in button click handler:', error)
+    })
+  }
+
   return (
     <AntButton
       color={color || 'default'}
       icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
-      onClick={onClick}
+      onClick={handleClick}
       size={size || 'middle'}
       type={type || 'primary'}
     >
