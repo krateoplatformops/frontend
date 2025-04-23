@@ -15,13 +15,17 @@ const Drawer: React.FC<Props> = ({ widgetData: data }) => {
   return (
     <AntDrawer
       destroyOnClose={true}
+      extra={extra}
+      footer={footer}
       maskClosable={false}
       open={isOpen}
       placement='right'
       size={size || 'default'}
       title={title}
       width={width || 378}
-    />
+    >
+      {content}
+    </AntDrawer>
   )
 }
 
