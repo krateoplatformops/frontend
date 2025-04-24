@@ -1,0 +1,11 @@
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Button
+metadata:
+  namespace: krateo-system
+  name: simple-button
+spec:
+  widgetData:
+    label: im a button
+    icon: fa-clock
+    type: text

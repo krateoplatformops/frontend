@@ -33,8 +33,9 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
   const navigate = useNavigate()
 
   const onClick = async () => {
-    const buttonAction = Object.values(actions as Action[]).find(({ id }) => id === clickActionId)
-
+    const buttonAction = Object.values(actions as Action[])
+      .flat()
+      .find(({ id }) => id === clickActionId)
     if (buttonAction) {
       const { backendEndpointId, requireConfirmation, type, verb } = buttonAction
 
