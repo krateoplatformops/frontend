@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntButton } from 'antd'
 import { useNavigate } from 'react-router'
 
+import { useConfigContext } from '../../context/ConfigContext'
 import type { ButtonSchema } from '../../types/Button.schema'
 import type { Action } from '../../utils/types'
 
@@ -28,9 +29,37 @@ const getEndpointUrl = (backendEndpointId: string, backendEndpoints: ButtonSchem
   return backendEndpoint.endpoint
 }
 
+type BackendEndpointFromSpec = {
+  apiVersion: string
+  id: string
+  name: string
+  namespace: string
+  resource: string
+  verb: string
+}
+
+/* eslint-disable-next-line */
+const HACK_getEndpointUrl = (
+  baseUrl: string,
+  backendEndpointId: string,
+  backendEndpoints: Array<BackendEndpointFromSpec>,
+) => {
+  /* HACK: creating endpoint as snowplow would do while waiting for snowplow to implement it */
+  if (!backendEndpoints || backendEndpoints.length === 0) {
+    throw new Error('cannot find backend endpoints')
+  }
+
+  const backendEndpoint = backendEndpoints.find((endpoint) => {
+    return endpoint.id === backendEndpointId
+  })
+
+  return `${baseUrl}/call?resource=${backendEndpoint!.resource}&apiVersion=${backendEndpoint!.apiVersion}&name=${backendEndpoint!.name}&namespace=${backendEndpoint!.namespace}`
+}
+
 const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }) => {
   const { color, clickActionId, label, icon, size, type } = data
   const navigate = useNavigate()
+  const { config } = useConfigContext()
 
   const onClick = async () => {
     const buttonAction = Object.values(actions as Action[])
@@ -43,7 +72,11 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
         case 'navigate': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(backendEndpointId, backendEndpoints)
+              const url = HACK_getEndpointUrl(
+                config!.api.BACKEND_API_BASE_URL,
+                backendEndpointId,
+                backendEndpoints as unknown as BackendEndpointFromSpec[],
+              )
               await navigate(url)
             }
           }
@@ -52,10 +85,20 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
         case 'rest': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(backendEndpointId, backendEndpoints)
-              await fetch(url, {
+              const url = HACK_getEndpointUrl(
+                config!.api.BACKEND_API_BASE_URL,
+                backendEndpointId,
+                backendEndpoints as unknown as BackendEndpointFromSpec[],
+              )
+              const res = await fetch(url, {
+                headers: {
+                  'X-Krateo-Groups': 'admins',
+                  'X-Krateo-User': 'admin',
+                },
                 method: verb,
               })
+              const json = (await res.json()) as unknown
+              alert(JSON.stringify(json))
             }
           }
           break
