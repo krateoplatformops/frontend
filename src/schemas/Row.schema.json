@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "description": "kubernetes api version",
+      "type": "string",
+      "const": "widgets.templates.krateo.io/v1alpha1"
+    },
+    "Kind": {
+      "type": "string",
+      "const": "Row",
+      "description": "name of the k8s Custom Resource"
+    },
+    "metadata": {
+      "description": "kubernetes metadata",
+      "type": "object",
+      "properties": {
+        "namespace": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "required": ["namespace", "name"],
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": ["widgetData"],
+      "properties": {
+        "widgetRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "apiVersion": { "type": "string", "enum":  ["widgets.templates.krateo.io/v1beta1"]},
+              "resource": { "type": "string","enum": ["rows"] },
+              "name": { "type": "string" },
+              "namespace": { "type": "string" }
+            },
+            "required": ["name", "type", "namespace"]
+          }
+        },
+        "widgetData": {
+          "description": "the data that will be passed to the widget on the frontend",
+          "type": "object",
+          "properties": {
+            "text": {
+              "description": "the content of the paragraph",
+              "type": "string"
+            }
+          },
+          "required": ["text"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+  "required": ["apiVersion", "Kind", "metadata", "spec"],
+  "additionalProperties": false
+}

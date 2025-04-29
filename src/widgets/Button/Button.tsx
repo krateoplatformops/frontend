@@ -1,6 +1,8 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntButton } from 'antd'
+import useApp from 'antd/es/app/useApp'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
@@ -53,13 +55,24 @@ const HACK_getEndpointUrl = (
     return endpoint.id === backendEndpointId
   })
 
-  return `${baseUrl}/call?resource=${backendEndpoint!.resource}&apiVersion=${backendEndpoint!.apiVersion}&name=${backendEndpoint!.name}&namespace=${backendEndpoint!.namespace}`
+  return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod&namespace=krateo-system`
 }
 
 const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }) => {
   const { color, clickActionId, label, icon, size, type } = data
   const navigate = useNavigate()
   const { config } = useConfigContext()
+  const [result, setResult] = useState<any>(null)
+  const { notification } = useApp()
+
+  useEffect(() => {
+    if (result) {
+      notification.success({
+        description: `Pod ${result.metadata.name} created successfully`,
+        message: '🐳 Pod created successfully',
+      })
+    }
+  }, [result])
 
   const onClick = async () => {
     const buttonAction = Object.values(actions as Action[])
@@ -91,14 +104,35 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
                 backendEndpoints as unknown as BackendEndpointFromSpec[],
               )
               const res = await fetch(url, {
+                body: JSON.stringify({
+                  apiVersion: 'v1',
+                  kind: 'Pod',
+                  metadata: {
+                    name: `nginx-pod-${Date.now()}`,
+                  },
+                  spec: {
+                    containers: [
+                      {
+                        image: 'nginx:latest',
+                        name: 'nginx',
+                        ports: [
+                          {
+                            containerPort: 80,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                }),
                 headers: {
                   'X-Krateo-Groups': 'admins',
                   'X-Krateo-User': 'admin',
                 },
-                method: verb,
+
+                method: 'POST',
               })
               const json = (await res.json()) as unknown
-              alert(JSON.stringify(json))
+              setResult(json)
             }
           }
           break
