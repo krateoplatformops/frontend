@@ -1,3 +1,4 @@
+/* eslint-disable max-depth */
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntButton } from 'antd'
@@ -6,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
+import { openDrawer } from '../../Drawer'
 import type { ButtonSchema } from '../../types/Button.schema'
 import type { Action } from '../../utils/types'
 
@@ -41,7 +43,20 @@ type BackendEndpointFromSpec = {
 }
 
 /* eslint-disable-next-line */
-const HACK_getEndpointUrl = (
+const HACK_getEndpointUrl = (backendEndpointId: string, backendEndpoints: Array<BackendEndpointFromSpec>) => {
+  /* HACK: creating endpoint as snowplow would do while waiting for snowplow to implement it */
+  if (!backendEndpoints || backendEndpoints.length === 0) {
+    throw new Error('cannot find backend endpoints')
+  }
+
+  const backendEndpoint = backendEndpoints.find((endpoint) => {
+    return endpoint.id === backendEndpointId
+  })
+
+  return `/call?resource=${backendEndpoint!.resource}&apiVersion=${backendEndpoint!.apiVersion}&name=${backendEndpoint!.name}&namespace=${backendEndpoint!.namespace}`
+}
+
+const createNginxPodEndpoint = (
   baseUrl: string,
   backendEndpointId: string,
   backendEndpoints: Array<BackendEndpointFromSpec>,
@@ -62,17 +77,7 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
   const { color, clickActionId, label, icon, size, type } = data
   const navigate = useNavigate()
   const { config } = useConfigContext()
-  const [result, setResult] = useState<any>(null)
   const { notification } = useApp()
-
-  useEffect(() => {
-    if (result) {
-      notification.success({
-        description: `Pod ${result.metadata.name} created successfully`,
-        message: '🐳 Pod created successfully',
-      })
-    }
-  }, [result])
 
   const onClick = async () => {
     const buttonAction = Object.values(actions as Action[])
@@ -98,7 +103,7 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
         case 'rest': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = HACK_getEndpointUrl(
+              const url = createNginxPodEndpoint(
                 config!.api.BACKEND_API_BASE_URL,
                 backendEndpointId,
                 backendEndpoints as unknown as BackendEndpointFromSpec[],
@@ -108,7 +113,7 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
                   apiVersion: 'v1',
                   kind: 'Pod',
                   metadata: {
-                    name: `nginx-pod-${Date.now()}`,
+                    name: `nginx-pod`,
                   },
                   spec: {
                     containers: [
@@ -131,14 +136,41 @@ const Button: React.FC<Props> = ({ widgetData: data, actions, backendEndpoints }
 
                 method: 'POST',
               })
-              const json = (await res.json()) as unknown
-              setResult(json)
+
+              const json = await res.json()
+
+              if (!res.ok) {
+                notification.error({
+                  description: json.message,
+                  message: `${json.status} - ${json.reason}`,
+                  placement: 'bottomLeft',
+                })
+              }
+
+              notification.success({
+                description: `Pod ${json.metadata.name} created successfully`,
+                message: '🐳 Pod created successfully',
+                placement: 'bottomLeft',
+              })
             }
           }
           break
         }
         case 'openDrawer': {
           /* TODO: implement open drawer action */
+
+          const backendEndpoints: BackendEndpointFromSpec[] = [
+            {
+              apiVersion: 'widgets.templates.krateo.io/v1beta1',
+              id: 'my-backend-endpoint',
+              name: 'button-with-action',
+              namespace: 'krateo-system',
+              resource: 'buttonwithactions',
+              verb: 'GET',
+            },
+          ]
+
+          openDrawer(HACK_getEndpointUrl(backendEndpointId, backendEndpoints))
           break
         }
         case 'openModal': {
