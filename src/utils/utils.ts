@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router'
 
+import type { Widget } from '../types/Widget'
+
 import type { Action } from './types'
 
 export const getActionsMap = (actions: Action[] | undefined) => {
@@ -31,6 +33,25 @@ export const getActionsMap = (actions: Action[] | undefined) => {
 
       return acc
     },
-    {} as Record<string, () => void>
+    {} as Record<string, () => void>,
   )
+}
+
+export const getEndpointUrl = (
+  backendEndpointId: string,
+  backendEndpoints: Widget['status']['backendEndpoints'],
+): string => {
+  if (!backendEndpoints || backendEndpoints.length === 0) {
+    throw new Error('cannot find backend endpoints')
+  }
+
+  const backendEndpoint = backendEndpoints.find((endpoint) => {
+    return endpoint.id === backendEndpointId
+  })
+
+  if (!backendEndpoint) {
+    throw new Error('cannot find backend endpoint for navigate action')
+  }
+
+  return backendEndpoint.path
 }

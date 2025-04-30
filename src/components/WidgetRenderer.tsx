@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
+import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
+
+import { Column } from './Column'
 
 function parseData(widget: Widget) {
   switch (widget.kind) {
@@ -11,10 +14,12 @@ function parseData(widget: Widget) {
       return (
         <Button
           actions={widget.spec.actions}
-          backendEndpoints={widget.spec.backendEndpoints}
-          widgetData={widget.status.widgetData}
+          backendEndpoints={widget.status.backendEndpoints}
+          widgetData={widget.status.widgetData as ButtonSchema['status']['widgetData']}
         />
       )
+    case 'Column':
+      return <Column backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }
@@ -23,7 +28,7 @@ function parseData(widget: Widget) {
 export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
   const [widget, setWidget] = useState<Widget | null>(null)
   const { config } = useConfigContext()
-  const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}/${widgetEndpoint}`
+  const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
 
   useEffect(() => {
     const getComponent = async () => {

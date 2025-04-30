@@ -12,6 +12,12 @@ const Page: React.FC = () => {
           '/call?resource=buttonwithactions&apiVersion=widgets.templates.krateo.io/v1beta1&name=button-with-action&namespace=krateo-system'
         }
       />
+
+      <WidgetRenderer
+        widgetEndpoint={
+          '/call?resource=columns&apiVersion=widgets.templates.krateo.io/v1beta1&name=my-column&namespace=krateo-system'
+        }
+      />
     </>
   )
 }

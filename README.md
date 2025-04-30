@@ -111,3 +111,12 @@ kubectl apply -f yourpath/yourfile.yml
 ```
 http://localhost:30080/call?resource=buttons&apiVersion=widgets.templates.krateo.io/v1beta1&name
 ```
+
+
+## Upadate snowplow version
+
+`helm upgrade snowplow krateo/snowplow -n krateo-system --set image.tag=x.x.x`
+
+## Upadate smithery version
+
+`helm upgrade smithery krateo/smithery -n krateo-system --set image.tag=x.x.x`
