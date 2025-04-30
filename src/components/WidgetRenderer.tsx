@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
@@ -26,29 +27,39 @@ function parseData(widget: Widget) {
 }
 
 export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
-  const [widget, setWidget] = useState<Widget | null>(null)
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
 
-  useEffect(() => {
-    const getComponent = async () => {
+  const {
+    data: widget,
+    isLoading,
+    error,
+  } = useQuery({
+    queryFn: async () => {
       const res = await fetch(widgetFullUrl, {
         headers: {
           'X-Krateo-Groups': 'admins',
           'X-Krateo-User': 'admin',
         },
       })
-      const widget = await res.json()
-      setWidget(widget)
-    }
 
-    getComponent().catch((error) => {
-      console.error('Error fetching component:', error)
-    })
-  }, [widgetEndpoint, widgetFullUrl])
+      const widget = (await res.json()) as Widget
+      return widget
+    },
+    queryKey: ['widgets', widgetFullUrl],
+  })
+
+  if (isLoading) {
+    return <div>...loading</div>
+  }
 
   if (!widget) {
-    return <div>...loading</div>
+    /* no data */
+    return null
+  }
+  if (error) {
+    console.error(error)
+    return <div>...error</div>
   }
 
   return parseData(widget)
