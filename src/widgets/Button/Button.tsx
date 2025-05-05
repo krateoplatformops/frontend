@@ -30,7 +30,7 @@ const createNginxPodEndpoint = (
     throw new Error('cannot find backend endpoints')
   }
 
-  return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod&namespace=krateo-system`
+  return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
 }
 
 const Button = ({ widgetData, actions, backendEndpoints }: WidgetProps<ButtonSchema['status']['widgetData']>) => {
@@ -70,7 +70,7 @@ const Button = ({ widgetData, actions, backendEndpoints }: WidgetProps<ButtonSch
                   apiVersion: 'v1',
                   kind: 'Pod',
                   metadata: {
-                    name: `nginx-pod`,
+                    name: `nginx-pod-x`,
                   },
                   spec: {
                     containers: [

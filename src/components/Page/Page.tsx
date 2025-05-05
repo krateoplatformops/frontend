@@ -18,6 +18,36 @@ const Page: React.FC = () => {
           '/call?resource=columns&apiVersion=widgets.templates.krateo.io/v1beta1&name=my-column&namespace=krateo-system'
         }
       />
+
+      <WidgetRenderer
+        widgetEndpoint={
+          '/call?resource=panels&apiVersion=widgets.templates.krateo.io/v1beta1&name=my-panel&namespace=krateo-system'
+        }
+      />
+
+      <WidgetRenderer
+        widgetEndpoint={
+          '/call?resource=piecharts&apiVersion=widgets.templates.krateo.io/v1beta1&name=my-pie-chart&namespace=krateo-system'
+        }
+      />
+
+      <WidgetRenderer
+        widgetEndpoint={
+          '/call?resource=tables&apiVersion=widgets.templates.krateo.io/v1beta1&name=my-table&namespace=krateo-system'
+        }
+      />
+
+      <WidgetRenderer
+        widgetEndpoint={
+          '/call?resource=buttons&apiVersion=widgets.templates.krateo.io/v1beta1&name=button-with-api&namespace=krateo-system'
+        }
+      />
+
+      <WidgetRenderer
+        widgetEndpoint={
+          '/call?resource=tables&apiVersion=widgets.templates.krateo.io/v1beta1&name=table-of-namespaces&namespace=krateo-system'
+        }
+      />
     </>
   )
 }

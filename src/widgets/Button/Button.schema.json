@@ -1,0 +1,254 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "description": "widget version",
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "description": "name of the k8s Custom Resource",
+      "default": "Button"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "description": "the data that will be passed to the widget on the frontend",
+          "type": "object",
+          "properties": {
+            "color": {
+              "description": "the color of the button",
+              "type": "string",
+              "enum": [
+                "default",
+                "primary",
+                "danger",
+                "blue",
+                "purple",
+                "cyan",
+                "green",
+                "magenta",
+                "pink",
+                "red",
+                "orange",
+                "yellow",
+                "volcano",
+                "geekblue",
+                "lime",
+                "gold"
+              ]
+            },
+            "label": {
+              "description": "the label of the button",
+              "type": "string"
+            },
+            "icon": {
+              "description": "the icon of the button (font awesome icon name eg: 'fa-inbox')",
+              "type": "string"
+            },
+            "size": {
+              "description": "the size of the button",
+              "type": "string",
+              "enum": ["small", "middle", "large"]
+            },
+            "type": {
+              "description": "the visual style of the button",
+              "type": "string",
+              "enum": ["default", "text", "link", "primary", "dashed"]
+            },
+            "clickActionId": {
+              "description": "the id of the action to be executed when the button is clicked",
+              "type": "string"
+            }
+          },
+          "required": ["label", "clickActionId"],
+          "additionalProperties": false
+        },
+        "backendEndpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
+              }
+            }
+          }
+        },
+        "actions": {
+          "description": "the actions of the button",
+          "type": "object",
+          "properties": {
+            "rest": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "backendEndpointId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "onSuccessNavigateTo": {
+                    "type": "string"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["rest"]
+                  }
+                },
+                "required": ["id", "backendEndpointId"]
+              }
+            },
+            "navigate": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["navigate"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "backendEndpointId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "backendEndpointId"]
+              }
+            },
+            "openDrawer": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openDrawer"]
+                  },
+                  "backendEndpointId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "contentWidgetRef"]
+              }
+            },
+            "openModal": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openModal"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "contentWidgetRef": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "contentWidgetRef"]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"]
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": ["widgetData", "backendEndpoints", "actions"]
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}

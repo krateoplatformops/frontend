@@ -50,7 +50,7 @@ export const getEndpointUrl = (
   })
 
   if (!backendEndpoint) {
-    throw new Error('cannot find backend endpoint for navigate action')
+    throw new Error(`cannot find backend endpoint with ID ${backendEndpointId}`)
   }
 
   return backendEndpoint.path

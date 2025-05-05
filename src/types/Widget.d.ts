@@ -72,3 +72,7 @@ export type WidgetProps<T> = {
   actions: Widget['status']['actions']
   backendEndpoints: Widget['status']['backendEndpoints']
 }
+
+export type WidgetItems = Array<{
+  backendEndpointId: string
+}>

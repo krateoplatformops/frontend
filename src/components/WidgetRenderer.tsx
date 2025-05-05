@@ -5,6 +5,9 @@ import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
+import Panel from '../widgets/Panel/Panel'
+import PieChart from '../widgets/PieChart/PieChart'
+import Table from '../widgets/Table/Table'
 
 import { Column } from './Column'
 
@@ -19,8 +22,14 @@ function parseData(widget: Widget) {
           widgetData={widget.status.widgetData as ButtonSchema['status']['widgetData']}
         />
       )
+    case 'Panel':
+      return <Panel backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
     case 'Column':
       return <Column backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+    case 'PieChart':
+      return <PieChart backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+    case 'Table':
+      return <Table backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }
