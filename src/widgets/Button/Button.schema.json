@@ -1,34 +1,19 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
-    "apiVersion": {
-      "description": "kubernetes api version",
+    "version": {
+      "description": "widget version",
       "type": "string",
-      "const": "widgets.templates.krateo.io/v1alpha1"
+      "default": "v1beta1"
     },
-    "Kind": {
+    "kind": {
       "type": "string",
-      "const": "Button",
-      "description": "name of the k8s Custom Resource"
-    },
-    "metadata": {
-      "description": "kubernetes metadata",
-      "type": "object",
-      "properties": {
-        "namespace": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "required": ["namespace", "name"],
-      "additionalProperties": false
+      "description": "name of the k8s Custom Resource",
+      "default": "Button"
     },
     "spec": {
       "type": "object",
-      "required": ["widgetData", "actions", "backendEndpoints"],
       "properties": {
         "widgetData": {
           "description": "the data that will be passed to the widget on the frontend",
@@ -82,6 +67,35 @@
           "required": ["label", "clickActionId"],
           "additionalProperties": false
         },
+        "backendEndpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
+              }
+            }
+          }
+        },
         "actions": {
           "description": "the actions of the button",
           "type": "object",
@@ -92,19 +106,8 @@
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": ["rest"]
-                  },
                   "id": {
                     "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "verb": {
-                    "type": "string",
-                    "enum": ["GET", "POST", "DELETE"]
                   },
                   "backendEndpointId": {
                     "type": "string"
@@ -115,13 +118,16 @@
                   "onSuccessNavigateTo": {
                     "type": "string"
                   },
-                  "actionResultTopic": "buttons/namespace/437f1a27-4206-435c-9944-42db6e823071",
                   "loading": {
                     "type": "string",
                     "enum": ["global", "inline", "none"]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["rest"]
                   }
                 },
-                "required": ["id", "type", "name", "verb", "backendEndpointId"]
+                "required": ["id", "backendEndpointId"]
               }
             },
             "navigate": {
@@ -166,9 +172,6 @@
                   "type": {
                     "type": "string",
                     "enum": ["openDrawer"]
-                  },
-                  "name": {
-                    "type": "string"
                   },
                   "backendEndpointId": {
                     "type": "string"
@@ -217,25 +220,17 @@
           },
           "additionalProperties": false
         },
-        "backendEndpoints": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["id", "endpoint", "verb"],
-            "additionalProperties": false,
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "path": {
-                "type": "string"
-              },
-              "verb": {
-                "type": "string",
-                "enum": ["GET", "POST", "DELETE"]
-              }
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
             }
-          }
+          },
+          "required": ["name", "namespace"]
         },
         "widgetDataTemplate": {
           "type": "array",
@@ -250,23 +245,10 @@
               }
             }
           }
-        },
-        "apiRef": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "namespace": {
-              "type": "string"
-            }
-          },
-          "required": ["name", "namespace"]
         }
       },
-      "additionalProperties": false
+      "required": ["widgetData", "backendEndpoints", "actions"]
     }
   },
-  "required": ["apiVersion", "Kind", "metadata", "spec"],
-  "additionalProperties": false
+  "required": ["kind", "spec", "version"]
 }

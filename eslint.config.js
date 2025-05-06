@@ -1,6 +1,7 @@
 // @ts-check
 import stylisticJs from '@stylistic/eslint-plugin-js'
 import stylisticTs from '@stylistic/eslint-plugin-ts'
+import pluginQuery from '@tanstack/eslint-plugin-query'
 import restrictedGlobals from 'confusing-browser-globals'
 // @ts-ignore
 import pluginImport from 'eslint-plugin-import'
@@ -28,6 +29,7 @@ const ignoredPaths = [
 ]
 
 export default tsEslint.config(
+  ...pluginQuery.configs['flat/recommended'],
   { ignores: ignoredPaths, name: 'Ignored files' },
 
   {
@@ -482,5 +484,5 @@ export default tsEslint.config(
     settings: {
       react: { version: 'detect' },
     },
-  }
+  },
 )

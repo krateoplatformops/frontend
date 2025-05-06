@@ -1,0 +1,10 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-1
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: button 1
+    icon: fa-sun
+    type: primary

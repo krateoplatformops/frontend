@@ -3,6 +3,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { App as AntApp, Spin } from 'antd'
 import { useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
@@ -12,6 +14,8 @@ import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
 
 library.add(fab, fas, far)
+
+const queryClient = new QueryClient()
 
 const AppInitializer: React.FC = () => {
   const { routes, isLoading: isRoutesLoading } = useRoutesContext()
@@ -35,12 +39,15 @@ const AppInitializer: React.FC = () => {
 const App: React.FC = () => {
   return (
     <ConfigProvider>
-      <RoutesProvider>
-        <AntApp>
-          <InitRoutes />
-          <AppInitializer />
-        </AntApp>
-      </RoutesProvider>
+      <QueryClientProvider client={queryClient}>
+        <RoutesProvider>
+          <AntApp>
+            <InitRoutes />
+            <AppInitializer />
+          </AntApp>
+        </RoutesProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </ConfigProvider>
   )
 }
