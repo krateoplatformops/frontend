@@ -8,6 +8,15 @@ spec:
     label: Dashboard
     path: /dashboard
     icon: fa-chart-line
+    backendEndpointId: panel-backend-endpoint-id
+  
+  backendEndpoints:
+    - id: panel-backend-endpoint-id
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-panel
+      namespace: krateo-system
+      resource: panels
+      verb: GET
 ---
 kind: Route
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -19,6 +28,15 @@ spec:
     label: Templates
     path: /templates
     icon: fa-rectangle-list
+    backendEndpointId: button-3-backend-endpoint-id
+  
+  backendEndpoints:
+    - id: button-3-backend-endpoint-id
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-3
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
 ---
 kind: Route
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -30,6 +48,15 @@ spec:
     label: Compositions
     path: /compositions
     icon: fa-shapes
+    backendEndpointId: button-2-backend-endpoint-id
+  
+  backendEndpoints:
+    - id: button-2-backend-endpoint-id
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-2
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
 ---
 kind: NavMenu
 apiVersion: widgets.templates.krateo.io/v1beta1

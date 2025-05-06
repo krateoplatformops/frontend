@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
@@ -54,6 +55,7 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
       `WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`,
     )
   }
+
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
 

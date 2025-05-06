@@ -25,6 +25,9 @@
             },
             "icon": {
               "type": "string"
+            },
+            "backendEndpointId": {
+              "type": "string"
             }
           },
           "additionalProperties": false
@@ -51,6 +54,35 @@
               },
               "expression": {
                 "type": "string"
+              }
+            }
+          }
+        },
+        "backendEndpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
               }
             }
           }
