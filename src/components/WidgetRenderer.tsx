@@ -15,14 +15,22 @@ import Table from '../widgets/Table/Table'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   switch (widget.kind) {
-    case 'Status':
+    case 'Status': {
+      const x = new URLSearchParams(widgetEndpoint)
       return (
-        <div>
+        <div style={{ border: '1px solid red', margin: '10px' }}>
           ERROR
-          <pre style={{ whiteSpace: 'wrap' }}>{JSON.stringify(widget, null, 2)}</pre>
-          <pre style={{ whiteSpace: 'wrap' }}>{widgetEndpoint}</pre>
+          <div>name: {x.get('name')}</div>
+          <div>namespace: {x.get('namespace')}</div>
+          <div>version: {x.get('apiVersion')}</div>
+          {/* <div>resource: {x.get('resource')}</div> */}
+          <div>
+            <pre style={{ whiteSpace: 'wrap' }}>{JSON.stringify(widget, null, 2)}</pre>
+            <pre style={{ whiteSpace: 'wrap' }}>endpoint:{widgetEndpoint}</pre>
+          </div>
         </div>
       )
+    }
     case 'Button':
     case 'ButtonWithAction':
       return (
