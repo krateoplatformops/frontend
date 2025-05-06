@@ -55,3 +55,17 @@ export const getEndpointUrl = (
 
   return backendEndpoint.path
 }
+
+export const getResourceEndpoint = ({
+  resource,
+  version,
+  name,
+  namespace,
+}: {
+  resource: string
+  version: string
+  name: string
+  namespace: string
+}): string => {
+  return `/call?resource=${resource}&apiVersion=widgets.templates.krateo.io/${version}&name=${name}&namespace=${namespace}`
+}

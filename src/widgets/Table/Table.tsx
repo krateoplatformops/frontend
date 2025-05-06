@@ -29,6 +29,7 @@ const Table = ({ widgetData }: WidgetProps<TableType>) => {
         }))}
         dataSource={data}
         pagination={data.length > widgetData.pageSize ? { defaultPageSize: widgetData.pageSize } : false}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   )

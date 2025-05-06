@@ -1,7 +1,7 @@
 import type { WidgetProps } from '../types/Widget'
 import { getEndpointUrl } from '../utils/utils'
 
-import { WidgetRenderer } from './WidgetRenderer'
+import { WidgetRenderer } from '../components/WidgetRenderer'
 
 export function Column({
   widgetData,

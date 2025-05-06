@@ -1,0 +1,63 @@
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: dashboard-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Dashboard
+    path: /dashboard
+    icon: fa-chart-line
+---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: templates-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Templates
+    path: /templates
+    icon: fa-rectangle-list
+---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: compositions-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Compositions
+    path: /compositions
+    icon: fa-shapes
+---
+kind: NavMenu
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: sidebar-nav-menu
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - backendEndpointId: dashboard-route
+      - backendEndpointId: templates-route
+      - backendEndpointId: compositions-route
+  backendEndpoints:
+    - id: dashboard-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: dashboard-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+    - id: templates-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: templates-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+    - id: compositions-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: compositions-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET

@@ -5,14 +5,23 @@ import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
+import { Column } from '../widgets/Column'
+import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import PieChart from '../widgets/PieChart/PieChart'
+import { Route } from '../widgets/Route/Route'
 import Table from '../widgets/Table/Table'
 
-import { Column } from './Column'
-
-function parseData(widget: Widget) {
+function parseData(widget: Widget, widgetEndpoint: string) {
   switch (widget.kind) {
+    case 'Status':
+      return (
+        <div>
+          ERROR
+          <pre style={{ whiteSpace: 'wrap' }}>{JSON.stringify(widget, null, 2)}</pre>
+          <pre style={{ whiteSpace: 'wrap' }}>{widgetEndpoint}</pre>
+        </div>
+      )
     case 'Button':
     case 'ButtonWithAction':
       return (
@@ -30,12 +39,21 @@ function parseData(widget: Widget) {
       return <PieChart backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
     case 'Table':
       return <Table backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+    case 'NavMenu':
+      return <NavMenu backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+    case 'Route':
+      return <Route backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }
 }
 
 export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
+  if (!widgetEndpoint.includes('widgets.templates.krateo.io')) {
+    console.warn(
+      `WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`,
+    )
+  }
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
 
@@ -71,5 +89,5 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
     return <div>...error</div>
   }
 
-  return parseData(widget)
+  return parseData(widget, widgetEndpoint)
 }

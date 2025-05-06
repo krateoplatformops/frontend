@@ -8,37 +8,21 @@
     },
     "kind": {
       "type": "string",
-      "default": "PieChart"
+      "default": "NavMenu"
     },
     "spec": {
       "type": "object",
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["title", "items"],
+          "required": ["items"],
           "properties": {
-            "title": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "total": {
-              "type": "integer"
-            },
-            "data": {
+            "items": {
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "color": {
-                    "type": "string",
-                    "enum": ["blue", "darkBlue", "orange", "gray", "red", "green"]
-                  },
-                  "value": {
-                    "type": "integer"
-                  },
-                  "label": {
+                  "backendEndpointId": {
                     "type": "string"
                   }
                 }
@@ -72,9 +56,38 @@
               }
             }
           }
+        },
+        "backendEndpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
+              }
+            }
+          }
         }
       },
-      "required": ["widgetData", "actions"]
+      "required": ["widgetData"]
     }
   },
   "required": ["kind", "spec", "version"]
