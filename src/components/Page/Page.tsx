@@ -8,7 +8,7 @@ const Page: React.FC = () => {
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar />
-      <div style={{ flex: 1 }}>
+      {/* <div style={{ flex: 1 }}>
         <Drawer />
         <WidgetRenderer widgetEndpoint={widgetEndpoint} />
         <WidgetRenderer
@@ -52,7 +52,7 @@ const Page: React.FC = () => {
             '/call?resource=tables&apiVersion=widgets.templates.krateo.io/v1beta1&name=table-of-namespaces&namespace=krateo-system'
           }
         />
-      </div>
+      </div> */}
     </div>
   )
 }

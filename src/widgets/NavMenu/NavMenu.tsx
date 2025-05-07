@@ -1,6 +1,6 @@
 import { WidgetRenderer } from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
-import { getEndpointUrl } from '../../utils/utils'
+import { getResourceEndpoint } from '../../utils/utils'
 
 export function NavMenu(
   props: WidgetProps<{
@@ -13,8 +13,12 @@ export function NavMenu(
   return (
     <div>
       {items.map((item) => {
-        const widgetEndpoint = getEndpointUrl(item.backendEndpointId, props.backendEndpoints)
-        return <WidgetRenderer widgetEndpoint={widgetEndpoint} />
+        return <WidgetRenderer widgetEndpoint={getResourceEndpoint({
+          name: item.backendEndpointId,
+          namespace: 'krateo-system',
+          resource: 'routes',
+          version: 'v1beta1',
+        })} />
       })}
     </div>
   )

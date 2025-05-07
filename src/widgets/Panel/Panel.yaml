@@ -1,14 +1,3 @@
-kind: Button
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: button-1
-  namespace: krateo-system
-spec:
-  widgetData:
-    label: button 1
-    icon: fa-sun
-    type: primary
----
 kind: PieChart
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -39,16 +28,16 @@ spec:
   widgetData:
     title: My Panel
     items:
-      - backendEndpointId: my-pie-chart-backend-endpoint-id
-      - backendEndpointId: my-table-backend-endpoint-id
+      - backendEndpointId: my-pie-chart
+      - backendEndpointId: my-table
   backendEndpoints:
-    - id: my-table-backend-endpoint-id
+    - id: my-table
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-table
       namespace: krateo-system
       resource: tables
       verb: GET
-    - id: my-pie-chart-backend-endpoint-id
+    - id: my-pie-chart
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-pie-chart
       namespace: krateo-system

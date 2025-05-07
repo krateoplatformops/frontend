@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router'
 
 import type { WidgetProps } from '../../types/Widget'
-import { getEndpointUrl } from '../../utils/utils'
+import { getResourceEndpoint } from '../../utils/utils'
 
 export function Route(
   props: WidgetProps<{
@@ -13,7 +13,13 @@ export function Route(
     backendEndpointId: string
   }>,
 ) {
-  const backendEndpoint = getEndpointUrl(props.widgetData.backendEndpointId, props.backendEndpoints)
+  const backendEndpoint = getResourceEndpoint({
+    name: props.widgetData.backendEndpointId,
+    namespace: 'krateo-system',
+    resource: 'panels',
+    version: 'v1beta1'
+})
+  
   return (
     <div>
       <Link to={`${props.widgetData.path}?widgetEndpoint=${encodeURIComponent(backendEndpoint)}`}>

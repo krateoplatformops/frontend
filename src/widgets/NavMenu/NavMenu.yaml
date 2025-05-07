@@ -8,54 +8,14 @@ spec:
     label: Dashboard
     path: /dashboard
     icon: fa-chart-line
-    backendEndpointId: panel-backend-endpoint-id
+    backendEndpointId: my-panel
   
   backendEndpoints:
-    - id: panel-backend-endpoint-id
+    - id: my-panel
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-panel
       namespace: krateo-system
       resource: panels
-      verb: GET
----
-kind: Route
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: templates-route
-  namespace: krateo-system
-spec:
-  widgetData:
-    label: Templates
-    path: /templates
-    icon: fa-rectangle-list
-    backendEndpointId: button-3-backend-endpoint-id
-  
-  backendEndpoints:
-    - id: button-3-backend-endpoint-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-3
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
----
-kind: Route
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: compositions-route
-  namespace: krateo-system
-spec:
-  widgetData:
-    label: Compositions
-    path: /compositions
-    icon: fa-shapes
-    backendEndpointId: button-2-backend-endpoint-id
-  
-  backendEndpoints:
-    - id: button-2-backend-endpoint-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-2
-      namespace: krateo-system
-      resource: buttons
       verb: GET
 ---
 kind: NavMenu
@@ -67,24 +27,10 @@ spec:
   widgetData:
     items:
       - backendEndpointId: dashboard-route
-      - backendEndpointId: templates-route
-      - backendEndpointId: compositions-route
   backendEndpoints:
     - id: dashboard-route
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: dashboard-route
-      namespace: krateo-system
-      resource: routes
-      verb: GET
-    - id: templates-route
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-route
-      namespace: krateo-system
-      resource: routes
-      verb: GET
-    - id: compositions-route
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: compositions-route
       namespace: krateo-system
       resource: routes
       verb: GET
