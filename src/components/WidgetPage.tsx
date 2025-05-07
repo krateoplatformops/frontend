@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router'
 
-import { Sidebar } from './Sidebar'
+import Sidebar from './Sidebar'
 import { WidgetRenderer } from './WidgetRenderer'
 
 export function WidgetPage() {

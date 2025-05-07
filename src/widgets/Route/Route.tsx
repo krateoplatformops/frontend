@@ -17,9 +17,9 @@ export function Route(
     name: props.widgetData.backendEndpointId,
     namespace: 'krateo-system',
     resource: 'panels',
-    version: 'v1beta1'
-})
-  
+    version: 'v1beta1',
+  })
+
   return (
     <div>
       <Link to={`${props.widgetData.path}?widgetEndpoint=${encodeURIComponent(backendEndpoint)}`}>

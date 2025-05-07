@@ -1,9 +1,9 @@
-import { Drawer } from '../../Drawer'
-import { Sidebar } from '../Sidebar'
-import { WidgetRenderer } from '../WidgetRenderer'
+// import { Drawer } from '../../Drawer'
+import Sidebar from '../Sidebar'
+// import { WidgetRenderer } from '../WidgetRenderer'
 
 const Page: React.FC = () => {
-  const widgetEndpoint = `/call?resource=buttonwithactions&apiVersion=widgets.templates.krateo.io/v1beta1&name=button-with-open-drawer&namespace=krateo-system`
+  // const widgetEndpoint = `/call?resource=buttonwithactions&apiVersion=widgets.templates.krateo.io/v1beta1&name=button-with-open-drawer&namespace=krateo-system`
 
   return (
     <div style={{ display: 'flex' }}>

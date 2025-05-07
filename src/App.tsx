@@ -9,6 +9,8 @@ import { App as AntApp, Spin } from 'antd'
 import { useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
+import '../index.css'
+import '../variables.css'
 import InitRoutes from './components/InitRoutes/InitRoutes'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'

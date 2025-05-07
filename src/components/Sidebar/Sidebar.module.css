@@ -1,0 +1,8 @@
+.sidebar {
+  padding: 10px 0;
+  background-image: linear-gradient(var(--menu-bg-start), var(--menu-bg-end));
+
+  .logo {
+    margin: 0 10px 25px;
+  }
+}

@@ -59,7 +59,7 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
 
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
-  
+
   const {
     data: widget,
     isLoading,
