@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 import type { RouteObject } from 'react-router'
 
 import Page from '../components/Page'
-import { WidgetPage } from '../components/WidgetPage'
+import WidgetPage from '../components/WidgetPage'
 import Page404 from '../pages/Page404'
 
 interface RoutesContextType {

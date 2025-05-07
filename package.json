@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint .",
+    "lint:css": "stylelint \"src/**/*.module.css\" --fix",
     "generate-types": "json2ts --input src/schemas/ --output src/types/",
     "watch-types": "chokidar 'src/schemas/*.schema.json' -c 'npm run generate-types'"
   },
@@ -39,6 +40,10 @@
     "eslint-plugin-stylistic-js": "^0.0.0-0",
     "globals": "^15.15.0",
     "json-schema-to-typescript": "^15.0.4",
+    "stylelint": "^16.19.1",
+    "stylelint-config-css-modules": "^4.4.0",
+    "stylelint-config-standard": "^38.0.0",
+    "stylelint-order": "^7.0.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.28.0",
     "vite": "^6.2.3"

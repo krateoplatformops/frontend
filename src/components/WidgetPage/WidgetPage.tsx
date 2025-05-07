@@ -1,14 +1,16 @@
 import { useSearchParams } from 'react-router'
 
-import Sidebar from './Sidebar'
-import { WidgetRenderer } from './WidgetRenderer'
+import Sidebar from '../Sidebar'
+import { WidgetRenderer } from '../WidgetRenderer'
 
-export function WidgetPage() {
+import styles from './WidgetPage.module.css'
+
+export const WidgetPage = () => {
   const [searchParams] = useSearchParams()
   const widgetEndpoint = searchParams.get('widgetEndpoint')
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className={styles.widgetPage}>
       <Sidebar />
       <div style={{ flex: 1 }}>
         {widgetEndpoint ? (
@@ -20,3 +22,5 @@ export function WidgetPage() {
     </div>
   )
 }
+
+export default WidgetPage
