@@ -1,21 +1,28 @@
-import { WidgetRenderer } from '../../components/WidgetRenderer'
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { Menu } from 'antd'
+import type { MenuItemType } from 'antd/es/menu/interface'
+import { useNavigate } from 'react-router'
+
 import type { WidgetProps } from '../../types/Widget'
-import { getEndpointUrl } from '../../utils/utils'
 
 export function NavMenu(
   props: WidgetProps<{
     items: Array<{
+      label: string
+      icon: string
       resourceRefId: string
     }>
   }>,
 ) {
+  const navigate = useNavigate()
+
   const { items } = props.widgetData
+  const menuItems: MenuItemType[] = items.map(({ icon, label, resourceRefId }) => ({ icon, key: resourceRefId, label }))
+
   return (
-    <div>
-      {items.map((item) => {
-        const widgetEndpoint = getEndpointUrl(item.resourceRefId, props.resourcesRefs)
-        return <WidgetRenderer widgetEndpoint={widgetEndpoint} />
-      })}
-    </div>
+    <Menu
+      items={menuItems}
+      onClick={item => navigate(item.key)}
+    />
   )
 }

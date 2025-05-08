@@ -5,6 +5,7 @@ module.exports = {
   ],
   plugins: ['stylelint-order'],
   rules: {
+    indentation: 2,
     'order/properties-alphabetical-order': true,
     'selector-class-pattern': null,
   },

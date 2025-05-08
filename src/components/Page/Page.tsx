@@ -1,12 +1,14 @@
 // import { Drawer } from '../../Drawer'
 import Sidebar from '../Sidebar'
+
 // import { WidgetRenderer } from '../WidgetRenderer'
+import styles from './Page.module.css'
 
 const Page: React.FC = () => {
   // const widgetEndpoint = `/call?resource=buttonwithactions&apiVersion=widgets.templates.krateo.io/v1beta1&name=button-with-open-drawer&namespace=krateo-system`
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className={styles.page}>
       <Sidebar />
       {/* <div style={{ flex: 1 }}>
         <Drawer />

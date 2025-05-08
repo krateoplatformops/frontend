@@ -2,7 +2,7 @@
   background-image: linear-gradient(var(--menu-bg-start), var(--menu-bg-end));
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-padding-md);
-  padding: var(--spacing-padding-md);
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
   width: 250px;
 }

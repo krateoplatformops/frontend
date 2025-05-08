@@ -1,0 +1,21 @@
+.route {
+  align-items: center;
+  color: var(--menuitem-color);
+  display: flex;
+  gap: var(--spacing-sm);
+
+  svg {
+    min-height: 22px;
+    min-width: 22px;
+    opacity: 0.5;
+    transition: all 300ms;
+  }
+
+  &:hover {
+    color: var(--light-color);
+
+    svg {
+      opacity: 1;
+    }
+  }
+}
