@@ -75,7 +75,7 @@ export interface ButtonSchema {
         id: string
         name: string
         verb: 'GET' | 'POST' | 'DELETE'
-        backendEndpointId: string
+        resourceRefId: string
         requireConfirmation?: boolean
         onSuccessNavigateTo?: string
         loading?: 'global' | 'inline' | 'none'
@@ -84,7 +84,7 @@ export interface ButtonSchema {
         id: string
         type: 'navigate'
         name: string
-        backendEndpointId: string
+        resourceRefId: string
         requireConfirmation?: boolean
         loading?: 'global' | 'inline' | 'none'
       }[]
@@ -105,7 +105,7 @@ export interface ButtonSchema {
         loading?: 'global' | 'inline' | 'none'
       }[]
     }
-    backendEndpoints: {
+    resourcesRefs: {
       id: string
       endpoint: string
       verb: 'GET' | 'POST' | 'DELETE'
@@ -167,7 +167,7 @@ export interface ButtonSchema {
         id: string
         name: string
         verb: 'GET' | 'POST' | 'DELETE'
-        backendEndpointId: string
+        resourceRefId: string
         requireConfirmation?: boolean
         onSuccessNavigateTo?: string
         loading?: 'global' | 'inline' | 'none'
@@ -176,7 +176,7 @@ export interface ButtonSchema {
         id: string
         type: 'navigate'
         name: string
-        backendEndpointId: string
+        resourceRefId: string
         requireConfirmation?: boolean
         loading?: 'global' | 'inline' | 'none'
       }[]
@@ -197,7 +197,7 @@ export interface ButtonSchema {
         loading?: 'global' | 'inline' | 'none'
       }[]
     }
-    backendEndpoints: {
+    resourcesRefs: {
       id: string
       endpoint: string
       verb: 'GET' | 'POST' | 'DELETE'

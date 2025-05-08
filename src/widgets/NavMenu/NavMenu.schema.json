@@ -22,7 +22,7 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   }
                 }
@@ -57,7 +57,7 @@
             }
           }
         },
-        "backendEndpoints": {
+        "resourcesRefs": {
           "type": "array",
           "items": {
             "type": "object",

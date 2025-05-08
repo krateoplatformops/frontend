@@ -39,9 +39,9 @@ spec:
   widgetData:
     title: My Panel
     items:
-      - backendEndpointId: my-pie-chart-backend-endpoint-id
-      - backendEndpointId: my-table-backend-endpoint-id
-  backendEndpoints:
+      - resourceRefId: my-pie-chart-backend-endpoint-id
+      - resourceRefId: my-table-backend-endpoint-id
+  resourcesRefs:
     - id: my-table-backend-endpoint-id
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-table

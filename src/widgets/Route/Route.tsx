@@ -10,10 +10,10 @@ export function Route(
     path: string
     icon: string
     label: string
-    backendEndpointId: string
+    resourceRefId: string
   }>,
 ) {
-  const backendEndpoint = getEndpointUrl(props.widgetData.backendEndpointId, props.backendEndpoints)
+  const backendEndpoint = getEndpointUrl(props.widgetData.resourceRefId, props.resourcesRefs)
   return (
     <div>
       <Link to={`${props.widgetData.path}?widgetEndpoint=${encodeURIComponent(backendEndpoint)}`}>

@@ -26,8 +26,8 @@ kubectl wait krateoplatformops krateo --for condition=Ready=True --namespace kra
 ```
 curl -v --request POST \
   -H 'Content-Type: application/json' \
-  -d @testdata/widgets.templates.krateo.io_buttons.json \
-  "http://127.0.0.1:30081/forge?apply=true"
+  -d @src/widgets/NavMenu/NavMenu.schema.json \
+  "http://52.158.28.123:8088/forge?apply=true"
 ```
 
 ## Create a custom resource wherever you want then execute the following command to apply it

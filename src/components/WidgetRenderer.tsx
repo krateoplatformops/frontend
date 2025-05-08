@@ -6,7 +6,7 @@ import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
-import { Column } from '../widgets/Column'
+import { Column } from '../widgets/Column/Column'
 import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import PieChart from '../widgets/PieChart/PieChart'
@@ -36,22 +36,22 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return (
         <Button
           actions={widget.spec.actions}
-          backendEndpoints={widget.status.backendEndpoints}
+          resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData as ButtonSchema['status']['widgetData']}
         />
       )
     case 'Panel':
-      return <Panel backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+      return <Panel resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Column':
-      return <Column backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+      return <Column resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'PieChart':
-      return <PieChart backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+      return <PieChart resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Table':
-      return <Table backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+      return <Table resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'NavMenu':
-      return <NavMenu backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+      return <NavMenu resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Route':
-      return <Route backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+      return <Route resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }

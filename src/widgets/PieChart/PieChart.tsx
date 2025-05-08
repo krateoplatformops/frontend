@@ -6,12 +6,12 @@ type PieChartType = {
   items: WidgetItems
 }
 
-const PieChart = ({ widgetData, backendEndpoints }: WidgetProps<PieChartType>) => {
+const PieChart = ({ widgetData, resourcesRefs }: WidgetProps<PieChartType>) => {
   return (
     <div>
       <h1>PieChart</h1>
       <pre>{JSON.stringify(widgetData, null, 2)}</pre>
-      <pre>{JSON.stringify(backendEndpoints, null, 2)}</pre>
+      <pre>{JSON.stringify(resourcesRefs, null, 2)}</pre>
     </div>
   )
 }

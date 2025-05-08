@@ -8,9 +8,9 @@ spec:
     label: Dashboard
     path: /dashboard
     icon: fa-chart-line
-    backendEndpointId: panel-backend-endpoint-id
+    resourceRefId: panel-backend-endpoint-id
   
-  backendEndpoints:
+  resourcesRefs:
     - id: panel-backend-endpoint-id
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-panel
@@ -28,9 +28,9 @@ spec:
     label: Templates
     path: /templates
     icon: fa-rectangle-list
-    backendEndpointId: button-3-backend-endpoint-id
+    resourceRefId: button-3-backend-endpoint-id
   
-  backendEndpoints:
+  resourcesRefs:
     - id: button-3-backend-endpoint-id
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: button-3
@@ -48,9 +48,9 @@ spec:
     label: Compositions
     path: /compositions
     icon: fa-shapes
-    backendEndpointId: button-2-backend-endpoint-id
+    resourceRefId: button-2-backend-endpoint-id
   
-  backendEndpoints:
+  resourcesRefs:
     - id: button-2-backend-endpoint-id
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: button-2
@@ -66,10 +66,10 @@ metadata:
 spec:
   widgetData:
     items:
-      - backendEndpointId: dashboard-route
-      - backendEndpointId: templates-route
-      - backendEndpointId: compositions-route
-  backendEndpoints:
+      - resourceRefId: dashboard-route
+      - resourceRefId: templates-route
+      - resourceRefId: compositions-route
+  resourcesRefs:
     - id: dashboard-route
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: dashboard-route

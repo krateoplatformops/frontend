@@ -24,3 +24,5 @@ pnpm-debug.log*
 .eslintcache
 playwright-report/
 coverage/
+
+kubeconfig.yaml

@@ -67,7 +67,7 @@
           "required": ["label", "clickActionId"],
           "additionalProperties": false
         },
-        "backendEndpoints": {
+        "resourcesRefs": {
           "type": "array",
           "items": {
             "type": "object",
@@ -109,7 +109,7 @@
                   "id": {
                     "type": "string"
                   },
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   },
                   "requireConfirmation": {
@@ -127,7 +127,7 @@
                     "enum": ["rest"]
                   }
                 },
-                "required": ["id", "backendEndpointId"]
+                "required": ["id", "resourceRefId"]
               }
             },
             "navigate": {
@@ -146,7 +146,7 @@
                   "name": {
                     "type": "string"
                   },
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   },
                   "requireConfirmation": {
@@ -157,7 +157,7 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "backendEndpointId"]
+                "required": ["id", "type", "name", "resourceRefId"]
               }
             },
             "openDrawer": {
@@ -173,7 +173,7 @@
                     "type": "string",
                     "enum": ["openDrawer"]
                   },
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   },
                   "requireConfirmation": {
@@ -247,7 +247,7 @@
           }
         }
       },
-      "required": ["widgetData", "backendEndpoints", "actions"]
+      "required": ["widgetData", "resourcesRefs", "actions"]
     }
   },
   "required": ["kind", "spec", "version"]

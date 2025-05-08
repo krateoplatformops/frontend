@@ -10,11 +10,11 @@ type PanelType = {
   items: WidgetItems
 }
 
-const Panel = ({ widgetData, backendEndpoints }: WidgetProps<PanelType>) => {
+const Panel = ({ widgetData, resourcesRefs }: WidgetProps<PanelType>) => {
   return (
     <AntdCard title={widgetData.title}>
       {widgetData.items.map((item) => {
-        return <WidgetRenderer widgetEndpoint={getEndpointUrl(item.backendEndpointId, backendEndpoints)} />
+        return <WidgetRenderer widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />
       })}
     </AntdCard>
   )

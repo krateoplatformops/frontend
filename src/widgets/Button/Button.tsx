@@ -23,17 +23,17 @@ type BackendEndpointFromSpec = {
 
 const createNginxPodEndpoint = (
   baseUrl: string,
-  backendEndpointId: string,
-  backendEndpoints: Array<BackendEndpointFromSpec>,
+  resourceRefId: string,
+  resourcesRefs: Array<BackendEndpointFromSpec>,
 ) => {
-  if (!backendEndpoints || backendEndpoints.length === 0) {
+  if (!resourcesRefs || resourcesRefs.length === 0) {
     throw new Error('cannot find backend endpoints')
   }
 
   return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
 }
 
-const Button = ({ widgetData, actions, backendEndpoints }: WidgetProps<ButtonSchema['status']['widgetData']>) => {
+const Button = ({ widgetData, actions, resourcesRefs }: WidgetProps<ButtonSchema['status']['widgetData']>) => {
   const { color, clickActionId, label, icon, size, type } = widgetData
 
   const navigate = useNavigate()
@@ -45,13 +45,13 @@ const Button = ({ widgetData, actions, backendEndpoints }: WidgetProps<ButtonSch
       .flat()
       .find(({ id }) => id === clickActionId)
     if (buttonAction) {
-      const { backendEndpointId, requireConfirmation, type, verb } = buttonAction
+      const { resourceRefId, requireConfirmation, type, verb } = buttonAction
 
       switch (type) {
         case 'navigate': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(backendEndpointId, backendEndpoints as unknown as BackendEndpointFromSpec[])
+              const url = getEndpointUrl(resourceRefId, resourcesRefs as unknown as BackendEndpointFromSpec[])
               await navigate(url)
             }
           }
@@ -62,8 +62,8 @@ const Button = ({ widgetData, actions, backendEndpoints }: WidgetProps<ButtonSch
             if (window.confirm('Are you sure?')) {
               const url = createNginxPodEndpoint(
                 config!.api.BACKEND_API_BASE_URL,
-                backendEndpointId,
-                backendEndpoints as unknown as BackendEndpointFromSpec[],
+                resourceRefId,
+                resourcesRefs as unknown as BackendEndpointFromSpec[],
               )
               const res = await fetch(url, {
                 body: JSON.stringify({
@@ -114,7 +114,7 @@ const Button = ({ widgetData, actions, backendEndpoints }: WidgetProps<ButtonSch
           break
         }
         case 'openDrawer': {
-          const widgetEndpoint = getEndpointUrl(backendEndpointId, backendEndpoints)
+          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
 
           openDrawer(widgetEndpoint)
           break

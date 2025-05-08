@@ -3,7 +3,7 @@ export interface Action {
   id: string
   name: string
   verb: 'GET' | 'POST' | 'DELETE'
-  backendEndpointId: string
+  resourceRefId: string
   requireConfirmation?: boolean
   onSuccessNavigateTo?: string
   loading?: 'global' | 'inline' | 'none'

@@ -5,7 +5,7 @@ import { getEndpointUrl } from '../../utils/utils'
 export function NavMenu(
   props: WidgetProps<{
     items: Array<{
-      backendEndpointId: string
+      resourceRefId: string
     }>
   }>,
 ) {
@@ -13,7 +13,7 @@ export function NavMenu(
   return (
     <div>
       {items.map((item) => {
-        const widgetEndpoint = getEndpointUrl(item.backendEndpointId, props.backendEndpoints)
+        const widgetEndpoint = getEndpointUrl(item.resourceRefId, props.resourcesRefs)
         return <WidgetRenderer widgetEndpoint={widgetEndpoint} />
       })}
     </div>
