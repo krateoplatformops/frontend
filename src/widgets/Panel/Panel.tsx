@@ -2,7 +2,7 @@ import { Card as AntdCard } from 'antd'
 
 import { WidgetRenderer } from '../../components/WidgetRenderer'
 import type { WidgetItems, WidgetProps } from '../../types/Widget'
-import { getResourceEndpoint } from '../../utils/utils'
+import { getEndpointUrl } from '../../utils/utils'
 
 /* TODO: generate from schema  */
 type PanelType = {

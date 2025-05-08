@@ -1,6 +1,6 @@
 import { WidgetRenderer } from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
-import { getResourceEndpoint } from '../../utils/utils'
+import { getEndpointUrl } from '../../utils/utils'
 
 export function NavMenu(
   props: WidgetProps<{

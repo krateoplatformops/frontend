@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router'
 
 import type { WidgetProps } from '../../types/Widget'
-import { getResourceEndpoint } from '../../utils/utils'
+import { getEndpointUrl } from '../../utils/utils'
 
 export function Route(
   props: WidgetProps<{
