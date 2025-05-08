@@ -5,7 +5,7 @@ import { getResourceEndpoint } from '../../utils/utils'
 export function NavMenu(
   props: WidgetProps<{
     items: Array<{
-      backendEndpointId: string
+      resourceRefId: string
     }>
   }>,
 ) {
@@ -13,12 +13,8 @@ export function NavMenu(
   return (
     <div>
       {items.map((item) => {
-        return <WidgetRenderer widgetEndpoint={getResourceEndpoint({
-          name: item.backendEndpointId,
-          namespace: 'krateo-system',
-          resource: 'routes',
-          version: 'v1beta1',
-        })} />
+        const widgetEndpoint = getEndpointUrl(item.resourceRefId, props.resourcesRefs)
+        return <WidgetRenderer widgetEndpoint={widgetEndpoint} />
       })}
     </div>
   )

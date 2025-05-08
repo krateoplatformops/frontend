@@ -28,7 +28,7 @@
     },
     "spec": {
       "type": "object",
-      "required": ["widgetData", "actions", "backendEndpoints"],
+      "required": ["widgetData", "actions", "resourcesRefs"],
       "properties": {
         "widgetData": {
           "description": "the data that will be passed to the widget on the frontend",
@@ -106,7 +106,7 @@
                     "type": "string",
                     "enum": ["GET", "POST", "DELETE"]
                   },
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   },
                   "requireConfirmation": {
@@ -121,7 +121,7 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "verb", "backendEndpointId"]
+                "required": ["id", "type", "name", "verb", "resourceRefId"]
               }
             },
             "navigate": {
@@ -140,7 +140,7 @@
                   "name": {
                     "type": "string"
                   },
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   },
                   "requireConfirmation": {
@@ -151,7 +151,7 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "backendEndpointId"]
+                "required": ["id", "type", "name", "resourceRefId"]
               }
             },
             "openDrawer": {
@@ -170,7 +170,7 @@
                   "name": {
                     "type": "string"
                   },
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   },
                   "requireConfirmation": {
@@ -217,7 +217,7 @@
           },
           "additionalProperties": false
         },
-        "backendEndpoints": {
+        "resourcesRefs": {
           "type": "array",
           "items": {
             "type": "object",

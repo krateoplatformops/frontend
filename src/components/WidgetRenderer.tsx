@@ -6,7 +6,7 @@ import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
-import { Column } from '../widgets/Column'
+import { Column } from '../widgets/Column/Column'
 import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import PieChart from '../widgets/PieChart/PieChart'
@@ -16,35 +16,43 @@ import Table from '../widgets/Table/Table'
 // TODO: BACKENDENDPOINTS AND WIDGETDATA SHOULD COME FROM STATUS NOT FROM SPEC!!!
 function parseData(widget: Widget, widgetEndpoint: string) {
   switch (widget.kind) {
-    case 'Status':
+    case 'Status': {
+      const x = new URLSearchParams(widgetEndpoint)
       return (
-        <div>
+        <div style={{ border: '1px solid red', margin: '10px' }}>
           ERROR
-          <pre style={{ whiteSpace: 'wrap' }}>{JSON.stringify(widget, null, 2)}</pre>
-          <pre style={{ whiteSpace: 'wrap' }}>{widgetEndpoint}</pre>
+          <div>name: {x.get('name')}</div>
+          <div>namespace: {x.get('namespace')}</div>
+          <div>version: {x.get('apiVersion')}</div>
+          {/* <div>resource: {x.get('resource')}</div> */}
+          <div>
+            <pre style={{ whiteSpace: 'wrap' }}>{JSON.stringify(widget, null, 2)}</pre>
+            <pre style={{ whiteSpace: 'wrap' }}>endpoint:{widgetEndpoint}</pre>
+          </div>
         </div>
       )
+    }
     case 'Button':
     case 'ButtonWithAction':
       return (
         <Button
           actions={widget.spec.actions}
-          backendEndpoints={widget.status.backendEndpoints}
+          resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData as ButtonSchema['status']['widgetData']}
         />
       )
     case 'Panel':
-      return <Panel backendEndpoints={widget.spec.backendEndpoints} widgetData={widget.spec.widgetData} />
+      return <Panel resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Column':
-      return <Column backendEndpoints={widget.status.backendEndpoints} widgetData={widget.status.widgetData} />
+      return <Column resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'PieChart':
-      return <PieChart backendEndpoints={widget.spec.backendEndpoints} widgetData={widget.spec.widgetData} />
+      return <PieChart resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Table':
-      return <Table backendEndpoints={widget.spec.backendEndpoints} widgetData={widget.spec.widgetData} />
+      return <Table resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'NavMenu':
-      return <NavMenu backendEndpoints={widget.spec.backendEndpoints} widgetData={widget.spec.widgetData} />
+      return <NavMenu resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Route':
-      return <Route backendEndpoints={widget.spec.backendEndpoints} widgetData={widget.spec.widgetData} />
+      return <Route resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }

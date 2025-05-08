@@ -25,7 +25,7 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "backendEndpointId": {
+                  "resourceRefId": {
                     "type": "string"
                   }
                 }
@@ -34,7 +34,7 @@
           },
           "additionalProperties": false
         },
-        "backendEndpoints": {
+        "resourcesRefs": {
           "type": "array",
           "items": {
             "type": "object",
@@ -90,7 +90,7 @@
           }
         }
       },
-      "required": ["widgetData", "backendEndpoints", "actions"]
+      "required": ["widgetData", "resourcesRefs", "actions"]
     }
   },
   "required": ["kind", "spec", "version"]

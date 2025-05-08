@@ -21,7 +21,7 @@ export interface Widget<WidetDataType = unknown> {
     widgets: Widget[]
     actions: WidgetActions
     events: unknown /* EventsType */
-    backendEndpoints: Array<{
+    resourcesRefs: Array<{
       id: string
       path: string
       verb: 'GET' | 'POST' | 'DELETE'
@@ -36,7 +36,7 @@ export type WidgetActions = {
     id: string
     name: string
     verb: 'GET' | 'POST' | 'DELETE'
-    backendEndpointId: string
+    resourceRefId: string
     requireConfirmation?: boolean
     onSuccessNavigateTo?: string
     loading?: 'global' | 'inline' | 'none'
@@ -45,7 +45,7 @@ export type WidgetActions = {
     id: string
     type: 'navigate'
     name: string
-    backendEndpointId: string
+    resourceRefId: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
   }[]
@@ -70,9 +70,9 @@ export type WidgetActions = {
 export type WidgetProps<T> = {
   widgetData: T
   actions: Widget['status']['actions']
-  backendEndpoints: Widget['status']['backendEndpoints']
+  resourcesRefs: Widget['status']['resourcesRefs']
 }
 
 export type WidgetItems = Array<{
-  backendEndpointId: string
+  resourceRefId: string
 }>

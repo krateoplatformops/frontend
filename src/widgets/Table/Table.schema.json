@@ -40,7 +40,7 @@
           },
           "additionalProperties": false
         },
-        "backendEndpoints": {
+        "resourcesRefs": {
           "type": "array",
           "items": {
             "type": "object",

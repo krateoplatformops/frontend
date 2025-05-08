@@ -3,60 +3,37 @@
   "additionalProperties": false,
   "properties": {
     "version": {
+      "description": "widget version",
       "type": "string",
       "default": "v1beta1"
     },
     "kind": {
       "type": "string",
-      "default": "Route"
+      "description": "name of the k8s Custom Resource",
+      "default": "Column"
     },
     "spec": {
       "type": "object",
       "properties": {
         "widgetData": {
+          "description": "the data that will be passed to the widget on the frontend",
           "type": "object",
-          "required": ["label", "path", "icon"],
+          "required": ["items"],
           "properties": {
-            "label": {
-              "type": "string"
-            },
-            "path": {
-              "type": "string"
-            },
-            "icon": {
-              "type": "string"
-            },
-            "resourceRefId": {
-              "type": "string"
+            "items": {
+              "description": "the items of the row",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "resourceRefId": {
+                    "type": "string"
+                  }
+                }
+              }
             }
           },
           "additionalProperties": false
-        },
-        "apiRef": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "namespace": {
-              "type": "string"
-            }
-          },
-          "required": ["name", "namespace"]
-        },
-        "widgetDataTemplate": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "forPath": {
-                "type": "string"
-              },
-              "expression": {
-                "type": "string"
-              }
-            }
-          }
         },
         "resourcesRefs": {
           "type": "array",
@@ -86,9 +63,35 @@
               }
             }
           }
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"]
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            }
+          }
         }
       },
-      "required": ["widgetData"]
+      "required": ["widgetData", "backendEndpoints", "actions"]
     }
   },
   "required": ["kind", "spec", "version"]

@@ -10,7 +10,7 @@ const Page: React.FC = () => {
       <Sidebar />
       {/* <div style={{ flex: 1 }}>
         <Drawer />
-        <WidgetRenderer widgetEndpoint={widgetEndpoint} />
+        {/* <WidgetRenderer widgetEndpoint={widgetEndpoint} />
         <WidgetRenderer
           widgetEndpoint={
             '/call?resource=buttonwithactions&apiVersion=widgets.templates.krateo.io/v1beta1&name=button-with-action&namespace=krateo-system'

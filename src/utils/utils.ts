@@ -1,20 +1,17 @@
 
 import type { Widget } from '../types/Widget'
 
-export const getEndpointUrl = (
-  backendEndpointId: string,
-  backendEndpoints: Widget['status']['backendEndpoints'],
-): string => {
-  if (!backendEndpoints || backendEndpoints.length === 0) {
+export const getEndpointUrl = (resourceRefId: string, resourcesRefs: Widget['status']['resourcesRefs']): string => {
+  if (!resourcesRefs || resourcesRefs.length === 0) {
     throw new Error('cannot find backend endpoints')
   }
 
-  const backendEndpoint = backendEndpoints.find((endpoint) => {
-    return endpoint.id === backendEndpointId
+  const backendEndpoint = resourcesRefs.find((endpoint) => {
+    return endpoint.id === resourceRefId
   })
 
   if (!backendEndpoint) {
-    throw new Error(`cannot find backend endpoint with ID ${backendEndpointId}`)
+    throw new Error(`cannot find backend endpoint with ID ${resourceRefId}`)
   }
 
   return backendEndpoint.path

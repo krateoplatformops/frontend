@@ -8,14 +8,54 @@ spec:
     label: Dashboard
     path: /dashboard
     icon: fa-chart-line
-    backendEndpointId: my-panel
-  
-  backendEndpoints:
-    - id: my-panel
+    resourceRefId: panel-backend-endpoint-id
+
+  resourcesRefs:
+    - id: panel-backend-endpoint-id
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-panel
       namespace: krateo-system
       resource: panels
+      verb: GET
+---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: templates-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Templates
+    path: /templates
+    icon: fa-rectangle-list
+    resourceRefId: button-3-backend-endpoint-id
+
+  resourcesRefs:
+    - id: button-3-backend-endpoint-id
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-3
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: compositions-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Compositions
+    path: /compositions
+    icon: fa-shapes
+    resourceRefId: button-2-backend-endpoint-id
+
+  resourcesRefs:
+    - id: button-2-backend-endpoint-id
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-2
+      namespace: krateo-system
+      resource: buttons
       verb: GET
 ---
 kind: NavMenu
@@ -26,8 +66,10 @@ metadata:
 spec:
   widgetData:
     items:
-      - backendEndpointId: dashboard-route
-  backendEndpoints:
+      - resourceRefId: dashboard-route
+      - resourceRefId: templates-route
+      - resourceRefId: compositions-route
+  resourcesRefs:
     - id: dashboard-route
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: dashboard-route

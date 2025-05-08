@@ -10,16 +10,10 @@ export function Route(
     path: string
     icon: string
     label: string
-    backendEndpointId: string
+    resourceRefId: string
   }>,
 ) {
-  const backendEndpoint = getResourceEndpoint({
-    name: props.widgetData.backendEndpointId,
-    namespace: 'krateo-system',
-    resource: 'panels',
-    version: 'v1beta1',
-  })
-
+  const backendEndpoint = getEndpointUrl(props.widgetData.resourceRefId, props.resourcesRefs)
   return (
     <div>
       <Link to={`${props.widgetData.path}?widgetEndpoint=${encodeURIComponent(backendEndpoint)}`}>

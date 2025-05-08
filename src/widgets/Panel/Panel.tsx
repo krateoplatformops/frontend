@@ -10,21 +10,12 @@ type PanelType = {
   items: WidgetItems
 }
 
-const Panel = ({ widgetData, backendEndpoints }: WidgetProps<PanelType>) => {
+const Panel = ({ widgetData, resourcesRefs }: WidgetProps<PanelType>) => {
   return (
     <AntdCard title={widgetData.title}>
-      <WidgetRenderer widgetEndpoint={getResourceEndpoint({
-        name: widgetData.items[0].backendEndpointId,
-        namespace: 'krateo-system',
-        resource: 'piecharts',
-        version: 'v1beta1',
-      })} />
-      <WidgetRenderer widgetEndpoint={getResourceEndpoint({
-        name: widgetData.items[1].backendEndpointId,
-        namespace: 'krateo-system',
-        resource: 'tables',
-        version: 'v1beta1',
-      })} />
+      {widgetData.items.map((item) => {
+        return <WidgetRenderer widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />
+      })}
     </AntdCard>
   )
 }
