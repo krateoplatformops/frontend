@@ -28,10 +28,10 @@ spec:
   widgetData:
     title: My Panel
     items:
-      - resourceRefId: my-pie-chart-backend-endpoint-id
-      - resourceRefId: my-table-backend-endpoint-id
+      - resourceRefId: my-pie-chart
+      - resourceRefId: my-table
   resourcesRefs:
-    - id: my-table-backend-endpoint-id
+    - id: my-table
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-table
       namespace: krateo-system
