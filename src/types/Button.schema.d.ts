@@ -8,7 +8,7 @@ export interface ButtonSchema {
   /**
    * kubernetes api version
    */
-  apiVersion: 'widgets.templates.krateo.io/v1alpha1'
+  apiVersion: 'widgets.templates.krateo.io/v1beta1'
   /**
    * name of the k8s Custom Resource
    */

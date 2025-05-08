@@ -5,7 +5,7 @@
     "apiVersion": {
       "description": "kubernetes api version",
       "type": "string",
-      "const": "widgets.templates.krateo.io/v1alpha1"
+      "const": "widgets.templates.krateo.io/v1beta1"
     },
     "Kind": {
       "type": "string",
