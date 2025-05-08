@@ -7,7 +7,8 @@
     "lint": "eslint .",
     "generate-types": "json2ts --input src/schemas/ --output src/types/",
     "watch-types": "chokidar 'src/schemas/*.schema.json' -c 'npm run generate-types'",
-    "send-schemas": "tsx scripts/send-schemas-to-smithery.ts"
+    "send-schemas": "tsx scripts/send-schemas-to-smithery.ts",
+    "apply-all": "tsx scripts/apply-k8s-yamls.ts"
   },
   "repository": {
     "type": "git",
