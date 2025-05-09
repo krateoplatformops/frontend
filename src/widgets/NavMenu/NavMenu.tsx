@@ -43,7 +43,7 @@ export function NavMenu(
   }, [items, props.resourcesRefs])
 
   useEffect(() => {
-    if (menuItems.length > 0) {
+    if (window.location.pathname === '/' && menuItems.length > 0) {
       const defaultPath = getWidgetEndpointPath(menuItems[0].key as string)
       void navigate(defaultPath)
     }
@@ -57,7 +57,6 @@ export function NavMenu(
     }
   }
 
-
   return (
     <Menu
       className={styles.menu}
@@ -65,6 +64,7 @@ export function NavMenu(
       items={menuItems}
       mode='inline'
       onClick={item => handleClick(item.key)}
+      selectedKeys={[window.location.pathname]}
     />
   )
 }
