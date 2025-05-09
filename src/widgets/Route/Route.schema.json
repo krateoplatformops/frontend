@@ -16,8 +16,16 @@
         "widgetData": {
           "type": "object",
           "properties": {
-            "resourceRefId": {
-              "type": "string"
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "resourceRefId": {
+                    "type": "string"
+                  }
+                }
+              }
             }
           },
           "additionalProperties": false

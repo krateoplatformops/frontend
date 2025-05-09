@@ -5,7 +5,9 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: panel-backend-endpoint-id
+    items:
+      - resourceRefId: panel-backend-endpoint-id
+      - resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
     - id: panel-backend-endpoint-id
@@ -13,6 +15,12 @@ spec:
       name: my-panel
       namespace: krateo-system
       resource: panels
+      verb: GET
+    - id: button-3-backend-endpoint-id
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-3
+      namespace: krateo-system
+      resource: buttons
       verb: GET
 ---
 kind: Route
@@ -22,7 +30,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: button-3-backend-endpoint-id
+    items:
+      - resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
     - id: button-3-backend-endpoint-id
@@ -39,7 +48,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: button-2-backend-endpoint-id
+    items:
+      - resourceRefId: button-2-backend-endpoint-id
 
   resourcesRefs:
     - id: button-2-backend-endpoint-id
