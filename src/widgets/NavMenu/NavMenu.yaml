@@ -5,9 +5,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    label: Dashboard
-    path: /dashboard
-    icon: fa-chart-line
     resourceRefId: panel-backend-endpoint-id
 
   resourcesRefs:
@@ -25,9 +22,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    label: Templates
-    path: /templates
-    icon: fa-rectangle-list
     resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
@@ -45,9 +39,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    label: Compositions
-    path: /compositions
-    icon: fa-shapes
     resourceRefId: button-2-backend-endpoint-id
 
   resourcesRefs:

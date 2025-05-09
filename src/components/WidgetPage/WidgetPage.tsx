@@ -12,7 +12,7 @@ export const WidgetPage = () => {
   return (
     <div className={styles.widgetPage}>
       <Sidebar />
-      <div style={{ flex: 1 }}>
+      <div className={styles.content}>
         {widgetEndpoint ? (
           <WidgetRenderer widgetEndpoint={widgetEndpoint} />
         ) : (

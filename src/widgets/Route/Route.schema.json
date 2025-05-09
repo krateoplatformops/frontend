@@ -15,17 +15,7 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["label", "path", "icon"],
           "properties": {
-            "label": {
-              "type": "string"
-            },
-            "path": {
-              "type": "string"
-            },
-            "icon": {
-              "type": "string"
-            },
             "resourceRefId": {
               "type": "string"
             }
@@ -62,7 +52,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "additionalProperties": false,
             "properties": {
               "id": {
