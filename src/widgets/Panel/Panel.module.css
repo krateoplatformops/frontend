@@ -1,0 +1,11 @@
+.panel {
+  .header {
+    border-bottom: none;
+    padding: var(--spacing-lg);
+  }
+
+  .title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-lighter);
+  }
+}

@@ -4,18 +4,19 @@ import { WidgetRenderer } from '../../components/WidgetRenderer'
 import type { WidgetItems, WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-/* TODO: generate from schema  */
-type PanelType = {
-  title: string
-  items: WidgetItems
-}
+import styles from './Panel.module.css'
 
-const Panel = ({ widgetData, resourcesRefs }: WidgetProps<PanelType>) => {
+const Panel = ({ widgetData, resourcesRefs }: WidgetProps<{title: string; items: WidgetItems}>) => {
   return (
-    <AntdCard title={widgetData.title}>
-      {widgetData.items.map((item) => {
-        return <WidgetRenderer widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />
-      })}
+    <AntdCard
+      className={styles.panel}
+      classNames={{ header: styles.header, title: styles.title }}
+      title={widgetData.title}
+      variant={'borderless'}
+    >
+      {widgetData.items.map((item) => (
+        <WidgetRenderer widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />
+      ))}
     </AntdCard>
   )
 }
