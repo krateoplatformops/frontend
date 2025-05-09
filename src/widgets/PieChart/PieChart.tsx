@@ -1,12 +1,6 @@
-import type { WidgetItems, WidgetProps } from '../../types/Widget'
+import type { WidgetItems, WidgetProps } from '../../types/Widget';
 
-/* TODO: generate from schema  */
-type PieChartType = {
-  title: string
-  items: WidgetItems
-}
-
-const PieChart = ({ widgetData, resourcesRefs }: WidgetProps<PieChartType>) => {
+const PieChart = ({ widgetData, resourcesRefs }: WidgetProps<{title: string; items: WidgetItems}>) => {
   return (
     <div>
       <h1>PieChart</h1>

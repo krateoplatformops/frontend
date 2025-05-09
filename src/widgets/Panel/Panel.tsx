@@ -1,4 +1,5 @@
-import { Card as AntdCard } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
+import { Card as AntdCard, Button, Tooltip } from 'antd'
 
 import { WidgetRenderer } from '../../components/WidgetRenderer'
 import type { WidgetItems, WidgetProps } from '../../types/Widget'
@@ -6,17 +7,40 @@ import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Panel.module.css'
 
-const Panel = ({ widgetData, resourcesRefs }: WidgetProps<{title: string; items: WidgetItems}>) => {
+const Panel = ({ widgetData, resourcesRefs }: WidgetProps<{
+  footer?: WidgetItems
+  items: WidgetItems
+  title: string
+  tooltip?: string
+}>) => {
+  const { footer, items, title, tooltip } = widgetData
+
   return (
     <AntdCard
       className={styles.panel}
       classNames={{ header: styles.header, title: styles.title }}
-      title={widgetData.title}
+      extra={tooltip && (
+        <Tooltip title={tooltip}>
+          <Button icon={<QuestionCircleOutlined />} type='text' />
+        </Tooltip>
+      )}
+      title={title}
       variant={'borderless'}
     >
-      {widgetData.items.map((item) => (
-        <WidgetRenderer widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />
-      ))}
+      <div className={styles.content}>
+        <div className={styles.body}>
+          {items.map(({ resourceRefId }) => (
+            <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+          ))}
+        </div>
+        {footer && (
+          <div className={styles.footer}>
+            {footer.map(({ resourceRefId }) => (
+              <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+            ))}
+          </div>
+        )}
+      </div>
     </AntdCard>
   )
 }

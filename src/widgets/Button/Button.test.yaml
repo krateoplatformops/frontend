@@ -4,7 +4,10 @@ metadata:
   name: button-1
   namespace: krateo-system
 spec:
+  actions: {}
   widgetData:
     label: button 1
     icon: fa-sun
     type: primary
+    clickActionId: action-1
+  resourcesRefs: []

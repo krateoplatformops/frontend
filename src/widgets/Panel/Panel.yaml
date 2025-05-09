@@ -30,6 +30,10 @@ spec:
     items:
       - resourceRefId: my-pie-chart
       - resourceRefId: my-table
+    tooltip: this is a tooltip!
+    footer:
+      - resourceRefId: button-1
+      - resourceRefId: button-1
   resourcesRefs:
     - id: my-table
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -42,4 +46,10 @@ spec:
       name: my-pie-chart
       namespace: krateo-system
       resource: piecharts
+      verb: GET
+    - id: button-1
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-1
+      namespace: krateo-system
+      resource: buttons
       verb: GET

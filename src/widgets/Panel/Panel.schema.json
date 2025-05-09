@@ -17,8 +17,16 @@
           "type": "object",
           "required": ["title", "items"],
           "properties": {
-            "title": {
-              "type": "string"
+            "footer": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "resourceRefId": {
+                    "type": "string"
+                  }
+                }
+              }
             },
             "items": {
               "type": "array",
@@ -30,6 +38,12 @@
                   }
                 }
               }
+            },
+            "title": {
+              "type": "string"
+            },
+            "tooltip": {
+              "type": "string"
             }
           },
           "additionalProperties": false
@@ -38,7 +52,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "additionalProperties": false,
             "properties": {
               "id": {
