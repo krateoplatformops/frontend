@@ -11,4 +11,11 @@
     padding: var(--spacing-lg) var(--spacing-md);
     width: 100%;
   }
+
+  & .header {
+    background-color: var(--light-color);
+    border-bottom: solid 1px var(--border-color);
+    height: 50px;
+    padding: 0;
+  }
 }

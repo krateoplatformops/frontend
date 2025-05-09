@@ -1,3 +1,4 @@
+import { Header } from 'antd/es/layout/layout'
 import { useSearchParams } from 'react-router'
 
 import Sidebar from '../Sidebar'
@@ -12,12 +13,15 @@ export const WidgetPage = () => {
   return (
     <div className={styles.widgetPage}>
       <Sidebar />
-      <div className={styles.content}>
-        {widgetEndpoint ? (
-          <WidgetRenderer widgetEndpoint={widgetEndpoint} />
-        ) : (
-          <div>No widget endpoint provided in query param widgetEndpoint</div>
-        )}
+      <div>
+        <Header className={styles.header} />
+        <div className={styles.content}>
+          {widgetEndpoint ? (
+            <WidgetRenderer widgetEndpoint={widgetEndpoint} />
+          ) : (
+            <div>No widget endpoint provided in query param widgetEndpoint</div>
+          )}
+        </div>
       </div>
     </div>
   )
