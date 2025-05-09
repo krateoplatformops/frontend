@@ -67,8 +67,11 @@ spec:
   widgetData:
     items:
       - resourceRefId: dashboard-route
-      # - resourceRefId: templates-route
-      # - resourceRefId: compositions-route
+        label: Dashboard
+        icon: fa-chart-line
+      - resourceRefId: templates-route
+        label: Templates
+        icon: fa-rectangle-list
   resourcesRefs:
     - id: dashboard-route
       apiVersion: widgets.templates.krateo.io/v1beta1
