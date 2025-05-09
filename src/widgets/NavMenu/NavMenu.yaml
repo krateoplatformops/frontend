@@ -69,13 +69,31 @@ spec:
       - resourceRefId: dashboard-route
         label: Dashboard
         icon: fa-chart-line
+        path: /dashboard
       - resourceRefId: templates-route
         label: Templates
         icon: fa-rectangle-list
+        path: /templates
+      - resourceRefId: compositions-route
+        label: Composition
+        icon: fa-shapes
+        path: /compositions
   resourcesRefs:
     - id: dashboard-route
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: dashboard-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+    - id: templates-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: templates-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+    - id: compositions-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: compositions-route
       namespace: krateo-system
       resource: routes
       verb: GET

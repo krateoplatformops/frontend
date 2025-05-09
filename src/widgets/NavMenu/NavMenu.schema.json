@@ -28,6 +28,9 @@
                   "icon": {
                     "type": "string"
                   },
+                  "path": {
+                    "type": "string"
+                  },
                   "resourceRefId": {
                     "type": "string"
                   }

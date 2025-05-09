@@ -6,6 +6,7 @@ import type { MenuItemType } from 'antd/es/menu/interface'
 import { useNavigate } from 'react-router'
 
 import type { WidgetProps } from '../../types/Widget'
+import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './NavMenu.module.css'
 
@@ -14,6 +15,7 @@ export function NavMenu(
     items: Array<{
       label: string
       icon: string
+      path: string
       resourceRefId: string
     }>
   }>,
@@ -22,11 +24,16 @@ export function NavMenu(
 
   const { items } = props.widgetData
 
-  const menuItems: MenuItemType[] = items.map(({ icon, label, resourceRefId }) => ({
-    icon: <FontAwesomeIcon icon={icon as IconProp} />,
-    key: resourceRefId,
-    label,
-  }))
+  const menuItems: MenuItemType[] = items.map(({ icon, label, path, resourceRefId }) => {
+    const backendEndpoint = getEndpointUrl(resourceRefId, props.resourcesRefs)
+    const key = `${path}?widgetEndpoint=${encodeURIComponent(backendEndpoint)}`
+
+    return ({
+      icon: <FontAwesomeIcon icon={icon as IconProp} />,
+      key,
+      label,
+    })
+  })
 
   return (
     <Menu
