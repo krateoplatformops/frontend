@@ -8,7 +8,7 @@
     flex: 1;
     height: 100%;
     overflow: scroll;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-md);
     width: 100%;
   }
 }

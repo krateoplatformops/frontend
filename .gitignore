@@ -22,6 +22,7 @@ pnpm-debug.log*
 
 # Misc
 .eslintcache
+.prettierrc
 playwright-report/
 coverage/
 

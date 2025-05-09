@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { glob } from 'glob'
 
 const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
-const SMITHERY_URL = 'http://127.0.0.1:8080/forge?apply=true'
+const SMITHERY_URL = 'http://127.0.0.1:8081/forge?apply=true'
 
 interface SchemaError extends Error {
   schemaPath?: string

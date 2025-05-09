@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
@@ -13,8 +11,11 @@ import PieChart from '../widgets/PieChart/PieChart'
 import { Route } from '../widgets/Route/Route'
 import Table from '../widgets/Table/Table'
 
-// TODO: BACKENDENDPOINTS AND WIDGETDATA SHOULD COME FROM STATUS NOT FROM SPEC!!!
 function parseData(widget: Widget, widgetEndpoint: string) {
+  if (!widget.status) {
+    return `no status for ${widget.kind} widget`
+  }
+
   switch (widget.kind) {
     case 'Status': {
       const x = new URLSearchParams(widgetEndpoint)
