@@ -1,5 +1,5 @@
 
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/logo_big.svg'
 import { getResourceEndpoint } from '../../utils/utils'
 import { WidgetRenderer } from '../WidgetRenderer'
 
