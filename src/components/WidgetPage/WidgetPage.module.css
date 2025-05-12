@@ -8,13 +8,15 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
     width: 100%;
 
     & .content {
       box-sizing: border-box;
       flex: 1;
       height: 100%;
-      overflow: scroll;
+      min-width: 0;
+      overflow: hidden scroll;
       padding: var(--spacing-lg) var(--spacing-md) var(--spacing-sm) var(--spacing-md);
       width: 100%;
     }
