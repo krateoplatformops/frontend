@@ -7,12 +7,14 @@ import styles from './Sidebar.module.css'
 const Sidebar = () => {
   return (
     <div className={styles.sidebar}>
-      <img
-        alt='Krateo DevOpsApp'
-        className={styles.logo}
-        height={40}
-        src={logo}
-      />
+      <div className={styles.logo}>
+        <img
+          alt='Krateo DevOpsApp'
+          className={styles.image}
+          height={48}
+          src={logo}
+        />
+      </div>
 
       <WidgetRenderer
         widgetEndpoint={getResourceEndpoint({
