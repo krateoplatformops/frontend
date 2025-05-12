@@ -1,0 +1,9 @@
+.badge {
+  &.hasNotifications {
+    top: 5px;
+  }
+
+  .icon {
+    font-size: 22px;
+  }
+}

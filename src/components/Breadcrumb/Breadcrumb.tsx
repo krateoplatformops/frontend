@@ -30,7 +30,11 @@ const Breadcrumb = () => {
 
       splitPath.forEach((pathElement, index) => {
         if (index === splitPath.length - 1) {
-          items.push({ title: <span className={styles.breadcrumbItem}>{pathElement}</span> })
+          items.push({ title: (
+            <span className={`${index === 0 ? styles.breadcrumbItem : ''}`}>
+              {pathElement}
+            </span>
+          ) })
         } else {
           items.push({ title: <Link to={getFullPath(index, splitPath)}>{pathElement}</Link> })
         }
