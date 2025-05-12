@@ -1,0 +1,10 @@
+.row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-sm);
+
+  .item {
+    flex: 1;
+  }
+}

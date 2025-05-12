@@ -2,9 +2,9 @@ import { WidgetRenderer } from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-import styles from './Column.module.css'
+import styles from './Row.module.css'
 
-const Column = ({
+const Row = ({
   widgetData,
   resourcesRefs,
 }: WidgetProps<{
@@ -15,10 +15,14 @@ const Column = ({
   const { items } = widgetData
 
   return (
-    <div className={styles.column}>
-      {items.map(({ resourceRefId }) => <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />)}
+    <div className={styles.row}>
+      {items.map(({ resourceRefId }) => (
+        <div className={styles.item}>
+          <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+        </div>
+      ))}
     </div>
   )
 }
 
-export default Column
+export default Row

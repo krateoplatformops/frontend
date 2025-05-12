@@ -4,6 +4,10 @@ import { useMemo, useState } from 'react'
 
 import styles from './Notifications.module.css'
 
+// TODO: handle actual notifications and events
+// understand if Redux is still needed
+// render notifications
+
 const Notifications = () => {
   const [drawerVisible, setDrawerVisible] = useState(false)
 

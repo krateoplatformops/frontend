@@ -53,3 +53,21 @@ spec:
       namespace: krateo-system
       resource: buttons
       verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-with-row-column
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Panel with Row and Column
+    items:
+      - resourceRefId: first-row
+  resourcesRefs:
+    - id: first-row
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: first-row
+      namespace: krateo-system
+      resource: rows
+      verb: GET

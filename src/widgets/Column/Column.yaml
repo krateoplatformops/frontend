@@ -1,0 +1,33 @@
+kind: Column
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: first-column
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: table-inside-row-column
+  resourcesRefs:
+    - id: table-inside-row-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: table-inside-row-column
+      namespace: krateo-system
+      resource: tables
+      verb: GET
+---
+kind: Column
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: second-column
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: pie-chart-inside-row-column
+  resourcesRefs:
+    - id: pie-chart-inside-row-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: pie-chart-inside-row-column
+      namespace: krateo-system
+      resource: piecharts
+      verb: GET

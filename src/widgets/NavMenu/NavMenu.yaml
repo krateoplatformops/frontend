@@ -6,10 +6,17 @@ metadata:
 spec:
   widgetData:
     items:
+      - resourceRefId: panel-with-row-column
       - resourceRefId: panel-backend-endpoint-id
       - resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
+    - id: panel-with-row-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: panel-with-row-column
+      namespace: krateo-system
+      resource: panels
+      verb: GET
     - id: panel-backend-endpoint-id
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-panel

@@ -10,7 +10,7 @@
     "kind": {
       "type": "string",
       "description": "name of the k8s Custom Resource",
-      "default": "Column"
+      "default": "Row"
     },
     "spec": {
       "type": "object",
@@ -21,7 +21,7 @@
           "required": ["items"],
           "properties": {
             "items": {
-              "description": "the items of the column",
+              "description": "the items of the row",
               "type": "array",
               "items": {
                 "type": "object",

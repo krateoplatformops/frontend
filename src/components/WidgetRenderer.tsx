@@ -4,11 +4,12 @@ import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
-import { Column } from '../widgets/Column/Column'
+import Column from '../widgets/Column'
 import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import PieChart from '../widgets/PieChart/PieChart'
 import { Route } from '../widgets/Route/Route'
+import Row from '../widgets/Row'
 import Table from '../widgets/Table/Table'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
@@ -42,18 +43,20 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           widgetData={widget.status.widgetData as ButtonSchema['status']['widgetData']}
         />
       )
-    case 'Panel':
-      return <Panel resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Column':
       return <Column resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
-    case 'PieChart':
-      return <PieChart resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
-    case 'Table':
-      return <Table resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'NavMenu':
       return <NavMenu resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+    case 'Panel':
+      return <Panel resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+    case 'PieChart':
+      return <PieChart resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+    case 'Row':
+      return <Row resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     case 'Route':
       return <Route resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+    case 'Table':
+      return <Table resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }

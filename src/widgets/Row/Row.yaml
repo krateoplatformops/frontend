@@ -1,0 +1,23 @@
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: first-row
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: first-column
+      - resourceRefId: second-column
+  resourcesRefs:
+    - id: first-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: first-column
+      namespace: krateo-system
+      resource: columns
+      verb: GET
+    - id: second-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: second-column
+      namespace: krateo-system
+      resource: columns
+      verb: GET
