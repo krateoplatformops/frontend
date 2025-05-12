@@ -3,19 +3,19 @@
   height: 100%;
   width: 100%;
 
-  & .content {
-    box-sizing: border-box;
-    flex: 1;
+  & .container {
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    overflow: scroll;
-    padding: var(--spacing-lg) var(--spacing-md);
     width: 100%;
-  }
 
-  & .header {
-    background-color: var(--light-color);
-    border-bottom: solid 1px var(--border-color);
-    height: 50px;
-    padding: 0;
+    & .content {
+      box-sizing: border-box;
+      flex: 1;
+      height: 100%;
+      overflow: scroll;
+      padding: var(--spacing-lg) var(--spacing-md);
+      width: 100%;
+    }
   }
 }

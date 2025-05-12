@@ -1,4 +1,3 @@
-
 import logo from '../../assets/images/logo_big.svg'
 import { getResourceEndpoint } from '../../utils/utils'
 import { WidgetRenderer } from '../WidgetRenderer'
@@ -8,7 +7,12 @@ import styles from './Sidebar.module.css'
 const Sidebar = () => {
   return (
     <div className={styles.sidebar}>
-      <img alt='Krateo DevOpsApp' className={styles.logo} src={logo} />
+      <img
+        alt='Krateo DevOpsApp'
+        className={styles.logo}
+        height={40}
+        src={logo}
+      />
 
       <WidgetRenderer
         widgetEndpoint={getResourceEndpoint({
