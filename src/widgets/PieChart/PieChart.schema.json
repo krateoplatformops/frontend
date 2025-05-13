@@ -23,26 +23,42 @@
             "description": {
               "type": "string"
             },
-            "total": {
-              "type": "integer"
-            },
-            "data": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "color": {
-                    "type": "string",
-                    "enum": ["blue", "darkBlue", "orange", "gray", "red", "green"]
-                  },
-                  "value": {
-                    "type": "integer"
-                  },
-                  "label": {
-                    "type": "string"
+            "series": {
+              "type": "object",
+              "required": ["total", "data"],
+              "properties": {
+                "total": {
+                  "type": "integer"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["color", "value", "label"],
+                    "properties": {
+                      "color": {
+                        "type": "string",
+                        "enum": [
+                          "blue",
+                          "darkBlue",
+                          "orange",
+                          "gray",
+                          "red",
+                          "green"
+                        ]
+                      },
+                      "value": {
+                        "type": "integer"
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
                   }
                 }
-              }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -74,7 +90,7 @@
           }
         }
       },
-      "required": ["widgetData", "actions"]
+      "required": ["widgetData"]
     }
   },
   "required": ["kind", "spec", "version"]

@@ -5,19 +5,20 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    title: My Pie chart
+    title: Pie chart
     description: This is a description
-    total: 100
-    data:
-      - color: blue
-        value: 10
-        label: Blue
-      - color: darkBlue
-        value: 20
-        label: Dark Blue
-      - color: orange
-        value: 30
-        label: Orange
+    series:
+      total: 100
+      data:
+        - color: blue
+          value: 10
+          label: Blue
+        - color: darkBlue
+          value: 20
+          label: Dark Blue
+        - color: orange
+          value: 30
+          label: Orange
 ---
 kind: PieChart
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -26,16 +27,17 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    title: Pie chart inside row column
-    description: This is a description
-    total: 100
-    data:
-      - color: blue
-        value: 10
-        label: Blue
-      - color: darkBlue
-        value: 20
-        label: Dark Blue
-      - color: orange
-        value: 30
-        label: Orange
+    title: '3'
+    description: 'Templates'
+    series:
+      data:
+        - color: blue
+          value: 10
+          label: Blue
+        - color: darkBlue
+          value: 20
+          label: Dark Blue
+        - color: orange
+          value: 30
+          label: Orange
+      total: 60

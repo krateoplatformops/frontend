@@ -1,116 +1,97 @@
+
 import { Result } from 'antd'
 import ReactECharts from 'echarts-for-react'
 
-import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 
-type DataItem = {
-  value: number
-  label: string
-  color: string
+type DataPoint = {
+  color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+  value?: number
+  label?: string
 }
 
-type Serie = {
-  data: DataItem[]
-  total: number
+type Series = {
+  total?: number
+  data?: DataPoint[]
 }
 
-const PieChart = ({
-  widgetData,
-}: WidgetProps<{
-  description: string
-  series: Serie[] | string
-  title: string
-}>) => {
-  const { description, series, title } = widgetData
-  let parsedSeries: Serie[] = []
+type PieChartProps = {
+  widgetData: {
+    title: string
+    description: string
+    series: Series
+  }
+}
 
-  if (!series) {
-    return <Result status='warning' subTitle='No chart data provided' />
+const PieChart = ({ widgetData }: PieChartProps) => {
+  const { title, description, series } = widgetData
+
+  if (!series?.data || !Array.isArray(series.data)) {
+    return <Result status='warning' subTitle='No chart data available' />
   }
 
-  try {
-    parsedSeries = typeof series === 'string' ? (JSON.parse(series) as Serie[]) : series
+  const total = series.total ?? series.data.reduce((sum, item) => sum + (item.value || 0), 0)
+  const filledValue = series.data.reduce((sum, item) => sum + (item.value || 0), 0)
+  const emptyValue = Math.max(total - filledValue, 0)
 
-    if (!Array.isArray(parsedSeries)) {
-      parsedSeries = [parsedSeries]
-    }
-  } catch (error: unknown) {
-    return <Result status='warning' subTitle={`Unable to parse chart data: ${error as string}`} />
-  }
+  const chartData = [
+    ...series.data.map((item) => ({
+      itemStyle: { color: getColorCode(item.color || 'gray') },
+      name: item.label ?? '',
+      value: item.value ?? 0,
+    })),
+    {
+      emphasis: { disabled: true },
+      itemStyle: { color: '#E1E3E8' },
+      label: { show: false },
+      name: '',
+      tooltip: { show: false },
+      value: emptyValue,
+    },
+  ]
 
-  const ringWidth = 15 - 2 * (parsedSeries.length - 1)
-
-  const optionPie = {
-    series: parsedSeries.map((serie, index) => {
-      const filledSum = serie.data.reduce((sum, data) => sum + data.value, 0)
-      const remaining = serie.total - filledSum
-
-      return {
+  const options = {
+    series: [
+      {
         avoidLabelOverlap: false,
-        data: [
-          ...serie.data.map(el => ({
-            itemStyle: { color: getColorCode(el.color) },
-            name: el.label,
-            value: el.value,
-          })),
-          {
-            emphasis: { disabled: true },
-            itemStyle: {
-              color: '#E1E3E8',
-            },
-            name: '',
-            tooltip: { show: false },
-            value: remaining,
-          },
-        ],
+        data: chartData,
         itemStyle: {
           borderColor: '#fff',
-          borderRadius: 5,
+          borderRadius: 6,
           borderWidth: 2,
         },
         label: {
-          formatter: `{b|${title}}\n{c|${description}}`,
-          position: 'center',
-          rich: {
-            b: {
-              align: 'center',
-              fontSize: 20,
-              fontWeight: 'bold',
-              lineHeight: 30,
-            },
-            c: {
-              align: 'center',
-              color: '#999',
-              fontSize: 16,
-            },
-          },
-          show: index === 0,
+          show: false,
         },
-        labelLine: { show: false },
-        radius: [`${100 - ringWidth * (index + 1)}%`, `${100 - ringWidth * index}%`],
+        labelLine: {
+          show: false,
+        },
+        radius: ['65%', '85%'],
         type: 'pie',
-      }
-    }),
+      },
+    ],
     title: {
-      left: 'center',
+      left: '50%',
       subtext: description,
       subtextStyle: {
-        align: 'center',
         fontSize: 18,
       },
+      subtextVerticalAlign: 'auto',
       text: title,
+      textAlign: 'center',
       textStyle: {
-        align: 'center',
-        fontSize: 44 - 2 * parsedSeries.length,
+        fontSize: 44 - (2 * (series.data.length || 0)),
         fontWeight: 400,
       },
-      top: 'center',
+      textVerticalAlign: 'auto',
+      top: '35%',
     },
-    tooltip: {},
+    tooltip: {
+      trigger: 'item',
+    },
   }
 
-  return <ReactECharts option={optionPie} />
+  return <ReactECharts option={options} />
 }
 
 export default PieChart
