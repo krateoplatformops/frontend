@@ -6,11 +6,11 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: table-inside-row-column
+      - resourceRefId: table-of-namespaces
   resourcesRefs:
-    - id: table-inside-row-column
+    - id: table-of-namespaces
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-inside-row-column
+      name: table-of-namespaces
       namespace: krateo-system
       resource: tables
       verb: GET

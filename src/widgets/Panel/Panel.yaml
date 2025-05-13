@@ -41,7 +41,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    title: Panel with Row and Column
+    title: This is a title
     items:
       - resourceRefId: first-row
   resourcesRefs:

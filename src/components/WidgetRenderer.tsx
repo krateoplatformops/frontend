@@ -28,7 +28,9 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           <div>version: {x.get('apiVersion')}</div>
           {/* <div>resource: {x.get('resource')}</div> */}
           <div>
-            <pre style={{ whiteSpace: 'wrap' }}>{JSON.stringify(widget, null, 2)}</pre>
+            <pre style={{ whiteSpace: 'wrap' }}>
+              {JSON.stringify(widget, null, 2)}
+            </pre>
             <pre style={{ whiteSpace: 'wrap' }}>endpoint:{widgetEndpoint}</pre>
           </div>
         </div>
@@ -40,29 +42,72 @@ function parseData(widget: Widget, widgetEndpoint: string) {
         <Button
           actions={widget.spec.actions}
           resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData as ButtonSchema['status']['widgetData']}
+          widgetData={
+            widget.status.widgetData as ButtonSchema['status']['widgetData']
+          }
         />
       )
     case 'Column':
-      return <Column resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Column
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'NavMenu':
-      return <NavMenu resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <NavMenu
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Panel':
-      return <Panel resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Panel
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'PieChart':
-      return <PieChart resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <PieChart
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Row':
-      return <Row resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Row
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Route':
-      return <Route resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Route
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Table':
-      return <Table resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Table
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }
 }
 
-export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
+export function WidgetRenderer({
+  widgetEndpoint,
+  extra,
+}: {
+  widgetEndpoint: string
+  extra?: string
+}) {
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(
       `WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`,
@@ -71,6 +116,12 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
 
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
+
+  const queryKey = ['widgets', widgetFullUrl]
+
+  if (extra) {
+    queryKey.push(extra)
+  }
 
   const {
     data: widget,
@@ -88,7 +139,7 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
       const widget = (await res.json()) as Widget
       return widget
     },
-    queryKey: ['widgets', widgetFullUrl],
+    queryKey,
   })
 
   if (isLoading) {

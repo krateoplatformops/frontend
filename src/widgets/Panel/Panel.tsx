@@ -7,7 +7,10 @@ import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Panel.module.css'
 
-const Panel = ({ widgetData, resourcesRefs }: WidgetProps<{
+const Panel = ({
+  widgetData,
+  resourcesRefs,
+}: WidgetProps<{
   footer?: WidgetItems
   items: WidgetItems
   title: string
@@ -19,24 +22,31 @@ const Panel = ({ widgetData, resourcesRefs }: WidgetProps<{
     <AntdCard
       className={styles.panel}
       classNames={{ header: styles.header, title: styles.title }}
-      extra={tooltip && (
-        <Tooltip title={tooltip}>
-          <Button icon={<QuestionCircleOutlined />} type='text' />
-        </Tooltip>
-      )}
+      extra={
+        tooltip && (
+          <Tooltip title={tooltip}>
+            <Button icon={<QuestionCircleOutlined />} type="text" />
+          </Tooltip>
+        )
+      }
       title={title}
       variant={'borderless'}
     >
       <div className={styles.content}>
         <div className={styles.body}>
           {items.map(({ resourceRefId }) => (
-            <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+            <WidgetRenderer
+              widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)}
+            />
           ))}
         </div>
         {footer && (
           <div className={styles.footer}>
             {footer.map(({ resourceRefId }) => (
-              <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+              <WidgetRenderer
+                extra={Date.now() + Math.random()}
+                widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)}
+              />
             ))}
           </div>
         )}

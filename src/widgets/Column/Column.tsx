@@ -16,7 +16,12 @@ const Column = ({
 
   return (
     <div className={styles.column}>
-      {items.map(({ resourceRefId }) => <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />)}
+      {items.map(({ resourceRefId }) => (
+        <WidgetRenderer
+          extra={Date.now()}
+          widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)}
+        />
+      ))}
     </div>
   )
 }

@@ -18,7 +18,10 @@ const Row = ({
     <div className={styles.row}>
       {items.map(({ resourceRefId }) => (
         <div className={styles.item}>
-          <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+          <WidgetRenderer
+            extra={Date.now() + Math.random()}
+            widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)}
+          />
         </div>
       ))}
     </div>

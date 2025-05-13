@@ -10,6 +10,8 @@ export const WidgetPage = () => {
   const [searchParams] = useSearchParams()
   const widgetEndpoint = searchParams.get('widgetEndpoint')
 
+  console.log('[WidgetPage] widgetEndpoint', widgetEndpoint)
+
   return (
     <div className={styles.widgetPage}>
       <Sidebar />
