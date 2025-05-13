@@ -6,38 +6,51 @@ To get started running the frontend locally, follow the steps below.
 
 ---
 
-### Step 1: Run the following commands
+### Step 1: Create a cluster (kind) with an instance of Krateo installed
 
 ```bash
 curl -L https://github.com/krateoplatformops/krateo-v2-docs/releases/latest/download/kind.sh | sh
 kubectl wait krateoplatformops krateo --for condition=Ready=True --namespace krateo-system --timeout=300s
 ```
 
-## Update snowplow version
+### Step 2: start the application and authenticate
 
-`helm upgrade snowplow krateo/snowplow -n krateo-system --set image.tag=x.x.x`
-
-## Update smithery version
-
-`helm upgrade smithery krateo/smithery -n krateo-system --set image.tag=x.x.x`
-
-## Create a CRD inside smithery with a command similar to this one
-
-```
-curl -v --request POST \
-  -H 'Content-Type: application/json' \
-  -d @src/widgets/NavMenu/NavMenu.schema.json \
-  "http://127.0.0.1:8081/forge?apply=true"
-```
-
-## Create a custom resource wherever you want then execute the following command to apply it
+Execute the following command to get a password:
 
 ```bash
-kubectl apply -f yourpath/yourfile.yml
+kubectl get secret admin-password  -n krateo-system -o jsonpath="{.data.password}" | base64 -d
 ```
 
-## Step 4: Fetch the resource inside your application using the following URL
+Start the application on `localhost:30080` and login with the user `admin` and the password retrieved.
 
+### Step 3: open a terminal and install / update the latest version of Snowplow
+
+```bash
+helm install snowplow krateo/snowplow -n krateo-system --set image.tag=x.x.x
 ```
-http://localhost:30080/call?resource=buttons&apiVersion=widgets.templates.krateo.io/v1beta1&name
+
+After executing the command follow the instructions to set a local port for Snowplow.
+
+### Step 4: open a terminal and install / update the latest version of Smithery
+
+```bash
+helm install smithery krateo/smithery -n krateo-system --set livenessProbe=null --set readinessProbe=null --set image.tag=x.x.x
+```
+
+After executing the command follow the instructions to set a local port for Smithery.
+
+### Step 5: send JSON schemas to Smithery
+
+Run the following command to execute a script that sends all files with `.schema.json` extension on the repository to Smithery, validates them and creates the related CRDs.
+
+```bash
+npm run send-schemas
+```
+
+### Step 6: create custom resources
+
+Run the following command to execute a script that creates all the custom resources defined by all files with `.yaml` extension on the repository.
+
+```bash
+npm run apply-all
 ```
