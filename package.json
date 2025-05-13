@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint .",
+    "build": "vite build",
+    "preview": "vite preview",
     "lint:css": "stylelint \"src/**/*.module.css\" --fix",
     "generate-types": "json2ts --input src/schemas/ --output src/types/",
     "watch-types": "chokidar 'src/schemas/*.schema.json' -c 'npm run generate-types'",
