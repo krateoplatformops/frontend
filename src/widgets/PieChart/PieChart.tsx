@@ -71,7 +71,7 @@ const PieChart = ({ widgetData }: PieChartProps) => {
       },
     ],
     title: {
-      left: '50%',
+      left: '49.5%',
       subtext: description,
       subtextStyle: {
         fontSize: 18,
