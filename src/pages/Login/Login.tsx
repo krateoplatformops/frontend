@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router'
 
 import logo from '../../assets/images/logo_big.svg'
 import { useConfigContext } from '../../context/ConfigContext'
+import type { Error } from '../../hooks/useCatchError'
+import useCatchError from '../../hooks/useCatchError'
 
 import styles from './Login.module.css'
 import LoginForm from './LoginForm'
@@ -12,7 +14,9 @@ import type { AuthModeType, FormType, LoginFormType } from './types'
 
 const Login = () => {
   const navigate = useNavigate()
+  const { catchError } = useCatchError()
   const { config } = useConfigContext()
+
   const authUrl = `${config!.api.AUTHN_API_BASE_URL}/strategies`
 
   const {
@@ -31,7 +35,6 @@ const Login = () => {
   const {
     isPending: isLoginLoading,
     mutateAsync: login,
-    // error,
   } = useMutation({
     mutationFn: async (credentials: { username: string; password: string; path: string }) => {
       const authUrl = `${config!.api.AUTHN_API_BASE_URL}${credentials.path}`
@@ -52,15 +55,13 @@ const Login = () => {
     const method = methods?.find(({ kind }) => kind === type)
 
     if (username && password && method?.path) {
-      try {
-        await login({ password, path: method.path, username })
-          .then(() => navigate('/'))
-      } catch (error) {
-        // TODO: handle error
-        console.error('Login failed:', error)
-      }
+      await login({ password, path: method.path, username })
+        .then(() => navigate('/'))
+        .catch((error) => catchError(error as Error, 'notification'))
+    } else {
+      catchError({ data: { message: 'Wrong username or password, try again with different credentials' }, status: 403 })
     }
-  }, [login, methods, navigate])
+  }, [catchError, login, methods, navigate])
 
   const content = useMemo(() => {
     if (isMethodLoading) {
