@@ -67,7 +67,7 @@ export type WidgetActions = {
   }[]
 }
 
-export type WidgetProps<T> = {
+export type WidgetProps<T = unknown> = {
   widgetData: T
   actions: Widget['status']['actions']
   resourcesRefs: Widget['status']['resourcesRefs']

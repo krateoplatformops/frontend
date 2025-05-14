@@ -5,6 +5,7 @@ import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
 import Column from '../widgets/Column'
+import Form from '../widgets/Form/Form'
 import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import PieChart from '../widgets/PieChart/PieChart'
@@ -28,7 +29,9 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           <div>version: {x.get('apiVersion')}</div>
           {/* <div>resource: {x.get('resource')}</div> */}
           <div>
-            <pre style={{ whiteSpace: 'wrap' }}>{JSON.stringify(widget, null, 2)}</pre>
+            <pre style={{ whiteSpace: 'wrap' }}>
+              {JSON.stringify(widget, null, 2)}
+            </pre>
             <pre style={{ whiteSpace: 'wrap' }}>endpoint:{widgetEndpoint}</pre>
           </div>
         </div>
@@ -40,23 +43,62 @@ function parseData(widget: Widget, widgetEndpoint: string) {
         <Button
           actions={widget.spec.actions}
           resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData as ButtonSchema['status']['widgetData']}
+          widgetData={
+            widget.status.widgetData as ButtonSchema['status']['widgetData']
+          }
         />
       )
     case 'Column':
-      return <Column resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Column
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'NavMenu':
-      return <NavMenu resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <NavMenu
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Panel':
-      return <Panel resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Panel
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'PieChart':
-      return <PieChart resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <PieChart
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Row':
-      return <Row resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Row
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Route':
-      return <Route resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Route
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Table':
-      return <Table resourcesRefs={widget.status.resourcesRefs} widgetData={widget.status.widgetData} />
+      return (
+        <Table
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'Form':
+      return <Form widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }

@@ -10,7 +10,7 @@
     "kind": {
       "type": "string",
       "description": "name of the k8s Custom Resource",
-      "default": "Button"
+      "default": "Form"
     },
     "spec": {
       "type": "object",
@@ -18,87 +18,37 @@
         "widgetData": {
           "description": "the data that will be passed to the widget on the frontend",
           "type": "object",
+          "required": ["schema"],
           "properties": {
-            "color": {
-              "description": "the color of the button",
-              "type": "string",
-              "enum": [
-                "default",
-                "primary",
-                "danger",
-                "blue",
-                "purple",
-                "cyan",
-                "green",
-                "magenta",
-                "pink",
-                "red",
-                "orange",
-                "yellow",
-                "volcano",
-                "geekblue",
-                "lime",
-                "gold"
-              ]
-            },
-            "label": {
-              "description": "the label of the button",
+            "schema": {
+              "description": "the schema of the form",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
               "type": "string"
             },
-            "icon": {
-              "description": "the icon of the button (font awesome icon name eg: 'fa-inbox')",
-              "type": "string"
-            },
-            "size": {
-              "description": "the size of the button",
-              "type": "string",
-              "enum": ["small", "middle", "large"]
-            },
-            "type": {
-              "description": "the visual style of the button",
-              "type": "string",
-              "enum": ["default", "text", "link", "primary", "dashed"]
-            },
-            "clickActionId": {
-              "description": "the id of the action to be executed when the button is clicked",
+            "namespace": {
               "type": "string"
             }
           },
-          "required": ["label", "clickActionId"],
-          "additionalProperties": false
+          "required": ["name", "namespace"]
         },
-        "resourcesRefs": {
+        "widgetDataTemplate": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
-            "additionalProperties": false,
             "properties": {
-              "id": {
+              "forPath": {
                 "type": "string"
               },
-              "apiVersion": {
+              "expression": {
                 "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "namespace": {
-                "type": "string"
-              },
-              "resource": {
-                "type": "string"
-              },
-              "verb": {
-                "type": "string",
-                "enum": ["GET", "POST", "DELETE"]
               }
             }
           }
@@ -191,7 +141,7 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "resourceRefId"]
+                "required": ["id", "type", "name", "contentWidgetRef"]
               }
             },
             "openModal": {
@@ -210,7 +160,7 @@
                   "name": {
                     "type": "string"
                   },
-                  "resourceRefId": {
+                  "contentWidgetRef": {
                     "type": "string"
                   },
                   "requireConfirmation": {
@@ -221,40 +171,14 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "resourceRefId"]
+                "required": ["id", "type", "name", "contentWidgetRef"]
               }
             }
           },
           "additionalProperties": false
-        },
-        "apiRef": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "namespace": {
-              "type": "string"
-            }
-          },
-          "required": ["name", "namespace"]
-        },
-        "widgetDataTemplate": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "forPath": {
-                "type": "string"
-              },
-              "expression": {
-                "type": "string"
-              }
-            }
-          }
         }
       },
-      "required": ["widgetData", "resourcesRefs", "actions"]
+      "required": ["widgetData", "actions"]
     }
   },
   "required": ["kind", "spec", "version"]

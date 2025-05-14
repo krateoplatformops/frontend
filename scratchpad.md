@@ -5,3 +5,6 @@ export NODE_PORT=$(kubectl get --namespace krateo-system -o jsonpath="{.spec.por
 
 http://192.168.148.3:31448
 ```
+
+## Form 
+https://github.com/krateoplatformops/krateo-v2-template-nginx
