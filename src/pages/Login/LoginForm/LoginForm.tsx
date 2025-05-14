@@ -1,9 +1,9 @@
 import { Button, Form, Input } from 'antd'
 import { Link } from 'react-router'
 
+import type { AuthModeType, LoginFormType } from '../types'
 
 import styles from './LoginForm.module.css'
-import type { AuthModeType, LoginFormType } from './types'
 
 type LoginType = {
   method: AuthModeType
@@ -13,7 +13,7 @@ type LoginType = {
 
 const LoginForm = ({ method, onSubmit, isLoading }: LoginType) => {
   return (
-    <section className={styles.loginForm}>
+    <section className={styles.form}>
       <Form
         autoComplete='off'
         disabled={isLoading}
@@ -38,25 +38,32 @@ const LoginForm = ({ method, onSubmit, isLoading }: LoginType) => {
           <Input.Password size='large' />
         </Form.Item>
 
-        { method.kind === 'basic'
-          && <div className={styles.linkPassword}>
+        { method.kind === 'basic' && (
+          <div className={styles.link}>
             <Link to='/forgotpassword'>Forgot password?</Link>
           </div>
-        }
+        )}
 
         <Form.Item>
           { method.kind === 'basic'
-            ? <Button className={styles.loginButton} htmlType='submit' size='large' type='primary'>
-              Sign In
-            </Button>
-            : <Button
-              className={styles.loginButton}
-              htmlType='submit'
-              size='large'
-              style={method.graphics?.backgroundColor && method.graphics?.textColor ? { backgroundColor: method.graphics.backgroundColor, color: method.graphics.textColor } : undefined}
-            >
-              {method.graphics?.displayName || 'LDAP Sign In'}
-            </Button>
+            ? (
+              <Button className={styles.button} htmlType='submit' size='large' type='primary'>
+                Sign In
+              </Button>
+            ) : (
+              <Button
+                className={styles.button}
+                htmlType='submit'
+                size='large'
+                style={
+                  method.graphics?.backgroundColor && method.graphics?.textColor
+                    ? { backgroundColor: method.graphics.backgroundColor, color: method.graphics.textColor }
+                    : undefined
+                }
+              >
+                {method.graphics?.displayName || 'LDAP Sign In'}
+              </Button>
+            )
           }
         </Form.Item>
       </Form>
