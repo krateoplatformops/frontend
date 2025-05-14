@@ -1,0 +1,26 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-with-drawer
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: I open a drawer
+    icon: fa-rocket
+    size: large
+    type: primary
+    clickActionId: my-click-action
+  actions:
+    openDrawer:
+      - id: my-click-action
+        resourceRefId: my-backend-endpoint
+        type: openDrawer
+  resourcesRefs:
+    - id: my-backend-endpoint
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      resource: panels
+      name: nginx-form-panel
+      namespace: krateo-system
+      verb: GET
+
+

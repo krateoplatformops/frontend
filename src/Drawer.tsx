@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react'
 import { WidgetRenderer } from './components/WidgetRenderer'
 
 export function openDrawer(widgetEndpoint: string) {
-  window.dispatchEvent(new CustomEvent('openDrawer', { detail: widgetEndpoint }))
+  window.dispatchEvent(
+    new CustomEvent('openDrawer', { detail: widgetEndpoint }),
+  )
+}
+
+export function closeDrawer() {
+  window.dispatchEvent(new CustomEvent('closeDrawer'))
 }
 
 export function Drawer() {
@@ -12,10 +18,21 @@ export function Drawer() {
   const [widgetEndpoint, setWidgetEndpoint] = useState<string | null>(null)
 
   useEffect(() => {
-    window.addEventListener('openDrawer', (event) => {
+    const handleOpenDrawer = (event) => {
       setWidgetEndpoint(event.detail)
       setIsOpen(true)
-    })
+    }
+    const handleCloseDrawer = () => {
+      setIsOpen(false)
+    }
+
+    window.addEventListener('openDrawer', handleOpenDrawer)
+    window.addEventListener('closeDrawer', handleCloseDrawer)
+
+    return () => {
+      window.removeEventListener('openDrawer', handleOpenDrawer)
+      window.removeEventListener('closeDrawer', handleCloseDrawer)
+    }
   }, [])
 
   if (!widgetEndpoint) {
@@ -23,7 +40,7 @@ export function Drawer() {
   }
 
   return (
-    <AntdDrawer open={isOpen}>
+    <AntdDrawer onClose={() => setIsOpen(false)} open={isOpen}>
       <WidgetRenderer widgetEndpoint={widgetEndpoint} />
     </AntdDrawer>
   )

@@ -33,7 +33,11 @@ const createNginxPodEndpoint = (
   return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
 }
 
-const Button = ({ widgetData, actions, resourcesRefs }: WidgetProps<ButtonSchema['status']['widgetData']>) => {
+const Button = ({
+  widgetData,
+  actions,
+  resourcesRefs,
+}: WidgetProps<ButtonSchema['status']['widgetData']>) => {
   const { color, clickActionId, label, icon, size, type } = widgetData
 
   const navigate = useNavigate()
@@ -51,7 +55,10 @@ const Button = ({ widgetData, actions, resourcesRefs }: WidgetProps<ButtonSchema
         case 'navigate': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(resourceRefId, resourcesRefs as unknown as BackendEndpointFromSpec[])
+              const url = getEndpointUrl(
+                resourceRefId,
+                resourcesRefs as unknown as BackendEndpointFromSpec[],
+              )
               await navigate(url)
             }
           }
