@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router'
 
 import Page from '../components/Page'
 import WidgetPage from '../components/WidgetPage'
+import Login from '../pages/Login'
 import Page404 from '../pages/Page404'
 
 interface RoutesContextType {
@@ -16,6 +17,7 @@ const RoutesContext = createContext<RoutesContextType | undefined>(undefined)
 export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const defaultRoutes: RouteObject[] = useMemo(
     () => [
+      { element: <Login />, path: '/login' },
       { element: <Page />, path: '/' },
       { element: <WidgetPage />, path: '*' },
       { element: <Page404 />, path: '/404' },
