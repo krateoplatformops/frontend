@@ -1,4 +1,4 @@
-import { Form as AntdForm, Input } from 'antd'
+import { Form as AntdForm, Button, Input } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
 
@@ -9,6 +9,7 @@ function Form({ widgetData, actions }: WidgetProps) {
         <AntdForm.Item name="name">
           <Input />
         </AntdForm.Item>
+        <Button onClick={() => alert('send')}>Send</Button>
       </AntdForm>
 
       <pre>{JSON.stringify(widgetData, null, 2)}</pre>

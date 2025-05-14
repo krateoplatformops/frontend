@@ -18,11 +18,15 @@
         "widgetData": {
           "description": "the data that will be passed to the widget on the frontend",
           "type": "object",
-          "required": ["schema"],
+          "required": ["schema", "submitActionId"],
           "properties": {
             "schema": {
               "description": "the schema of the form",
               "type": "object"
+            },
+            "submitActionId": {
+              "description": "the id of the action to be called when the form is submitted",
+              "type": "string"
             }
           },
           "additionalProperties": false
