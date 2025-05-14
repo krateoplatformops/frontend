@@ -2,14 +2,19 @@
   --background-color: #f5f5f5;
   --border-color: #fff;
   --light-color: #fff;
+  --gray-color: #a0a0a0;
   --menuitem-bg: rgb(17 178 226 / 40%);
   --menuitem-color: rgb(255 255 255 / 50%);
   --menu-bg-start: #005d8b;
   --menu-bg-end: #002f46;
+  --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
+  --font-size-md: 18px;
   --font-size-lg: 30px;
   --font-weight-lighter: 300;
+  --font-weight-light: 400;
+  --font-weight-bold: 600
 }
