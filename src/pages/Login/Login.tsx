@@ -32,7 +32,6 @@ const Login = () => {
     queryKey: ['methods', authUrl],
   })
 
-  // TODO: handle error
   const {
     isPending: isLoginLoading,
     mutateAsync: login,
@@ -47,7 +46,11 @@ const Login = () => {
         method: 'GET',
       })
 
-      return await res.json() as AuthModeType[]
+      const data = await res.json() as AuthModeType[]
+
+      localStorage.setItem('K_user', JSON.stringify(data))
+
+      return data
     },
   })
 
