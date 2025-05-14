@@ -10,6 +10,7 @@ import useCatchError from '../../hooks/useCatchError'
 
 import styles from './Login.module.css'
 import LoginForm from './LoginForm'
+import SocialLogin from './SocialLogin'
 import type { AuthModeType, FormType, LoginFormType } from './types'
 
 const Login = () => {
@@ -99,8 +100,7 @@ const Login = () => {
           )
         }
 
-        // TODO: add social login
-        return <></>
+        return <SocialLogin key={`login_${index}`} method={method} />
       })
     }
   }, [isMethodLoading, isMethodsError, methods, isLoginLoading, onFormSubmit])
