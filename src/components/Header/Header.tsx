@@ -2,6 +2,7 @@ import { Header as AntHeader } from 'antd/es/layout/layout'
 
 import Breadcrumb from '../Breadcrumb'
 import Notifications from '../Notifications'
+import UserMenu from '../UserMenu'
 
 import styles from './Header.module.css'
 
@@ -12,6 +13,7 @@ const Header = () => {
         <Breadcrumb />
         <div className={styles.right}>
           <Notifications />
+          <UserMenu />
         </div>
       </div>
     </AntHeader>

@@ -6,8 +6,8 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: first-column
       - resourceRefId: second-column
+      - resourceRefId: first-column
   resourcesRefs:
     - id: first-column
       apiVersion: widgets.templates.krateo.io/v1beta1

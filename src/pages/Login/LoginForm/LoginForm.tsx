@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd'
 import { Link } from 'react-router'
 
-import type { AuthModeType, LoginFormType } from '../types'
+import type { AuthModeType, LoginFormType } from '../Login.types'
 
 import styles from './LoginForm.module.css'
 

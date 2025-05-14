@@ -11,7 +11,7 @@ import useCatchError from '../../hooks/useCatchError'
 import styles from './Login.module.css'
 import LoginForm from './LoginForm'
 import SocialLogin from './SocialLogin'
-import type { AuthModeType, FormType, LoginFormType } from './types'
+import type { AuthModeType, FormType, LoginFormType } from './Login.types'
 
 const Login = () => {
   const navigate = useNavigate()

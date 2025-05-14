@@ -2,7 +2,7 @@ import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button } from 'antd'
 
-import type { AuthModeType } from '../types'
+import type { AuthModeType } from '../Login.types'
 
 import styles from './SocialLogin.module.css'
 
