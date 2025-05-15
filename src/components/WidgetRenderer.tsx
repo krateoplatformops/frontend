@@ -9,7 +9,6 @@ import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import Paragraph from '../widgets/Paragraph'
 import PieChart from '../widgets/PieChart/PieChart'
-import RichRow from '../widgets/RichRow'
 import { Route } from '../widgets/Route/Route'
 import Row from '../widgets/Row'
 import Table from '../widgets/Table/Table'
@@ -81,12 +80,6 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return (
         <PieChart
           resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'RichRow':
-      return (
-        <RichRow
           widgetData={widget.status.widgetData}
         />
       )

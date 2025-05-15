@@ -2,21 +2,27 @@ import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Avatar, Flex, Space, Typography } from 'antd'
 
-import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 
 import styles from './RichRow.module.css'
 
-const RichRow = ({ widgetData }: WidgetProps<{
+interface RichRowProps {
   color: string
   icon: string
   primaryText: string
   secondaryText: string
   subPrimaryText: string
   subSecondaryText: string
-}>) => {
-  const { color, icon, primaryText, secondaryText, subPrimaryText, subSecondaryText } = widgetData
+}
 
+const RichRow = ({
+  color,
+  icon,
+  primaryText,
+  secondaryText,
+  subPrimaryText,
+  subSecondaryText,
+}: RichRowProps) => {
   return (
     <Flex className={styles.richRow} gap={10} justify='space-between'>
       <Space align='start' className={styles.primary} size='large'>

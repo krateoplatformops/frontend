@@ -46,7 +46,6 @@ spec:
     items:
       - resourceRefId: panel-paragraph
       - resourceRefId: panel-yaml-viewer
-      - resourceRefId: panel-rich-row
       - resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
@@ -65,12 +64,6 @@ spec:
     - id: panel-yaml-viewer
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: panel-yaml-viewer
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-rich-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-rich-row
       namespace: krateo-system
       resource: panels
       verb: GET

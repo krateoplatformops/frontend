@@ -87,21 +87,3 @@ spec:
       namespace: krateo-system
       resource: yamlviewers
       verb: GET
----
-kind: Panel
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: panel-rich-row
-  namespace: krateo-system
-spec:
-  widgetData:
-    title: Rich Row
-    items:
-      - resourceRefId: my-rich-row
-  resourcesRefs:
-    - id: my-rich-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-rich-row
-      namespace: krateo-system
-      resource: richrows
-      verb: GET
