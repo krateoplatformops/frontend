@@ -5,4 +5,4 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    text: 'ciao'
+    text: "This is a paragraph"

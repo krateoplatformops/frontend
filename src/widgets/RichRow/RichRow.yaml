@@ -1,0 +1,13 @@
+kind: RichRow
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: my-rich-row
+  namespace: krateo-system
+spec:
+  widgetData:
+    color: blue
+    icon: fa-rocket
+    primaryText: primaryText
+    secondaryText: secondaryText
+    subPrimaryText: subPrimaryText
+    subSecondaryText: subSecondaryText

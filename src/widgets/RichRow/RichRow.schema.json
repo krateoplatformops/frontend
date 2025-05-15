@@ -1,0 +1,79 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "default": "RichRow"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "type": "object",
+          "required": [
+            "color",
+            "icon",
+            "primaryText",
+            "secondaryText",
+            "subPrimaryText",
+            "subSecondaryText"
+          ],
+          "properties": {
+            "color": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "primaryText": {
+              "type": "string"
+            },
+            "secondaryText": {
+              "type": "string"
+            },
+            "subPrimaryText": {
+              "type": "string"
+            },
+            "subSecondaryText": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"]
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": ["widgetData"]
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}
