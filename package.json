@@ -25,10 +25,12 @@
     "@stylistic/eslint-plugin-js": "^3.0.1",
     "@stylistic/eslint-plugin-ts": "^3.0.1",
     "@tanstack/eslint-plugin-query": "^5.74.7",
+    "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.17.16",
     "@types/node": "^22.15.16",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
     "chokidar-cli": "^3.0.0",
@@ -71,10 +73,14 @@
     "eslint-plugin-sort-keys": "^2.3.5",
     "eslint-plugin-sort-keys-fix": "^1.1.2",
     "glob": "^11.0.2",
+    "js-yaml": "^4.1.0",
+    "js-yaml-js-types": "^1.0.1",
     "lodash": "^4.17.21",
     "react": "^19.1.0",
+    "react-copy-to-clipboard-ts": "^1.1.0",
     "react-redux": "^9.2.0",
     "react-router": "^7.5.3",
+    "react-syntax-highlighter": "^15.6.1",
     "vite-plugin-svgr": "^4.3.0"
   }
 }

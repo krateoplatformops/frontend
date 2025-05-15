@@ -45,6 +45,7 @@ spec:
   widgetData:
     items:
       - resourceRefId: my-paragraph
+      - resourceRefId: my-yaml-viewer
       - resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
@@ -59,6 +60,12 @@ spec:
       name: my-paragraph
       namespace: krateo-system
       resource: paragraphs
+      verb: GET
+    - id: my-yaml-viewer
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-yaml-viewer
+      namespace: krateo-system
+      resource: yamlviewers
       verb: GET
 ---
 kind: Route

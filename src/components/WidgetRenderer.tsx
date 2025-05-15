@@ -12,6 +12,7 @@ import PieChart from '../widgets/PieChart/PieChart'
 import { Route } from '../widgets/Route/Route'
 import Row from '../widgets/Row'
 import Table from '../widgets/Table/Table'
+import YamlViewer from '../widgets/YamlViewer'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   if (!widget.status) {
@@ -100,6 +101,12 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return (
         <Table
           resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'YamlViewer':
+      return (
+        <YamlViewer
           widgetData={widget.status.widgetData}
         />
       )
