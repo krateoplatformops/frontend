@@ -2,7 +2,7 @@ import { App, Result } from 'antd'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
-export interface Error {
+export interface CatchError {
   name?: string
   data?: {
     message?: string
@@ -16,8 +16,8 @@ const useCatchError = () => {
   const { notification } = App.useApp()
   const navigate = useNavigate()
 
-  const catchError = useCallback((error?: Error, type: 'result' | 'notification' = 'notification') => {
-    let message: string = "Ops! Something didn't work"
+  const catchError = useCallback((error?: CatchError, type: 'result' | 'notification' = 'notification') => {
+    let message: string = error?.message || "Ops! Something didn't work"
     let description: React.ReactNode = 'Unable to complete the operation, please try later'
 
     if ((error?.status === 401 || error?.code === 401)) {

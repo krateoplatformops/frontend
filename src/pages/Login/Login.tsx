@@ -5,13 +5,12 @@ import { useNavigate } from 'react-router'
 
 import logo from '../../assets/images/logo_big.svg'
 import { useConfigContext } from '../../context/ConfigContext'
-import type { Error } from '../../hooks/useCatchError'
 import useCatchError from '../../hooks/useCatchError'
 
 import styles from './Login.module.css'
+import type { AuthModeType, FormType, LoginFormType } from './Login.types'
 import LoginForm from './LoginForm'
 import SocialLogin from './SocialLogin'
-import type { AuthModeType, FormType, LoginFormType } from './Login.types'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -35,22 +34,28 @@ const Login = () => {
   const {
     isPending: isLoginLoading,
     mutateAsync: login,
+    error: isLoginError,
   } = useMutation({
     mutationFn: async (credentials: { username: string; password: string; path: string }) => {
       const authUrl = `${config!.api.AUTHN_API_BASE_URL}${credentials.path}`
 
-      const res = await fetch(authUrl, {
+      const response = await fetch(authUrl, {
         headers: {
           Authorization: `Basic ${btoa(`${credentials.username}:${credentials.password}`)}`,
         },
         method: 'GET',
       })
 
-      const data = await res.json() as AuthModeType[]
-
-      localStorage.setItem('K_user', JSON.stringify(data))
-
-      return data
+      if (response.ok) {
+        const data = await response.json() as AuthModeType[]
+        localStorage.setItem('K_user', JSON.stringify(data))
+        void navigate('/')
+      } else {
+        catchError({
+          message: `Login error (${response.status}: ${response.statusText})`,
+          status: response.status,
+        }, 'notification')
+      }
     },
   })
 
@@ -60,12 +65,10 @@ const Login = () => {
 
     if (username && password && method?.path) {
       await login({ password, path: method.path, username })
-        .then(() => navigate('/'))
-        .catch((error) => catchError(error as Error, 'notification'))
     } else {
       catchError({ data: { message: 'Wrong username or password, try again with different credentials' }, status: 403 })
     }
-  }, [catchError, login, methods, navigate])
+  }, [catchError, login, methods])
 
   const content = useMemo(() => {
     if (isMethodLoading) {
@@ -74,6 +77,10 @@ const Login = () => {
 
     if (isMethodsError) {
       return <Result status='error' subTitle='Unable to retrieve authentication methods' title="Ops! Something didn't work" />
+    }
+
+    if (isLoginError) {
+      return <Result status='error' subTitle='Error during the login operation' title="Ops! Something didn't work" />
     }
 
     if (methods) {
@@ -106,7 +113,7 @@ const Login = () => {
         return <SocialLogin key={`login_${index}`} method={method} />
       })
     }
-  }, [isMethodLoading, isMethodsError, methods, isLoginLoading, onFormSubmit])
+  }, [isMethodLoading, isMethodsError, isLoginError, methods, isLoginLoading, onFormSubmit])
 
   return (
     <div className={styles.login}>

@@ -20,6 +20,8 @@ const UserMenu = () => {
     .slice(0, 2)
     .join('')
 
+  console.log(userData, fullName, initials)
+
   // TODO: get role from user role
   const role = 'administrator'
 
