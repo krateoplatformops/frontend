@@ -7,15 +7,18 @@ import { useConfigContext } from '../../context/ConfigContext'
 
 import styles from './Notifications.module.css'
 
-// TODO: handle actual notifications and events
-// understand if Redux is still needed
-// render notifications
+// TODO: this should be completed
 
 export type NotificationType = {
-  id: string
-  title: string
-  description: string
   createdAt: string
+  description: string
+  id: string
+  metadata: {
+    name: string
+    uid: string
+  }
+  message: string
+  title: string
 }
 
 const Notifications = () => {
@@ -41,14 +44,13 @@ const Notifications = () => {
       <Badge
         className={`${styles.badge} ${count > 0 ? styles.hasNotifications : ''}`}
         count={count}
-        //  count={notifications.length}
       >
         <Button
           className={styles.icon}
           icon={<BellFilled />}
           onClick={() => setDrawerVisible(true)}
-          shape="circle"
-          type="link"
+          shape='circle'
+          type='link'
         />
       </Badge>
     ),
@@ -59,15 +61,15 @@ const Notifications = () => {
     <Drawer
       onClose={() => setDrawerVisible(false)}
       open={drawerVisible}
-      title="Notifications"
+      title='Notifications'
       width={550}
     >
       {isLoading && <Skeleton active />}
-      {notifications?.map((notification) => (
-        <div key={notification.metadata.uid} style={{ marginBottom: 24 }}>
-          <h3>{notification.metadata.name}</h3>
-          <p>{notification.metadata.uid}</p>
-          <p>{notification.message}</p>
+      {notifications?.map(({ message, metadata: { name, uid } }) => (
+        <div key={uid} style={{ marginBottom: 24 }}>
+          <h3>{name}</h3>
+          <p>{uid}</p>
+          <p>{message}</p>
         </div>
       ))}
     </Drawer>

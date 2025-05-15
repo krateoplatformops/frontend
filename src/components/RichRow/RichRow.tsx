@@ -1,6 +1,7 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Avatar, Flex, Space, Typography } from 'antd'
+import type { ReactNode } from 'react'
 
 import { getColorCode } from '../../utils/palette'
 
@@ -9,10 +10,10 @@ import styles from './RichRow.module.css'
 interface RichRowProps {
   color: string
   icon: string
-  primaryText: string
-  secondaryText: string
-  subPrimaryText: string
-  subSecondaryText: string
+  primaryText: ReactNode
+  secondaryText: ReactNode
+  subPrimaryText: ReactNode
+  subSecondaryText: ReactNode
 }
 
 const RichRow = ({
