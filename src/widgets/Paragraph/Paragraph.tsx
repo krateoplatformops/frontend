@@ -1,11 +1,17 @@
 import { Typography } from 'antd'
 
-import type { ParagraphSchema } from '../../types/Paragraph.schema'
+import type { WidgetProps } from '../../types/Widget'
 
-type ParagraphType = ParagraphSchema['spec']['widgetData']
+import styles from './Paragraph.module.css'
 
-const Paragraph: React.FC<ParagraphType> = ({ text }: ParagraphType) => {
-  return <Typography.Paragraph>{text}</Typography.Paragraph>
+const Paragraph = ({ widgetData }: WidgetProps<{ text: string }>) => {
+  const { text } = widgetData
+
+  return (
+    <Typography.Paragraph className={styles.paragraph}>
+      {text}
+    </Typography.Paragraph>
+  )
 }
 
 export default Paragraph

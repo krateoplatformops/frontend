@@ -44,6 +44,7 @@ metadata:
 spec:
   widgetData:
     items:
+      - resourceRefId: my-paragraph
       - resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
@@ -52,6 +53,12 @@ spec:
       name: button-3
       namespace: krateo-system
       resource: buttons
+      verb: GET
+    - id: my-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-paragraph
+      namespace: krateo-system
+      resource: paragraphs
       verb: GET
 ---
 kind: Route

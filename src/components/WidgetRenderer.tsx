@@ -5,9 +5,9 @@ import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
 import Column from '../widgets/Column'
-import Form from '../widgets/Form/Form'
 import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
+import Paragraph from '../widgets/Paragraph'
 import PieChart from '../widgets/PieChart/PieChart'
 import { Route } from '../widgets/Route/Route'
 import Row from '../widgets/Row'
@@ -55,6 +55,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           widgetData={widget.status.widgetData}
         />
       )
+    case 'Form':
+      return <Form widgetData={widget.status.widgetData} />
     case 'NavMenu':
       return (
         <NavMenu
@@ -68,6 +70,10 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData}
         />
+      )
+    case 'Paragraph':
+      return (
+        <Paragraph widgetData={widget.status.widgetData} />
       )
     case 'PieChart':
       return (
@@ -97,8 +103,6 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           widgetData={widget.status.widgetData}
         />
       )
-    case 'Form':
-      return <Form widgetData={widget.status.widgetData} />
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }

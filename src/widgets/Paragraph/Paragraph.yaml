@@ -1,0 +1,8 @@
+kind: Paragraph
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: my-paragraph
+  namespace: krateo-system
+spec:
+  widgetData:
+    text: 'ciao'
