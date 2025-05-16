@@ -7,3 +7,34 @@
     font-size: 22px;
   }
 }
+
+.drawer {
+  .list {
+    .listItem {
+      &:hover {
+        background-color: var(--background-color);
+      }   
+
+      .notificationElement {
+        height: auto;
+        padding: 0;
+        text-align: left;
+        text-wrap: wrap;
+
+        .title {
+          text-wrap: wrap;
+        }
+
+        .description {
+          max-width: 100%;
+          white-space: initial;
+        }
+
+        .details {
+          color: var(--gray-color);
+          font-size: var(--font-size-xxs);
+        }
+      }
+    }
+  }
+}

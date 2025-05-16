@@ -6,7 +6,7 @@ metadata:
 spec:
   widgetData:
     events:
-      - icon: "fa-error"
+      - icon: "fa-exclamation-circle"
         reason: "FailedScheduling"
         message: "0/1 nodes are available: 1 Insufficient memory."
         type: "Warning"
