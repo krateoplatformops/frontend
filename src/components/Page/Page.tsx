@@ -1,5 +1,4 @@
 // import { Drawer } from '../../Drawer'
-import Sidebar from '../Sidebar'
 
 // import { WidgetRenderer } from '../WidgetRenderer'
 import styles from './Page.module.css'
@@ -9,7 +8,7 @@ const Page: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <Sidebar />
+      {/* <Sidebar /> */}
       {/* <div style={{ flex: 1 }}>
         <Drawer />
         {/* <WidgetRenderer widgetEndpoint={widgetEndpoint} />

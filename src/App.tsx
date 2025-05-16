@@ -12,7 +12,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import '../index.css'
 import '../variables.css'
 import styles from './App.module.css'
-import InitRoutes from './components/InitRoutes/InitRoutes'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
 
@@ -45,7 +44,6 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <RoutesProvider>
           <AntApp className={styles.app}>
-            <InitRoutes />
             <AppInitializer />
           </AntApp>
         </RoutesProvider>

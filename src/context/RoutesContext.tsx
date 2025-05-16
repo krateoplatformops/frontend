@@ -1,7 +1,6 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useContext, useState } from 'react'
 import type { RouteObject } from 'react-router'
 
-import Page from '../components/Page'
 import WidgetPage from '../components/WidgetPage'
 import Login from '../pages/Login'
 import Page404 from '../pages/Page404'
@@ -14,27 +13,21 @@ interface RoutesContextType {
 
 const RoutesContext = createContext<RoutesContextType | undefined>(undefined)
 
+const defaultRoutes: RouteObject[] = [
+  { element: <Login />, path: '/login' },
+  { element: <WidgetPage />, path: '*' },
+  { element: <Page404 />, path: '/404' },
+]
+
 export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const defaultRoutes: RouteObject[] = useMemo(
-    () => [
-      { element: <Login />, path: '/login' },
-      { element: <Page />, path: '/' },
-      { element: <WidgetPage />, path: '*' },
-      { element: <Page404 />, path: '/404' },
-    ],
-    [],
-  )
-
   const [routes, setRoutes] = useState<RouteObject[]>(defaultRoutes)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const updateRoutes = useCallback(
-    (newRoutes: RouteObject[]) => {
-      setRoutes([...newRoutes, ...defaultRoutes])
-      setIsLoading(false)
-    },
-    [defaultRoutes],
-  )
+  const updateRoutes = useCallback((newRoutes: RouteObject[]) => {
+    setIsLoading(true)
+    setRoutes([...newRoutes, ...defaultRoutes])
+    setIsLoading(false)
+  }, [])
 
   return <RoutesContext.Provider value={{ isLoading, routes, updateRoutes }}>{children}</RoutesContext.Provider>
 }
