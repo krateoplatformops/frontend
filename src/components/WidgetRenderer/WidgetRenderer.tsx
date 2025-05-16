@@ -16,6 +16,7 @@ import PieChart from '../../widgets/PieChart/PieChart'
 import { Route } from '../../widgets/Route/Route'
 import Row from '../../widgets/Row'
 import Table from '../../widgets/Table/Table'
+import TabList from '../../widgets/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 
 import styles from './WidgetRenderer.module.css'
@@ -114,6 +115,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Table':
       return (
         <Table
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'TabList':
+      return (
+        <TabList
           resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData}
         />

@@ -105,3 +105,21 @@ spec:
       namespace: krateo-system
       resource: eventlists
       verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-tab-list
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Tab list
+    items:
+      - resourceRefId: my-tab-list
+  resourcesRefs:
+    - id: my-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-tab-list
+      namespace: krateo-system
+      resource: tablists
+      verb: GET
