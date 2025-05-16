@@ -13,15 +13,19 @@ curl -L https://github.com/krateoplatformops/krateo-v2-docs/releases/latest/down
 kubectl wait krateoplatformops krateo --for condition=Ready=True --namespace krateo-system --timeout=300s
 ```
 
-### Step 2: start the application and authenticate
+### Step 2: start the application and authenticate
 
-Execute the following command to get a password:
+Execute the following command to start the app locally:
+
+```bash
+npm run dev
+```
+
+Start the application on `localhost:4000/login` and login with the user `admin` and the password retrieved by executing the following command:
 
 ```bash
 kubectl get secret admin-password  -n krateo-system -o jsonpath="{.data.password}" | base64 -d
 ```
-
-Start the application on `localhost:30080` and login with the user `admin` and the password retrieved.
 
 ### Step 3: open a terminal and install / update the latest version of Snowplow
 
