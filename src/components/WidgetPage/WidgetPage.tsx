@@ -1,6 +1,6 @@
+import { Drawer } from 'antd'
 import { useSearchParams } from 'react-router'
 
-import { Drawer } from '../../Drawer'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
 import WidgetRenderer from '../WidgetRenderer'
