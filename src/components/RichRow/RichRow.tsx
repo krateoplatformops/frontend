@@ -26,7 +26,7 @@ const RichRow = ({
 }: RichRowProps) => {
   return (
     <Flex className={styles.richRow} gap={10} justify='space-between'>
-      <Space align='start' className={styles.primary} size='large'>
+      <Space align='center' className={styles.primary} size='large'>
         <Avatar
           icon={<FontAwesomeIcon icon={icon as IconProp} />}
           size={icon ? 24 : 18}

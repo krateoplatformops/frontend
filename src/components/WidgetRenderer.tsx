@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
 import Column from '../widgets/Column'
+import EventList from '../widgets/EventList'
 import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import Paragraph from '../widgets/Paragraph'
@@ -21,13 +23,14 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 
   switch (widget.kind) {
     case 'Status': {
-      const x = new URLSearchParams(widgetEndpoint)
+      const params = new URLSearchParams(widgetEndpoint)
+
       return (
         <div style={{ border: '1px solid red', margin: '10px' }}>
           ERROR
-          <div>name: {x.get('name')}</div>
-          <div>namespace: {x.get('namespace')}</div>
-          <div>version: {x.get('apiVersion')}</div>
+          <div>name: {params.get('name')}</div>
+          <div>namespace: {params.get('namespace')}</div>
+          <div>version: {params.get('apiVersion')}</div>
           {/* <div>resource: {x.get('resource')}</div> */}
           <div>
             <pre style={{ whiteSpace: 'wrap' }}>
@@ -52,6 +55,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Column':
       return (
         <Column
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'EventList':
+      return (
+        <EventList
           resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData}
         />
@@ -116,6 +126,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 }
 
 export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
+  const navigate = useNavigate()
+
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(
       `WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`,
@@ -155,6 +167,10 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
   if (error) {
     console.error(error)
     return <div>...error</div>
+  }
+
+  if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
+    void navigate('/login')
   }
 
   return parseData(widget, widgetEndpoint)

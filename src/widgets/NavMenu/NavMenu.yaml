@@ -46,6 +46,7 @@ spec:
     items:
       - resourceRefId: panel-paragraph
       - resourceRefId: panel-yaml-viewer
+      - resourceRefId: panel-event-list
       - resourceRefId: button-3-backend-endpoint-id
 
   resourcesRefs:
@@ -64,6 +65,12 @@ spec:
     - id: panel-yaml-viewer
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: panel-yaml-viewer
+      namespace: krateo-system
+      resource: panels
+      verb: GET
+    - id: panel-event-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: panel-event-list
       namespace: krateo-system
       resource: panels
       verb: GET

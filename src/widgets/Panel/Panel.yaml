@@ -87,3 +87,21 @@ spec:
       namespace: krateo-system
       resource: yamlviewers
       verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-event-list
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Event list
+    items:
+      - resourceRefId: my-event-list
+  resourcesRefs:
+    - id: my-event-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-event-list
+      namespace: krateo-system
+      resource: eventlists
+      verb: GET

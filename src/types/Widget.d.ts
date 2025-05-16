@@ -4,6 +4,9 @@ export interface Widget<WidetDataType = unknown> {
   namespace: string
   apiVersion: string
   kind: string
+  code?: number
+  message?: string
+  reason?: string
   spec: {
     widgetData: WidetDataType
     widgetRefs?: {
@@ -27,7 +30,7 @@ export interface Widget<WidetDataType = unknown> {
       verb: 'GET' | 'POST' | 'DELETE'
       payload: object
     }>
-  }
+  } | string
 }
 
 export type WidgetActions = {

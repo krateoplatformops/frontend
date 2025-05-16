@@ -6,25 +6,47 @@ import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
 import { formatISODate } from '../../utils/utils'
 
-interface SSEEvent {
+interface K8sEvent {
   metadata: {
-    uid: string
-    creationTimestamp: string
-  }
-  reason: string
-  icon: string
-  type: 'Normal'
-  message: string
-  involvedObject: {
     name: string
     namespace: string
+    uid: string
+    creationTimestamp: string
+    [key: string]: unknown
+  }
+  involvedObject: {
     kind: string
-    apiVersion: string
+    namespace: string
+    name: string
+    uid: string
+    [key: string]: unknown
+  }
+  reason: string
+  message: string
+  type: 'Normal' | 'Warning'
+  source: {
+    component: string
+    host?: string
+  }
+  firstTimestamp?: string
+  lastTimestamp?: string
+  eventTime?: string
+  count?: number
+  action?: string
+  reportingComponent?: string
+  reportingInstance?: string
+  [key: string]: unknown
+}
+
+interface SSEK8sEvent extends K8sEvent {
+  icon?: string
+  involvedObject: K8sEvent['involvedObject'] & {
+    apiVersion?: string
   }
 }
 
 const EventList = ({ widgetData }: WidgetProps<{
-  events: SSEEvent[]
+  events: SSEK8sEvent[]
   sseEndpoint?: string
   sseTopic?: string
 }>) => {
@@ -32,7 +54,7 @@ const EventList = ({ widgetData }: WidgetProps<{
 
   const { config } = useConfigContext()
 
-  const [eventList, setEventList] = useState<SSEEvent[]>(events || [])
+  const [eventList, setEventList] = useState<SSEK8sEvent[]>(events || [])
 
   useEffect(() => {
     if (sseEndpoint && sseTopic) {
@@ -42,7 +64,7 @@ const EventList = ({ widgetData }: WidgetProps<{
       })
 
       eventSource.addEventListener(sseTopic, (event: MessageEvent<string>) => {
-        const data = JSON.parse(event.data) as SSEEvent[]
+        const data = JSON.parse(event.data) as SSEK8sEvent[]
         setEventList(prev => [...data, ...prev])
       })
 
@@ -62,7 +84,7 @@ const EventList = ({ widgetData }: WidgetProps<{
       }) => (
         <RichRow
           color={type === 'Normal' ? 'blue' : 'orange'}
-          icon={icon}
+          icon={icon || 'fa-ellipsis-h'}
           key={uid}
           primaryText={
             <>
