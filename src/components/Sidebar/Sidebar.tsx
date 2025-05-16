@@ -1,6 +1,6 @@
 import logo from '../../assets/images/logo_big.svg'
 import { getResourceEndpoint } from '../../utils/utils'
-import { WidgetRenderer } from '../WidgetRenderer'
+import WidgetRenderer from '../WidgetRenderer'
 
 import styles from './Sidebar.module.css'
 

@@ -1,20 +1,24 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
+import { Spin } from 'antd'
 import { useNavigate } from 'react-router'
 
-import { useConfigContext } from '../context/ConfigContext'
-import type { ButtonSchema } from '../types/Button.schema'
-import type { Widget } from '../types/Widget'
-import Button from '../widgets/Button'
-import Column from '../widgets/Column'
-import EventList from '../widgets/EventList'
-import { NavMenu } from '../widgets/NavMenu/NavMenu'
-import Panel from '../widgets/Panel/Panel'
-import Paragraph from '../widgets/Paragraph'
-import PieChart from '../widgets/PieChart/PieChart'
-import { Route } from '../widgets/Route/Route'
-import Row from '../widgets/Row'
-import Table from '../widgets/Table/Table'
-import YamlViewer from '../widgets/YamlViewer'
+import { useConfigContext } from '../../context/ConfigContext'
+import type { ButtonSchema } from '../../types/Button.schema'
+import type { Widget } from '../../types/Widget'
+import Button from '../../widgets/Button'
+import Column from '../../widgets/Column'
+import EventList from '../../widgets/EventList'
+import { NavMenu } from '../../widgets/NavMenu/NavMenu'
+import Panel from '../../widgets/Panel/Panel'
+import Paragraph from '../../widgets/Paragraph'
+import PieChart from '../../widgets/PieChart/PieChart'
+import { Route } from '../../widgets/Route/Route'
+import Row from '../../widgets/Row'
+import Table from '../../widgets/Table/Table'
+import YamlViewer from '../../widgets/YamlViewer'
+
+import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   if (!widget.status) {
@@ -125,7 +129,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
   }
 }
 
-export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
+const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
   const navigate = useNavigate()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
@@ -157,13 +161,17 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
   })
 
   if (isLoading) {
-    return <div>...loading</div>
+    return (
+      <div className={styles.loading}>
+        <Spin indicator={<LoadingOutlined />} size='large' spinning />
+      </div>
+    )
   }
 
   if (!widget) {
-    /* no data */
     return null
   }
+
   if (error) {
     console.error(error)
     return <div>...error</div>
@@ -175,3 +183,5 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
 
   return parseData(widget, widgetEndpoint)
 }
+
+export default WidgetRenderer

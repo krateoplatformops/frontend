@@ -1,7 +1,10 @@
 import { Drawer as AntdDrawer } from 'antd'
 import { useEffect, useState } from 'react'
 
-import { WidgetRenderer } from './components/WidgetRenderer'
+import WidgetRenderer from './components/WidgetRenderer'
+
+// TODO: add style
+// TODO: create type for Event
 
 export function openDrawer(widgetEndpoint: string) {
   window.dispatchEvent(

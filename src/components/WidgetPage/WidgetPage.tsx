@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router'
 import { Drawer } from '../../Drawer'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
-import { WidgetRenderer } from '../WidgetRenderer'
+import WidgetRenderer from '../WidgetRenderer'
 
 import styles from './WidgetPage.module.css'
 
