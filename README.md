@@ -21,7 +21,7 @@ Execute the following command to start the app locally:
 npm run dev
 ```
 
-Start the application on `localhost:4000/login` and login with the user `admin` and the password retrieved by executing the following command:
+Start the application on http://localhost:4000/login and login with the user `admin` and the password retrieved by executing the following command:
 
 ```bash
 kubectl get secret admin-password  -n krateo-system -o jsonpath="{.data.password}" | base64 -d
@@ -43,7 +43,7 @@ helm install smithery krateo/smithery -n krateo-system --set livenessProbe=null 
 
 After executing the command follow the instructions to set a local port for Smithery.
 
-### Step 5: send JSON schemas to Smithery
+### Step 5: send JSON schemas to Smithery to create CRDs
 
 Run the following command to execute a script that sends all files with `.schema.json` extension on the repository to Smithery, validates them and creates the related CRDs.
 
@@ -51,7 +51,7 @@ Run the following command to execute a script that sends all files with `.schema
 npm run send-schemas
 ```
 
-### Step 6: create custom resources
+### Step 6: apply custom resources
 
 Run the following command to execute a script that creates all the custom resources defined by all files with `.yaml` extension on the repository.
 
