@@ -6,11 +6,15 @@ import UserMenu from '../UserMenu'
 
 import styles from './Header.module.css'
 
-const Header = () => {
+type HeaderProps = {
+  breadcrumbVisible: boolean
+}
+
+const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
   return (
     <AntHeader className={styles.header}>
       <div className={styles.content}>
-        <Breadcrumb />
+        <div>{breadcrumbVisible && <Breadcrumb />}</div>
         <div className={styles.right}>
           <Notifications />
           <UserMenu />
