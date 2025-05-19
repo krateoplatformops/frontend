@@ -49,6 +49,7 @@ spec:
       - resourceRefId: panel-event-list
       - resourceRefId: panel-tab-list
       - resourceRefId: button-3-backend-endpoint-id
+      - resourceRefId: my-line-chart
 
   resourcesRefs:
     - id: button-3-backend-endpoint-id
@@ -80,6 +81,12 @@ spec:
       name: panel-tab-list
       namespace: krateo-system
       resource: panels
+      verb: GET
+    - id: my-line-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-line-chart
+      namespace: krateo-system
+      resource: linecharts
       verb: GET
 ---
 kind: Route

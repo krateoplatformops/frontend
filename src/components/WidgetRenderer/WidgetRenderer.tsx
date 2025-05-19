@@ -1,6 +1,6 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Spin } from 'antd'
+import { Spin, Form } from 'antd'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
@@ -9,6 +9,7 @@ import type { Widget } from '../../types/Widget'
 import Button from '../../widgets/Button'
 import Column from '../../widgets/Column'
 import EventList from '../../widgets/EventList'
+import LineChart from '../../widgets/LineChart'
 import { NavMenu } from '../../widgets/NavMenu/NavMenu'
 import Panel from '../../widgets/Panel/Panel'
 import Paragraph from '../../widgets/Paragraph'
@@ -94,6 +95,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'PieChart':
       return (
         <PieChart
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'LineChart':
+      return (
+        <LineChart
           resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData}
         />
