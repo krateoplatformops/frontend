@@ -48,16 +48,9 @@ spec:
       - resourceRefId: panel-yaml-viewer
       - resourceRefId: panel-event-list
       - resourceRefId: panel-tab-list
-      - resourceRefId: button-3-backend-endpoint-id
-      - resourceRefId: my-line-chart
+      - resourceRefId: panel-line-chart
 
   resourcesRefs:
-    - id: button-3-backend-endpoint-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-3
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
     - id: panel-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: panel-paragraph
@@ -82,11 +75,11 @@ spec:
       namespace: krateo-system
       resource: panels
       verb: GET
-    - id: my-line-chart
+    - id: panel-line-chart
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-line-chart
+      name: panel-line-chart
       namespace: krateo-system
-      resource: linecharts
+      resource: panels
       verb: GET
 ---
 kind: Route

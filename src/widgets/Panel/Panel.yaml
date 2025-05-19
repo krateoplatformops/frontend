@@ -123,3 +123,21 @@ spec:
       namespace: krateo-system
       resource: tablists
       verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-line-chart
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Line chart
+    items:
+      - resourceRefId: my-line-chart
+  resourcesRefs:
+    - id: my-line-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-line-chart
+      namespace: krateo-system
+      resource: linecharts
+      verb: GET
