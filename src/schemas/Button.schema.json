@@ -115,7 +115,9 @@
                   "onSuccessNavigateTo": {
                     "type": "string"
                   },
-                  "actionResultTopic": "buttons/namespace/437f1a27-4206-435c-9944-42db6e823071",
+                  "actionResultTopic": {
+                    "type": "string"
+                  },
                   "loading": {
                     "type": "string",
                     "enum": ["global", "inline", "none"]

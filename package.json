@@ -10,8 +10,9 @@
     "lint:css": "stylelint \"src/**/*.module.css\" --fix",
     "generate-types": "json2ts --input src/schemas/ --output src/types/",
     "watch-types": "chokidar 'src/schemas/*.schema.json' -c 'npm run generate-types'",
+    "apply-all": "tsx scripts/apply-k8s-yamls.ts",
     "send-schemas": "tsx scripts/send-schemas-to-smithery.ts",
-    "apply-all": "tsx scripts/apply-k8s-yamls.ts"
+    "validate-schemas": "tsx scripts/validate-schemas.ts"
   },
   "repository": {
     "type": "git",
@@ -33,12 +34,15 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
+    "ajv-cli": "^5.0.0",
+    "ajv-formats": "^3.0.1",
     "chokidar-cli": "^3.0.0",
     "confusing-browser-globals": "^1.0.11",
     "eslint": "^9.23.0",
     "eslint-import-resolver-node": "^0.3.9",
     "eslint-import-resolver-typescript": "^3.10.0",
     "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-json-schema-validator": "^5.4.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-n": "^17.15.1",
     "eslint-plugin-react": "^7.37.4",
