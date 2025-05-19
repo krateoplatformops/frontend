@@ -46,6 +46,7 @@ spec:
     items:
       - resourceRefId: my-paragraph
       - resourceRefId: button-3-backend-endpoint-id
+      - resourceRefId: my-line-chart
 
   resourcesRefs:
     - id: button-3-backend-endpoint-id
@@ -59,6 +60,12 @@ spec:
       name: my-paragraph
       namespace: krateo-system
       resource: paragraphs
+      verb: GET
+    - id: my-line-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-line-chart
+      namespace: krateo-system
+      resource: linecharts
       verb: GET
 ---
 kind: Route

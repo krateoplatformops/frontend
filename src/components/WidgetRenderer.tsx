@@ -5,6 +5,7 @@ import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
 import Button from '../widgets/Button'
 import Column from '../widgets/Column'
+import LineChart from '../widgets/LineChart'
 import { NavMenu } from '../widgets/NavMenu/NavMenu'
 import Panel from '../widgets/Panel/Panel'
 import Paragraph from '../widgets/Paragraph'
@@ -12,6 +13,7 @@ import PieChart from '../widgets/PieChart/PieChart'
 import { Route } from '../widgets/Route/Route'
 import Row from '../widgets/Row'
 import Table from '../widgets/Table/Table'
+import { Form } from 'antd'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   if (!widget.status) {
@@ -78,6 +80,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'PieChart':
       return (
         <PieChart
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'LineChart':
+      return (
+        <LineChart
           resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData}
         />
