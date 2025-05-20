@@ -1,4 +1,4 @@
-export interface Widget<WidetDataType = unknown> {
+export interface Widget<WidgetDataType = unknown> {
   uid: string
   name: string
   namespace: string
@@ -8,7 +8,7 @@ export interface Widget<WidetDataType = unknown> {
   message?: string
   reason?: string
   spec: {
-    widgetData: WidetDataType
+    widgetData: WidgetDataType
     widgetRefs?: {
       [key: string]: {
         id: string
@@ -20,7 +20,7 @@ export interface Widget<WidetDataType = unknown> {
     }
   }
   status: {
-    widgetData: WidetDataType
+    widgetData: WidgetDataType
     widgets: Widget[]
     actions: WidgetActions
     events: unknown /* EventsType */

@@ -35,7 +35,7 @@ async function walkDir(dir: string, callback: (filepath: string) => Promise<void
 async function generateTypes() {
   await walkDir(baseDir, async (filepath) => {
     if (filepath.endsWith('.schema.json')) {
-      const outputPath = filepath.replace('.schema.json', '.d.ts')
+      const outputPath = filepath.replace('.schema.json', '.type.d.ts')
       try {
         const ts = await compileFromFile(filepath, {
           bannerComment: '',
