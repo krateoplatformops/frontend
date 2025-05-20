@@ -60,7 +60,8 @@
                         "type": "string",
                         "format": "date-time"
                       }
-                    }
+                    },
+                    "additionalProperties": false
                   },
                   "involvedObject": {
                     "type": "object",
@@ -71,16 +72,19 @@
                       "name": { "type": "string" },
                       "namespace": { "type": "string" },
                       "uid": { "type": "string" }
-                    }
+                    },
+                    "additionalProperties": false
                   },
                   "source": {
                     "type": "object",
                     "properties": {
                       "component": { "type": "string" },
                       "host": { "type": "string" }
-                    }
+                    },
+                    "additionalProperties": false
                   }
-                }
+                },
+                "additionalProperties": false
               }
             },
             "sseEndpoint": { "type": "string" },
@@ -134,7 +138,8 @@
               "type": "string"
             }
           },
-          "required": ["name", "namespace"]
+          "required": ["name", "namespace"],
+          "additionalProperties": false
         },
         "widgetDataTemplate": {
           "type": "array",
@@ -147,11 +152,13 @@
               "expression": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
         }
       },
-      "required": ["widgetData"]
+      "required": ["widgetData"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]

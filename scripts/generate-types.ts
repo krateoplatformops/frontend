@@ -39,6 +39,10 @@ async function generateTypes() {
       try {
         const ts = await compileFromFile(filepath, {
           bannerComment: '',
+          style: {
+            singleQuote: true,
+            semi: false
+          }
         })
         await fs.writeFile(outputPath, ts)
         console.log(`Generated: ${outputPath}`)

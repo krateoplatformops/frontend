@@ -48,10 +48,12 @@
                         "yAxis": {
                           "type": "integer"
                         }
-                      }
+                      },
+                      "additionalProperties": false
                     }
                   }
-                }
+                },
+                "additionalProperties": false
               }
             },
             "xAxisName": {
@@ -73,7 +75,8 @@
               "type": "string"
             }
           },
-          "required": ["name", "namespace"]
+          "required": ["name", "namespace"],
+          "additionalProperties": false
         },
         "widgetDataTemplate": {
           "type": "array",
@@ -86,11 +89,13 @@
               "expression": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
         }
       },
-      "required": ["widgetData"]
+      "required": ["widgetData"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]

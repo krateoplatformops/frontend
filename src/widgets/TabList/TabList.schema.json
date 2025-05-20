@@ -32,7 +32,8 @@
                   "resourceRefId": {
                     "type": "string"
                   }
-                }
+                },
+                "additionalProperties": false
               }
             }
           },
@@ -84,6 +85,7 @@
               "type": "string"
             }
           },
+          "additionalProperties": false,
           "required": ["name", "namespace"]
         },
         "widgetDataTemplate": {
@@ -97,11 +99,14 @@
               "expression": {
                 "type": "string"
               }
-            }
-          }
+            },
+            "additionalProperties": false
+          },
+          "additionalProperties": false
         }
       },
-      "required": ["widgetData", "resourcesRefs"]
+      "required": ["widgetData", "resourcesRefs"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]

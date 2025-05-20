@@ -346,6 +346,11 @@ export default tsEslint.config(
   },
 
   {
+    files: ['src/widgets/**/*.d.ts'],
+    ignores: true,
+  },
+
+  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsEslint.parser,

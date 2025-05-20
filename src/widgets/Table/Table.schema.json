@@ -34,7 +34,8 @@
                   "title": {
                     "type": "string"
                   }
-                }
+                },
+                "additionalProperties": false
               }
             }
           },
@@ -44,7 +45,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "additionalProperties": false,
             "properties": {
               "id": {
@@ -79,6 +87,7 @@
               "type": "string"
             }
           },
+          "additionalProperties": false,
           "required": ["name", "namespace"]
         },
         "widgetDataTemplate": {
@@ -92,11 +101,14 @@
               "expression": {
                 "type": "string"
               }
-            }
-          }
+            },
+            "additionalProperties": false
+          },
+          "additionalProperties": false
         }
       },
-      "required": ["widgetData"]
+      "required": ["widgetData"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]

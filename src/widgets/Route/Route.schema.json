@@ -24,7 +24,8 @@
                   "resourceRefId": {
                     "type": "string"
                   }
-                }
+                },
+                "additionalProperties": false
               }
             }
           },
@@ -40,7 +41,8 @@
               "type": "string"
             }
           },
-          "required": ["name", "namespace"]
+          "required": ["name", "namespace"],
+          "additionalProperties": false
         },
         "widgetDataTemplate": {
           "type": "array",
@@ -53,7 +55,8 @@
               "expression": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
         },
         "resourcesRefs": {
@@ -90,10 +93,12 @@
                 "enum": ["GET", "POST", "DELETE"]
               }
             }
-          }
+          },
+          "additionalProperties": false
         }
       },
-      "required": ["widgetData"]
+      "required": ["widgetData"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]
