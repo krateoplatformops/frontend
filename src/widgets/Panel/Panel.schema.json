@@ -21,6 +21,7 @@
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
                     "type": "string"
@@ -33,6 +34,7 @@
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
                     "type": "string"

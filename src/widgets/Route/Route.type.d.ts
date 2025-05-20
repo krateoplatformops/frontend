@@ -3,8 +3,8 @@ export interface Route {
   kind: string
   spec: {
     widgetData: {
-      items?: {
-        resourceRefId?: string
+      items: {
+        resourceRefId: string
       }[]
     }
     apiRef?: {

@@ -1,8 +1,11 @@
 import { Form as AntdForm, Button, Input } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
+import type { Form as WidgetType } from './Form.type'
 
-function Form({ widgetData, actions }: WidgetProps) {
+type WidgetData = WidgetType['spec']['widgetData']
+
+function Form({ widgetData, actions }: WidgetProps<WidgetData>) {
   return (
     <div>
       <AntdForm>

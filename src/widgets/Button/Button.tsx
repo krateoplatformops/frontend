@@ -1,16 +1,18 @@
 /* eslint-disable max-depth */
-import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntButton } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import { useNavigate } from 'react-router'
-
 import { useConfigContext } from '../../context/ConfigContext'
-import type { ButtonSchema } from '../../types/Button.schema'
-import type { WidgetProps } from '../../types/Widget'
-import type { Action } from '../../utils/types'
 import { getEndpointUrl } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
+
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
+import type { WidgetProps } from '../../types/Widget'
+import type { Button as WidgetType } from './Button.type'
+import type { Action } from '../../utils/types'
+
+type WidgetData = WidgetType['spec']['widgetData']
 
 type BackendEndpointFromSpec = {
   apiVersion: string
@@ -23,7 +25,6 @@ type BackendEndpointFromSpec = {
 
 const createNginxPodEndpoint = (
   baseUrl: string,
-  resourceRefId: string,
   resourcesRefs: Array<BackendEndpointFromSpec>,
 ) => {
   if (!resourcesRefs || resourcesRefs.length === 0) {
@@ -33,11 +34,7 @@ const createNginxPodEndpoint = (
   return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
 }
 
-const Button = ({
-  widgetData,
-  actions,
-  resourcesRefs,
-}: WidgetProps<ButtonSchema['status']['widgetData']>) => {
+const Button = ({ widgetData, actions, resourcesRefs,}: WidgetProps<WidgetData>) => {
   const { color, clickActionId, label, icon, size, type } = widgetData
 
   const navigate = useNavigate()
@@ -48,8 +45,9 @@ const Button = ({
     const buttonAction = Object.values(actions as Action[])
       .flat()
       .find(({ id }) => id === clickActionId)
+
     if (buttonAction) {
-      const { resourceRefId, requireConfirmation, type, verb } = buttonAction
+      const { resourceRefId, requireConfirmation, type } = buttonAction
 
       switch (type) {
         case 'navigate': {
@@ -69,7 +67,6 @@ const Button = ({
             if (window.confirm('Are you sure?')) {
               const url = createNginxPodEndpoint(
                 config!.api.BACKEND_API_BASE_URL,
-                resourceRefId,
                 resourcesRefs as unknown as BackendEndpointFromSpec[],
               )
               const res = await fetch(url, {

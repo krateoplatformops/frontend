@@ -12,36 +12,7 @@ export interface EventList {
      * the data that will be passed to the widget on the frontend
      */
     widgetData: {
-      events: {
-        icon?: string
-        reason: string
-        message: string
-        type: 'Normal' | 'Warning'
-        count?: number
-        action?: string
-        reportingComponent?: string
-        reportingInstance?: string
-        firstTimestamp?: string
-        lastTimestamp?: string
-        eventTime?: string
-        metadata: {
-          name: string
-          namespace: string
-          uid: string
-          creationTimestamp: string
-        }
-        involvedObject: {
-          apiVersion?: string
-          kind: string
-          name: string
-          namespace: string
-          uid: string
-        }
-        source: {
-          component?: string
-          host?: string
-        }
-      }[]
+      events: SSEK8sEvent
       sseEndpoint?: string
       sseTopic?: string
     }

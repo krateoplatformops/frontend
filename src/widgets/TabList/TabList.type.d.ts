@@ -17,7 +17,7 @@ export interface TabList {
        */
       items: {
         label?: string
-        resourceRefId?: string
+        resourceRefId: string
       }[]
     }
     resourcesRefs: {

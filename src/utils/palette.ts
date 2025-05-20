@@ -9,8 +9,8 @@ const palette = {
 
 type PaletteColor = keyof typeof palette
 
-export const getColorCode = (colorName: string) => {
-  if (colorName in palette) {
+export const getColorCode = (colorName: string | undefined) => {
+  if (colorName && colorName in palette) {
     return palette[colorName as PaletteColor]
   }
 

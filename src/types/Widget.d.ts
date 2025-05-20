@@ -76,6 +76,3 @@ export type WidgetProps<T = unknown> = {
   resourcesRefs: Widget['status']['resourcesRefs']
 }
 
-export type WidgetItems = Array<{
-  resourceRefId: string
-}>

@@ -1,33 +1,20 @@
 import { Empty } from 'antd'
 import ReactECharts from 'echarts-for-react'
-
-import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 
+import type { WidgetProps } from '../../types/Widget'
+import type { LineChart as WidgetType } from './LineChart.type'
 
-type ChartLineDataPoint = {
-  xAxis: string | number
-  yAxis: string | number
-}
+type WidgetData = WidgetType['spec']['widgetData']
 
-type ChartLineInput = {
-  name: string
-  color: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
-  coords: ChartLineDataPoint[]
-}
-
-const LineChart = ({ widgetData }: WidgetProps<{
-  lines: ChartLineInput[]
-  xAxisName?: string
-  yAxisName?: string
-}>) => {
+const LineChart = ({ widgetData }: WidgetProps<WidgetData>) => {
   const { lines, xAxisName, yAxisName } = widgetData
 
   if (!lines) {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   }
 
-  const xValues = lines && lines[0] ? lines[0].coords.map((el) => el.xAxis) : []
+  const xValues = lines[0]?.coords?.map(({ xAxis }) => xAxis) || []
 
   const optionLine = {
     grid: {
@@ -36,12 +23,12 @@ const LineChart = ({ widgetData }: WidgetProps<{
     },
     legend: {
       bottom: 0,
-      data: lines.map((line) => line.name),
+      data: lines.map(({ name }) => name),
     },
-    series: lines.map((line) => ({
-      color: getColorCode(line.color),
-      data: line.coords.map((el) => el.yAxis),
-      name: line.name,
+    series: lines.map(({ color, coords, name }) => ({
+      color: getColorCode(color),
+      data: coords?.map(({ yAxis }) => yAxis) || [],
+      name,
       smooth: true,
       type: 'line',
     })),

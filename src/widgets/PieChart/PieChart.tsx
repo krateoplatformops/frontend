@@ -1,41 +1,27 @@
 
 import { Result } from 'antd'
 import ReactECharts from 'echarts-for-react'
-
 import { getColorCode } from '../../utils/palette'
 
-type DataPoint = {
-  color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
-  value?: number
-  label?: string
-}
+import { WidgetProps } from '../../types/Widget'
+import type { PieChart as WidgetType } from './PieChart.type'
 
-type Series = {
-  total?: number
-  data?: DataPoint[]
-}
+type WidgetData = WidgetType['spec']['widgetData']
 
-type PieChartProps = {
-  widgetData: {
-    title: string
-    description: string
-    series: Series
-  }
-}
-
-const PieChart = ({ widgetData }: PieChartProps) => {
+const PieChart = ({ widgetData }: WidgetProps<WidgetData>) => {
   const { title, description, series } = widgetData
 
-  if (!series?.data || !Array.isArray(series.data)) {
+  if (!series) {
     return <Result status='warning' subTitle='No chart data available' />
   }
 
-  const total = series.total ?? series.data.reduce((sum, item) => sum + (item.value || 0), 0)
-  const filledValue = series.data.reduce((sum, item) => sum + (item.value || 0), 0)
+  const {data, total}  = series
+
+  const filledValue = data.reduce((sum, item) => sum + (item.value || 0), 0)
   const emptyValue = Math.max(total - filledValue, 0)
 
   const chartData = [
-    ...series.data.map((item) => ({
+    ...data.map((item) => ({
       itemStyle: { color: getColorCode(item.color || 'gray') },
       name: item.label ?? '',
       value: item.value ?? 0,
@@ -80,7 +66,7 @@ const PieChart = ({ widgetData }: PieChartProps) => {
       text: title,
       textAlign: 'center',
       textStyle: {
-        fontSize: 44 - (2 * (series.data.length || 0)),
+        fontSize: 44 - (2 * (data.length || 0)),
         fontWeight: 400,
       },
       textVerticalAlign: 'auto',

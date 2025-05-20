@@ -4,10 +4,10 @@ export interface NavMenu {
   spec: {
     widgetData: {
       items: {
-        label?: string
-        icon?: string
-        path?: string
-        resourceRefId?: string
+        label: string
+        icon: string
+        path: string
+        resourceRefId: string
       }[]
     }
     apiRef?: {

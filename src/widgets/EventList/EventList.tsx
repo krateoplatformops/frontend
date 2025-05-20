@@ -1,17 +1,16 @@
 import { Divider, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-
 import RichRow from '../../components/RichRow'
 import { useConfigContext } from '../../context/ConfigContext'
-import type { WidgetProps } from '../../types/Widget'
-import type { SSEK8sEvent } from '../../utils/types'
 import { formatISODate } from '../../utils/utils'
 
-const EventList = ({ widgetData }: WidgetProps<{
-  events: SSEK8sEvent[]
-  sseEndpoint?: string
-  sseTopic?: string
-}>) => {
+import type { WidgetProps } from '../../types/Widget'
+import type { EventList as WidgetType } from './EventList.type'
+import type { SSEK8sEvent } from '../../utils/types'
+
+type WidgetData = WidgetType['spec']['widgetData']
+
+const EventList = ({ widgetData }: WidgetProps<WidgetData>) => {
   const { events, sseEndpoint, sseTopic } = widgetData
 
   const { config } = useConfigContext()

@@ -4,10 +4,10 @@ export interface Panel {
   spec: {
     widgetData: {
       footer?: {
-        resourceRefId?: string
+        resourceRefId: string
       }[]
       items: {
-        resourceRefId?: string
+        resourceRefId: string
       }[]
       title: string
       tooltip?: string

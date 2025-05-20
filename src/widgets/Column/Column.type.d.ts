@@ -16,7 +16,7 @@ export interface Column {
        * the items of the column
        */
       items: {
-        resourceRefId?: string
+        resourceRefId: string
       }[]
     }
     resourcesRefs: {

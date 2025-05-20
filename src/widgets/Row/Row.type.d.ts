@@ -16,7 +16,7 @@ export interface Row {
        * the items of the row
        */
       items: {
-        resourceRefId?: string
+        resourceRefId: string
       }[]
     }
     resourcesRefs: {

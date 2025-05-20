@@ -7,11 +7,14 @@ import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { lightfair } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
+import type { YamlViewer as WidgetType } from './YamlViewer.type'
 import type { WidgetProps } from '../../types/Widget'
 
 import styles from './YamlViewer.module.css'
 
-const YamlViewer = ({ widgetData }: WidgetProps<{ json: string }>) => {
+type WidgetData = WidgetType['spec']['widgetData']
+
+const YamlViewer = ({ widgetData }: WidgetProps<WidgetData>) => {
   const { json } = widgetData
 
   const [isCopied, setIsCopied] = useState(false)
