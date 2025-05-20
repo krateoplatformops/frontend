@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint:css": "stylelint \"src/**/*.module.css\" --fix",
-    "generate-types": "json2ts --input src/schemas/ --output src/types/",
-    "watch-types": "chokidar 'src/schemas/*.schema.json' -c 'npm run generate-types'",
+    "generate-types": "tsx scripts/generate-types.ts",
     "apply-all": "tsx scripts/apply-k8s-yamls.ts",
     "send-schemas": "tsx scripts/send-schemas-to-smithery.ts",
     "validate-schemas": "tsx scripts/validate-schemas.ts"
