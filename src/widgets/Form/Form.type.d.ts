@@ -15,7 +15,7 @@ export interface Form {
       /**
        * the schema of the form
        */
-      schema: {}
+      schema: unknown
       /**
        * the id of the action to be called when the form is submitted
        */

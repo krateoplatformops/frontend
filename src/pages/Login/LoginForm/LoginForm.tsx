@@ -11,7 +11,7 @@ type LoginType = {
   isLoading: boolean
 }
 
-const LoginForm = ({ method, onSubmit, isLoading }: LoginType) => {
+const LoginForm = ({ isLoading, method, onSubmit }: LoginType) => {
   return (
     <section className={styles.form}>
       <Form

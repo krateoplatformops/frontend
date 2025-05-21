@@ -1,6 +1,8 @@
-import { Table as AntdTable, TableProps } from 'antd'
+import type { TableProps } from 'antd'
+import { Table as AntdTable } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
+
 import type { Table as WidgetType } from './Table.type'
 
 type WidgetData = WidgetType['spec']['widgetData']
@@ -11,7 +13,7 @@ const Table = ({ widgetData }: WidgetProps<WidgetData>) => {
   let dataSource: TableProps['dataSource'] = []
   try {
     if (data) {
-      dataSource = JSON.parse(data)
+      dataSource = JSON.parse(data) as TableProps['dataSource']
     }
   } catch (error) {
     console.error('Error while parsing Table data', error)
@@ -19,7 +21,7 @@ const Table = ({ widgetData }: WidgetProps<WidgetData>) => {
 
   return (
     <AntdTable
-      columns={columns?.map(({valueKey, title}) => ({
+      columns={columns?.map(({ title, valueKey }) => ({
         dataIndex: valueKey,
         title,
       }))}

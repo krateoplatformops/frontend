@@ -12,7 +12,7 @@ export interface EventList {
      * the data that will be passed to the widget on the frontend
      */
     widgetData: {
-      events: SSEK8sEvent
+      events: SSEK8sEvent[]
       sseEndpoint?: string
       sseTopic?: string
     }

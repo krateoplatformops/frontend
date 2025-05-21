@@ -1,21 +1,22 @@
 
 import { Result } from 'antd'
 import ReactECharts from 'echarts-for-react'
+
+import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 
-import { WidgetProps } from '../../types/Widget'
 import type { PieChart as WidgetType } from './PieChart.type'
 
 type WidgetData = WidgetType['spec']['widgetData']
 
 const PieChart = ({ widgetData }: WidgetProps<WidgetData>) => {
-  const { title, description, series } = widgetData
+  const { description, series, title } = widgetData
 
   if (!series) {
     return <Result status='warning' subTitle='No chart data available' />
   }
 
-  const {data, total}  = series
+  const { data, total } = series
 
   const filledValue = data.reduce((sum, item) => sum + (item.value || 0), 0)
   const emptyValue = Math.max(total - filledValue, 0)

@@ -1,20 +1,22 @@
 
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'antd'
+import type { MenuItemType } from 'antd/es/menu/interface'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
+
+import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-import type { IconProp } from '@fortawesome/fontawesome-svg-core'
-import type { MenuItemType } from 'antd/es/menu/interface'
-import type { NavMenu as WidgetType } from './NavMenu.type'
-import type { WidgetProps } from '../../types/Widget'
 
 import styles from './NavMenu.module.css'
+import type { NavMenu as WidgetType } from './NavMenu.type'
+
 
 type WidgetData = WidgetType['spec']['widgetData']
 
-export function NavMenu({ widgetData, resourcesRefs }: WidgetProps<WidgetData>) {
+export function NavMenu({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) {
   const navigate = useNavigate()
 
   const { items } = widgetData

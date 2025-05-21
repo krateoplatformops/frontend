@@ -18,10 +18,10 @@ export const getEndpointUrl = (resourceRefId: string, resourcesRefs: Widget['sta
 }
 
 export const getResourceEndpoint = ({
-  resource,
-  version,
   name,
   namespace,
+  resource,
+  version,
 }: {
   resource: string
   version: string

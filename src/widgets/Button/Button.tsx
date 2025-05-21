@@ -1,16 +1,17 @@
 /* eslint-disable max-depth */
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntButton } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import { useNavigate } from 'react-router'
+
 import { useConfigContext } from '../../context/ConfigContext'
+import type { WidgetProps } from '../../types/Widget'
+import type { Action } from '../../utils/types'
 import { getEndpointUrl } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 
-import type { IconProp } from '@fortawesome/fontawesome-svg-core'
-import type { WidgetProps } from '../../types/Widget'
 import type { Button as WidgetType } from './Button.type'
-import type { Action } from '../../utils/types'
 
 type WidgetData = WidgetType['spec']['widgetData']
 
@@ -34,8 +35,8 @@ const createNginxPodEndpoint = (
   return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
 }
 
-const Button = ({ widgetData, actions, resourcesRefs,}: WidgetProps<WidgetData>) => {
-  const { color, clickActionId, label, icon, size, type } = widgetData
+const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<WidgetData>) => {
+  const { clickActionId, color, icon, label, size, type } = widgetData
 
   const navigate = useNavigate()
   const { config } = useConfigContext()
@@ -47,7 +48,7 @@ const Button = ({ widgetData, actions, resourcesRefs,}: WidgetProps<WidgetData>)
       .find(({ id }) => id === clickActionId)
 
     if (buttonAction) {
-      const { resourceRefId, requireConfirmation, type } = buttonAction
+      const { requireConfirmation, resourceRefId, type } = buttonAction
 
       switch (type) {
         case 'navigate': {

@@ -1,43 +1,32 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Spin, Form } from 'antd'
+import { Spin } from 'antd'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
-import type { ButtonSchema } from '../../types/Button.schema'
 import type { Widget } from '../../types/Widget'
 import Button from '../../widgets/Button'
-import Column from '../../widgets/Column'
-import EventList from '../../widgets/EventList'
-import LineChart from '../../widgets/LineChart'
-import { NavMenu } from '../../widgets/NavMenu/NavMenu'
-import Panel from '../../widgets/Panel/Panel'
-import Paragraph from '../../widgets/Paragraph'
-import PieChart from '../../widgets/PieChart/PieChart'
-import { Route } from '../../widgets/Route/Route'
-import Row from '../../widgets/Row'
-import Table from '../../widgets/Table/Table'
-import TabList from '../../widgets/TabList'
-import YamlViewer from '../../widgets/YamlViewer'
 
 import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
-  if (!widget.status) {
-    return `no status for ${widget.kind} widget`
+  const { kind, spec, status } = widget
+
+  if (!status) {
+    return `no status for ${kind} widget`
   }
 
-  switch (widget.kind) {
+  switch (kind) {
     case 'Status': {
       const params = new URLSearchParams(widgetEndpoint)
 
+      // TODO: handle error
       return (
         <div style={{ border: '1px solid red', margin: '10px' }}>
           ERROR
           <div>name: {params.get('name')}</div>
           <div>namespace: {params.get('namespace')}</div>
           <div>version: {params.get('apiVersion')}</div>
-          {/* <div>resource: {x.get('resource')}</div> */}
           <div>
             <pre style={{ whiteSpace: 'wrap' }}>
               {JSON.stringify(widget, null, 2)}
@@ -58,88 +47,88 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           }
         />
       )
-    case 'Column':
-      return (
-        <Column
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'EventList':
-      return (
-        <EventList
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'Form':
-      return <Form widgetData={widget.status.widgetData} />
-    case 'NavMenu':
-      return (
-        <NavMenu
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'Panel':
-      return (
-        <Panel
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'Paragraph':
-      return (
-        <Paragraph widgetData={widget.status.widgetData} />
-      )
-    case 'PieChart':
-      return (
-        <PieChart
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'LineChart':
-      return (
-        <LineChart
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'Row':
-      return (
-        <Row
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'Route':
-      return (
-        <Route
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'Table':
-      return (
-        <Table
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'TabList':
-      return (
-        <TabList
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'YamlViewer':
-      return (
-        <YamlViewer
-          widgetData={widget.status.widgetData}
-        />
-      )
+    // case 'Column':
+    //   return (
+    //     <Column
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'EventList':
+    //   return (
+    //     <EventList
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'Form':
+    //   return <Form widgetData={widget.status.widgetData} />
+    // case 'NavMenu':
+    //   return (
+    //     <NavMenu
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'Panel':
+    //   return (
+    //     <Panel
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'Paragraph':
+    //   return (
+    //     <Paragraph widgetData={widget.status.widgetData} />
+    //   )
+    // case 'PieChart':
+    //   return (
+    //     <PieChart
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'LineChart':
+    //   return (
+    //     <LineChart
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'Row':
+    //   return (
+    //     <Row
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'Route':
+    //   return (
+    //     <Route
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'Table':
+    //   return (
+    //     <Table
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'TabList':
+    //   return (
+    //     <TabList
+    //       resourcesRefs={widget.status.resourcesRefs}
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
+    // case 'YamlViewer':
+    //   return (
+    //     <YamlViewer
+    //       widgetData={widget.status.widgetData}
+    //     />
+    //   )
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }
@@ -159,8 +148,8 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
 
   const {
     data: widget,
-    isLoading,
     error,
+    isLoading,
   } = useQuery({
     queryFn: async () => {
       const res = await fetch(widgetFullUrl, {
@@ -188,12 +177,15 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
     return null
   }
 
+  // TODO: handle error
   if (error) {
     console.error(error)
     return <div>...error</div>
   }
 
-  if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
+  const { code, kind, message, status } = widget
+
+  if (kind === 'Status' && code === 500 && status === 'Failure' && message?.includes('credentials')) {
     void navigate('/login')
   }
 

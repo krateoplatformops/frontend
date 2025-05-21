@@ -86,7 +86,7 @@
                 },
                 "additionalProperties": false
               },
-              "tsType": "SSEK8sEvent"
+              "tsType": "SSEK8sEvent[]"
             },
             "sseEndpoint": { "type": "string" },
             "sseTopic": { "type": "string" }

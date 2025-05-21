@@ -19,7 +19,7 @@ library.add(fab, fas, far)
 const queryClient = new QueryClient()
 
 const AppInitializer: React.FC = () => {
-  const { routes, isLoading: isRoutesLoading } = useRoutesContext()
+  const { isLoading: isRoutesLoading, routes } = useRoutesContext()
   const { isLoading: isConfigLoading } = useConfigContext()
 
 

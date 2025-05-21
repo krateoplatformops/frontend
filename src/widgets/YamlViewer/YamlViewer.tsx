@@ -7,10 +7,10 @@ import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { lightfair } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
-import type { YamlViewer as WidgetType } from './YamlViewer.type'
 import type { WidgetProps } from '../../types/Widget'
 
 import styles from './YamlViewer.module.css'
+import type { YamlViewer as WidgetType } from './YamlViewer.type'
 
 type WidgetData = WidgetType['spec']['widgetData']
 
@@ -19,7 +19,7 @@ const YamlViewer = ({ widgetData }: WidgetProps<WidgetData>) => {
 
   const [isCopied, setIsCopied] = useState(false)
 
-  const { yamlString, error } = useMemo(() => {
+  const { error, yamlString } = useMemo(() => {
     try {
       const parsedJson = JSON.parse(json) as unknown
       return { error: null, yamlString: dump(parsedJson) }

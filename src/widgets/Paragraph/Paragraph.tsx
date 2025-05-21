@@ -1,9 +1,10 @@
 import { Typography } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
-import type { Paragraph as WidgetType } from './Paragraph.type'
 
 import styles from './Paragraph.module.css'
+import type { Paragraph as WidgetType } from './Paragraph.type'
+
 
 type WidgetData = WidgetType['spec']['widgetData']
 

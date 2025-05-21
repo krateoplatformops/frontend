@@ -1,8 +1,9 @@
 import { Empty } from 'antd'
 import ReactECharts from 'echarts-for-react'
-import { getColorCode } from '../../utils/palette'
 
 import type { WidgetProps } from '../../types/Widget'
+import { getColorCode } from '../../utils/palette'
+
 import type { LineChart as WidgetType } from './LineChart.type'
 
 type WidgetData = WidgetType['spec']['widgetData']

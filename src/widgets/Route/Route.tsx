@@ -1,15 +1,14 @@
 
 import WidgetRenderer from '../../components/WidgetRenderer'
+import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-import type { WidgetProps } from '../../types/Widget'
-import type { Route as WidgetType } from './Route.type'
-
 import styles from './Route.module.css'
+import type { Route as WidgetType } from './Route.type'
 
 type WidgetData = WidgetType['spec']['widgetData']
 
-export function Route({ widgetData, resourcesRefs }: WidgetProps<WidgetData>) {
+export function Route({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) {
   const { items } = widgetData
 
   return (

@@ -1,15 +1,16 @@
 import type { TabsProps } from 'antd'
 import { Tabs } from 'antd'
 import { useMemo } from 'react'
+
 import WidgetRenderer from '../../components/WidgetRenderer'
+import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-import type { WidgetProps } from '../../types/Widget'
 import type { TabList as WidgetType } from './TabList.type'
 
 type WidgetData = WidgetType['spec']['widgetData']
 
-const TabList = ({ widgetData, resourcesRefs }: WidgetProps<WidgetData>) => {
+const TabList = ({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) => {
   const { items } = widgetData
 
   const tabItems: TabsProps['items'] = useMemo(() => items.map(({ label, resourceRefId }, index) => ({

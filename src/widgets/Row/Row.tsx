@@ -1,14 +1,13 @@
 import WidgetRenderer from '../../components/WidgetRenderer'
+import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-import type { WidgetProps } from '../../types/Widget'
-import type { Row as WidgetType } from './Row.type'
-
 import styles from './Row.module.css'
+import type { Row as WidgetType } from './Row.type'
 
 type WidgetData = WidgetType['spec']['widgetData']
 
-const Row = ({ widgetData, resourcesRefs }: WidgetProps<WidgetData>) => {
+const Row = ({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) => {
   const { items } = widgetData
 
   return (
