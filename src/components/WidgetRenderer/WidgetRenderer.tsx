@@ -1,6 +1,6 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Spin } from 'antd'
+import { Result, Spin } from 'antd'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
@@ -39,35 +39,52 @@ import styles from './WidgetRenderer.module.css'
 function parseData(widget: Widget, widgetEndpoint: string) {
   const { kind, status } = widget
 
-  // TODO: handle error
   if (!status) {
-    return `No status for ${kind} widget`
+    return (
+      <div className={styles.message}>
+        <Result
+          status='error'
+          subTitle={`Widget ${kind} does not have a status specification`}
+          title='Error while rendering widget'
+        />
+      </div>
+    )
   }
 
-  // TODO: handle error
   if (typeof status === 'string') {
     if (kind === 'Status') {
       const params = new URLSearchParams(widgetEndpoint)
 
-      // TODO: handle error
       return (
-        <div style={{ border: '1px solid red', margin: '10px' }}>
-          ERROR
-          <div>name: {params.get('name')}</div>
-          <div>namespace: {params.get('namespace')}</div>
-          <div>version: {params.get('apiVersion')}</div>
-          {/* <div>resource: {x.get('resource')}</div> */}
-          <div>
-            <pre style={{ whiteSpace: 'wrap' }}>
-              {JSON.stringify(widget, null, 2)}
-            </pre>
-            <pre style={{ whiteSpace: 'wrap' }}>endpoint:{widgetEndpoint}</pre>
-          </div>
+        <div className={styles.message}>
+          <Result
+            status='error'
+            subTitle={`There has been an error while rendering a widget with the following specification:`}
+            title='Error while rendering widget'
+          >
+            <div className={styles.content}>
+              <pre className={styles.pre}>
+                <b>Name:</b> {params.get('name')}{'\n'}
+                <b>Namespace:</b> {params.get('namespace')}{'\n'}
+                <b>Version:</b> {params.get('apiVersion')}{'\n'}
+                <b>Endpoint:</b> {widgetEndpoint}{'\n'}{'\n'}
+                <b>Widget:</b> {JSON.stringify(widget, null, 2)}{'\n'}
+              </pre>
+            </div>
+          </Result>
         </div>
       )
     }
 
-    return `Status for ${kind} widget is in string format: ${status}`
+    return (
+      <div className={styles.message}>
+        <Result
+          status='error'
+          subTitle={`Status for ${kind} widget is in string format: ${status}`}
+          title='Error while rendering widget'
+        />
+      </div>
+    )
   }
 
   const { actions, resourcesRefs, widgetData } = status
@@ -146,13 +163,29 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
   }
 
   if (!widget) {
-    return null
+    return (
+      <div className={styles.message}>
+        <Result
+          status='error'
+          subTitle={`The widget does not exist`}
+          title='Error while rendering widget'
+        />
+      </div>
+    )
   }
 
-  // TODO: handle error
   if (error) {
     console.error(error)
-    return <div>...error</div>
+
+    return (
+      <div className={styles.message}>
+        <Result
+          status='error'
+          subTitle={`There has been an error while fetching the widget: ${error}`}
+          title='Error while rendering widget'
+        />
+      </div>
+    )
   }
 
   if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {

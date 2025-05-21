@@ -16,14 +16,16 @@ const Sidebar = () => {
         />
       </div>
 
-      <WidgetRenderer
-        widgetEndpoint={getResourceEndpoint({
-          name: 'sidebar-nav-menu',
-          namespace: 'krateo-system',
-          resource: 'navmenus',
-          version: 'v1beta1',
-        })}
-      />
+      <div className={styles.content}>
+        <WidgetRenderer
+          widgetEndpoint={getResourceEndpoint({
+            name: 'sidebar-nav-menu',
+            namespace: 'krateo-system',
+            resource: 'navmenus',
+            version: 'v1beta1',
+          })}
+        />
+      </div>
     </div>
   )
 }
