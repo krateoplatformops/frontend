@@ -5,7 +5,7 @@ import { dump } from 'js-yaml'
 import { useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import { lightfair } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import lightfair from 'react-syntax-highlighter/dist/esm/styles/hljs/lightfair.js'
 
 import type { WidgetProps } from '../../types/Widget'
 

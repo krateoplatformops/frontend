@@ -141,3 +141,21 @@ spec:
       namespace: krateo-system
       resource: linecharts
       verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-bar-chart
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Bar chart
+    items:
+      - resourceRefId: my-bar-chart
+  resourcesRefs:
+    - id: my-bar-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-bar-chart
+      namespace: krateo-system
+      resource: barcharts
+      verb: GET

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { Widget } from '../../types/Widget'
+import BarChart from '../../widgets/BarChart'
 import Button from '../../widgets/Button'
 import type { ButtonWidgetData } from '../../widgets/Button/Button'
 import Column from '../../widgets/Column'
@@ -12,7 +13,6 @@ import type { ColumnWidgetData } from '../../widgets/Column/Column'
 import EventList from '../../widgets/EventList'
 import type { EventListWidgetData } from '../../widgets/EventList/EventList'
 import LineChart from '../../widgets/LineChart'
-import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
 import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
 import { NavMenu } from '../../widgets/NavMenu/NavMenu'
 import type { PanelWidgetData } from '../../widgets/Panel/Panel'
@@ -85,7 +85,19 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'PieChart':
       return <PieChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as PieChartWidgetData} />
     case 'LineChart':
-      return <LineChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as LineChartWidgetData} />
+      return (
+        <LineChart
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'BarChart':
+      return (
+        <BarChart
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
     case 'Row':
       return <Row actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RowWidgetData} />
     case 'Route':

@@ -49,7 +49,7 @@ spec:
       - resourceRefId: panel-event-list
       - resourceRefId: panel-tab-list
       - resourceRefId: panel-line-chart
-
+      - resourceRefId: panel-bar-chart
   resourcesRefs:
     - id: panel-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -78,6 +78,12 @@ spec:
     - id: panel-line-chart
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: panel-line-chart
+      namespace: krateo-system
+      resource: panels
+      verb: GET
+    - id: panel-bar-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: panel-bar-chart
       namespace: krateo-system
       resource: panels
       verb: GET

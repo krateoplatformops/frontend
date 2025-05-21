@@ -3,10 +3,14 @@
   --border-color: #fff;
   --light-color: #fff;
   --gray-color: #a0a0a0;
+  --primary-color: #05629A;
   --menuitem-bg: rgb(17 178 226 / 40%);
   --menuitem-color: rgb(255 255 255 / 50%);
   --menu-bg-start: #005d8b;
   --menu-bg-end: #002f46;
+  --success-color: #00D690;
+  --error-color: #F84C4C;
+  --warning-color: #FFAA00;
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
