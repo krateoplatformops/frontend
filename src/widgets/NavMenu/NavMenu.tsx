@@ -11,19 +11,17 @@ import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './NavMenu.module.css'
 
-export function NavMenu(
-  props: WidgetProps<{
-    items: Array<{
-      label: string
-      icon: string
-      path: string
-      resourceRefId: string
-    }>
-  }>,
-) {
+export function NavMenu({ widgetData, resourcesRefs }: WidgetProps<{
+  items: Array<{
+    label: string
+    icon: string
+    path: string
+    resourceRefId: string
+  }>
+}>) {
   const navigate = useNavigate()
 
-  const { items } = props.widgetData
+  const { items } = widgetData
 
   const menuItems: MenuItemType[] = useMemo(() => items.map(({ icon, label, path }) => ({
     icon: <FontAwesomeIcon icon={icon as IconProp} />,
@@ -35,12 +33,12 @@ export function NavMenu(
     const item = items.find((item) => item.path === path)
 
     if (item) {
-      const backendEndpoint = getEndpointUrl(item.resourceRefId, props.resourcesRefs)
+      const backendEndpoint = getEndpointUrl(item.resourceRefId, resourcesRefs)
       return `${path}?widgetEndpoint=${encodeURIComponent(backendEndpoint)}`
     }
 
     return path
-  }, [items, props.resourcesRefs])
+  }, [items, resourcesRefs])
 
   useEffect(() => {
     if (window.location.pathname === '/' && menuItems.length > 0) {

@@ -1,20 +1,26 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Form } from 'antd'
+import { Spin, Form } from 'antd'
+import { useNavigate } from 'react-router'
 
-import { useConfigContext } from '../context/ConfigContext'
-import type { ButtonSchema } from '../types/Button.schema'
-import type { Widget } from '../types/Widget'
-import BarChart from '../widgets/BarChart'
-import Button from '../widgets/Button'
-import Column from '../widgets/Column'
-import LineChart from '../widgets/LineChart'
-import { NavMenu } from '../widgets/NavMenu/NavMenu'
-import Panel from '../widgets/Panel/Panel'
-import Paragraph from '../widgets/Paragraph'
-import PieChart from '../widgets/PieChart/PieChart'
-import { Route } from '../widgets/Route/Route'
-import Row from '../widgets/Row'
-import Table from '../widgets/Table/Table'
+import { useConfigContext } from '../../context/ConfigContext'
+import type { ButtonSchema } from '../../types/Button.schema'
+import type { Widget } from '../../types/Widget'
+import Button from '../../widgets/Button'
+import Column from '../../widgets/Column'
+import EventList from '../../widgets/EventList'
+import LineChart from '../../widgets/LineChart'
+import { NavMenu } from '../../widgets/NavMenu/NavMenu'
+import Panel from '../../widgets/Panel/Panel'
+import Paragraph from '../../widgets/Paragraph'
+import PieChart from '../../widgets/PieChart/PieChart'
+import { Route } from '../../widgets/Route/Route'
+import Row from '../../widgets/Row'
+import Table from '../../widgets/Table/Table'
+import TabList from '../../widgets/TabList'
+import YamlViewer from '../../widgets/YamlViewer'
+
+import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   if (!widget.status) {
@@ -23,13 +29,14 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 
   switch (widget.kind) {
     case 'Status': {
-      const x = new URLSearchParams(widgetEndpoint)
+      const params = new URLSearchParams(widgetEndpoint)
+
       return (
         <div style={{ border: '1px solid red', margin: '10px' }}>
           ERROR
-          <div>name: {x.get('name')}</div>
-          <div>namespace: {x.get('namespace')}</div>
-          <div>version: {x.get('apiVersion')}</div>
+          <div>name: {params.get('name')}</div>
+          <div>namespace: {params.get('namespace')}</div>
+          <div>version: {params.get('apiVersion')}</div>
           {/* <div>resource: {x.get('resource')}</div> */}
           <div>
             <pre style={{ whiteSpace: 'wrap' }}>
@@ -54,6 +61,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Column':
       return (
         <Column
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'EventList':
+      return (
+        <EventList
           resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData}
         />
@@ -120,12 +134,27 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           widgetData={widget.status.widgetData}
         />
       )
+    case 'TabList':
+      return (
+        <TabList
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'YamlViewer':
+      return (
+        <YamlViewer
+          widgetData={widget.status.widgetData}
+        />
+      )
     default:
       throw new Error(`Unknown widget kind: ${widget.kind}`)
   }
 }
 
-export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
+const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
+  const navigate = useNavigate()
+
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(
       `WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`,
@@ -155,17 +184,27 @@ export function WidgetRenderer({ widgetEndpoint }: { widgetEndpoint: string }) {
   })
 
   if (isLoading) {
-    return <div>...loading</div>
+    return (
+      <div className={styles.loading}>
+        <Spin indicator={<LoadingOutlined />} size='large' spinning />
+      </div>
+    )
   }
 
   if (!widget) {
-    /* no data */
     return null
   }
+
   if (error) {
     console.error(error)
     return <div>...error</div>
   }
 
+  if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
+    void navigate('/login')
+  }
+
   return parseData(widget, widgetEndpoint)
 }
+
+export default WidgetRenderer

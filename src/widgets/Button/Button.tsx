@@ -6,11 +6,11 @@ import useApp from 'antd/es/app/useApp'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
-import { openDrawer } from '../../Drawer'
 import type { ButtonSchema } from '../../types/Button.schema'
 import type { WidgetProps } from '../../types/Widget'
 import type { Action } from '../../utils/types'
 import { getEndpointUrl } from '../../utils/utils'
+import { openDrawer } from '../Drawer/Drawer'
 
 type BackendEndpointFromSpec = {
   apiVersion: string

@@ -1,7 +1,7 @@
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Card as AntdCard, Button, Tooltip } from 'antd'
 
-import { WidgetRenderer } from '../../components/WidgetRenderer'
+import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetItems, WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 

@@ -1,0 +1,158 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "description": "widget version",
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "description": "name of the k8s Custom Resource",
+      "default": "EventList"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "description": "the data that will be passed to the widget on the frontend",
+          "type": "object",
+          "required": ["events"],
+          "properties": {
+            "events": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "metadata",
+                  "involvedObject",
+                  "reason",
+                  "message",
+                  "type",
+                  "source"
+                ],
+                "properties": {
+                  "icon": { "type": "string" },
+                  "reason": { "type": "string" },
+                  "message": { "type": "string" },
+                  "type": { "type": "string", "enum": ["Normal", "Warning"] },
+                  "count": { "type": "integer" },
+                  "action": { "type": "string" },
+                  "reportingComponent": { "type": "string" },
+                  "reportingInstance": { "type": "string" },
+                  "firstTimestamp": { "type": "string", "format": "date-time" },
+                  "lastTimestamp": { "type": "string", "format": "date-time" },
+                  "eventTime": { "type": "string", "format": "date-time" },
+                  "metadata": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "namespace",
+                      "uid",
+                      "creationTimestamp"
+                    ],
+                    "properties": {
+                      "name": { "type": "string" },
+                      "namespace": { "type": "string" },
+                      "uid": { "type": "string" },
+                      "creationTimestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  },
+                  "involvedObject": {
+                    "type": "object",
+                    "required": ["kind", "name", "namespace", "uid"],
+                    "properties": {
+                      "apiVersion": { "type": "string" },
+                      "kind": { "type": "string" },
+                      "name": { "type": "string" },
+                      "namespace": { "type": "string" },
+                      "uid": { "type": "string" }
+                    }
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "component": { "type": "string" },
+                      "host": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "sseEndpoint": { "type": "string" },
+            "sseTopic": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "resourcesRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
+              }
+            }
+          }
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"]
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": ["widgetData"]
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}

@@ -4,8 +4,6 @@ import ReactECharts from 'echarts-for-react'
 import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 
-import styles from './LineChart.module.css'
-
 
 type ChartLineDataPoint = {
   xAxis: string | number
@@ -59,11 +57,7 @@ const LineChart = ({ widgetData }: WidgetProps<{
     },
   }
 
-  return (
-    <div className={styles.chart}>
-      <ReactECharts option={optionLine} style={{ height: '400px' }} />
-    </div>
-  )
+  return <ReactECharts option={optionLine} style={{ height: '400px' }} />
 }
 
 export default LineChart

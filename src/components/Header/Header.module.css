@@ -12,7 +12,8 @@
     & .right {
       align-items: center;
       display: flex;
-      gap: var(--spacing-sm)
+      gap: var(--spacing-md);
+      justify-self: flex-end
     }
   }
 }
