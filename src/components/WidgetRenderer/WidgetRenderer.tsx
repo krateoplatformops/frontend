@@ -46,13 +46,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 
   // TODO: handle error
   if (typeof status === 'string') {
-    return `Status for ${kind} widget is in string format: ${status}`
-  }
-
-  const { actions, resourcesRefs, widgetData } = status
-
-  switch (kind) {
-    case 'Status': {
+    if (kind === 'Status') {
       const params = new URLSearchParams(widgetEndpoint)
 
       // TODO: handle error
@@ -72,6 +66,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
         </div>
       )
     }
+
+    return `Status for ${kind} widget is in string format: ${status}`
+  }
+
+  const { actions, resourcesRefs, widgetData } = status
+
+  switch (kind) {
     case 'Button':
       return <Button actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ButtonWidgetData }/>
     case 'Column':
@@ -90,7 +91,6 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <LineChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as LineChartWidgetData} />
     case 'BarChart':
       return <BarChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as BarChartWidgetData} />
-
     case 'Row':
       return <Row actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RowWidgetData} />
     case 'Route':
