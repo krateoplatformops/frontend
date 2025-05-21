@@ -6,7 +6,7 @@ import useApp from 'antd/es/app/useApp'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
-import type { WidgetProps } from '../../types/Widget'
+import type { ResourcesRefs, WidgetProps } from '../../types/Widget'
 import type { Action } from '../../utils/types'
 import { getEndpointUrl } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
@@ -15,18 +15,9 @@ import type { Button as WidgetType } from './Button.type'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
 
-type BackendEndpointFromSpec = {
-  apiVersion: string
-  id: string
-  name: string
-  namespace: string
-  resource: string
-  verb: string
-}
-
 const createNginxPodEndpoint = (
   baseUrl: string,
-  resourcesRefs: Array<BackendEndpointFromSpec>,
+  resourcesRefs: ResourcesRefs,
 ) => {
   if (!resourcesRefs || resourcesRefs.length === 0) {
     throw new Error('cannot find backend endpoints')
@@ -54,10 +45,7 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
         case 'navigate': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(
-                resourceRefId,
-                resourcesRefs as unknown as BackendEndpointFromSpec[],
-              )
+              const url = getEndpointUrl(resourceRefId, resourcesRefs,)
               await navigate(url)
             }
           }
@@ -66,10 +54,7 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
         case 'rest': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = createNginxPodEndpoint(
-                config!.api.BACKEND_API_BASE_URL,
-                resourcesRefs as unknown as BackendEndpointFromSpec[],
-              )
+              const url = createNginxPodEndpoint(config!.api.BACKEND_API_BASE_URL, resourcesRefs)
               const res = await fetch(url, {
                 body: JSON.stringify({
                   apiVersion: 'v1',
@@ -99,7 +84,15 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
                 method: 'POST',
               })
 
-              const json = await res.json()
+              type NginxResponse = {
+                message: string
+                metadata: {
+                  name: string
+                }
+                reason: string
+                status: string
+              }
+              const json = await res.json() as NginxResponse
 
               if (!res.ok) {
                 notification.error({

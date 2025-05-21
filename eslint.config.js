@@ -96,7 +96,7 @@ export default tsEslint.config(
       ],
       '@stylistic/js/no-mixed-spaces-and-tabs': 'error',
       '@stylistic/js/no-multi-spaces': 'error',
-      '@stylistic/js/no-multiple-empty-lines': 'error',
+      '@stylistic/js/no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
       '@stylistic/js/no-tabs': 'error',
       '@stylistic/js/no-trailing-spaces': 'error',
       '@stylistic/js/no-whitespace-before-property': 'error',

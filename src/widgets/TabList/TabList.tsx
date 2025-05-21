@@ -19,7 +19,6 @@ const TabList = ({ resourcesRefs, widgetData }: WidgetProps<TabListWidgetData>) 
     label,
   })), [items, resourcesRefs])
 
-
   return <Tabs items={tabItems} />
 }
 

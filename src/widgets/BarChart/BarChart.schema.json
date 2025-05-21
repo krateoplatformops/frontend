@@ -21,6 +21,7 @@
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["bars"],
                 "properties": {
                   "label": {
                     "type": "string"
@@ -48,10 +49,12 @@
                             "green"
                           ]
                         }
-                      }
+                      },
+                      "additionalProperties": false
                     }
                   }
-                }
+                },
+                "additionalProperties": false
               }
             }
           },
@@ -67,6 +70,7 @@
               "type": "string"
             }
           },
+          "additionalProperties": false,
           "required": ["name", "namespace"]
         },
         "widgetDataTemplate": {
@@ -80,10 +84,12 @@
               "expression": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
         }
       },
+      "additionalProperties": false,
       "required": ["widgetData"]
     }
   },

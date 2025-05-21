@@ -1,3 +1,12 @@
+export interface ResourceRef {
+  id: string
+  path: string
+  verb: 'GET' | 'POST' | 'DELETE'
+  payload: object
+}
+
+export type ResourcesRefs = ResourceRef[]
+
 export interface Widget<WidgetDataType = unknown> {
   uid: string
   name: string
@@ -24,12 +33,7 @@ export interface Widget<WidgetDataType = unknown> {
     widgets: Widget[]
     actions: WidgetActions
     events: unknown /* EventsType */
-    resourcesRefs: Array<{
-      id: string
-      path: string
-      verb: 'GET' | 'POST' | 'DELETE'
-      payload: object
-    }>
+    resourcesRefs: ResourcesRefs
   } | string
 }
 
@@ -73,6 +77,5 @@ export type WidgetActions = {
 export type WidgetProps<T = unknown> = {
   widgetData: T
   actions: Widget['status']['actions']
-  resourcesRefs: Widget['status']['resourcesRefs']
+  resourcesRefs: ResourcesRefs
 }
-

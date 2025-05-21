@@ -1,4 +1,3 @@
-
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'

@@ -22,7 +22,6 @@ const AppInitializer: React.FC = () => {
   const { isLoading: isRoutesLoading, routes } = useRoutesContext()
   const { isLoading: isConfigLoading } = useConfigContext()
 
-
   if (isRoutesLoading || isConfigLoading) {
     return (
       <div className={styles.loading}>

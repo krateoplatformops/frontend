@@ -31,7 +31,6 @@ async function walkDir(dir: string, callback: (filepath: string) => Promise<void
   await Promise.all(tasks)
 }
 
-
 async function generateTypes() {
   await walkDir(baseDir, async (filepath) => {
     if (filepath.endsWith('.schema.json')) {

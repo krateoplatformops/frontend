@@ -1,4 +1,3 @@
-
 import { CopyOutlined } from '@ant-design/icons'
 import { Button, Result } from 'antd'
 import { dump } from 'js-yaml'
@@ -59,7 +58,7 @@ const YamlViewer = ({ widgetData }: WidgetProps<YamlViewerWidgetData>) => {
         <SyntaxHighlighter
           language='yaml'
           showLineNumbers
-          style={lightfair}
+          style={lightfair as { [key: string]: React.CSSProperties }}
           wrapLines
           wrapLongLines
         >

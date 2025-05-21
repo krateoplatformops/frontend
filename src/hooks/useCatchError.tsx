@@ -49,5 +49,3 @@ const useCatchError = () => {
 }
 
 export default useCatchError
-
-
