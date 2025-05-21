@@ -1,0 +1,26 @@
+kind: BarChart
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: my-bar-chart
+  namespace: krateo-system
+spec:
+  widgetData:
+    data:
+      - label: utilizzo CPU
+        bars:
+          - value: "1982"
+            percentage: 75
+            color: blue
+          - value: "75"
+            percentage: 12
+            color: red
+      - label: utilizzo RAM
+        bars:
+          - value: "72"
+            percentage: 12
+            color: orange
+      - label: Temperatura
+        bars:
+          - value: "63"
+            percentage: 85
+            color: red

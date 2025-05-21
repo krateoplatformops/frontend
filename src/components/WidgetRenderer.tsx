@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
+import { Form } from 'antd'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { ButtonSchema } from '../types/Button.schema'
 import type { Widget } from '../types/Widget'
+import BarChart from '../widgets/BarChart'
 import Button from '../widgets/Button'
 import Column from '../widgets/Column'
 import LineChart from '../widgets/LineChart'
@@ -13,7 +15,6 @@ import PieChart from '../widgets/PieChart/PieChart'
 import { Route } from '../widgets/Route/Route'
 import Row from '../widgets/Row'
 import Table from '../widgets/Table/Table'
-import { Form } from 'antd'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   if (!widget.status) {
@@ -87,6 +88,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'LineChart':
       return (
         <LineChart
+          resourcesRefs={widget.status.resourcesRefs}
+          widgetData={widget.status.widgetData}
+        />
+      )
+    case 'BarChart':
+      return (
+        <BarChart
           resourcesRefs={widget.status.resourcesRefs}
           widgetData={widget.status.widgetData}
         />
