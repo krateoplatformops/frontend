@@ -12,9 +12,9 @@ import type { WidgetProps } from '../../types/Widget'
 import styles from './YamlViewer.module.css'
 import type { YamlViewer as WidgetType } from './YamlViewer.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type YamlViewerWidgetData = WidgetType['spec']['widgetData']
 
-const YamlViewer = ({ widgetData }: WidgetProps<WidgetData>) => {
+const YamlViewer = ({ widgetData }: WidgetProps<YamlViewerWidgetData>) => {
   const { json } = widgetData
 
   const [isCopied, setIsCopied] = useState(false)

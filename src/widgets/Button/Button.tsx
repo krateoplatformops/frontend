@@ -13,7 +13,7 @@ import { openDrawer } from '../Drawer/Drawer'
 
 import type { Button as WidgetType } from './Button.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type ButtonWidgetData = WidgetType['spec']['widgetData']
 
 type BackendEndpointFromSpec = {
   apiVersion: string
@@ -35,7 +35,7 @@ const createNginxPodEndpoint = (
   return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
 }
 
-const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<WidgetData>) => {
+const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidgetData>) => {
   const { clickActionId, color, icon, label, size, type } = widgetData
 
   const navigate = useNavigate()

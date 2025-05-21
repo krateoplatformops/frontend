@@ -9,9 +9,9 @@ import { formatISODate } from '../../utils/utils'
 
 import type { EventList as WidgetType } from './EventList.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type EventListWidgetData = WidgetType['spec']['widgetData']
 
-const EventList = ({ widgetData }: WidgetProps<WidgetData>) => {
+const EventList = ({ widgetData }: WidgetProps<EventListWidgetData>) => {
   const { events, sseEndpoint, sseTopic } = widgetData
 
   const { config } = useConfigContext()

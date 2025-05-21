@@ -8,9 +8,9 @@ import { getEndpointUrl } from '../../utils/utils'
 import styles from './Panel.module.css'
 import type { Panel as WidgetType } from './Panel.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type PanelWidgetData = WidgetType['spec']['widgetData']
 
-const Panel = ({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) => {
+const Panel = ({ resourcesRefs, widgetData }: WidgetProps<PanelWidgetData>) => {
   const { footer, items, title, tooltip } = widgetData
 
   return (

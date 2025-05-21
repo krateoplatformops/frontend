@@ -4,9 +4,9 @@ import type { WidgetProps } from '../../types/Widget'
 
 import type { Form as WidgetType } from './Form.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type FormWidgetData = WidgetType['spec']['widgetData']
 
-function Form({ actions, widgetData }: WidgetProps<WidgetData>) {
+function Form({ actions, widgetData }: WidgetProps<FormWidgetData>) {
   return (
     <div>
       <AntdForm>

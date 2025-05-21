@@ -6,9 +6,9 @@ import { getEndpointUrl } from '../../utils/utils'
 import styles from './Route.module.css'
 import type { Route as WidgetType } from './Route.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type RouteWidgetData = WidgetType['spec']['widgetData']
 
-export function Route({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) {
+export function Route({ resourcesRefs, widgetData }: WidgetProps<RouteWidgetData>) {
   const { items } = widgetData
 
   return (

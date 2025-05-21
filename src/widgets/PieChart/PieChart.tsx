@@ -7,9 +7,9 @@ import { getColorCode } from '../../utils/palette'
 
 import type { PieChart as WidgetType } from './PieChart.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type PieChartWidgetData = WidgetType['spec']['widgetData']
 
-const PieChart = ({ widgetData }: WidgetProps<WidgetData>) => {
+const PieChart = ({ widgetData }: WidgetProps<PieChartWidgetData>) => {
   const { description, series, title } = widgetData
 
   if (!series) {

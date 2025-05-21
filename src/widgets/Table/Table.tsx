@@ -5,9 +5,9 @@ import type { WidgetProps } from '../../types/Widget'
 
 import type { Table as WidgetType } from './Table.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type TableWidgetData = WidgetType['spec']['widgetData']
 
-const Table = ({ widgetData }: WidgetProps<WidgetData>) => {
+const Table = ({ widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize } = widgetData
 
   let dataSource: TableProps['dataSource'] = []

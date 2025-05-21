@@ -8,9 +8,9 @@ import { getEndpointUrl } from '../../utils/utils'
 
 import type { TabList as WidgetType } from './TabList.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type TabListWidgetData = WidgetType['spec']['widgetData']
 
-const TabList = ({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) => {
+const TabList = ({ resourcesRefs, widgetData }: WidgetProps<TabListWidgetData>) => {
   const { items } = widgetData
 
   const tabItems: TabsProps['items'] = useMemo(() => items.map(({ label, resourceRefId }, index) => ({

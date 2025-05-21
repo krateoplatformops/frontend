@@ -9,14 +9,12 @@ import { useNavigate } from 'react-router'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-
 import styles from './NavMenu.module.css'
 import type { NavMenu as WidgetType } from './NavMenu.type'
 
+export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
-type WidgetData = WidgetType['spec']['widgetData']
-
-export function NavMenu({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) {
+export function NavMenu({ resourcesRefs, widgetData }: WidgetProps<NavMenuWidgetData>) {
   const navigate = useNavigate()
 
   const { items } = widgetData

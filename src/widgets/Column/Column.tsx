@@ -5,9 +5,9 @@ import { getEndpointUrl } from '../../utils/utils'
 import styles from './Column.module.css'
 import type { Column as WidgetType } from './Column.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type ColumnWidgetData = WidgetType['spec']['widgetData']
 
-const Column = ({ resourcesRefs, widgetData }: WidgetProps<WidgetData>) => {
+const Column = ({ resourcesRefs, widgetData }: WidgetProps<ColumnWidgetData>) => {
   const { items } = widgetData
 
   return (

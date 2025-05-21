@@ -6,9 +6,9 @@ import styles from './Paragraph.module.css'
 import type { Paragraph as WidgetType } from './Paragraph.type'
 
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type ParagraphWidgetData = WidgetType['spec']['widgetData']
 
-const Paragraph = ({ widgetData }: WidgetProps<WidgetData>) => {
+const Paragraph = ({ widgetData }: WidgetProps<ParagraphWidgetData>) => {
   const { text } = widgetData
 
   return (

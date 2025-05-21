@@ -6,9 +6,9 @@ import { getColorCode } from '../../utils/palette'
 
 import type { LineChart as WidgetType } from './LineChart.type'
 
-type WidgetData = WidgetType['spec']['widgetData']
+export type LineChartWidgetData = WidgetType['spec']['widgetData']
 
-const LineChart = ({ widgetData }: WidgetProps<WidgetData>) => {
+const LineChart = ({ widgetData }: WidgetProps<LineChartWidgetData>) => {
   const { lines, xAxisName, yAxisName } = widgetData
 
   if (!lines) {
