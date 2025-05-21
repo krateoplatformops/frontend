@@ -45,7 +45,7 @@ const App: React.FC = () => {
           </AntApp>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>i
+      </QueryClientProvider>
     </ConfigProvider>
   )
 }
