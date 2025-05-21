@@ -4,8 +4,10 @@ export interface Table {
   spec: {
     widgetData: {
       pageSize?: number
-      data?: string
-      columns?: {
+      data: {
+        [k: string]: unknown
+      }[]
+      columns: {
         valueKey?: string
         title?: string
       }[]

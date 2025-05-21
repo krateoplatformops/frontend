@@ -15,13 +15,16 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["title", "items"],
+          "required": ["data", "columns"],
           "properties": {
             "pageSize": {
               "type": "integer"
             },
             "data": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
             },
             "columns": {
               "type": "array",
