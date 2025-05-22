@@ -1,7 +1,8 @@
-import { Table as AntdTable } from 'antd'
+import { Table as AntdTable, Typography } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
 
+import styles from './Table.module.css'
 import type { Table as WidgetType } from './Table.type'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
@@ -13,7 +14,13 @@ const Table = ({ widgetData }: WidgetProps<TableWidgetData>) => {
     <AntdTable
       columns={columns?.map(({ title, valueKey }) => ({
         dataIndex: valueKey,
-        title,
+        title: (
+          <div className={styles.headerEllipsis}>
+            <Typography.Text ellipsis={{ tooltip: true }}>
+              {title}
+            </Typography.Text>
+          </div>
+        ),
       }))}
       dataSource={data}
       pagination={data && pageSize && data.length > pageSize ? { defaultPageSize: pageSize } : false}

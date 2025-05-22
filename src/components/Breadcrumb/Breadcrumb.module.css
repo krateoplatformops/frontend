@@ -1,9 +1,9 @@
 :global(.ant-breadcrumb) {
-        display: flex;
-        flex-wrap: nowrap;
-        min-width: 0;
-        overflow: hidden;
-      }
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
 
 :global(.ant-breadcrumb > ol) {
   display: flex;
@@ -20,7 +20,7 @@
   text-overflow: ellipsis;
 }
 
-      .breadcrumbItem {
+.breadcrumbItem {
   display: block;
   max-width: 100%;
   overflow: hidden;

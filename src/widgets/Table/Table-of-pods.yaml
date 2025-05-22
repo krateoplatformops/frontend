@@ -13,7 +13,7 @@ spec:
       - valueKey: namespace
         title: Namespace
       - valueKey: image
-        title: Image
+        title: ImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImage
 
   widgetDataTemplate:
     - forPath: data
