@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router'
 
 import WidgetPage from '../components/WidgetPage'
 import Login from '../pages/Login'
+import Auth from '../pages/Auth/Auth'
 
 interface RoutesContextType {
   routes: RouteObject[]
@@ -14,6 +15,7 @@ const RoutesContext = createContext<RoutesContextType | undefined>(undefined)
 
 const defaultRoutes: RouteObject[] = [
   { element: <Login />, path: '/login' },
+  { element: <Auth />, path: '/auth' },
   { element: <WidgetPage />, path: '*' },
 ]
 
