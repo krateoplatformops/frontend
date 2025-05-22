@@ -21,6 +21,7 @@
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["label", "icon", "path", "resourceRefId"],
                 "properties": {
                   "label": {
                     "type": "string"
@@ -34,7 +35,8 @@
                   "resourceRefId": {
                     "type": "string"
                   }
-                }
+                },
+                "additionalProperties": false
               }
             }
           },
@@ -50,7 +52,8 @@
               "type": "string"
             }
           },
-          "required": ["name", "namespace"]
+          "required": ["name", "namespace"],
+          "additionalProperties": false
         },
         "widgetDataTemplate": {
           "type": "array",
@@ -63,7 +66,8 @@
               "expression": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
         },
         "resourcesRefs": {
@@ -78,7 +82,6 @@
               "resource",
               "verb"
             ],
-            "additionalProperties": false,
             "properties": {
               "id": {
                 "type": "string"
@@ -99,11 +102,13 @@
                 "type": "string",
                 "enum": ["GET", "POST", "DELETE"]
               }
-            }
+            },
+            "additionalProperties": false
           }
         }
       },
-      "required": ["widgetData"]
+      "required": ["widgetData"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]

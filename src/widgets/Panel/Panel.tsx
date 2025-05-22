@@ -2,17 +2,15 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import { Card as AntdCard, Button, Tooltip } from 'antd'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
-import type { WidgetItems, WidgetProps } from '../../types/Widget'
+import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Panel.module.css'
+import type { Panel as WidgetType } from './Panel.type'
 
-const Panel = ({ widgetData, resourcesRefs }: WidgetProps<{
-  footer?: WidgetItems
-  items: WidgetItems
-  title: string
-  tooltip?: string
-}>) => {
+export type PanelWidgetData = WidgetType['spec']['widgetData']
+
+const Panel = ({ resourcesRefs, widgetData }: WidgetProps<PanelWidgetData>) => {
   const { footer, items, title, tooltip } = widgetData
 
   return (

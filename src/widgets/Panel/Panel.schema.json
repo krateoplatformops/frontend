@@ -21,22 +21,26 @@
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
                     "type": "string"
                   }
-                }
+                },
+                "additionalProperties": false
               }
             },
             "items": {
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
                     "type": "string"
                   }
-                }
+                },
+                "additionalProperties": false
               }
             },
             "title": {
@@ -94,7 +98,8 @@
               "type": "string"
             }
           },
-          "required": ["name", "namespace"]
+          "required": ["name", "namespace"],
+          "additionalProperties": false
         },
         "widgetDataTemplate": {
           "type": "array",
@@ -107,11 +112,13 @@
               "expression": {
                 "type": "string"
               }
-            }
+            },
+            "additionalProperties": false
           }
         }
       },
-      "required": ["widgetData", "resourcesRefs", "actions"]
+      "required": ["widgetData", "resourcesRefs", "actions"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]

@@ -1,4 +1,3 @@
-
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'antd'
@@ -10,15 +9,11 @@ import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './NavMenu.module.css'
+import type { NavMenu as WidgetType } from './NavMenu.type'
 
-export function NavMenu({ widgetData, resourcesRefs }: WidgetProps<{
-  items: Array<{
-    label: string
-    icon: string
-    path: string
-    resourceRefId: string
-  }>
-}>) {
+export type NavMenuWidgetData = WidgetType['spec']['widgetData']
+
+export function NavMenu({ resourcesRefs, widgetData }: WidgetProps<NavMenuWidgetData>) {
   const navigate = useNavigate()
 
   const { items } = widgetData
@@ -46,7 +41,6 @@ export function NavMenu({ widgetData, resourcesRefs }: WidgetProps<{
       void navigate(defaultPath)
     }
   }, [getWidgetEndpointPath, menuItems, navigate])
-
 
   const handleClick = (key: string) => {
     const path = getWidgetEndpointPath(key)

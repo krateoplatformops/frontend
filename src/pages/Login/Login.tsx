@@ -32,9 +32,9 @@ const Login = () => {
   })
 
   const {
+    error: isLoginError,
     isPending: isLoginLoading,
     mutateAsync: login,
-    error: isLoginError,
   } = useMutation({
     mutationFn: async (credentials: { username: string; password: string; path: string }) => {
       const authUrl = `${config!.api.AUTHN_API_BASE_URL}${credentials.path}`
@@ -60,7 +60,7 @@ const Login = () => {
   })
 
   const onFormSubmit = useCallback(async (body: LoginFormType, type: FormType) => {
-    const { username, password } = body
+    const { password, username } = body
     const method = methods?.find(({ kind }) => kind === type)
 
     if (username && password && method?.path) {

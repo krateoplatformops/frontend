@@ -1,29 +1,32 @@
+import type { TableProps } from 'antd'
 import { Table as AntdTable } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
 
-/* TODO: generate from schema  */
-type TableType = {
-  title: string
-  pageSize: number
-  columns: Array<{
-    valueKey: string
-    title: string
-  }>
-  data: unknown[]
-}
+import type { Table as WidgetType } from './Table.type'
 
-const Table = ({ widgetData }: WidgetProps<TableType>) => {
-  const data = widgetData.data || []
+export type TableWidgetData = WidgetType['spec']['widgetData']
+
+const Table = ({ widgetData }: WidgetProps<TableWidgetData>) => {
+  const { columns, data, pageSize } = widgetData
+
+  let dataSource: TableProps['dataSource'] = []
+  try {
+    if (data) {
+      dataSource = JSON.parse(data) as TableProps['dataSource']
+    }
+  } catch (error) {
+    console.error('Error while parsing Table data', error)
+  }
 
   return (
     <AntdTable
-      columns={widgetData.columns.map((column) => ({
-        dataIndex: column.valueKey,
-        title: column.title,
+      columns={columns?.map(({ title, valueKey }) => ({
+        dataIndex: valueKey,
+        title,
       }))}
-      dataSource={data}
-      pagination={data.length > widgetData.pageSize ? { defaultPageSize: widgetData.pageSize } : false}
+      dataSource={dataSource}
+      pagination={dataSource && pageSize && dataSource.length > pageSize ? { defaultPageSize: pageSize } : false}
       scroll={{ x: 'max-content' }}
     />
   )

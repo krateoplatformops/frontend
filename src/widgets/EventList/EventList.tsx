@@ -7,11 +7,11 @@ import type { WidgetProps } from '../../types/Widget'
 import type { SSEK8sEvent } from '../../utils/types'
 import { formatISODate } from '../../utils/utils'
 
-const EventList = ({ widgetData }: WidgetProps<{
-  events: SSEK8sEvent[]
-  sseEndpoint?: string
-  sseTopic?: string
-}>) => {
+import type { EventList as WidgetType } from './EventList.type'
+
+export type EventListWidgetData = WidgetType['spec']['widgetData']
+
+const EventList = ({ widgetData }: WidgetProps<EventListWidgetData>) => {
   const { events, sseEndpoint, sseTopic } = widgetData
 
   const { config } = useConfigContext()
@@ -38,8 +38,8 @@ const EventList = ({ widgetData }: WidgetProps<{
     <>
       {eventList.map(({
         icon,
-        message,
         involvedObject: { apiVersion, kind, name, namespace },
+        message,
         metadata: { creationTimestamp, uid },
         reason,
         type,

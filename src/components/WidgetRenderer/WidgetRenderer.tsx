@@ -1,37 +1,61 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Spin, Form } from 'antd'
+import { Spin } from 'antd'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
-import type { ButtonSchema } from '../../types/Button.schema'
 import type { Widget } from '../../types/Widget'
 import BarChart from '../../widgets/BarChart'
+import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
+import type { ButtonWidgetData } from '../../widgets/Button/Button'
 import Column from '../../widgets/Column'
+import type { ColumnWidgetData } from '../../widgets/Column/Column'
 import EventList from '../../widgets/EventList'
+import type { EventListWidgetData } from '../../widgets/EventList/EventList'
 import LineChart from '../../widgets/LineChart'
+import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
+import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
 import { NavMenu } from '../../widgets/NavMenu/NavMenu'
+import type { PanelWidgetData } from '../../widgets/Panel/Panel'
 import Panel from '../../widgets/Panel/Panel'
 import Paragraph from '../../widgets/Paragraph'
+import type { ParagraphWidgetData } from '../../widgets/Paragraph/Paragraph'
+import type { PieChartWidgetData } from '../../widgets/PieChart/PieChart'
 import PieChart from '../../widgets/PieChart/PieChart'
+import type { RouteWidgetData } from '../../widgets/Route/Route'
 import { Route } from '../../widgets/Route/Route'
 import Row from '../../widgets/Row'
+import type { RowWidgetData } from '../../widgets/Row/Row'
+import type { TableWidgetData } from '../../widgets/Table/Table'
 import Table from '../../widgets/Table/Table'
 import TabList from '../../widgets/TabList'
+import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
+import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
 
 import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
-  if (!widget.status) {
-    return `no status for ${widget.kind} widget`
+  const { kind, status } = widget
+
+  // TODO: handle error
+  if (!status) {
+    return `No status for ${kind} widget`
   }
 
-  switch (widget.kind) {
+  // TODO: handle error
+  if (typeof status === 'string') {
+    return `Status for ${kind} widget is in string format: ${status}`
+  }
+
+  const { actions, resourcesRefs, widgetData } = status
+
+  switch (kind) {
     case 'Status': {
       const params = new URLSearchParams(widgetEndpoint)
 
+      // TODO: handle error
       return (
         <div style={{ border: '1px solid red', margin: '10px' }}>
           ERROR
@@ -49,107 +73,36 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       )
     }
     case 'Button':
-    case 'ButtonWithAction':
-      return (
-        <Button
-          actions={widget.spec.actions}
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={
-            widget.status.widgetData as ButtonSchema['status']['widgetData']
-          }
-        />
-      )
+      return <Button actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ButtonWidgetData }/>
     case 'Column':
-      return (
-        <Column
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <Column actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ColumnWidgetData} />
     case 'EventList':
-      return (
-        <EventList
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
-    case 'Form':
-      return <Form widgetData={widget.status.widgetData} />
+      return <EventList actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as EventListWidgetData} />
     case 'NavMenu':
-      return (
-        <NavMenu
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <NavMenu actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as NavMenuWidgetData} />
     case 'Panel':
-      return (
-        <Panel
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <Panel actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as PanelWidgetData} />
     case 'Paragraph':
-      return (
-        <Paragraph widgetData={widget.status.widgetData} />
-      )
+      return <Paragraph actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ParagraphWidgetData} />
     case 'PieChart':
-      return (
-        <PieChart
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <PieChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as PieChartWidgetData} />
     case 'LineChart':
-      return (
-        <LineChart
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <LineChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as LineChartWidgetData} />
     case 'BarChart':
-      return (
-        <BarChart
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <BarChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as BarChartWidgetData} />
+
     case 'Row':
-      return (
-        <Row
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <Row actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RowWidgetData} />
     case 'Route':
-      return (
-        <Route
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <Route actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RouteWidgetData} />
     case 'Table':
-      return (
-        <Table
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <Table actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as TableWidgetData} />
     case 'TabList':
-      return (
-        <TabList
-          resourcesRefs={widget.status.resourcesRefs}
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <TabList actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
-      return (
-        <YamlViewer
-          widgetData={widget.status.widgetData}
-        />
-      )
+      return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as YamlViewerWidgetData} />
     default:
-      throw new Error(`Unknown widget kind: ${widget.kind}`)
+      throw new Error(`Unknown widget kind: ${kind}`)
   }
 }
 
@@ -167,8 +120,8 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
 
   const {
     data: widget,
-    isLoading,
     error,
+    isLoading,
   } = useQuery({
     queryFn: async () => {
       const res = await fetch(widgetFullUrl, {
@@ -196,6 +149,7 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
     return null
   }
 
+  // TODO: handle error
   if (error) {
     console.error(error)
     return <div>...error</div>

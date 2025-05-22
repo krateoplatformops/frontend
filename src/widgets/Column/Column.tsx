@@ -3,15 +3,11 @@ import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Column.module.css'
+import type { Column as WidgetType } from './Column.type'
 
-const Column = ({
-  widgetData,
-  resourcesRefs,
-}: WidgetProps<{
-  items: Array<{
-    resourceRefId: string
-  }>
-}>) => {
+export type ColumnWidgetData = WidgetType['spec']['widgetData']
+
+const Column = ({ resourcesRefs, widgetData }: WidgetProps<ColumnWidgetData>) => {
   const { items } = widgetData
 
   return (

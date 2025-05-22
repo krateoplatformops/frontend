@@ -1,10 +1,12 @@
-import { join } from 'node:path'
-import { glob } from 'glob'
+/* eslint-disable no-console */
 import { execSync } from 'node:child_process'
+import { join } from 'node:path'
+
+import { glob } from 'glob'
 
 const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
 
-async function applyYamlFile(yamlPath: string) {
+function applyYamlFile(yamlPath: string): boolean {
   try {
     console.log(`Applying ${yamlPath.split('/').pop()}...`)
     execSync(`kubectl apply -f ${yamlPath}`, { stdio: 'inherit' })
@@ -20,8 +22,8 @@ async function main() {
   try {
     // Find all .yaml and .yml files in the widgets directory
     const yamlFiles = await glob('**/*.{yaml,yml}', {
-      cwd: WIDGETS_DIR,
       absolute: true,
+      cwd: WIDGETS_DIR,
     })
 
     if (yamlFiles.length === 0) {
@@ -36,11 +38,11 @@ async function main() {
 
     // Process each YAML file
     for (const yamlFile of yamlFiles) {
-      const success = await applyYamlFile(yamlFile)
+      const success = applyYamlFile(yamlFile)
       if (success) {
-        successCount++
+        successCount += 1
       } else {
-        failureCount++
+        failureCount += 1
       }
     }
 
@@ -61,4 +63,4 @@ async function main() {
   }
 }
 
-main()
+void main()

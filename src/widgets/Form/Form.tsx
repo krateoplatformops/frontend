@@ -2,11 +2,15 @@ import { Form as AntdForm, Button, Input } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
 
-function Form({ widgetData, actions }: WidgetProps) {
+import type { Form as WidgetType } from './Form.type'
+
+export type FormWidgetData = WidgetType['spec']['widgetData']
+
+function Form({ actions, widgetData }: WidgetProps<FormWidgetData>) {
   return (
     <div>
       <AntdForm>
-        <AntdForm.Item name="name">
+        <AntdForm.Item name='name'>
           <Input />
         </AntdForm.Item>
         <Button onClick={() => alert('send')}>Send</Button>

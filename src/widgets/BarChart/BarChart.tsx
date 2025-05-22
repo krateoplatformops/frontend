@@ -4,21 +4,11 @@ import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 
 import styles from './BarChart.module.css'
+import type { BarChart as WidgetType } from './BarChart.type'
 
-type ChartMultipleBarsDataType = {
-  label: string
-  bars: {
-    value: string
-    percentage: number
-    color: 'success' | 'normal' | 'exception' | 'active'
-  }[]
-}
+export type BarChartWidgetData = WidgetType['spec']['widgetData']
 
-type ChartMultipleBarsType = {
-  data: ChartMultipleBarsDataType[]
-}
-
-const BarChart = ({ widgetData }: WidgetProps<ChartMultipleBarsType>) => {
+const BarChart = ({ widgetData }: WidgetProps<BarChartWidgetData>) => {
   const { data } = widgetData
 
   if (!data) {
@@ -28,26 +18,28 @@ const BarChart = ({ widgetData }: WidgetProps<ChartMultipleBarsType>) => {
   return (
     <div className={styles.chart}>
       {
-        data.map((el, index) => (
+        data.map(({ bars, label }, index) => (
           <div className={styles.chartBarsRow} key={`multiplebar_${index}`}>
             <div className={styles.chartBarsData}>
-              <div className={styles.chartBarsLabel}>{el.label}</div>
+              <div className={styles.chartBarsLabel}>{label}</div>
               <Space size='large' >
                 {
-                  el.bars.map((bar) => <span className={styles.chartBarsValue} style={{ color: getColorCode(bar.color) }}>{bar.value}</span>)
+                  bars.map(({ color, value }) => (
+                    <span className={styles.chartBarsValue} style={{ color: getColorCode(color) }}>{value}</span>
+                  ))
                 }
               </Space>
             </div>
             <div className={styles.chartBarsList}>
               {
-                el.bars.map((bar, i) => (
+                bars.map(({ color, percentage }, i) => (
                   <Progress
                     className={styles.chartBarsProgress}
                     key={`progess_${i}`}
-                    percent={bar.percentage}
+                    percent={percentage}
                     showInfo={false}
                     size='small'
-                    strokeColor={getColorCode(bar.color)}
+                    strokeColor={getColorCode(color)}
                   />
                 ))
               }

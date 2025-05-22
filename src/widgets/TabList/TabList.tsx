@@ -6,9 +6,11 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-const TabList = ({ widgetData, resourcesRefs }: WidgetProps<{
-  items: Array<{ label: string; resourceRefId: string }>
-}>) => {
+import type { TabList as WidgetType } from './TabList.type'
+
+export type TabListWidgetData = WidgetType['spec']['widgetData']
+
+const TabList = ({ resourcesRefs, widgetData }: WidgetProps<TabListWidgetData>) => {
   const { items } = widgetData
 
   const tabItems: TabsProps['items'] = useMemo(() => items.map(({ label, resourceRefId }, index) => ({
@@ -16,7 +18,6 @@ const TabList = ({ widgetData, resourcesRefs }: WidgetProps<{
     key: `tab-${index}`,
     label,
   })), [items, resourcesRefs])
-
 
   return <Tabs items={tabItems} />
 }

@@ -9,6 +9,7 @@ import pluginJsxA11y from 'eslint-plugin-jsx-a11y'
 import pluginNode from 'eslint-plugin-n'
 import pluginReact from 'eslint-plugin-react'
 import pluginReactHooks from 'eslint-plugin-react-hooks'
+import sortDestructureKeys from 'eslint-plugin-sort-destructure-keys'
 import sortKeys from 'eslint-plugin-sort-keys'
 import globals from 'globals'
 import tsEslint from 'typescript-eslint'
@@ -26,6 +27,7 @@ const ignoredPaths = [
   'playwright-report/**/*',
   '.vscode/**/*',
   '.idea/**/*',
+  '.eslint.config.js',
 ]
 
 export default tsEslint.config(
@@ -94,7 +96,7 @@ export default tsEslint.config(
       ],
       '@stylistic/js/no-mixed-spaces-and-tabs': 'error',
       '@stylistic/js/no-multi-spaces': 'error',
-      '@stylistic/js/no-multiple-empty-lines': 'error',
+      '@stylistic/js/no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
       '@stylistic/js/no-tabs': 'error',
       '@stylistic/js/no-trailing-spaces': 'error',
       '@stylistic/js/no-whitespace-before-property': 'error',
@@ -346,6 +348,11 @@ export default tsEslint.config(
   },
 
   {
+    files: ['src/widgets/**/*.d.ts'],
+    ignores: ['.src/**'],
+  },
+
+  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsEslint.parser,
@@ -357,11 +364,12 @@ export default tsEslint.config(
     plugins: {
       '@stylistic/ts': stylisticTs,
       '@typescript-eslint': tsEslint.plugin,
+      'sort-destructure-keys': sortDestructureKeys,
     },
     rules: {
       ...tsEslint.configs.strict[2].rules,
       ...tsEslint.configs.recommendedTypeChecked[2].rules,
-
+      '@stylistic/js/object-curly-spacing': ['error', 'always'],
       '@stylistic/ts/member-delimiter-style': [
         2,
         {
@@ -404,6 +412,7 @@ export default tsEslint.config(
       'no-undef': 'off',
 
       'no-use-before-define': 'off',
+      'sort-destructure-keys/sort-destructure-keys': ['error', { caseSensitive: true }],
       'sort-imports': 'off',
     },
     settings: {
@@ -431,6 +440,7 @@ export default tsEslint.config(
     rules: {
       // http://eslint.org/docs/rules/
       '@stylistic/js/jsx-quotes': ['error', 'prefer-single'],
+      '@stylistic/js/object-curly-spacing': ['error', 'always'],
       // https://github.com/evcohen/eslint-plugin-jsx-a11y/tree/master/docs/rules
       'jsx-a11y/alt-text': 'error',
       'jsx-a11y/anchor-has-content': 'error',
@@ -456,6 +466,7 @@ export default tsEslint.config(
       'jsx-a11y/role-has-required-aria-props': 'error',
       'jsx-a11y/role-supports-aria-props': 'error',
       'jsx-a11y/scope': 'error',
+      'object-curly-spacing': ['error', 'always'],
       'react-hooks/exhaustive-deps': 'error',
       // https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
       'react-hooks/rules-of-hooks': 'error',
@@ -475,9 +486,9 @@ export default tsEslint.config(
       'react/jsx-sort-props': 'error',
 
       // 'react/style-prop-object': 'error',
+
       'react/no-did-update-set-state': 'error',
       // 'react/no-danger-with-children': 'error',
-
       'react/no-is-mounted': 'error',
       'react/no-unknown-property': 'error',
     },

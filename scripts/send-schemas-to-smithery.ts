@@ -1,26 +1,22 @@
+/* eslint-disable no-console */
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+
 import { glob } from 'glob'
 
 const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
 const SMITHERY_URL = 'http://127.0.0.1:8081/forge?apply=true'
-
-interface SchemaError extends Error {
-  schemaPath?: string
-  statusCode?: number
-  responseBody?: string
-}
 
 async function sendSchemaToSmithery(schemaPath: string) {
   try {
     const schemaContent = readFileSync(schemaPath, 'utf-8')
     // Parse and validate JSON before sending
     const response = await fetch(SMITHERY_URL, {
-      method: 'POST',
+      body: schemaContent,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: schemaContent,
+      method: 'POST',
     })
 
     if (!response.ok) {
@@ -39,8 +35,8 @@ async function main() {
   try {
     // Find all .schema.json files in the widgets directory
     const schemaFiles = await glob('**/*.schema.json', {
-      cwd: WIDGETS_DIR,
       absolute: true,
+      cwd: WIDGETS_DIR,
     })
 
     if (schemaFiles.length === 0) {
@@ -56,11 +52,11 @@ async function main() {
     // Process each schema file
     for (const schemaFile of schemaFiles) {
       try {
+        // eslint-disable-next-line no-await-in-loop
         await sendSchemaToSmithery(schemaFile)
-        successCount++
-      } catch (error) {
-        failureCount++
-        // Continue processing other files even if one fails
+        successCount += 1
+      } catch {
+        failureCount += 1
       }
     }
 
@@ -81,4 +77,4 @@ async function main() {
   }
 }
 
-main()
+void main()

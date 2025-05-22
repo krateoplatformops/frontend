@@ -33,6 +33,7 @@
               "type": "string"
             }
           },
+          "additionalProperties": false,
           "required": ["name", "namespace"]
         },
         "widgetDataTemplate": {
@@ -46,11 +47,14 @@
               "expression": {
                 "type": "string"
               }
-            }
-          }
+            },
+            "additionalProperties": false
+          },
+          "additionalProperties": false
         }
       },
-      "required": ["widgetData"]
+      "required": ["widgetData"],
+      "additionalProperties": false
     }
   },
   "required": ["kind", "spec", "version"]

@@ -19,10 +19,10 @@ type UseApiFetchParams = {
 };
 
 function useApiFetch<T>({
-  method = 'GET',
-  endpoint,
-  config,
   autoFetch = true,
+  config,
+  endpoint,
+  method = 'GET',
 }: UseApiFetchParams): FetchState<T> {
   const [data, setData] = useState<T | null>(null)
   const [isLoading, setIsLoading] = useState(false)
