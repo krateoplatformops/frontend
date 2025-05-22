@@ -5,7 +5,7 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { App as AntApp, Spin } from 'antd'
+import { App as AntdApp, Spin } from 'antd'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import '../index.css'
@@ -40,9 +40,9 @@ const App: React.FC = () => {
     <ConfigProvider>
       <QueryClientProvider client={queryClient}>
         <RoutesProvider>
-          <AntApp className={styles.app}>
+          <AntdApp className={styles.app}>
             <AppInitializer />
-          </AntApp>
+          </AntdApp>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

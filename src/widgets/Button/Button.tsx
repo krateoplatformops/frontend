@@ -1,7 +1,7 @@
 /* eslint-disable max-depth */
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button as AntButton } from 'antd'
+import { Button as AntdButton } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import { useNavigate } from 'react-router'
 
@@ -136,7 +136,7 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
   }
 
   return (
-    <AntButton
+    <AntdButton
       color={color || 'default'}
       icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
       onClick={handleClick}
@@ -144,7 +144,7 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
       type={type || 'primary'}
     >
       {label}
-    </AntButton>
+    </AntdButton>
   )
 }
 

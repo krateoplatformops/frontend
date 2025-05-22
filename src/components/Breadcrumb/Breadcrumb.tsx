@@ -1,4 +1,4 @@
-import { Breadcrumb as AntBreadcrumb } from 'antd'
+import { Breadcrumb as AntdBreadcrumb } from 'antd'
 import type { BreadcrumbItemType, BreadcrumbSeparatorType } from 'antd/es/breadcrumb/Breadcrumb'
 import { useEffect, useState } from 'react'
 import { Link, useMatches } from 'react-router'
@@ -46,7 +46,7 @@ const Breadcrumb = () => {
     }
   }, [matches])
 
-  return <AntBreadcrumb items={items}/>
+  return <AntdBreadcrumb items={items}/>
 }
 
 export default Breadcrumb

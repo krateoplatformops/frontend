@@ -1,4 +1,4 @@
-import { Header as AntHeader } from 'antd/es/layout/layout'
+import { Header as AntdHeader } from 'antd/es/layout/layout'
 
 import Breadcrumb from '../Breadcrumb'
 import Notifications from '../Notifications'
@@ -12,7 +12,7 @@ type HeaderProps = {
 
 const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
   return (
-    <AntHeader className={styles.header}>
+    <AntdHeader className={styles.header}>
       <div className={styles.content}>
         <div>{breadcrumbVisible && <Breadcrumb />}</div>
         <div className={styles.right}>
@@ -20,7 +20,7 @@ const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
           <UserMenu />
         </div>
       </div>
-    </AntHeader>
+    </AntdHeader>
   )
 }
 
