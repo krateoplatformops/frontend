@@ -1,3 +1,5 @@
+import { Row as AntdRow } from 'antd'
+
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
@@ -11,13 +13,13 @@ const Row = ({ resourcesRefs, widgetData }: WidgetProps<RowWidgetData>) => {
   const { items } = widgetData
 
   return (
-    <div className={styles.row}>
+    <AntdRow align={'middle'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} justify={'center'} wrap>
       {items.map(({ resourceRefId }) => (
         <div className={styles.item}>
           <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
         </div>
       ))}
-    </div>
+    </AntdRow>
   )
 }
 

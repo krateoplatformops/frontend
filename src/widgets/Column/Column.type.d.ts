@@ -18,6 +18,10 @@ export interface Column {
       items: {
         resourceRefId: string
       }[]
+      /**
+       * the number of cells that the column will occupy, from 0 (not displayed) to 24 (occupies all space)
+       */
+      size?: number
     }
     resourcesRefs: {
       id: string
