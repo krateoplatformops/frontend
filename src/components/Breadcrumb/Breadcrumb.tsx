@@ -1,4 +1,4 @@
-import { Breadcrumb as AntdBreadcrumb } from 'antd'
+import { Breadcrumb as AntdBreadcrumb, Typography } from 'antd'
 import type { BreadcrumbItemType, BreadcrumbSeparatorType } from 'antd/es/breadcrumb/Breadcrumb'
 import { useEffect, useState } from 'react'
 import { Link, useMatches } from 'react-router'
@@ -30,13 +30,24 @@ const Breadcrumb = () => {
 
       splitPath.forEach((pathElement, index) => {
         if (index === splitPath.length - 1) {
-          items.push({ title: (
-            <span className={`${index === 0 ? styles.breadcrumbItem : ''}`}>
-              {pathElement}
-            </span>
-          ) })
+          items.push({
+            title: (
+              <Typography.Text
+                className={index === 0 ? styles.breadcrumbItem : ''}
+                ellipsis={{ tooltip: true }}
+              >
+                {pathElement}
+              </Typography.Text>
+            ),
+          })
         } else {
-          items.push({ title: <Link to={getFullPath(index, splitPath)}>{pathElement}</Link> })
+          items.push({
+            title: (
+              <Typography.Text ellipsis={{ tooltip: true }}>
+                <Link to={getFullPath(index, splitPath)}>{pathElement}</Link>
+              </Typography.Text>
+            ),
+          })
         }
       })
 

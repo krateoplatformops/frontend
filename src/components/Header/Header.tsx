@@ -14,7 +14,9 @@ const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
   return (
     <AntdHeader className={styles.header}>
       <div className={styles.content}>
-        <div>{breadcrumbVisible && <Breadcrumb />}</div>
+        <div className={styles.left}>
+          {breadcrumbVisible && <Breadcrumb />}
+        </div>
         <div className={styles.right}>
           <Notifications />
           <UserMenu />

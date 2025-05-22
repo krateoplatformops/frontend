@@ -1,3 +1,30 @@
-.breadcrumbItem {
-  text-transform: capitalize
+:global(.ant-breadcrumb) {
+        display: flex;
+        flex-wrap: nowrap;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+:global(.ant-breadcrumb > ol) {
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+:global(.ant-breadcrumb > ol > li) {
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+      .breadcrumbItem {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+  white-space: nowrap;
 }
