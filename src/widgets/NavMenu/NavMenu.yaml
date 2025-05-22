@@ -6,14 +6,21 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: panel-with-row-column
+      - resourceRefId: panel-with-row
+      - resourceRefId: panel-with-column
       - resourceRefId: panel-backend-endpoint-id
       - resourceRefId: button-3-backend-endpoint-id
       - resourceRefId: button-with-drawer-backend-endpoint-id
   resourcesRefs:
-    - id: panel-with-row-column
+    - id: panel-with-row
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-with-row-column
+      name: panel-with-row
+      namespace: krateo-system
+      resource: panels
+      verb: GET
+    - id: panel-with-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: panel-with-column
       namespace: krateo-system
       resource: panels
       verb: GET

@@ -37,11 +37,11 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: panel-with-row-column
+  name: panel-with-row
   namespace: krateo-system
 spec:
   widgetData:
-    title: Panel with Row and Column
+    title: Panel with Row
     items:
       - resourceRefId: first-row
   resourcesRefs:
@@ -50,6 +50,24 @@ spec:
       name: first-row
       namespace: krateo-system
       resource: rows
+      verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-with-column
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Panel with Column
+    items:
+      - resourceRefId: first-column
+  resourcesRefs:
+    - id: first-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: first-column
+      namespace: krateo-system
+      resource: columns
       verb: GET
 ---
 kind: Panel

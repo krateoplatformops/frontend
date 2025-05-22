@@ -6,18 +6,18 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: second-column
-      - resourceRefId: first-column
+      - resourceRefId: table-of-pods
+      - resourceRefId: pie-chart-inside-column
   resourcesRefs:
-    - id: first-column
+    - id: table-of-pods
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: first-column
+      name: table-of-pods
       namespace: krateo-system
-      resource: columns
+      resource: tables
       verb: GET
-    - id: second-column
+    - id: pie-chart-inside-column
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: second-column
+      name: pie-chart-inside-column
       namespace: krateo-system
-      resource: columns
+      resource: piecharts
       verb: GET

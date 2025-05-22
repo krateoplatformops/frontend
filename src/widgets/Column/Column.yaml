@@ -7,6 +7,7 @@ spec:
   widgetData:
     items:
       - resourceRefId: table-of-pods
+      - resourceRefId: pie-chart-inside-column
   resourcesRefs:
     - id: table-of-pods
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -14,20 +15,9 @@ spec:
       namespace: krateo-system
       resource: tables
       verb: GET
----
-kind: Column
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: second-column
-  namespace: krateo-system
-spec:
-  widgetData:
-    items:
-      - resourceRefId: pie-chart-inside-row-column
-  resourcesRefs:
-    - id: pie-chart-inside-row-column
+    - id: pie-chart-inside-column
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: pie-chart-inside-row-column
+      name: pie-chart-inside-column
       namespace: krateo-system
       resource: piecharts
       verb: GET

@@ -23,7 +23,7 @@ spec:
 kind: PieChart
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: pie-chart-inside-row-column
+  name: pie-chart-inside-column
   namespace: krateo-system
 spec:
   widgetData:

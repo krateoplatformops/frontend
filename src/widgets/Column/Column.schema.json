@@ -36,7 +36,7 @@
             },
             "size": {
               "description": "the number of cells that the column will occupy, from 0 (not displayed) to 24 (occupies all space)",
-              "type": "number",
+              "type": "integer",
               "minimum": 0,
               "maximum": 24
             }

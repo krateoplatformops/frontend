@@ -29,6 +29,12 @@
                 "properties": {
                   "resourceRefId": {
                     "type": "string"
+                  },
+                  "size": {
+                    "description": "the number of cells that the item will occupy, from 0 (not displayed) to 24 (occupies all space)",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 24
                   }
                 },
                 "additionalProperties": false

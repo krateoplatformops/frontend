@@ -17,6 +17,10 @@ export interface Row {
        */
       items: {
         resourceRefId: string
+        /**
+         * the number of cells that the item will occupy, from 0 (not displayed) to 24 (occupies all space)
+         */
+        size?: number
       }[]
     }
     resourcesRefs: {
