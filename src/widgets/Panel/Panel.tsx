@@ -10,7 +10,7 @@ import type { Panel as WidgetType } from './Panel.type'
 
 export type PanelWidgetData = WidgetType['spec']['widgetData']
 
-const Panel = ({ resourcesRefs, widgetData }: WidgetProps<PanelWidgetData>) => {
+const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
   const { footer, items, title, tooltip } = widgetData
 
   return (
@@ -22,19 +22,20 @@ const Panel = ({ resourcesRefs, widgetData }: WidgetProps<PanelWidgetData>) => {
           <Button icon={<QuestionCircleOutlined />} type='text' />
         </Tooltip>
       )}
+      key={uid}
       title={title}
       variant={'borderless'}
     >
       <div className={styles.content}>
         <div className={styles.body}>
-          {items.map(({ resourceRefId }) => (
-            <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+          {items.map(({ resourceRefId }, index) => (
+            <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
           ))}
         </div>
         {footer && (
           <div className={styles.footer}>
-            {footer.map(({ resourceRefId }) => (
-              <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+            {footer.map(({ resourceRefId }, index) => (
+              <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
             ))}
           </div>
         )}

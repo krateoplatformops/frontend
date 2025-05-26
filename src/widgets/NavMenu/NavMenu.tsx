@@ -13,7 +13,7 @@ import type { NavMenu as WidgetType } from './NavMenu.type'
 
 export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
-export function NavMenu({ resourcesRefs, widgetData }: WidgetProps<NavMenuWidgetData>) {
+export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuWidgetData>) {
   const navigate = useNavigate()
 
   const { items } = widgetData
@@ -54,6 +54,7 @@ export function NavMenu({ resourcesRefs, widgetData }: WidgetProps<NavMenuWidget
       className={styles.menu}
       defaultSelectedKeys={[menuItems[0].key as string]}
       items={menuItems}
+      key={uid}
       mode='inline'
       onClick={item => handleClick(item.key)}
       selectedKeys={[window.location.pathname]}

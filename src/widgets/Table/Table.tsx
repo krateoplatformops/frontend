@@ -7,7 +7,7 @@ import type { Table as WidgetType } from './Table.type'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
-const Table = ({ widgetData }: WidgetProps<TableWidgetData>) => {
+const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize } = widgetData
 
   return (
@@ -23,6 +23,7 @@ const Table = ({ widgetData }: WidgetProps<TableWidgetData>) => {
         ),
       }))}
       dataSource={data}
+      key={uid}
       pagination={data && pageSize && data.length > pageSize ? { defaultPageSize: pageSize } : false}
       scroll={{ x: 'max-content' }}
     />

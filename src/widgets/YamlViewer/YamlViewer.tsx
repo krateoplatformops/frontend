@@ -13,7 +13,7 @@ import type { YamlViewer as WidgetType } from './YamlViewer.type'
 
 export type YamlViewerWidgetData = WidgetType['spec']['widgetData']
 
-const YamlViewer = ({ widgetData }: WidgetProps<YamlViewerWidgetData>) => {
+const YamlViewer = ({ uid, widgetData }: WidgetProps<YamlViewerWidgetData>) => {
   const { json } = widgetData
 
   const [isCopied, setIsCopied] = useState(false)
@@ -39,7 +39,7 @@ const YamlViewer = ({ widgetData }: WidgetProps<YamlViewerWidgetData>) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} key={uid}>
       <div className={styles.button}>
         {isCopied && 'Copied to clipboard'}
 

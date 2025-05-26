@@ -8,14 +8,20 @@ export interface ResourceRef {
 export type ResourcesRefs = ResourceRef[]
 
 export interface Widget<WidgetDataType = unknown> {
-  uid: string
-  name: string
-  namespace: string
   apiVersion: string
   kind: string
   code?: number
   message?: string
   reason?: string
+  metadata: {
+    annotations: object
+    creationTimestamp: string
+    generation: number
+    name: string
+    namespace: string
+    resourceVersion: string
+    uid: string
+  }
   spec: {
     widgetData: WidgetDataType
     widgetRefs?: {
@@ -75,7 +81,8 @@ export type WidgetActions = {
 }
 
 export type WidgetProps<T = unknown> = {
-  widgetData: T
   actions: Widget['status']['actions']
   resourcesRefs: ResourcesRefs
+  uid: string
+  widgetData: T
 }

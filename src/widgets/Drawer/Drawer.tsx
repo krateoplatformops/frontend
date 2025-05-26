@@ -41,7 +41,7 @@ const Drawer = () => {
 
   return (
     <AntdDrawer onClose={() => setIsOpen(false)} open={isOpen}>
-      <WidgetRenderer widgetEndpoint={widgetEndpoint} />
+      <WidgetRenderer key={'drawer'} widgetEndpoint={widgetEndpoint} />
     </AntdDrawer>
   )
 }

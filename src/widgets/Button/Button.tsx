@@ -26,7 +26,7 @@ const createNginxPodEndpoint = (
   return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
 }
 
-const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidgetData>) => {
+const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
   const { clickActionId, color, icon, label, size, type } = widgetData
 
   const navigate = useNavigate()
@@ -139,6 +139,7 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
     <AntdButton
       color={color || 'default'}
       icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
+      key={uid}
       onClick={handleClick}
       size={size || 'middle'}
       type={type || 'primary'}

@@ -19,7 +19,7 @@ const Sidebar = () => {
       </div>
 
       <div className={styles.content}>
-        <WidgetRenderer widgetEndpoint={config!.api.INIT} />
+        <WidgetRenderer key={'sidebar'} widgetEndpoint={config!.api.INIT} />
       </div>
     </div>
   )

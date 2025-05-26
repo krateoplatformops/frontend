@@ -37,7 +37,7 @@ import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
 import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
-  const { kind, status } = widget
+  const { kind, metadata, status } = widget
 
   if (!status) {
     return (
@@ -88,36 +88,38 @@ function parseData(widget: Widget, widgetEndpoint: string) {
   }
 
   const { actions, resourcesRefs, widgetData } = status
+  const uid = metadata?.uid
+  if (kind === 'Route') { console.log(uid) }
 
   switch (kind) {
-    case 'Button':
-      return <Button actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ButtonWidgetData }/>
-    case 'Column':
-      return <Column actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ColumnWidgetData} />
-    case 'EventList':
-      return <EventList actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as EventListWidgetData} />
-    case 'NavMenu':
-      return <NavMenu actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as NavMenuWidgetData} />
-    case 'Panel':
-      return <Panel actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as PanelWidgetData} />
-    case 'Paragraph':
-      return <Paragraph actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ParagraphWidgetData} />
-    case 'PieChart':
-      return <PieChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as PieChartWidgetData} />
-    case 'LineChart':
-      return <LineChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as LineChartWidgetData} />
     case 'BarChart':
-      return <BarChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as BarChartWidgetData} />
+      return <BarChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as BarChartWidgetData} />
+    case 'Button':
+      return <Button actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData }/>
+    case 'Column':
+      return <Column actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
+    case 'EventList':
+      return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
+    case 'LineChart':
+      return <LineChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
+    case 'NavMenu':
+      return <NavMenu actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as NavMenuWidgetData} />
+    case 'Panel':
+      return <Panel actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PanelWidgetData} />
+    case 'Paragraph':
+      return <Paragraph actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ParagraphWidgetData} />
+    case 'PieChart':
+      return <PieChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
     case 'Row':
-      return <Row actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RowWidgetData} />
+      return <Row actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
     case 'Route':
-      return <Route actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RouteWidgetData} />
+      return <Route actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
     case 'Table':
-      return <Table actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as TableWidgetData} />
+      return <Table actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
     case 'TabList':
-      return <TabList actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as TabListWidgetData} />
+      return <TabList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
-      return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as YamlViewerWidgetData} />
+      return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }

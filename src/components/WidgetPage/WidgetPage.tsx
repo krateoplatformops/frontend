@@ -30,7 +30,7 @@ export const WidgetPage = () => {
         <Header breadcrumbVisible={widgetEndpoint !== null} />
         <div className={styles.content}>
           {widgetEndpoint
-            ? <WidgetRenderer widgetEndpoint={widgetEndpoint} />
+            ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} />
             : <Page404 />
           }
         </div>
