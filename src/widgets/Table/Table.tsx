@@ -12,8 +12,9 @@ const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
 
   return (
     <AntdTable
-      columns={columns?.map(({ title, valueKey }) => ({
+      columns={columns?.map(({ title, valueKey }, index) => ({
         dataIndex: valueKey,
+        key: `${uid}-col-${index}`,
         title: (
           <div className={styles.headerEllipsis}>
             <Typography.Text ellipsis={{ tooltip: true }}>

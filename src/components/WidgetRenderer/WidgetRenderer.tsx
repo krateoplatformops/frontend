@@ -89,7 +89,6 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 
   const { actions, resourcesRefs, widgetData } = status
   const uid = metadata?.uid
-  if (kind === 'Route') { console.log(uid) }
 
   switch (kind) {
     case 'BarChart':

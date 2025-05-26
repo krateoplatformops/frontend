@@ -33,4 +33,4 @@ spec:
   api:
   - name: pods
     path: "/api/v1/pods"
-    filter: "[.items[] | {name: .metadata.name, namespace: .metadata.namespace, image: .spec.containers[0].image}]"
+    filter: "[.items[] | {key: .metadata.name, name: .metadata.name, namespace: .metadata.namespace, image: .spec.containers[0].image}]"
