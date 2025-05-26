@@ -1,14 +1,12 @@
 import type { MenuProps } from 'antd'
 import { Avatar, Menu, Popover, Typography } from 'antd'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 
 import type { AuthResponseType } from '../../pages/Login/Login.types'
 
 import styles from './UserMenu.module.css'
 
 const UserMenu = () => {
-  const navigate = useNavigate()
-
   const userData = JSON.parse(localStorage.getItem('K_user') || '{}') as AuthResponseType
   const { avatarURL, displayName, username } = userData.user || {}
 
@@ -26,10 +24,9 @@ const UserMenu = () => {
   // TODO: get groups from user data
   const groups = ['devOps', 'managers']
 
-  // TODO: handle logout
   const onLogout = () => {
     localStorage.removeItem('K_user')
-    void navigate('/login')
+    window.location.href = '/login'
   }
 
   const items: MenuProps['items'] = [
