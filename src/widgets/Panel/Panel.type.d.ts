@@ -4,8 +4,11 @@ export interface Panel {
   spec: {
     widgetData: {
       footer?: {
-        resourceRefId: string
-      }[]
+        items: {
+          resourceRefId: string
+        }[]
+        tag?: string
+      }
       icon?: {
         name: string
         color?: string

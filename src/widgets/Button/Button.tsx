@@ -27,7 +27,7 @@ const createNginxPodEndpoint = (
 }
 
 const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
-  const { clickActionId, color, icon, label, size, type } = widgetData
+  const { clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const navigate = useNavigate()
   const { config } = useConfigContext()
@@ -141,6 +141,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
       icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
       key={uid}
       onClick={handleClick}
+      shape={shape || 'default'}
       size={size || 'middle'}
       type={type || 'primary'}
     >

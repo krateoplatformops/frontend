@@ -1,7 +1,7 @@
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Card as AntdCard, Avatar, Button, Tooltip } from 'antd'
+import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
@@ -47,8 +47,9 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
           ))}
         </div>
         {footer && (
-          <div className={styles.footer}>
-            {footer.map(({ resourceRefId }, index) => (
+          <div className={`${styles.footer} ${(!footer.tag && footer.items.length === 1) ? styles.single : ''} `}>
+            {footer.tag && <Tag>{footer.tag}</Tag> }
+            {footer.items.map(({ resourceRefId }, index) => (
               <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
             ))}
           </div>

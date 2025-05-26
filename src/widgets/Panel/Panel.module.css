@@ -17,13 +17,14 @@
     }
 
     .footer {
+      align-items: center;
       display: flex;
       gap: var(--spacing-sm);
       justify-content: space-between;
-    }
 
-    .footer:has(:only-child) {
-      justify-content: flex-end;
+      &.single {
+        justify-content: flex-end;
+      }
     }
   }
 

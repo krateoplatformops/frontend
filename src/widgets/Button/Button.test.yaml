@@ -11,7 +11,20 @@ spec:
     type: primary
     clickActionId: action-1
   resourcesRefs: []
-
+---
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-button
+  namespace: krateo-system
+spec:
+  actions: {}
+  widgetData:
+    icon: fa-trash
+    type: default
+    shape: circle
+    clickActionId: action-1
+  resourcesRefs: []
 ---
 # apiVersion: v1
 # kind: Secret

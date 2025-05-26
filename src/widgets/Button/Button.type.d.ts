@@ -35,11 +35,15 @@ export interface Button {
       /**
        * the label of the button
        */
-      label: string
+      label?: string
       /**
        * the icon of the button (font awesome icon name eg: 'fa-inbox')
        */
       icon?: string
+      /**
+       * the shape of the button
+       */
+      shape?: 'default' | 'circle' | 'round'
       /**
        * the size of the button
        */

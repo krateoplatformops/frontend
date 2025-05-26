@@ -12,8 +12,9 @@ spec:
       - resourceRefId: my-table
     tooltip: this is a tooltip!
     footer:
-      - resourceRefId: button-1
-      - resourceRefId: button-1
+      items:
+        - resourceRefId: button-1
+        - resourceRefId: button-1
   resourcesRefs:
     - id: my-table
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -185,16 +186,26 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    footer:
+      items:
+        - resourceRefId: composition-test-button
+      tag: krateo-system
     icon:
       name: fa-solid fa-cubes
       color: blue
     items:
-      - resourceRefId: my-bar-chart
-    title: test-composition
+      - resourceRefId: composition-test-paragraph
+    title: composition-test
   resourcesRefs:
-    - id: my-bar-chart
+    - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-bar-chart
+      name: composition-test-paragraph
       namespace: krateo-system
-      resource: barcharts
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
       verb: GET

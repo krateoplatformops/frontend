@@ -18,17 +18,27 @@
           "required": ["title", "items"],
           "properties": {
             "footer": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["resourceRefId"],
-                "properties": {
-                  "resourceRefId": {
-                    "type": "string"
+              "type": "object",
+              "required": ["items"],
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["resourceRefId"],
+                    "properties": {
+                      "resourceRefId": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
                   }
                 },
-                "additionalProperties": false
-              }
+                "tag": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
             },
             "icon": {
               "type": "object",
