@@ -177,3 +177,24 @@ spec:
       namespace: krateo-system
       resource: barcharts
       verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    icon:
+      name: fa-solid fa-cubes
+      color: blue
+    items:
+      - resourceRefId: my-bar-chart
+    title: test-composition
+  resourcesRefs:
+    - id: my-bar-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-bar-chart
+      namespace: krateo-system
+      resource: barcharts
+      verb: GET

@@ -103,14 +103,13 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: button-2-backend-endpoint-id
-
+      - resourceRefId: composition-test-row
   resourcesRefs:
-    - id: button-2-backend-endpoint-id
+    - id: composition-test-row
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-2
+      name: composition-test-row
       namespace: krateo-system
-      resource: buttons
+      resource: rows
       verb: GET
 ---
 kind: Route

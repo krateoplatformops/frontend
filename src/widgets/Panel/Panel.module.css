@@ -29,7 +29,10 @@
   }
 
   .title {
+    align-items: center;
+    display: flex;
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-lighter);
+    gap: var(--spacing-md);
   }
 }

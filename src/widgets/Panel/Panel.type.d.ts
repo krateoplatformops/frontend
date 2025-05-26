@@ -6,6 +6,10 @@ export interface Panel {
       footer?: {
         resourceRefId: string
       }[]
+      icon?: {
+        name: string
+        color?: string
+      }
       items: {
         resourceRefId: string
       }[]

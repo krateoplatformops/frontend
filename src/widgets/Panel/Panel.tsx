@@ -1,8 +1,11 @@
 import { QuestionCircleOutlined } from '@ant-design/icons'
-import { Card as AntdCard, Button, Tooltip } from 'antd'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Card as AntdCard, Avatar, Button, Tooltip } from 'antd'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
+import { getColorCode } from '../../utils/palette'
 import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Panel.module.css'
@@ -11,7 +14,7 @@ import type { Panel as WidgetType } from './Panel.type'
 export type PanelWidgetData = WidgetType['spec']['widgetData']
 
 const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
-  const { footer, items, title, tooltip } = widgetData
+  const { footer, icon, items, title, tooltip } = widgetData
 
   return (
     <AntdCard
@@ -23,7 +26,18 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
         </Tooltip>
       )}
       key={uid}
-      title={title}
+      title={(
+        <div className={styles.title}>
+          {icon && (
+            <Avatar
+              icon={<FontAwesomeIcon icon={icon.name as IconProp} />}
+              size={64}
+              style={{ backgroundColor: getColorCode(icon.color) }}
+            />
+          )}
+          {title}
+        </div>
+      )}
       variant={'borderless'}
     >
       <div className={styles.content}>
