@@ -1,4 +1,3 @@
-/* eslint-disable max-depth */
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntButton } from 'antd'
@@ -10,7 +9,7 @@ import { openDrawer } from '../../Drawer'
 import type { ButtonSchema } from '../../types/Button.schema'
 import type { WidgetProps } from '../../types/Widget'
 import type { Action } from '../../utils/types'
-import { getEndpointUrl } from '../../utils/utils'
+import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 
 type BackendEndpointFromSpec = {
   apiVersion: string
@@ -49,7 +48,13 @@ const Button = ({
       .flat()
       .find(({ id }) => id === clickActionId)
     if (buttonAction) {
-      const { resourceRefId, requireConfirmation, type, verb } = buttonAction
+      const {
+        resourceRefId,
+        requireConfirmation,
+        type,
+        payload,
+        id: actionId,
+      } = buttonAction
 
       switch (type) {
         case 'navigate': {
@@ -66,58 +71,40 @@ const Button = ({
         }
         case 'rest': {
           if (requireConfirmation) {
-            if (window.confirm('Are you sure?')) {
-              const url = createNginxPodEndpoint(
-                config!.api.BACKEND_API_BASE_URL,
-                resourceRefId,
-                resourcesRefs as unknown as BackendEndpointFromSpec[],
-              )
-              const res = await fetch(url, {
-                body: JSON.stringify({
-                  apiVersion: 'v1',
-                  kind: 'Pod',
-                  metadata: {
-                    name: `nginx-pod-x`,
-                  },
-                  spec: {
-                    containers: [
-                      {
-                        image: 'nginx:latest',
-                        name: 'nginx',
-                        ports: [
-                          {
-                            containerPort: 80,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                }),
-                headers: {
-                  'X-Krateo-Groups': 'admins',
-                  'X-Krateo-User': 'admin',
-                },
-
-                method: 'POST',
-              })
-
-              const json = await res.json()
-
-              if (!res.ok) {
-                notification.error({
-                  description: json.message,
-                  message: `${json.status} - ${json.reason}`,
-                  placement: 'bottomLeft',
-                })
-              }
-
-              notification.success({
-                description: `Pod ${json.metadata.name} created successfully`,
-                message: '🐳 Pod created successfully',
-                placement: 'bottomLeft',
-              })
+            const confirmed = window.confirm('Are you sure?')
+            if (!confirmed) {
+              break
             }
           }
+          const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
+          const url = config?.api.BACKEND_API_BASE_URL + resourceRef.path
+          debugger
+          if (resourceRef.verb === 'POST' && !payload) {
+            console.warn(`Payload not found for POST action ${actionId}`)
+          }
+
+          const res = await fetch(url, {
+            body: JSON.stringify(payload),
+            headers: {
+              'X-Krateo-Groups': 'admins',
+              'X-Krateo-User': 'admin',
+            },
+            method: 'POST',
+          })
+          const json = await res.json()
+          if (!res.ok) {
+            notification.error({
+              description: json.message,
+              message: `${json.status} - ${json.reason}`,
+              placement: 'bottomLeft',
+            })
+          }
+          debugger
+          notification.success({
+            description: `Successfully created ${json.metadata.name} in ${json.metadata.namespace}`,
+            message: json.message,
+            placement: 'bottomLeft',
+          })
           break
         }
         case 'openDrawer': {

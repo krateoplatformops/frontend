@@ -7,4 +7,5 @@ export interface Action {
   requireConfirmation?: boolean
   onSuccessNavigateTo?: string
   loading?: 'global' | 'inline' | 'none'
+  payload?: object
 }
