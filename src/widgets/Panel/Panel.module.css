@@ -1,4 +1,8 @@
 .panel {
+  &.clickable {
+    cursor: pointer;
+  }
+
   .actions {
     align-items: flex-end;
     border: none;

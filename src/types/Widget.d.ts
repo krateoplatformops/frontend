@@ -66,6 +66,7 @@ export type WidgetActions = {
     id: string
     type: 'openDrawer'
     name: string
+    resourceRefId: string
     contentWidgetRef: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
@@ -81,7 +82,7 @@ export type WidgetActions = {
 }
 
 export type WidgetProps<T = unknown> = {
-  actions: Widget['status']['actions']
+  actions: WidgetActions
   resourcesRefs: ResourcesRefs
   uid: string
   widgetData: T

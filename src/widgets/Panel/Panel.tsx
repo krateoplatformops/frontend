@@ -2,6 +2,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
+import { useNavigate } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
@@ -13,12 +14,46 @@ import type { Panel as WidgetType } from './Panel.type'
 
 export type PanelWidgetData = WidgetType['spec']['widgetData']
 
-const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
-  const { footer, icon, items, title, tooltip } = widgetData
+const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
+  const navigate = useNavigate()
+  const { clickActionId, footer, icon, items, title, tooltip } = widgetData
+
+  const action = Object.values(actions ?? {})
+    .flat()
+    .find(({ id }) => id === clickActionId)
+
+  const onClick = async () => {
+    if (action) {
+      const { requireConfirmation, type } = action
+
+      switch (type) {
+        case 'navigate': {
+          if (requireConfirmation) {
+            if (window.confirm('Are you sure?')) {
+              const url = getEndpointUrl(action.resourceRefId, resourcesRefs)
+              await navigate(url)
+            }
+          }
+          break
+        }
+        default:
+          throw new Error(`Unsupported action type}`)
+      }
+    } else {
+      throw new Error(`Actions with id ${clickActionId} not found`)
+    }
+  }
+
+  const handleClick = () => {
+    onClick()
+      .catch((error) => {
+        console.error('Error in panel click handler:', error)
+      })
+  }
 
   return (
     <AntdCard
-      className={styles.panel}
+      className={`${styles.panel} ${action ? styles.clickable : ''}`}
       classNames={{ header: styles.header, title: styles.title }}
       extra={tooltip && (
         <Tooltip title={tooltip}>
@@ -26,6 +61,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
         </Tooltip>
       )}
       key={uid}
+      onClick={handleClick}
       title={(
         <div className={styles.title}>
           {icon && (

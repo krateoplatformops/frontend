@@ -17,6 +17,10 @@
           "type": "object",
           "required": ["title", "items"],
           "properties": {
+            "clickActionId": {
+              "description": "the id of the action to be executed when the panel is clicked",
+              "type": "string"
+            },
             "footer": {
               "type": "object",
               "required": ["items"],
@@ -122,6 +126,43 @@
             }
           },
           "required": ["name", "namespace"],
+          "additionalProperties": false
+        },
+        "actions": {
+          "description": "the actions of the panel",
+          "type": "object",
+          "properties": {
+            "navigate": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["navigate"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
+            }
+          },
           "additionalProperties": false
         },
         "widgetDataTemplate": {

@@ -186,6 +186,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    clickActionId: navigate
     footer:
       items:
         - resourceRefId: composition-test-button
@@ -196,6 +197,12 @@ spec:
     items:
       - resourceRefId: composition-test-paragraph
     title: composition-test
+  actions:
+    navigate:
+      - id: composition-click-action
+        name: composition-click-action
+        resourceRefId: my-backend-endpoint
+        type: navigate
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1

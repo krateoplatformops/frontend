@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { ResourcesRefs, WidgetProps } from '../../types/Widget'
-import type { Action } from '../../utils/types'
 import { getEndpointUrl } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 
@@ -34,18 +33,18 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
   const { notification } = useApp()
 
   const onClick = async () => {
-    const buttonAction = Object.values(actions as Action[])
+    const action = Object.values(actions ?? {})
       .flat()
       .find(({ id }) => id === clickActionId)
 
-    if (buttonAction) {
-      const { requireConfirmation, resourceRefId, type } = buttonAction
+    if (action) {
+      const { requireConfirmation, type } = action
 
       switch (type) {
         case 'navigate': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(resourceRefId, resourcesRefs,)
+              const url = getEndpointUrl(action.resourceRefId, resourcesRefs,)
               await navigate(url)
             }
           }
@@ -112,7 +111,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           break
         }
         case 'openDrawer': {
-          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+          const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
 
           openDrawer(widgetEndpoint)
           break
@@ -129,10 +128,13 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
     }
   }
 
-  const handleClick = () => {
-    onClick().catch((error) => {
-      console.error('Error in button click handler:', error)
-    })
+  const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    event.stopPropagation()
+
+    onClick()
+      .catch((error) => {
+        console.error('Error in button click handler:', error)
+      })
   }
 
   return (
@@ -140,7 +142,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
       color={color || 'default'}
       icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
       key={uid}
-      onClick={handleClick}
+      onClick={event => handleClick(event)}
       shape={shape || 'default'}
       size={size || 'middle'}
       type={type || 'primary'}
