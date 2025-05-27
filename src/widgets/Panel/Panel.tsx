@@ -41,6 +41,7 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
           throw new Error(`Unsupported action type}`)
       }
     } else {
+      // TODO: remove this
       const url = `${window.location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl('my-tab-list', resourcesRefs))}`
       void navigate(url)
       throw new Error(`Actions with id ${clickActionId} not found`)
