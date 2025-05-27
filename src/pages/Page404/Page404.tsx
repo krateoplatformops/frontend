@@ -9,7 +9,7 @@ const Page404 = () => {
   return (
     <div className={styles.result}>
       <Result
-        extra={<Link to='/'>Go to the Home page</Link>}
+        extra={<Link onClick={() => { window.location.href = '/' }} to=''>Go to the Home page</Link>}
         icon={<img alt='Krateo | PlatformOps' src={logo} width={400} />}
         subTitle="We can't find the page you're looking for"
         title='404 Page not found'
