@@ -201,7 +201,7 @@ spec:
     navigate:
       - id: composition-click-action
         name: composition-click-action
-        resourceRefId: my-backend-endpoint
+        resourceRefId: my-tab-list
         type: navigate
   resourcesRefs:
     - id: composition-test-paragraph
@@ -215,4 +215,10 @@ spec:
       name: composition-test-button
       namespace: krateo-system
       resource: buttons
+      verb: GET
+    - id: my-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-tab-list
+      namespace: krateo-system
+      resource: tablists
       verb: GET

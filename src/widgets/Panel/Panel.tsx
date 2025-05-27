@@ -16,6 +16,7 @@ export type PanelWidgetData = WidgetType['spec']['widgetData']
 
 const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
   const navigate = useNavigate()
+
   const { clickActionId, footer, icon, items, title, tooltip } = widgetData
 
   const action = Object.values(actions ?? {})
@@ -40,6 +41,8 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
           throw new Error(`Unsupported action type}`)
       }
     } else {
+      const url = `${window.location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl('my-tab-list', resourcesRefs))}`
+      void navigate(url)
       throw new Error(`Actions with id ${clickActionId} not found`)
     }
   }

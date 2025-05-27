@@ -1,7 +1,7 @@
 import { Breadcrumb as AntdBreadcrumb, Typography } from 'antd'
 import type { BreadcrumbItemType, BreadcrumbSeparatorType } from 'antd/es/breadcrumb/Breadcrumb'
 import { useEffect, useState } from 'react'
-import { Link, useMatches } from 'react-router'
+import { useMatches, useNavigate } from 'react-router'
 
 import styles from './Breadcrumb.module.css'
 
@@ -18,6 +18,8 @@ const getFullPath = (index: number, splitPath: string[]) => {
 }
 
 const Breadcrumb = () => {
+  const navigate = useNavigate()
+
   const [items, setItems] = useState<Partial<BreadcrumbItemType & BreadcrumbSeparatorType>[]>()
   const matches = useMatches()
 
@@ -33,7 +35,7 @@ const Breadcrumb = () => {
           items.push({
             title: (
               <Typography.Text
-                className={index === 0 ? styles.breadcrumbItem : ''}
+                className={`${styles.breadcrumbItem} ${index === 0 ? styles.capitalize : ''}`}
                 ellipsis={{ tooltip: true }}
               >
                 {pathElement}
@@ -43,8 +45,13 @@ const Breadcrumb = () => {
         } else {
           items.push({
             title: (
-              <Typography.Text ellipsis={{ tooltip: true }}>
-                <Link to={getFullPath(index, splitPath)}>{pathElement}</Link>
+              <Typography.Text
+                className={`${styles.breadcrumbItem} ${index === 0 ? styles.capitalize : ''}`}
+                ellipsis={{ tooltip: true }}
+              >
+                <span className={styles.link} onClick={() => { void navigate(getFullPath(index, splitPath)) }}>
+                  {pathElement}
+                </span>
               </Typography.Text>
             ),
           })
@@ -55,7 +62,7 @@ const Breadcrumb = () => {
     } else {
       setItems([{ title: '' }])
     }
-  }, [matches])
+  }, [matches, navigate])
 
   return <AntdBreadcrumb items={items}/>
 }
