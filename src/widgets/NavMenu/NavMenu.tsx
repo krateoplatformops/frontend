@@ -2,11 +2,12 @@ import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'antd'
 import type { MenuItemType } from 'antd/es/menu/interface'
-import { useCallback, useEffect, useMemo } from 'react'
-import { useNavigate } from 'react-router'
+import { useEffect, useMemo } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 
+import type { AppRoute } from '../../context/RoutesContext'
+import { useRoutesContext } from '../../context/RoutesContext'
 import type { WidgetProps } from '../../types/Widget'
-import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './NavMenu.module.css'
 import type { NavMenu as WidgetType } from './NavMenu.type'
@@ -14,9 +15,30 @@ import type { NavMenu as WidgetType } from './NavMenu.type'
 export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
 export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuWidgetData>) {
+  const location = useLocation()
   const navigate = useNavigate()
+  const { menuRoutes, updateMenuRoutes } = useRoutesContext()
 
   const { items } = widgetData
+
+  const routes: AppRoute[] = useMemo(() => items.map(({ path, resourceRefId }) => ({
+    path,
+    resourceRef: resourcesRefs.find(({ id }) => id === resourceRefId),
+    resourceRefId,
+  })), [items, resourcesRefs])
+
+  useEffect(() => {
+    if (routes.length > 0) {
+      localStorage.setItem('routes', JSON.stringify(routes))
+      updateMenuRoutes(routes)
+    }
+  }, [resourcesRefs, routes, updateMenuRoutes])
+
+  useEffect(() => {
+    if (location.pathname === '/' && menuRoutes.length > 0) {
+      void navigate(menuRoutes[0].path)
+    }
+  }, [location.pathname, menuRoutes, navigate])
 
   const menuItems: MenuItemType[] = useMemo(() => items.map(({ icon, label, path }) => ({
     icon: <FontAwesomeIcon icon={icon as IconProp} />,
@@ -24,29 +46,8 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
     label,
   })), [items])
 
-  const getWidgetEndpointPath = useCallback((path: string) => {
-    const item = items.find((item) => item.path === path)
-
-    if (item) {
-      const backendEndpoint = getEndpointUrl(item.resourceRefId, resourcesRefs)
-      return `${path}?widgetEndpoint=${encodeURIComponent(backendEndpoint)}`
-    }
-
-    return path
-  }, [items, resourcesRefs])
-
-  useEffect(() => {
-    if (window.location.pathname === '/' && menuItems.length > 0) {
-      const defaultPath = getWidgetEndpointPath(menuItems[0].key as string)
-      void navigate(defaultPath)
-    }
-  }, [getWidgetEndpointPath, menuItems, navigate])
-
   const handleClick = (key: string) => {
-    const path = getWidgetEndpointPath(key)
-    if (path) {
-      void navigate(path)
-    }
+    void navigate(key)
   }
 
   return (
@@ -57,7 +58,7 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
       key={uid}
       mode='inline'
       onClick={item => handleClick(item.key)}
-      selectedKeys={[window.location.pathname]}
+      selectedKeys={[location.pathname]}
     />
   )
 }
