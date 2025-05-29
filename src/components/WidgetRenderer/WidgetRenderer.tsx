@@ -11,6 +11,8 @@ import Button from '../../widgets/Button'
 import type { ButtonWidgetData } from '../../widgets/Button/Button'
 import Column from '../../widgets/Column'
 import type { ColumnWidgetData } from '../../widgets/Column/Column'
+import type { CompositionCardWidgetData } from '../../widgets/CompositionCard/CompositionCard'
+import CompositionCard from '../../widgets/CompositionCard/CompositionCard'
 import EventList from '../../widgets/EventList'
 import type { EventListWidgetData } from '../../widgets/EventList/EventList'
 import LineChart from '../../widgets/LineChart'
@@ -97,6 +99,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <Button actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData }/>
     case 'Column':
       return <Column actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
+    case 'CompositionCard':
+      return <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
     case 'EventList':
       return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'LineChart':

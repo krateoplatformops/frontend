@@ -1,0 +1,50 @@
+
+kind: CompositionCard
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-card
+  namespace: krateo-system
+spec:
+  widgetData:
+    date: oggi
+    status: success
+    tooltip: test
+    navigateToDetailActionId: composition-click-action
+    deleteCompositionActionId: 
+    tags: 
+      - krateo-system
+      - test-system
+    icon:
+      name: fa-solid fa-cubes
+      color: blue
+    title: composition-test
+    description: This is a test composition card.
+  actions:
+    navigate:
+      - id: composition-click-action
+        name: composition-click-action
+        resourceRefId: my-tab-list
+        type: navigate
+    rest:
+      - id: composition-delete-action
+        resourceRefId: composition-test-panel
+        type: rest
+  resourcesRefs:
+    - id: composition-test-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: my-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-tab-list
+      namespace: krateo-system
+      resource: tablists
+      verb: GET

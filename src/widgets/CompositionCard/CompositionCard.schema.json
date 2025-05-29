@@ -1,0 +1,201 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "default": "CompositionCard"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                }
+              },
+              "required": ["name"],
+              "additionalProperties": false
+            },
+            "status": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "title": {
+              "type": "string"
+            },
+            "tooltip": {
+              "type": "string"
+            },
+            "deleteCompositionActionId": {
+              "description": "the id of the action to be executed when the delete button is clicked",
+              "type": "string"
+            },
+            "navigateToDetailActionId": {
+              "description": "the id of the action to be executed when the panel is clicked",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "resourcesRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
+              }
+            }
+          }
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"],
+          "additionalProperties": false
+        },
+        "actions": {
+          "description": "the actions of the panel",
+          "type": "object",
+          "properties": {
+            "navigate": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["navigate"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
+            },
+            "rest": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "onSuccessNavigateTo": {
+                    "type": "string"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["rest"]
+                  }
+                },
+                "required": ["id", "resourceRefId"]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["widgetData", "resourcesRefs", "actions"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}

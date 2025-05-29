@@ -30,11 +30,11 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: composition-test-panel
+      - resourceRefId: composition-test-card
   resourcesRefs:
-    - id: composition-test-panel
+    - id: composition-test-card
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-panel
+      name: composition-test-card
       namespace: krateo-system
-      resource: panels
+      resource: compositioncards
       verb: GET
