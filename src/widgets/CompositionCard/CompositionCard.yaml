@@ -6,11 +6,11 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    date: oggi
-    status: success
+    date: ""
+    status: ""
     tooltip: test
     navigateToDetailActionId: composition-click-action
-    deleteCompositionActionId: 
+    deleteCompositionActionId: composition-delete-action
     tags: 
       - krateo-system
       - test-system
@@ -48,3 +48,22 @@ spec:
       namespace: krateo-system
       resource: tablists
       verb: GET
+  widgetDataTemplate:
+    - forPath: date
+      expression: ${ .getCompositionDefinition.metadata.creationTimestamp }
+    - forPath: status
+      expression: ${ .getCompositionDefinition.status.conditions[] | select(.type == "Ready") | "Ready:" + .status }
+  apiRef:
+    name: compositions-rest-action
+    namespace: krateo-system
+
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: compositions-rest-action
+  namespace: krateo-system
+spec:
+  api:
+  - name: getCompositionDefinition
+    path: "/apis/core.krateo.io/v1alpha1/namespaces/fireworksapp-system/compositiondefinitions/fireworksapp"
