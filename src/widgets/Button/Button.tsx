@@ -1,26 +1,22 @@
-/* eslint-disable max-depth */
-import type { IconProp } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button as AntdButton } from 'antd'
-import useApp from 'antd/es/app/useApp'
-import { useNavigate } from 'react-router'
+import type { IconProp } from "@fortawesome/fontawesome-svg-core"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Button as AntdButton } from "antd"
+import useApp from "antd/es/app/useApp"
+import { useNavigate } from "react-router"
 
-import { useConfigContext } from '../../context/ConfigContext'
-import type { ResourcesRefs, WidgetProps } from '../../types/Widget'
-import type { Action } from '../../utils/types'
-import { getEndpointUrl } from '../../utils/utils'
-import { openDrawer } from '../Drawer/Drawer'
+import { useConfigContext } from "../../context/ConfigContext"
+import type { ResourcesRefs, WidgetProps } from "../../types/Widget"
+import type { Action } from "../../utils/types"
+import { getEndpointUrl, getResourceRef } from "../../utils/utils"
+import { openDrawer } from "../Drawer/Drawer"
 
-import type { Button as WidgetType } from './Button.type'
+import type { Button as WidgetType } from "./Button.type"
 
-export type ButtonWidgetData = WidgetType['spec']['widgetData']
+export type ButtonWidgetData = WidgetType["spec"]["widgetData"]
 
-const createNginxPodEndpoint = (
-  baseUrl: string,
-  resourcesRefs: ResourcesRefs,
-) => {
+const createNginxPodEndpoint = (baseUrl: string, resourcesRefs: ResourcesRefs) => {
   if (!resourcesRefs || resourcesRefs.length === 0) {
-    throw new Error('cannot find backend endpoints')
+    throw new Error("cannot find backend endpoints")
   }
 
   return `${baseUrl}/call?resource=pods&apiVersion=v1&name=my-pod-x&namespace=krateo-system`
@@ -39,85 +35,63 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
       .find(({ id }) => id === clickActionId)
 
     if (buttonAction) {
-      const { requireConfirmation, resourceRefId, type } = buttonAction
+      const { resourceRefId, requireConfirmation, type, payload, id: actionId } = buttonAction
 
       switch (type) {
-        case 'navigate': {
+        case "navigate": {
           if (requireConfirmation) {
-            if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(resourceRefId, resourcesRefs,)
+            if (window.confirm("Are you sure?")) {
+              const url = getEndpointUrl(resourceRefId, resourcesRefs)
               await navigate(url)
             }
           }
           break
         }
-        case 'rest': {
+        case "rest": {
           if (requireConfirmation) {
-            if (window.confirm('Are you sure?')) {
-              const url = createNginxPodEndpoint(config!.api.BACKEND_API_BASE_URL, resourcesRefs)
-              const res = await fetch(url, {
-                body: JSON.stringify({
-                  apiVersion: 'v1',
-                  kind: 'Pod',
-                  metadata: {
-                    name: `nginx-pod-x`,
-                  },
-                  spec: {
-                    containers: [
-                      {
-                        image: 'nginx:latest',
-                        name: 'nginx',
-                        ports: [
-                          {
-                            containerPort: 80,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                }),
-                headers: {
-                  'X-Krateo-Groups': 'admins',
-                  'X-Krateo-User': 'admin',
-                },
-
-                method: 'POST',
-              })
-
-              type NginxResponse = {
-                message: string
-                metadata: {
-                  name: string
-                }
-                reason: string
-                status: string
-              }
-              const json = await res.json() as NginxResponse
-
-              if (!res.ok) {
-                notification.error({
-                  description: json.message,
-                  message: `${json.status} - ${json.reason}`,
-                  placement: 'bottomLeft',
-                })
-              }
-
-              notification.success({
-                description: `Pod ${json.metadata.name} created successfully`,
-                message: '🐳 Pod created successfully',
-                placement: 'bottomLeft',
-              })
+            const confirmed = window.confirm("Are you sure?")
+            if (!confirmed) {
+              break
             }
           }
+          const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
+          const url = config?.api.BACKEND_API_BASE_URL + resourceRef.path
+          debugger
+          if (resourceRef.verb === "POST" && !payload) {
+            console.warn(`Payload not found for POST action ${actionId}`)
+          }
+
+          const res = await fetch(url, {
+            body: JSON.stringify(payload),
+            headers: {
+              "X-Krateo-Groups": "admins",
+              "X-Krateo-User": "admin",
+            },
+            method: "POST",
+          })
+          const json = await res.json()
+          if (!res.ok) {
+            notification.error({
+              description: json.message,
+              message: `${json.status} - ${json.reason}`,
+              placement: "bottomLeft",
+            })
+          }
+          debugger
+          notification.success({
+            description: `Successfully created ${json.metadata.name} in ${json.metadata.namespace}`,
+            message: json.message,
+            placement: "bottomLeft",
+          })
           break
         }
-        case 'openDrawer': {
+        case "openDrawer": {
           const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
 
           openDrawer(widgetEndpoint)
           break
         }
-        case 'openModal': {
+        case "openModal": {
           /* TODO: implement open modal action */
           break
         }
@@ -131,17 +105,17 @@ const Button = ({ actions, resourcesRefs, widgetData }: WidgetProps<ButtonWidget
 
   const handleClick = () => {
     onClick().catch((error) => {
-      console.error('Error in button click handler:', error)
+      console.error("Error in button click handler:", error)
     })
   }
 
   return (
     <AntdButton
-      color={color || 'default'}
+      color={color || "default"}
       icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
       onClick={handleClick}
-      size={size || 'middle'}
-      type={type || 'primary'}
+      size={size || "middle"}
+      type={type || "primary"}
     >
       {label}
     </AntdButton>

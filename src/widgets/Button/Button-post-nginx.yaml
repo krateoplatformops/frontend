@@ -1,0 +1,35 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-post-nginx
+  namespace: krateo-system
+spec:
+  widgetData:
+      label: button 1
+      icon: fa-rocket
+      type: primary
+      clickActionId: action-1
+  actions:
+    rest:
+      - id: action-1
+        resourceRefId: resource-ref-1
+        type: rest
+        payload: 
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: nginx-pod-789
+          spec:
+            containers:
+              - image: 'nginx:latest'
+                name: nginx
+                ports:
+                  - containerPort: 80
+                  
+  resourcesRefs:
+    - id: resource-ref-1
+      apiVersion: v1
+      resource: pods
+      name: my-pod-name
+      namespace: krateo-system
+      verb: POST

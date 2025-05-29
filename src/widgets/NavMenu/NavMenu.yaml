@@ -130,6 +130,23 @@ spec:
       resource: panels
       verb: GET
 ---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-post-nginx
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: button-post-nginx
+  resourcesRefs:
+    - id: button-post-nginx
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-post-nginx
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+---
 kind: NavMenu
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -154,6 +171,10 @@ spec:
         label: Nginx factory
         icon: fa-shapes
         path: /nginx
+      - resourceRefId: button-post-nginx
+        label: Post button
+        icon: fa-rocket
+        path: /post-button
   resourcesRefs:
     - id: dashboard-route
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -179,3 +200,10 @@ spec:
       namespace: krateo-system
       resource: routes
       verb: GET
+    - id: button-post-nginx
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-post-nginx
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+    
