@@ -69,7 +69,7 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
       )}
       key={uid}
       onClick={handleClick}
-      title={(
+      title={(title || icon) && (
         <div className={styles.title}>
           {icon && (
             <Avatar

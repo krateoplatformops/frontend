@@ -15,7 +15,7 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["title", "items"],
+          "required": ["items"],
           "properties": {
             "clickActionId": {
               "description": "the id of the action to be executed when the panel is clicked",

@@ -20,7 +20,7 @@ export interface Panel {
       items: {
         resourceRefId: string
       }[]
-      title: string
+      title?: string
       tooltip?: string
     }
     resourcesRefs: {

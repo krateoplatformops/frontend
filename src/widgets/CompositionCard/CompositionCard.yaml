@@ -23,7 +23,7 @@ spec:
     navigate:
       - id: composition-click-action
         name: composition-click-action
-        resourceRefId: my-tab-list
+        resourceRefId: composition-test-tab-list
         type: navigate
     rest:
       - id: composition-delete-action
@@ -42,9 +42,9 @@ spec:
       namespace: krateo-system
       resource: buttons
       verb: GET
-    - id: my-tab-list
+    - id: composition-test-tab-list
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-tab-list
+      name: composition-test-tab-list
       namespace: krateo-system
       resource: tablists
       verb: GET
@@ -67,3 +67,112 @@ spec:
   api:
   - name: getCompositionDefinition
     path: "/apis/core.krateo.io/v1alpha1/namespaces/fireworksapp-system/compositiondefinitions/fireworksapp"
+
+---
+kind: TabList
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-tab-list
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - label: Overview
+        resourceRefId: composition-test-panel-paragraph
+      - label: Composition Status
+        resourceRefId: my-bar-chart
+      - label: Application Status
+        resourceRefId: my-line-chart
+      - label: Events
+        resourceRefId: composition-test-panel-event-list
+      - label: Values
+        resourceRefId: composition-test-panel-yaml-viewer
+  resourcesRefs:
+    - id: composition-test-panel-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-panel-paragraph
+      namespace: krateo-system
+      resource: panels
+      verb: GET
+    - id: my-bar-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-bar-chart
+      namespace: krateo-system
+      resource: barcharts
+      verb: GET
+    - id: my-line-chart
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-line-chart
+      namespace: krateo-system
+      resource: linecharts
+      verb: GET
+    - id: composition-test-panel-event-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-panel-event-list
+      namespace: krateo-system
+      resource: panels
+      verb: GET
+    - id: composition-test-panel-yaml-viewer
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-panel-yaml-viewer
+      namespace: krateo-system
+      resource: panels
+      verb: GET
+
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-panel-paragraph
+  namespace: krateo-system
+spec:
+  actions: {}
+  widgetData:
+    items:
+      - resourceRefId: my-paragraph
+  resourcesRefs:
+    - id: my-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-panel-event-list
+  namespace: krateo-system
+spec:
+  actions: {}
+  widgetData:
+    items:
+      - resourceRefId: my-event-list
+  resourcesRefs:
+    - id: my-event-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-event-list
+      namespace: krateo-system
+      resource: eventlists
+      verb: GET
+
+
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-panel-yaml-viewer
+  namespace: krateo-system
+spec: 
+  actions: {}
+  widgetData:
+    items:
+      - resourceRefId: my-yaml-viewer
+  resourcesRefs:
+    - id: my-yaml-viewer
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-yaml-viewer
+      namespace: krateo-system
+      resource: yamlviewers
+      verb: GET
