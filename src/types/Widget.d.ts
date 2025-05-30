@@ -48,6 +48,7 @@ export type WidgetActions = {
     type: 'rest'
     id: string
     name: string
+    payload: object
     verb: 'GET' | 'POST' | 'DELETE'
     resourceRefId: string
     requireConfirmation?: boolean

@@ -12,6 +12,7 @@ import { openDrawer } from '../Drawer/Drawer'
 import type { Button as WidgetType } from './Button.type'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
+
 const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
   const { clickActionId, color, icon, label, shape, size, type } = widgetData
 
@@ -38,6 +39,8 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           break
         }
         case 'rest': {
+          const { id, payload } = action
+
           if (requireConfirmation) {
             const confirmed = window.confirm('Are you sure?')
             if (!confirmed) {
@@ -46,9 +49,9 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           }
           const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
           const url = config?.api.BACKEND_API_BASE_URL + resourceRef.path
-          debugger
+
           if (resourceRef.verb === 'POST' && !payload) {
-            console.warn(`Payload not found for POST action ${actionId}`)
+            console.warn(`Payload not found for POST action ${id}`)
           }
 
           const res = await fetch(url, {
@@ -59,6 +62,8 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
             },
             method: 'POST',
           })
+
+          // TODO: write this type
           const json = await res.json()
           if (!res.ok) {
             notification.error({
@@ -67,7 +72,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
               placement: 'bottomLeft',
             })
           }
-          debugger
+
           notification.success({
             description: `Successfully created ${json.metadata.name} in ${json.metadata.namespace}`,
             message: json.message,

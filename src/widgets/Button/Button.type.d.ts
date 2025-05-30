@@ -76,6 +76,9 @@ export interface Button {
         onSuccessNavigateTo?: string
         loading?: 'global' | 'inline' | 'none'
         type?: 'rest'
+        payload?: {
+          [k: string]: unknown
+        }
       }[]
       navigate?: {
         id: string

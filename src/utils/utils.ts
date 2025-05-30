@@ -1,6 +1,6 @@
-import type { Widget } from '../types/Widget'
+import type { ResourcesRefs } from '../types/Widget'
 
-export const getResourceRef = (resourceRefId: string, resourcesRefs: Widget['status']['resourcesRefs']) => {
+export const getResourceRef = (resourceRefId: string, resourcesRefs: ResourcesRefs) => {
   if (!resourcesRefs || resourcesRefs.length === 0) {
     throw new Error('Cannot find resources refs')
   }
@@ -16,7 +16,7 @@ export const getResourceRef = (resourceRefId: string, resourcesRefs: Widget['sta
   return backendEndpoint
 }
 
-export const getEndpointUrl = (resourceRefId: string, resourcesRefs: Widget['status']['resourcesRefs']): string => {
+export const getEndpointUrl = (resourceRefId: string, resourcesRefs: ResourcesRefs): string => {
   const backendEndpoint = getResourceRef(resourceRefId, resourcesRefs)
 
   return backendEndpoint.path
