@@ -50,18 +50,18 @@ spec:
       verb: GET
   widgetDataTemplate:
     - forPath: date
-      expression: ${ .getCompositionDefinition.metadata.creationTimestamp }
+      expression: ${ .getCompositionDefinition.metadata.uid }
     - forPath: status
-      expression: ${ .getCompositionDefinition.status.conditions[] | select(.type == "Ready") | "Ready:" + .status }
+      expression: ${ .getCompositionDefinition.status.conditions[] | select(.type == "Ready") | "Ready:" + " " + .status }
   apiRef:
-    name: compositions-rest-action
+    name: compositionsrestaction
     namespace: krateo-system
 
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  name: compositions-rest-action
+  name: compositionsrestaction
   namespace: krateo-system
 spec:
   api:

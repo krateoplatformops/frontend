@@ -1,58 +1,65 @@
-import { QuestionCircleOutlined } from '@ant-design/icons'
+import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
+import { useNavigate } from 'react-router'
 
 import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
+import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './CompositionCard.module.css'
 import type { CompositionCard as WidgetType } from './CompositionCard.type'
 
 export type CompositionCardWidgetData = WidgetType['spec']['widgetData']
 
-const CompositionCard = ({ uid, widgetData }: WidgetProps<CompositionCardWidgetData>) => {
-  const { date, description, icon, status, tags, title, tooltip } = widgetData
+const CompositionCard = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<CompositionCardWidgetData>) => {
+  const navigate = useNavigate()
 
-  // const action = Object.values(actions ?? {})
-  //   .flat()
-  //   .find(({ id }) => id === clickActionId)
+  const { date, description, icon, navigateToDetailActionId, status, tags, title, tooltip } = widgetData
 
-  // const onClick = async () => {
-  //   if (action) {
-  //     const { requireConfirmation, type } = action
+  const clickAction = Object.values(actions ?? {})
+    .flat()
+    .find(({ id }) => id === navigateToDetailActionId)
 
-  //     switch (type) {
-  //       case 'navigate': {
-  //         if (requireConfirmation) {
-  //           if (window.confirm('Are you sure?')) {
-  //             const url = getEndpointUrl(action.resourceRefId, resourcesRefs)
-  //             await navigate(url)
-  //           }
-  //         }
-  //         break
-  //       }
-  //       default:
-  //         throw new Error(`Unsupported action type}`)
-  //     }
-  //   } else {
-  //     // TODO: remove this
-  //     const url = `${window.location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl('my-tab-list', resourcesRefs))}`
-  //     void navigate(url)
-  //     throw new Error(`Actions with id ${clickActionId} not found`)
-  //   }
-  // }
+  const onClick = async () => {
+    if (clickAction) {
+      const { requireConfirmation, type } = clickAction
 
-  // const handleClick = () => {
-  //   onClick()
-  //     .catch((error) => {
-  //       console.error('Error in composition card click handler:', error)
-  //     })
-  // }
+      switch (type) {
+        case 'navigate': {
+          if (requireConfirmation) {
+            if (window.confirm('Are you sure?')) {
+              const url = getEndpointUrl(clickAction.resourceRefId, resourcesRefs)
+              await navigate(url)
+            }
+          } else {
+            const url = getEndpointUrl(clickAction.resourceRefId, resourcesRefs)
+            await navigate(url)
+          }
+          break
+        }
+        default:
+          throw new Error(`Unsupported action type}`)
+      }
+    } else {
+      // TODO: remove this
+      const url = title && `${window.location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl('my-tab-list', resourcesRefs))}`
+      if (url) { void navigate(url) }
+      throw new Error(`Actions with id ${navigateToDetailActionId} not found`)
+    }
+  }
+
+  const handleClick = () => {
+    onClick()
+      .catch((error) => {
+        console.error('Error in composition card click handler:', error)
+      })
+  }
 
   return (
     <AntdCard
-      // className={`${styles.compositionCard} ${action ? styles.clickable : ''}`}
+      className={`${styles.compositionCard} ${clickAction ? styles.clickable : ''}`}
       classNames={{ header: styles.header, title: styles.title }}
       extra={tooltip && (
         <Tooltip title={tooltip}>
@@ -60,6 +67,7 @@ const CompositionCard = ({ uid, widgetData }: WidgetProps<CompositionCardWidgetD
         </Tooltip>
       )}
       key={uid}
+      onClick={handleClick}
       title={(
         <div className={styles.title}>
           {icon && (
@@ -76,13 +84,21 @@ const CompositionCard = ({ uid, widgetData }: WidgetProps<CompositionCardWidgetD
     >
       <div className={styles.content}>
         <div className={styles.body}>
-          {status}
-          {date}
+          <div className={styles.info}>
+            <span>{status}</span>
+            <span>{date}</span>
+          </div>
           {description}
-          {<Tag className={styles.tag}>{tags?.join(', ')}</Tag>}
         </div>
-        <div className={`${styles.footer}`}>
-          <Button />
+        <div className={styles.footer}>
+          <div>
+            {tags?.map(tag => <Tag>{tag}</Tag>)}
+          </div>
+          <Button
+            icon={<DeleteOutlined />}
+            onClick={(event) => event.stopPropagation()}
+            shape='circle'
+          />
         </div>
       </div>
     </AntdCard>
