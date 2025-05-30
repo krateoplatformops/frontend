@@ -23,6 +23,7 @@ export interface Widget<WidgetDataType = unknown> {
     uid: string
   }
   spec: {
+    actions: WidgetActions
     widgetData: WidgetDataType
     widgetRefs?: {
       [key: string]: {
@@ -37,7 +38,6 @@ export interface Widget<WidgetDataType = unknown> {
   status: {
     widgetData: WidgetDataType
     widgets: Widget[]
-    actions: WidgetActions
     events: unknown /* EventsType */
     resourcesRefs: ResourcesRefs
   } | string

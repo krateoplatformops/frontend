@@ -2,7 +2,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
@@ -15,6 +15,7 @@ import type { Panel as WidgetType } from './Panel.type'
 export type PanelWidgetData = WidgetType['spec']['widgetData']
 
 const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
+  const location = useLocation()
   const navigate = useNavigate()
 
   const { clickActionId, footer, icon, items, title, tooltip } = widgetData
@@ -29,11 +30,16 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
 
       switch (type) {
         case 'navigate': {
+          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl(action.resourceRefId, resourcesRefs))}`
+
+          if (!url) { return }
+
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(action.resourceRefId, resourcesRefs)
               await navigate(url)
             }
+          } else {
+            await navigate(url)
           }
           break
         }
@@ -41,9 +47,6 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
           throw new Error(`Unsupported action type}`)
       }
     } else {
-      // TODO: remove this
-      const url = `${window.location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl('my-tab-list', resourcesRefs))}`
-      void navigate(url)
       throw new Error(`Actions with id ${clickActionId} not found`)
     }
   }

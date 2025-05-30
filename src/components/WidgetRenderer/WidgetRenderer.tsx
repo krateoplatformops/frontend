@@ -39,7 +39,7 @@ import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
 import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
-  const { kind, metadata, status } = widget
+  const { kind, metadata, spec, status } = widget
 
   if (!status) {
     return (
@@ -89,7 +89,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     )
   }
 
-  const { actions, resourcesRefs, widgetData } = status
+  const { actions } = spec
+  const { resourcesRefs, widgetData } = status
   const uid = metadata?.uid
 
   switch (kind) {

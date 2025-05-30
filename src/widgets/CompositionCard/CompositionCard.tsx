@@ -2,7 +2,7 @@ import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
@@ -14,6 +14,7 @@ import type { CompositionCard as WidgetType } from './CompositionCard.type'
 export type CompositionCardWidgetData = WidgetType['spec']['widgetData']
 
 const CompositionCard = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<CompositionCardWidgetData>) => {
+  const location = useLocation()
   const navigate = useNavigate()
 
   const { date, description, icon, navigateToDetailActionId, status, tags, title, tooltip } = widgetData
@@ -28,13 +29,15 @@ const CompositionCard = ({ actions, resourcesRefs, uid, widgetData }: WidgetProp
 
       switch (type) {
         case 'navigate': {
+          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl(clickAction.resourceRefId, resourcesRefs))}`
+
+          if (!url) { return }
+
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(clickAction.resourceRefId, resourcesRefs)
               await navigate(url)
             }
           } else {
-            const url = getEndpointUrl(clickAction.resourceRefId, resourcesRefs)
             await navigate(url)
           }
           break
@@ -43,9 +46,6 @@ const CompositionCard = ({ actions, resourcesRefs, uid, widgetData }: WidgetProp
           throw new Error(`Unsupported action type}`)
       }
     } else {
-      // TODO: remove this
-      const url = title && `${window.location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl('my-tab-list', resourcesRefs))}`
-      if (url) { void navigate(url) }
       throw new Error(`Actions with id ${navigateToDetailActionId} not found`)
     }
   }
@@ -92,7 +92,7 @@ const CompositionCard = ({ actions, resourcesRefs, uid, widgetData }: WidgetProp
         </div>
         <div className={styles.footer}>
           <div>
-            {tags?.map(tag => <Tag>{tag}</Tag>)}
+            {tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
           </div>
           <Button
             icon={<DeleteOutlined />}
