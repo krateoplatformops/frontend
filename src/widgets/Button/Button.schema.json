@@ -137,6 +137,10 @@
                   "type": {
                     "type": "string",
                     "enum": ["rest"]
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": true
                   }
                 },
                 "required": ["id", "resourceRefId"]

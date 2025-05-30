@@ -20,7 +20,10 @@ async function sendSchemaToSmithery(schemaPath: string) {
     })
 
     if (!response.ok) {
-      console.error(`❌ Failed to send schema to Smithery (${schemaPath})`, response.statusText)
+      console.error(
+        `❌ Failed to send schema to Smithery (${schemaPath})`,
+        response.statusText,
+      )
       console.error(await response.text())
       process.exit(1)
     }
