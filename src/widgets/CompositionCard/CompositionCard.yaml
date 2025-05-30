@@ -80,9 +80,9 @@ spec:
       - label: Overview
         resourceRefId: composition-test-panel-paragraph
       - label: Composition Status
-        resourceRefId: my-bar-chart
+        resourceRefId: my-flow-chart
       - label: Application Status
-        resourceRefId: my-line-chart
+        resourceRefId: my-flow-chart
       - label: Events
         resourceRefId: composition-test-panel-event-list
       - label: Values
@@ -94,17 +94,17 @@ spec:
       namespace: krateo-system
       resource: panels
       verb: GET
-    - id: my-bar-chart
+    - id: my-flow-chart
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-bar-chart
+      name: my-flow-chart
       namespace: krateo-system
-      resource: barcharts
+      resource: flowcharts
       verb: GET
-    - id: my-line-chart
+    - id: my-flow-chart
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-line-chart
+      name: my-flow-chart
       namespace: krateo-system
-      resource: linecharts
+      resource: flowcharts
       verb: GET
     - id: composition-test-panel-event-list
       apiVersion: widgets.templates.krateo.io/v1beta1

@@ -10,6 +10,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import '../index.css'
 import '../variables.css'
+import 'reactflow/dist/style.css'
+
 import styles from './App.module.css'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'

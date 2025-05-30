@@ -15,7 +15,7 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["title", "items"],
+          "required": ["title"],
           "properties": {
             "title": {
               "type": "string"

@@ -15,6 +15,8 @@ import type { CompositionCardWidgetData } from '../../widgets/CompositionCard/Co
 import CompositionCard from '../../widgets/CompositionCard/CompositionCard'
 import EventList from '../../widgets/EventList'
 import type { EventListWidgetData } from '../../widgets/EventList/EventList'
+import type { FlowChartWidgetData } from '../../widgets/FlowChart/FlowChart'
+import FlowChart from '../../widgets/FlowChart/FlowChart'
 import LineChart from '../../widgets/LineChart'
 import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
 import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
@@ -89,6 +91,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     )
   }
 
+  // TODO: check if actions should be retrieved from status
   const { actions } = spec
   const { resourcesRefs, widgetData } = status
   const uid = metadata?.uid
@@ -104,6 +107,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
     case 'EventList':
       return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
+    case 'FlowChart':
+      return <FlowChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
     case 'LineChart':
       return <LineChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
     case 'NavMenu':
