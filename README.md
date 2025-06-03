@@ -37,7 +37,7 @@ kubectl get secret admin-password  -n krateo-system -o jsonpath="{.data.password
 ### Step 3: open a terminal and install / update the latest version of Snowplow
 
 ```bash
-helm upgrade snowplow krateo/snowplow -n krateo-system --set image.tag=0.11.1
+helm upgrade snowplow krateo/snowplow -n krateo-system --set image.tag=0.11.2
 ```
 
 After executing the command follow the instructions to set a local port for Snowplow.

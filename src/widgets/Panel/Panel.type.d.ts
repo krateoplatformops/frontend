@@ -38,7 +38,7 @@ export interface Panel {
     /**
      * the actions of the panel
      */
-    actions: {
+    actions?: {
       navigate?: {
         id: string
         type: 'navigate'

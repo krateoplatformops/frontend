@@ -76,14 +76,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
             "additionalProperties": false,
             "properties": {
               "id": {
@@ -265,7 +258,7 @@
           }
         }
       },
-      "required": ["widgetData", "resourcesRefs", "actions"],
+      "required": ["widgetData", "actions"],
       "additionalProperties": false
     }
   },

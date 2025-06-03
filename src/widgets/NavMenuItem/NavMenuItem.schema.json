@@ -8,27 +8,26 @@
     },
     "kind": {
       "type": "string",
-      "default": "NavMenu"
+      "default": "NavMenuItem"
     },
     "spec": {
       "type": "object",
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["items"],
+          "required": ["label", "icon", "path", "resourceRefId"],
           "properties": {
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["label", "icon", "path", "resourceRefId"],
-                "properties": {
-                  "resourceRefId": {
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": false
-              }
+            "label": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "resourceRefId": {
+              "type": "string"
             }
           },
           "additionalProperties": false

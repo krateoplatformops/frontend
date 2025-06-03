@@ -2,15 +2,20 @@ import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu } from 'antd'
 import type { MenuItemType } from 'antd/es/menu/interface'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import type { AppRoute } from '../../context/RoutesContext'
 import { useRoutesContext } from '../../context/RoutesContext'
-import type { WidgetProps } from '../../types/Widget'
+import type { Widget, WidgetProps } from '../../types/Widget'
 
 import styles from './NavMenu.module.css'
 import type { NavMenu as WidgetType } from './NavMenu.type'
+import { useQueries } from '@tanstack/react-query'
+import { getAccessToken } from '../../utils/getAccessToken'
+import { useConfigContext } from '../../context/ConfigContext'
+import { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
+import { Route } from '../Route/Route.type'
 
 export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
@@ -18,21 +23,65 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
   const location = useLocation()
   const navigate = useNavigate()
   const { menuRoutes, updateMenuRoutes } = useRoutesContext()
+  const { config } = useConfigContext()
 
-  const { items } = widgetData
+  /* HACK: waiting for the widgetData to return items from the backend via a restaction that sets items from resourcesRefsTemplate */
+  // const { items } = widgetData
+  const items = resourcesRefs
 
-  const routes: AppRoute[] = useMemo(() => items.map(({ path, resourceRefId }) => ({
-    path,
-    resourceRef: resourcesRefs.find(({ id }) => id === resourceRefId),
-    resourceRefId,
-  })), [items, resourcesRefs])
+  const { navMenuItems, loadedAllMenuItems } = useQueries({
+    queries: items.map((resourcesRef) => {
+      const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${resourcesRef.path}`
+      return {
+        queryKey: ['navmenuitems', resourcesRef.id, widgetFullUrl],
+        queryFn: async () => {
+          const res = await fetch(widgetFullUrl, {
+            headers: {
+              Authorization: `Bearer ${getAccessToken()}`,
+            },
+          })
+          const widget = await res.json()
+          return widget
+        },
+      }
+    }),
+    combine: (results) => {
+      return {
+        navMenuItems: results.map((result) => result.data),
+        isLoading: results.some((result) => result.isLoading),
+        isError: results.some((result) => result.isError),
+        loadedAllMenuItems: results.every((result) => result.status === 'success'),
+      }
+    },
+  })
+
+  // const routes: AppRoute[] = useMemo(() => {
+  //   if (!loadedAllRoutes) {
+  //     return []
+  //   }
+  //   return allRoutes.map(({ path, resourceRefId }) => ({
+  //     path,
+  //     resourceRef: resourcesRefs.find(({ id }) => id === resourceRefId),
+  //     resourceRefId,
+  //   }))
+  // }, [items, resourcesRefs, allRoutes, loadedAllRoutes])
 
   useEffect(() => {
-    if (routes.length > 0) {
-      localStorage.setItem('routes', JSON.stringify(routes))
-      updateMenuRoutes(routes)
+    if (loadedAllMenuItems && navMenuItems.length > 0) {
+      const routesToSave = navMenuItems.map((menuItem) => {
+        const { resourceRefId } = menuItem.status.widgetData as unknown as NavMenuItem['spec']['widgetData']
+        const routeResourceRef = menuItem.status.resourcesRefs.find(({ id }) => id === resourceRefId)!
+        return {
+          path: menuItem.status.widgetData.path,
+          resourceRef: routeResourceRef,
+          resourceRefId,
+        }
+      })
+
+      localStorage.setItem('routes', JSON.stringify(routesToSave))
+      updateMenuRoutes(routesToSave)
     }
-  }, [resourcesRefs, routes, updateMenuRoutes])
+  }, [loadedAllMenuItems, navMenuItems])
 
   useEffect(() => {
     if (location.pathname === '/' && menuRoutes.length > 0) {
@@ -40,11 +89,19 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
     }
   }, [location.pathname, menuRoutes, navigate])
 
-  const menuItems: MenuItemType[] = useMemo(() => items.map(({ icon, label, path }) => ({
-    icon: <FontAwesomeIcon icon={icon as IconProp} />,
-    key: path,
-    label,
-  })), [items])
+  const menuItems: MenuItemType[] = useMemo(() => {
+    if (!loadedAllMenuItems) {
+      return []
+    }
+    return navMenuItems.map((item) => {
+      const { icon, label, path } = item.status.widgetData as unknown as NavMenuItem['spec']['widgetData']
+      return {
+        icon: <FontAwesomeIcon icon={icon as IconProp} />,
+        key: path,
+        label,
+      }
+    })
+  }, [items, navMenuItems, loadedAllMenuItems])
 
   const handleClick = (key: string) => {
     void navigate(key)
@@ -53,11 +110,11 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
   return (
     <Menu
       className={styles.menu}
-      defaultSelectedKeys={[menuItems[0].key as string]}
+      defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
       items={menuItems}
       key={uid}
       mode='inline'
-      onClick={item => handleClick(item.key)}
+      onClick={(item) => handleClick(item.key)}
       selectedKeys={[location.pathname]}
     />
   )

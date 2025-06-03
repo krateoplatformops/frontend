@@ -57,7 +57,7 @@ export interface Button {
        */
       clickActionId: string
     }
-    resourcesRefs: {
+    resourcesRefs?: {
       id: string
       apiVersion: string
       name: string

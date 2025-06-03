@@ -112,38 +112,98 @@ spec:
       resource: rows
       verb: GET
 ---
-kind: Route
+# kind: Route
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: nginx-form-route
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     items:
+#       - resourceRefId: nginx-form-panel
+#   resourcesRefs:
+#     - id: nginx-form-panel
+#       apiVersion: widgets.templates.krateo.io/v1beta1
+#       name: nginx-form-panel
+#       namespace: krateo-system
+#       resource: panels
+#       verb: GET
+# ---
+# kind: Route
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: button-post-nginx
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     items:
+#       - resourceRefId: button-post-nginx
+#   resourcesRefs:
+#     - id: button-post-nginx
+#       apiVersion: widgets.templates.krateo.io/v1beta1
+#       name: button-post-nginx
+#       namespace: krateo-system
+#       resource: buttons
+#       verb: GET
+# ---
+kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: nginx-form-route
+  name: nav-menu-item-dashboard
   namespace: krateo-system
 spec:
   widgetData:
-    items:
-      - resourceRefId: nginx-form-panel
+    resourceRefId: dashboard-route
+    label: Dashboard
+    icon: fa-chart-line
+    path: /dashboard
+  
   resourcesRefs:
-    - id: nginx-form-panel
+    - id: dashboard-route
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: nginx-form-panel
+      name: dashboard-route
       namespace: krateo-system
-      resource: panels
+      resource: routes
       verb: GET
 ---
-kind: Route
+kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: button-post-nginx
+  name: nav-menu-item-templates
   namespace: krateo-system
 spec:
   widgetData:
-    items:
-      - resourceRefId: button-post-nginx
+    resourceRefId: templates-route
+    label: Templates
+    icon: fa-rectangle-list
+    path: /templates
+
   resourcesRefs:
-    - id: button-post-nginx
+    - id: templates-route
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-post-nginx
+      name: templates-route
       namespace: krateo-system
-      resource: buttons
+      resource: routes
+      verb: GET
+---
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: nav-menu-item-compositions
+  namespace: krateo-system
+spec:
+  widgetData:
+    resourceRefId: compositions-route
+    label: Compositions
+    icon: fa-shapes
+    path: /compositions
+
+  resourcesRefs:
+    - id: compositions-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: compositions-route
+      namespace: krateo-system
+      resource: routes
       verb: GET
 ---
 kind: NavMenu
@@ -153,67 +213,27 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    items:
-      - resourceRefId: dashboard-route
-        label: Dashboard
-        icon: fa-chart-line
-        path: /dashboard
-      - resourceRefId: templates-route
-        label: Templates
-        icon: fa-rectangle-list
-        path: /templates
-      - resourceRefId: compositions-route
-        label: Compositions
-        icon: fa-shapes
-        path: /compositions
-      - resourceRefId: nginx-form-route
-        label: Nginx factory
-        icon: fa-shapes
-        path: /nginx
-      - resourceRefId: button-post-nginx
-        label: Post button
-        icon: fa-rocket
-        path: /post-button
-  resourcesRefs:
-    - id: dashboard-route
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: dashboard-route
-      namespace: krateo-system
-      resource: routes
-      verb: GET
-    - id: templates-route
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-route
-      namespace: krateo-system
-      resource: routes
-      verb: GET
-    - id: compositions-route
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: compositions-route
-      namespace: krateo-system
-      resource: routes
-      verb: GET
-    - id: nginx-form-route
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: nginx-form-route
-      namespace: krateo-system
-      resource: routes
-      verb: GET
-    - id: button-post-nginx
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-post-nginx
-      namespace: krateo-system
-      resource: routes
-      verb: GET
-  apiRef:
-    name: routes
-    namespace: krateo-system
+    items: []
+  resourcesRefs: []
 
+  resourcesRefsTemplate:
+    - iterator: ${ .navmenuitems }
+      template:
+        id: ${ .metadata.namespace + "_" + .metadata.name }
+        name: ${ .metadata.name }
+        apiVersion: ${ .apiVersion }
+        resource: navmenuitems
+        namespace: ${ .metadata.namespace }
+        verb: GET
+
+  apiRef:
+    name: navmenuitems
+    namespace: krateo-system
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  name: routes
+  name: navmenuitems
   # namespace: {{ .Release.Namespace }}
   namespace: krateo-system
 spec:
@@ -221,9 +241,13 @@ spec:
   - name: namespaces
     path: "/api/v1/namespaces"
     filter: "[.items[] | .metadata.name]"
-  - name: routes
+  - name: navmenuitems
+    continueOnError: true
     dependsOn: 
       name: namespaces
       iterator: .[]
-    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/routes" }
-    continueOnError: true
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/navmenuitems" }
+  filter: "{navmenuitems: [.navmenuitems[] | select(.items != null) | .items[]]}"
+    
+    
+    

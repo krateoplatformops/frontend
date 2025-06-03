@@ -1,11 +1,12 @@
-export interface NavMenu {
+export interface NavMenuItem {
   version: string
   kind: string
   spec: {
     widgetData: {
-      items: {
-        resourceRefId: string
-      }[]
+      label: string
+      icon: string
+      path: string
+      resourceRefId: string
     }
     apiRef?: {
       name: string
