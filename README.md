@@ -13,6 +13,13 @@ curl -L https://github.com/krateoplatformops/krateo-v2-docs/releases/latest/down
 kubectl wait krateoplatformops krateo --for condition=Ready=True --namespace krateo-system --timeout=300s
 ```
 
+Add JWT secret to the cluster:
+
+```bash
+kubectl create secret generic jwt-sign-key --from-literal=JWT_SIGN_KEY=AbbraCadabbra -n krateo-system
+```
+
+
 ### Step 2: start the application and authenticate
 
 Execute the following command to start the app locally:
@@ -30,7 +37,7 @@ kubectl get secret admin-password  -n krateo-system -o jsonpath="{.data.password
 ### Step 3: open a terminal and install / update the latest version of Snowplow
 
 ```bash
-helm install snowplow krateo/snowplow -n krateo-system --set image.tag=x.x.x
+helm upgrade snowplow krateo/snowplow -n krateo-system --set image.tag=0.11.1
 ```
 
 After executing the command follow the instructions to set a local port for Snowplow.
@@ -38,12 +45,21 @@ After executing the command follow the instructions to set a local port for Snow
 ### Step 4: open a terminal and install / update the latest version of Smithery
 
 ```bash
-helm install smithery krateo/smithery -n krateo-system --set livenessProbe=null --set readinessProbe=null --set image.tag=x.x.x
+helm upgrade authn krateo/authn -n krateo-system --install --set livenessProbe=null --set readinessProbe=null --set image.tag=0.20.1
 ```
+
 
 After executing the command follow the instructions to set a local port for Smithery.
 
-### Step 5: send JSON schemas to Smithery to create CRDs
+### Step 5: open a terminal and install / update the latest version of Authn
+
+
+
+```
+helm upgrade authn krateo/authn -n krateo-system --install --set livenessProbe=null --set readinessProbe=null --set image.tag=0.20.1
+```
+
+### Step 6: send JSON schemas to Smithery to create CRDs
 
 Run the following command to execute a script that sends all files with `.schema.json` extension on the repository to Smithery, validates them and creates the related CRDs.
 
@@ -51,7 +67,7 @@ Run the following command to execute a script that sends all files with `.schema
 npm run send-schemas
 ```
 
-### Step 6: apply custom resources
+### Step 7: apply custom resources
 
 Run the following command to execute a script that creates all the custom resources defined by all files with `.yaml` extension on the repository.
 
