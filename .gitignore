@@ -27,3 +27,6 @@ playwright-report/
 coverage/
 
 kubeconfig.yaml
+
+scripts/login-response.json
+*kubeconfig*

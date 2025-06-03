@@ -11,7 +11,8 @@
     "generate-types": "tsx scripts/generate-types.ts",
     "apply-all": "tsx scripts/apply-k8s-yamls.ts",
     "send-schemas": "tsx scripts/send-schemas-to-smithery.ts",
-    "validate-schemas": "tsx scripts/validate-schemas.ts"
+    "validate-schemas": "tsx scripts/validate-schemas.ts",
+    "get-access-token": "tsx scripts/get-access-token.ts"
   },
   "repository": {
     "type": "git",

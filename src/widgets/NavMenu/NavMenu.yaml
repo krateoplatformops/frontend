@@ -205,4 +205,25 @@ spec:
       namespace: krateo-system
       resource: routes
       verb: GET
-    
+  apiRef:
+    name: routes
+    namespace: krateo-system
+
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: routes
+  # namespace: {{ .Release.Namespace }}
+  namespace: krateo-system
+spec:
+  api:
+  - name: namespaces
+    path: "/api/v1/namespaces"
+    filter: "[.items[] | .metadata.name]"
+  - name: routes
+    dependsOn: 
+      name: namespaces
+      iterator: .[]
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/routes" }
+    continueOnError: true

@@ -44,16 +44,15 @@ After executing the command follow the instructions to set a local port for Snow
 
 ### Step 4: open a terminal and install / update the latest version of Smithery
 
+
 ```bash
-helm upgrade authn krateo/authn -n krateo-system --install --set livenessProbe=null --set readinessProbe=null --set image.tag=0.20.1
+helm upgrade smithery krateo/smithery -n krateo-system --install --set livenessProbe=null --set readinessProbe=null --set image.tag=0.6.0
 ```
 
 
 After executing the command follow the instructions to set a local port for Smithery.
 
 ### Step 5: open a terminal and install / update the latest version of Authn
-
-
 
 ```
 helm upgrade authn krateo/authn -n krateo-system --install --set livenessProbe=null --set readinessProbe=null --set image.tag=0.20.1

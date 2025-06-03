@@ -1,84 +1,83 @@
 /* eslint-disable no-console */
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
-import { glob } from "glob";
+import { glob } from 'glob'
+import { api } from '../public/config/config.json'
 
-const WIDGETS_DIR = join(process.cwd(), "src", "widgets");
-const SMITHERY_URL = "http://127.0.0.1:8081/forge?apply=true";
+const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
 
-const accessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZ3JvdXBzIjpbImFkbWlucyJdLCJpc3MiOiJrcmF0ZW8uaW8iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTc0OTAyMzM2OSwibmJmIjoxNzQ4OTM2OTY5LCJpYXQiOjE3NDg5MzY5Njl9.38l7dnsHUJho3Bk0Q6pzeNiRS1cDq8OzpxU3nfh25o8";
+import { accessToken } from './login-response.json'
 
 async function sendSchemaToSmithery(schemaPath: string) {
   try {
-    const schemaContent = readFileSync(schemaPath, "utf-8");
+    const schemaContent = readFileSync(schemaPath, 'utf-8')
     // Parse and validate JSON before sending
-    const response = await fetch(SMITHERY_URL, {
+    const response = await fetch(`${api.SMITHERY_API_BASE_URL}/forge?apply=true`, {
       body: schemaContent,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      method: "POST",
-    });
+      method: 'POST',
+    })
 
     if (!response.ok) {
-      console.error(`❌ Failed to send schema to Smithery (${schemaPath})`, response.statusText);
-      console.error(await response.text());
-      process.exit(1);
+      console.error(`❌ Failed to send schema to Smithery (${schemaPath})`, response.statusText)
+      console.error(await response.text())
+      process.exit(1)
     }
 
-    console.log(schemaPath.split("/").pop(), response.statusText);
+    console.log(schemaPath.split('/').pop(), response.statusText)
   } catch (error) {
-    console.error(`❌ Failed to send schema to Smithery (${schemaPath})`, error);
+    console.error(`❌ Failed to send schema to Smithery (${schemaPath})`, error)
   }
 }
 
 async function main() {
   try {
     // Find all .schema.json files in the widgets directory
-    const schemaFiles = await glob("**/*.schema.json", {
+    const schemaFiles = await glob('**/*.schema.json', {
       absolute: true,
       cwd: WIDGETS_DIR,
-    });
+    })
 
     if (schemaFiles.length === 0) {
-      console.error("❌ No schema files found in:", WIDGETS_DIR);
-      process.exit(1);
+      console.error('❌ No schema files found in:', WIDGETS_DIR)
+      process.exit(1)
     }
 
-    console.log(`Found ${schemaFiles.length} schema files to process`);
+    console.log(`Found ${schemaFiles.length} schema files to process`)
 
-    let successCount = 0;
-    let failureCount = 0;
+    let successCount = 0
+    let failureCount = 0
 
     // Process each schema file
     for (const schemaFile of schemaFiles) {
       try {
         // eslint-disable-next-line no-await-in-loop
-        await sendSchemaToSmithery(schemaFile);
-        successCount += 1;
+        await sendSchemaToSmithery(schemaFile)
+        successCount += 1
       } catch {
-        failureCount += 1;
+        failureCount += 1
       }
     }
 
-    console.log("\n📊 Processing Summary:");
-    console.log(`Total schemas: ${schemaFiles.length}`);
-    console.log(`✅ Successful: ${successCount}`);
-    console.log(`❌ Failed: ${failureCount}`);
+    console.log('\n📊 Processing Summary:')
+    console.log(`Total schemas: ${schemaFiles.length}`)
+    console.log(`✅ Successful: ${successCount}`)
+    console.log(`❌ Failed: ${failureCount}`)
 
     if (failureCount > 0) {
-      process.exit(1);
+      process.exit(1)
     }
 
-    console.log("\n🎉 All schemas have been processed successfully!");
+    console.log('\n🎉 All schemas have been processed successfully!')
   } catch (error) {
-    console.error("\n❌ Fatal Error:");
-    console.error(error instanceof Error ? error.message : String(error));
-    process.exit(1);
+    console.error('\n❌ Fatal Error:')
+    console.error(error instanceof Error ? error.message : String(error))
+    process.exit(1)
   }
 }
 
-void main();
+void main()

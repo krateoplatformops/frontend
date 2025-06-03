@@ -74,14 +74,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
             "properties": {
               "id": {
                 "type": "string"
