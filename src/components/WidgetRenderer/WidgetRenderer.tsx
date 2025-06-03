@@ -39,6 +39,7 @@ import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
 
 import styles from './WidgetRenderer.module.css'
+import { getAccessToken } from '../../utils/getAccessToken'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   const { kind, metadata, spec, status } = widget
@@ -46,11 +47,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
   if (!status) {
     return (
       <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`Widget ${kind} does not have a status specification`}
-          title='Error while rendering widget'
-        />
+        <Result status='error' subTitle={`Widget ${kind} does not have a status specification`} title='Error while rendering widget' />
       </div>
     )
   }
@@ -68,11 +65,17 @@ function parseData(widget: Widget, widgetEndpoint: string) {
           >
             <div className={styles.content}>
               <pre className={styles.pre}>
-                <b>Name:</b> {params.get('name')}{'\n'}
-                <b>Namespace:</b> {params.get('namespace')}{'\n'}
-                <b>Version:</b> {params.get('apiVersion')}{'\n'}
-                <b>Endpoint:</b> {widgetEndpoint}{'\n'}{'\n'}
-                <b>Widget:</b> {JSON.stringify(widget, null, 2)}{'\n'}
+                <b>Name:</b> {params.get('name')}
+                {'\n'}
+                <b>Namespace:</b> {params.get('namespace')}
+                {'\n'}
+                <b>Version:</b> {params.get('apiVersion')}
+                {'\n'}
+                <b>Endpoint:</b> {widgetEndpoint}
+                {'\n'}
+                {'\n'}
+                <b>Widget:</b> {JSON.stringify(widget, null, 2)}
+                {'\n'}
               </pre>
             </div>
           </Result>
@@ -82,11 +85,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 
     return (
       <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`Status for ${kind} widget is in string format: ${status}`}
-          title='Error while rendering widget'
-        />
+        <Result status='error' subTitle={`Status for ${kind} widget is in string format: ${status}`} title='Error while rendering widget' />
       </div>
     )
   }
@@ -100,11 +99,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'BarChart':
       return <BarChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as BarChartWidgetData} />
     case 'Button':
-      return <Button actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData }/>
+      return <Button actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
     case 'Column':
       return <Column actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'CompositionCard':
-      return <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
+      return (
+        <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
+      )
     case 'EventList':
       return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'FlowChart':
@@ -138,9 +139,7 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
   const navigate = useNavigate()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
-    console.warn(
-      `WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`,
-    )
+    console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
   }
 
   const { config } = useConfigContext()
@@ -154,8 +153,7 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
     queryFn: async () => {
       const res = await fetch(widgetFullUrl, {
         headers: {
-          'X-Krateo-Groups': 'admins',
-          'X-Krateo-User': 'admin',
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       })
 
@@ -176,11 +174,7 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
   if (!widget) {
     return (
       <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`The widget does not exist`}
-          title='Error while rendering widget'
-        />
+        <Result status='error' subTitle={`The widget does not exist`} title='Error while rendering widget' />
       </div>
     )
   }

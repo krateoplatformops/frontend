@@ -50,7 +50,7 @@ spec:
       verb: GET
   widgetDataTemplate:
     - forPath: date
-      expression: ${ .getCompositionDefinition.metadata.uid }
+      expression: ${ .getCompositionDefinition.metadata.namespace }
     - forPath: status
       expression: ${ .getCompositionDefinition.status.conditions[] | select(.type == "Ready") | "Ready:" + " " + .status }
   apiRef:

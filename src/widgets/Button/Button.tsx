@@ -10,6 +10,7 @@ import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 
 import type { Button as WidgetType } from './Button.type'
+import {getAccessToken} from '../../utils/getAccessToken'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
 
@@ -57,8 +58,9 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           const res = await fetch(url, {
             body: JSON.stringify(payload),
             headers: {
-              'X-Krateo-Groups': 'admins',
-              'X-Krateo-User': 'admin',
+              // 'X-Krateo-Groups': 'admins',
+              // 'X-Krateo-User': 'admin',
+              Authorization: `Bearer ${getAccessToken()}`,
             },
             method: 'POST',
           })
