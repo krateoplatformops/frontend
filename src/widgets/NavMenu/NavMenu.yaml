@@ -112,22 +112,22 @@ spec:
       resource: rows
       verb: GET
 ---
-# kind: Route
-# apiVersion: widgets.templates.krateo.io/v1beta1
-# metadata:
-#   name: nginx-form-route
-#   namespace: krateo-system
-# spec:
-#   widgetData:
-#     items:
-#       - resourceRefId: nginx-form-panel
-#   resourcesRefs:
-#     - id: nginx-form-panel
-#       apiVersion: widgets.templates.krateo.io/v1beta1
-#       name: nginx-form-panel
-#       namespace: krateo-system
-#       resource: panels
-#       verb: GET
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: form-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: firework-form-panel
+  resourcesRefs:
+    - id: firework-form-panel
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: firework-form-panel
+      namespace: krateo-system
+      resource: panels
+      verb: GET
 # ---
 # kind: Route
 # apiVersion: widgets.templates.krateo.io/v1beta1

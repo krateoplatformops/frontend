@@ -9,7 +9,7 @@ const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
 function applyYamlFile(yamlPath: string): boolean {
   try {
     console.log(`Applying ${yamlPath.split('/').pop()}...`)
-    execSync(`kubectl apply -f ${yamlPath} --kubeconfig kubeconfig.yaml`, { stdio: 'inherit' })
+    execSync(`kubectl apply -f ${yamlPath}`, { stdio: 'inherit' })
     console.log(`✅ Successfully applied ${yamlPath.split('/').pop()}`)
     return true
   } catch (error) {

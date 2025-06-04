@@ -30,3 +30,5 @@ kubeconfig.yaml
 
 scripts/login-response.json
 *kubeconfig*
+
+scratchpad.md
