@@ -7,7 +7,9 @@ spec:
   widgetData:
     items:
       - resourceRefId: table-of-pods
+        size: 18
       - resourceRefId: pie-chart-inside-column
+        size: 6
   resourcesRefs:
     - id: table-of-pods
       apiVersion: widgets.templates.krateo.io/v1beta1

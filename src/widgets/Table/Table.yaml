@@ -27,3 +27,20 @@ spec:
         title: Name
       - valueKey: age
         title: Age
+
+---
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: dashboard-table-1
+  namespace: krateo-system
+spec:
+  widgetData:
+    data: []
+    pageSize: 10
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: age
+        title: Age
+
