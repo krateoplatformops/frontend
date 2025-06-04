@@ -6,6 +6,7 @@ metadata:
 spec:
   widgetData:
     pageSize: 10
+    data: []
     columns:
       - valueKey: name
         title: Name
@@ -19,6 +20,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    data: []
     pageSize: 10
     columns:
       - valueKey: name
