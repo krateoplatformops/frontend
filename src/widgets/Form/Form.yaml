@@ -5,7 +5,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    title: Nginx factory
+    title: Firework App Form
     items:
       - resourceRefId: firework-form
   resourcesRefs:
@@ -34,7 +34,7 @@ spec:
 
   widgetDataTemplate:
     - forPath: schema
-      expression: ${ .getSchema | .spec.versions[] | select(.name == "v0-1-0") | .schema.openAPIV3Schema.properties.spec }
+      expression: ${ .getSchema | .spec.versions[] | select(.name == "v1-1-15") | .schema.openAPIV3Schema.properties.spec }
   apiRef:
     name: firework-schema
     namespace: krateo-system

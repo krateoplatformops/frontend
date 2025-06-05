@@ -1,0 +1,24 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-with-drawer-form
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Form
+    icon: fa-rocket
+    size: large
+    type: primary
+    clickActionId: my-click-action
+  actions:
+    openDrawer:
+      - id: my-click-action
+        resourceRefId: firework-form
+        type: openDrawer
+  resourcesRefs:
+    - id: firework-form
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: firework-form
+      namespace: krateo-system
+      resource: forms
+      verb: GET

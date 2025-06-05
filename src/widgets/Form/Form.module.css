@@ -6,11 +6,11 @@
   justify-content: space-between;
 
   .anchorWrapper {
-    position: relative;
+    /* position: relative; */
     height: 100%;
 
     .anchorRow {
-      position: absolute;
+      /* position: absolute; */
       top: 0;
       bottom: 0;
       overflow: hidden;
@@ -70,6 +70,3 @@
     }
   }
 }
-
-.simpleForm {
-} 

@@ -40,6 +40,7 @@ import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
 
 import styles from './WidgetRenderer.module.css'
 import { getAccessToken } from '../../utils/getAccessToken'
+import Form, { type FormWidgetData } from '../../widgets/Form/Form'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   const { kind, metadata, spec, status } = widget
@@ -130,6 +131,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <TabList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
       return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
+    case 'Form':
+      return <Form actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }

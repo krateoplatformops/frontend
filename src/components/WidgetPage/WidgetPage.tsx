@@ -1,4 +1,3 @@
-import { Drawer } from 'antd'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router'
 
@@ -9,6 +8,7 @@ import Sidebar from '../Sidebar'
 import WidgetRenderer from '../WidgetRenderer'
 
 import styles from './WidgetPage.module.css'
+import Drawer from '../../widgets/Drawer'
 
 export const WidgetPage = () => {
   const location = useLocation()
@@ -18,7 +18,9 @@ export const WidgetPage = () => {
   const [widgetEndpoint, setWidgetEndpoint] = useState<string>('')
 
   useEffect(() => {
-    if (menuRoutes.length === 0) { return }
+    if (menuRoutes.length === 0) {
+      return
+    }
 
     const currentRoute = menuRoutes.find(({ path }) => path === location.pathname)
 
@@ -45,10 +47,7 @@ export const WidgetPage = () => {
       <div className={styles.container}>
         <Header breadcrumbVisible={widgetEndpoint !== null} />
         <div className={styles.content}>
-          {widgetEndpoint
-            ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} />
-            : <Page404 />
-          }
+          {widgetEndpoint ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} /> : <Page404 />}
         </div>
       </div>
       <Drawer />

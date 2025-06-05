@@ -120,14 +120,15 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: firework-form-panel
+      - resourceRefId: button-with-drawer-form
   resourcesRefs:
-    - id: firework-form-panel
+    - id: button-with-drawer-form
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: firework-form-panel
+      name: button-with-drawer-form
       namespace: krateo-system
-      resource: panels
+      resource: buttons
       verb: GET
+---
 # ---
 # kind: Route
 # apiVersion: widgets.templates.krateo.io/v1beta1
@@ -189,6 +190,26 @@ spec:
 kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: nav-menu-item-form
+  namespace: krateo-system
+spec:
+  widgetData:
+    resourceRefId: form-route
+    label: Form
+    icon: fa-rectangle-list
+    path: /form
+
+  resourcesRefs:
+    - id: form-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: form-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+---
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: nav-menu-item-compositions
   namespace: krateo-system
 spec:
@@ -213,7 +234,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    items: []
+    items: [] # TODO: compile this from restaction at the moment we are reading from resourcesRefs instead of items in the frontend
   resourcesRefs: []
 
   resourcesRefsTemplate:

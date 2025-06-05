@@ -10,7 +10,7 @@ import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 
 import type { Button as WidgetType } from './Button.type'
-import {getAccessToken} from '../../utils/getAccessToken'
+import { getAccessToken } from '../../utils/getAccessToken'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
 
@@ -33,7 +33,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
         case 'navigate': {
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(action.resourceRefId, resourcesRefs,)
+              const url = getEndpointUrl(action.resourceRefId, resourcesRefs)
               await navigate(url)
             }
           }
@@ -84,7 +84,6 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
         }
         case 'openDrawer': {
           const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
-
           openDrawer(widgetEndpoint)
           break
         }
@@ -103,10 +102,9 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.stopPropagation()
 
-    onClick()
-      .catch((error) => {
-        console.error('Error in button click handler:', error)
-      })
+    onClick().catch((error) => {
+      console.error('Error in button click handler:', error)
+    })
   }
 
   return (
@@ -114,7 +112,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
       color={color || 'default'}
       icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
       key={uid}
-      onClick={event => handleClick(event)}
+      onClick={(event) => handleClick(event)}
       shape={shape || 'default'}
       size={size || 'middle'}
       type={type || 'primary'}
