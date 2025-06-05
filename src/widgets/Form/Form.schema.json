@@ -61,7 +61,7 @@
           }
         },
         "actions": {
-          "description": "the actions of the button",
+          "description": "the actions of the form",
           "type": "object",
           "properties": {
             "rest": {
@@ -89,6 +89,26 @@
                   "type": {
                     "type": "string",
                     "enum": ["rest"]
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "payloadToOverride": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["name", "value"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
                   }
                 },
                 "required": ["id", "resourceRefId"]

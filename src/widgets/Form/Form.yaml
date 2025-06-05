@@ -30,6 +30,7 @@ spec:
       - id: firework-submit-action
         resourceRefId: resource-ref-1
         type: rest
+        onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
 
   widgetDataTemplate:
     - forPath: schema

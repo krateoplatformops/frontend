@@ -49,6 +49,8 @@ spec:
       resource: tablists
       verb: GET
   widgetDataTemplate:
+    - forPath: title
+      expression: ${ .getCompositionDefinition.metadata.name }
     - forPath: date
       expression: ${ .getCompositionDefinition.metadata.namespace }
     - forPath: status
