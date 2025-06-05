@@ -1,33 +1,35 @@
-import { QueryKey, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { QueryKey } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
-import { useConfigContext } from '../context/ConfigContext'
-import { SSEK8sEvent } from '../utils/types'
 
-export function useGetEvents({ topic = 'krateo', registerToSSE = true }: { topic?: string; registerToSSE?: boolean }) {
+import { useConfigContext } from '../context/ConfigContext'
+import type { SSEK8sEvent } from '../utils/types'
+
+export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic?: string; registerToSSE?: boolean }) {
   const { config } = useConfigContext()
   const refConnected = useRef(false)
 
   /* list of events */
-  const eventsUrl = config!.api.EVENTS_API_BASE_URL + '/events'
+  const eventsUrl = `${config!.api.EVENTS_API_BASE_URL}/events`
 
   /* stream of events */
-  const notificationsUrl = config!.api.EVENTS_PUSH_API_BASE_URL + '/notifications'
-  const queryKey: QueryKey = ['events', 'topic', topic]
+  const notificationsUrl = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
+  const queryKey: QueryKey = ['events', eventsUrl, 'topic', topic]
 
   const queryClient = useQueryClient()
   const queryResult = useQuery({
-    /* Prevent all automatic refetching, SSE will handle new events  */
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    staleTime: Infinity,
     gcTime: Infinity,
     queryFn: async () => {
       const res = await fetch(eventsUrl)
       const notifications = (await res.json()) as SSEK8sEvent[]
-      return notifications.reverse()
+      return notifications
     },
     queryKey,
+    /* Prevent all automatic refetching, SSE will handle new events  */
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   })
 
   useEffect(() => {

@@ -1,9 +1,10 @@
 import { BellFilled } from '@ant-design/icons'
 import { Badge, Button, Drawer, List, Skeleton, Space, Typography } from 'antd'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useGetEvents } from '../../hooks/useGetEvents'
+
 import styles from './Notifications.module.css'
 
 const Notifications = () => {
@@ -11,7 +12,7 @@ const Notifications = () => {
 
   const [drawerVisible, setDrawerVisible] = useState(false)
 
-  const { data: notifications, isLoading } = useGetEvents({ topic: 'krateo', registerToSSE: false })
+  const { data: notifications, isLoading } = useGetEvents({ registerToSSE: false, topic: 'krateo' })
 
   const onClickNotification = useCallback(
     (url: string | undefined) => {
