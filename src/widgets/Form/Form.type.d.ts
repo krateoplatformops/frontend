@@ -30,7 +30,7 @@ export interface Form {
       expression?: string
     }[]
     /**
-     * the actions of the button
+     * the actions of the form
      */
     actions: {
       rest?: {
@@ -40,6 +40,13 @@ export interface Form {
         onSuccessNavigateTo?: string
         loading?: 'global' | 'inline' | 'none'
         type?: 'rest'
+        payload?: {
+          [k: string]: unknown
+        }
+        payloadToOverride?: {
+          name: string
+          value: string
+        }[]
       }[]
       navigate?: {
         id: string

@@ -1,18 +1,23 @@
 import type { Edge } from 'reactflow'
 
 import type { FlowChartElement, NodeElement } from './types'
+import { FlowChartWidgetData } from './FlowChart'
 
 export const getNormalizedLabel = (label: string | boolean): string | boolean => {
   const strLabel = String(label).toLowerCase()
 
-  if (strLabel === 'true') { return 'Healthy' }
-  if (strLabel === 'false') { return 'Degraded' }
+  if (strLabel === 'true') {
+    return 'Healthy'
+  }
+  if (strLabel === 'false') {
+    return 'Degraded'
+  }
 
   return label
 }
 
 export const getDaysPeriodFromISO = (isoDate: string) => {
-  const deltaMSeconds = (new Date()).getTime() - (new Date(isoDate)).getTime()
+  const deltaMSeconds = new Date().getTime() - new Date(isoDate).getTime()
   const deltaDays = Math.floor(deltaMSeconds / 24 / 60 / 60 / 1000)
 
   return deltaDays
@@ -20,45 +25,39 @@ export const getDaysPeriodFromISO = (isoDate: string) => {
 
 export const getDaysPeriod = (isoDate: string) => {
   const days = getDaysPeriodFromISO(isoDate)
-  return (days !== 1) ? `${days} days` : `${days} day`
+  return days !== 1 ? `${days} days` : `${days} day`
 }
 
-export const parseGraphData = (data: string | undefined): { parsedNodes: NodeElement[]; parsedEdges: Edge[] } => {
+export const parseGraphData = (data: FlowChartWidgetData['data']): { parsedNodes: NodeElement[]; parsedEdges: Edge[] } => {
   let parsedNodes: NodeElement[] = []
   let parsedEdges: Edge[] = []
 
   if (data) {
     try {
-      const flowChartElements: FlowChartElement[] = JSON.parse(data) as FlowChartElement[]
+      const flowChartElements: FlowChartElement[] = data
 
-      parsedNodes = flowChartElements.map(({
-        createdAt,
-        health,
-        icon,
-        kind,
-        name,
-        namespace,
-        status,
-        uid,
-        version,
-      }): NodeElement => ({
-        data: {
-          date: createdAt,
-          health: health ?? {},
-          icon,
-          kind,
-          name,
-          namespace,
-          status,
-          version,
-        },
-        id: uid,
-        position: { x: 0, y: 0 },
-        type: 'nodeElement',
-      }))
+      parsedNodes = flowChartElements.map(
+        ({ createdAt, health, icon, kind, name, namespace, status, uid, version }): NodeElement => ({
+          data: {
+            date: createdAt,
+            health: health ?? {},
+            icon,
+            kind,
+            name,
+            namespace,
+            status,
+            version,
+          },
+          id: uid,
+          position: { x: 0, y: 0 },
+          type: 'nodeElement',
+        })
+      )
 
       parsedEdges = flowChartElements.flatMap(({ parentRefs, uid }) => {
-        if (!parentRefs || !Array.isArray(parentRefs)) { return [] }
+        if (!parentRefs || !Array.isArray(parentRefs)) {
+          return []
+        }
 
         return parentRefs
           .filter((ref): ref is { uid: string } => typeof ref?.uid === 'string')
