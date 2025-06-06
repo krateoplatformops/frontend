@@ -51,6 +51,7 @@ metadata:
 spec:
   widgetData:
     items:
+      - resourceRefId: button-delete-fireworks-app
       - resourceRefId: panel-paragraph
       - resourceRefId: panel-yaml-viewer
       - resourceRefId: panel-event-list
@@ -58,6 +59,12 @@ spec:
       - resourceRefId: panel-line-chart
       - resourceRefId: panel-bar-chart
   resourcesRefs:
+    - id: button-delete-fireworks-app
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-delete-fireworks-app
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
     - id: panel-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: panel-paragraph

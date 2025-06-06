@@ -51,7 +51,8 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
           const url = config?.api.BACKEND_API_BASE_URL + resourceRef.path
 
-          if (resourceRef.verb === 'POST' && !payload) {
+          const method = resourceRef.verb
+          if (method === 'POST' && !payload) {
             console.warn(`Payload not found for POST action ${id}`)
           }
 
@@ -62,7 +63,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
               // 'X-Krateo-User': 'admin',
               Authorization: `Bearer ${getAccessToken()}`,
             },
-            method: 'POST',
+            method,
           })
 
           // TODO: write this type
@@ -75,8 +76,9 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
             })
           }
 
+          const actionName = method === 'DELETE' ? 'deleted' : 'created'
           notification.success({
-            description: `Successfully created ${json.metadata.name} in ${json.metadata.namespace}`,
+            description: `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
             message: json.message,
             placement: 'bottomLeft',
           })
