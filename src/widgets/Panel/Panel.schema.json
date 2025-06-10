@@ -38,8 +38,11 @@
                     "additionalProperties": false
                   }
                 },
-                "tag": {
-                  "type": "string"
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               },
               "additionalProperties": false
@@ -83,7 +86,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "additionalProperties": false,
             "properties": {
               "id": {

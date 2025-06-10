@@ -11,7 +11,7 @@ export interface Panel {
         items: {
           resourceRefId: string
         }[]
-        tag?: string
+        tags?: string[]
       }
       icon?: {
         name: string
@@ -39,9 +39,35 @@ export interface Panel {
      * the actions of the panel
      */
     actions?: {
+      rest?: {
+        id: string
+        resourceRefId: string
+        requireConfirmation?: boolean
+        onSuccessNavigateTo?: string
+        loading?: 'global' | 'inline' | 'none'
+        type?: 'rest'
+        payload?: {
+          [k: string]: unknown
+        }
+      }[]
       navigate?: {
         id: string
         type: 'navigate'
+        name: string
+        resourceRefId: string
+        requireConfirmation?: boolean
+        loading?: 'global' | 'inline' | 'none'
+      }[]
+      openDrawer?: {
+        id: string
+        type: 'openDrawer'
+        resourceRefId: string
+        requireConfirmation?: boolean
+        loading?: 'global' | 'inline' | 'none'
+      }[]
+      openModal?: {
+        id: string
+        type: 'openModal'
         name: string
         resourceRefId: string
         requireConfirmation?: boolean
