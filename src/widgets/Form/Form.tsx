@@ -50,6 +50,13 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
   /* if the form is inside a Drawer, button will be already rendered in the Drawer  */
   const shouldRenderButtonsInsideForm = !drawerContext.insideDrawer
 
+  if (!widgetData.schema && !widgetData.stringSchema) {
+    throw new Error('received no widgetData.schema or widgetData.stringSchema')
+  }
+
+  const schema = (widgetData.stringSchema ? JSON.parse(widgetData.stringSchema as string) : widgetData.schema) as JSONSchema4
+  debugger
+
   return (
     <div>
       {shouldRenderButtonsInsideForm ? (
@@ -106,9 +113,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
               const substr = valuePath.replace('${', '').replace('}', '')
               const parts = substr.split('+').map((el) => el.trim())
 
-              const value = parts
-                .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
-                .join('')
+              const value = parts.map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || '')).join('')
 
               return _.merge({}, values, convertStringToObject(keyPath, value))
             }
@@ -200,7 +205,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           //   }
           // }
         }}
-        schema={widgetData.schema as JSONSchema4}
+        schema={schema}
         showFormStructure={true}
       />
       {/* <pre>{JSON.stringify(widgetData, null, 2)}</pre> */}
