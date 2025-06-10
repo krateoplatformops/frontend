@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 import { readFileSync } from 'node:fs'
+import fs from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { glob } from 'glob'
+
 import { api } from '../public/config/config.json'
 
 const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
@@ -16,8 +18,8 @@ async function sendSchemaToSmithery(schemaPath: string) {
     const response = await fetch(`${api.SMITHERY_API_BASE_URL}/forge?apply=true`, {
       body: schemaContent,
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
       },
       method: 'POST',
     })
@@ -28,7 +30,12 @@ async function sendSchemaToSmithery(schemaPath: string) {
       process.exit(1)
     }
 
-    console.log(schemaPath.split('/').pop(), response.statusText)
+    const schemaName = schemaPath.split('/').pop()
+
+    const crdName = schemaName.replace('.schema.json', '.crd.yaml')
+    await fs.writeFile(`scripts/smithery-output/${crdName}`, await response.text())
+
+    console.log(schemaName, response.statusText)
   } catch (error) {
     console.error(`❌ Failed to send schema to Smithery (${schemaPath})`, error)
   }

@@ -8,6 +8,7 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 import { getEndpointUrl } from '../../utils/utils'
+import { openDrawer } from '../Drawer/Drawer'
 
 import styles from './Panel.module.css'
 import type { Panel as WidgetType } from './Panel.type'
@@ -32,7 +33,10 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
         case 'navigate': {
           const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl(action.resourceRefId, resourcesRefs))}`
 
-          if (!url) { return }
+          if (!url) {
+            console.warn('No url found for action', action)
+            return
+          }
 
           if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
@@ -41,6 +45,11 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
           } else {
             await navigate(url)
           }
+          break
+        }
+        case 'openDrawer': {
+          const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
+          openDrawer(widgetEndpoint)
           break
         }
         default:
@@ -52,35 +61,32 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
   }
 
   const handleClick = () => {
-    onClick()
-      .catch((error) => {
-        console.error('Error in panel click handler:', error)
-      })
+    onClick().catch((error) => {
+      console.error('Error in panel click handler:', error)
+    })
   }
 
   return (
     <AntdCard
       className={`${styles.panel} ${action ? styles.clickable : ''}`}
       classNames={{ header: styles.header, title: styles.title }}
-      extra={tooltip && (
-        <Tooltip title={tooltip}>
-          <Button icon={<QuestionCircleOutlined />} type='text' />
-        </Tooltip>
-      )}
+      extra={
+        tooltip && (
+          <Tooltip title={tooltip}>
+            <Button icon={<QuestionCircleOutlined />} type='text' />
+          </Tooltip>
+        )
+      }
       key={uid}
       onClick={handleClick}
-      title={(title || icon) && (
-        <div className={styles.title}>
-          {icon && (
-            <Avatar
-              icon={<FontAwesomeIcon icon={icon.name as IconProp} />}
-              size={64}
-              style={{ backgroundColor: getColorCode(icon.color) }}
-            />
-          )}
-          {title}
-        </div>
-      )}
+      title={
+        (title || icon) && (
+          <div className={styles.title}>
+            {icon && <Avatar icon={<FontAwesomeIcon icon={icon.name as IconProp} />} size={64} style={{ backgroundColor: getColorCode(icon.color) }} />}
+            {title}
+          </div>
+        )
+      }
       variant={'borderless'}
     >
       <div className={styles.content}>
@@ -90,7 +96,7 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
           ))}
         </div>
         {footer && (
-          <div className={`${styles.footer} ${(!footer.tags && footer.items.length === 1) ? styles.single : ''} `}>
+          <div className={`${styles.footer} ${!footer.tags && footer.items.length === 1 ? styles.single : ''} `}>
             {footer.tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
             {footer.items.map(({ resourceRefId }, index) => (
               <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />

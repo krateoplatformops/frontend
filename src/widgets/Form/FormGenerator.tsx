@@ -120,7 +120,9 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
       rules.push({ message: 'Insert right value', pattern: node.pattern })
     }
 
-    switch (node.type) {
+    /* to handle nodes declared as array like `"type": ["string"] or "type": ["number"], multiple types for the same field is not supported */
+    const nodeType = Array.isArray(node.type) ? node.type[0] : node.type
+    switch (nodeType) {
       case 'string':
         return (
           <div className={styles.formField} id={name}>
@@ -280,9 +282,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
     const substr = valuePath.replace('${', '').replace('}', '')
     const parts = substr.split('+').map((el) => el.trim())
 
-    const value = parts
-      .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
-      .join('')
+    const value = parts.map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || '')).join('')
 
     return _.merge({}, values, convertStringToObject(keyPath, value))
   }
@@ -419,12 +419,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
 
           {showFormStructure && (
             <Col className={styles.anchorLabelWrapper} span={12}>
-              <Anchor
-                affix={false}
-                getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
-                items={getAnchorList()}
-                onClick={handleAnchorClick}
-              />
+              <Anchor affix={false} getContainer={() => document.getElementById('anchor-content') as HTMLDivElement} items={getAnchorList()} onClick={handleAnchorClick} />
             </Col>
           )}
         </Row>

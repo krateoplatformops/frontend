@@ -54,7 +54,8 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
     throw new Error('received no widgetData.schema or widgetData.stringSchema')
   }
 
-  const schema = (widgetData.schema as JSONSchema4) || JSON.parse(widgetData.stringSchema as string)
+  const schema = (widgetData.stringSchema ? JSON.parse(widgetData.stringSchema as string) : widgetData.schema) as JSONSchema4
+  debugger
 
   return (
     <div>
@@ -112,9 +113,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
               const substr = valuePath.replace('${', '').replace('}', '')
               const parts = substr.split('+').map((el) => el.trim())
 
-              const value = parts
-                .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
-                .join('')
+              const value = parts.map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || '')).join('')
 
               return _.merge({}, values, convertStringToObject(keyPath, value))
             }
