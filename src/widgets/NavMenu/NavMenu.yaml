@@ -165,6 +165,7 @@ spec:
     label: Dashboard
     icon: fa-chart-line
     path: /dashboard
+    order: 10
   
   resourcesRefs:
     - id: dashboard-route
@@ -185,6 +186,7 @@ spec:
     label: Templates
     icon: fa-rectangle-list
     path: /templates
+    order: 20
 
   resourcesRefs:
     - id: templates-route
@@ -205,6 +207,7 @@ spec:
     label: Form
     icon: fa-rectangle-list
     path: /form
+    order: 50
 
   resourcesRefs:
     - id: form-route
@@ -225,6 +228,7 @@ spec:
     label: Compositions
     icon: fa-shapes
     path: /compositions
+    order: 30
 
   resourcesRefs:
     - id: compositions-route
@@ -275,7 +279,7 @@ spec:
       name: namespaces
       iterator: .[]
     path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/navmenuitems" }
-  filter: "{navmenuitems: [.navmenuitems[] | select(.items != null) | .items[]]}"
+  filter: "{navmenuitems: [.navmenuitems[] | select(.items != null) | .items[]] | sort_by(.spec.widgetData.order)}"
     
     
     

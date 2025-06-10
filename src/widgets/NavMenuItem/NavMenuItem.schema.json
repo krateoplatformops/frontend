@@ -28,6 +28,11 @@
             },
             "resourceRefId": {
               "type": "string"
+            },
+            "order": {
+              "description": "a weight to be used to sort the items in the menu",
+              "type": "integer",
+              "default": 100
             }
           },
           "additionalProperties": false

@@ -21,7 +21,7 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["label", "icon", "path", "resourceRefId"],
+                "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
                     "type": "string"
