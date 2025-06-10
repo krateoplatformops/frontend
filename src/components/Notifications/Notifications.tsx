@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useGetEvents } from '../../hooks/useGetEvents'
+import { formatISODate } from '../../utils/utils'
 
 import styles from './Notifications.module.css'
 
@@ -23,44 +24,48 @@ const Notifications = () => {
     [navigate]
   )
 
-  const notificationList = useMemo(
-    () => (
-      <List
-        className={styles.list}
-        dataSource={notifications}
-        itemLayout='vertical'
-        renderItem={({
-          description,
-          involvedObject: { apiVersion, kind },
-          message,
-          metadata: { name, namespace, uid },
-          reason,
-          title,
-          type,
-          url,
-        }) => (
-          <List.Item className={styles.listItem} key={uid}>
-            <Button className={styles.notificationElement} onClick={() => onClickNotification(url)} type='link'>
-              <Space direction='vertical'>
-                <Badge
-                  color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
-                  text={
-                    <Typography.Text className={styles.title} strong>
-                      {title || reason}
-                    </Typography.Text>
-                  }
-                />
-                <Typography.Text className={styles.description}>{description || message}</Typography.Text>
-                <Typography.Paragraph className={styles.details}>{`${apiVersion}.${kind}/${name}@${namespace}`}</Typography.Paragraph>
-              </Space>
-            </Button>
-          </List.Item>
-        )}
-        size='large'
-      />
-    ),
-    [notifications, onClickNotification]
-  )
+  const notificationList = useMemo(() => (
+    <List
+      className={styles.list}
+      dataSource={notifications}
+      itemLayout='vertical'
+      renderItem={({
+        description,
+        involvedObject: { apiVersion, kind },
+        message,
+        metadata: { creationTimestamp, name, namespace, uid },
+        reason,
+        title,
+        type,
+        url,
+      }) => (
+        <List.Item className={styles.listItem} key={uid}>
+          <Button className={styles.notificationElement} onClick={() => onClickNotification(url)} type='link'>
+            <Space direction='vertical'>
+              <Typography.Paragraph className={styles.timestamp}>
+                {formatISODate(creationTimestamp, true)}
+              </Typography.Paragraph>
+              <Badge
+                color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
+                text={
+                  <Typography.Text className={styles.title} strong>
+                    {title || reason}
+                  </Typography.Text>
+                }
+              />
+              <Typography.Text className={styles.description}>
+                {description || message}
+              </Typography.Text>
+              <Typography.Paragraph className={styles.details}>
+                {`${apiVersion}.${kind}/${name}@${namespace}`}
+              </Typography.Paragraph>
+            </Space>
+          </Button>
+        </List.Item>
+      )}
+      size='large'
+    />
+  ), [notifications, onClickNotification])
 
   return (
     <>
