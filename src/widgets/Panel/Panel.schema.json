@@ -125,6 +125,40 @@
           "description": "the actions of the panel",
           "type": "object",
           "properties": {
+            "rest": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "onSuccessNavigateTo": {
+                    "type": "string"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["rest"]
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "required": ["id", "resourceRefId"]
+              }
+            },
             "navigate": {
               "type": "array",
               "items": {
@@ -137,6 +171,63 @@
                   "type": {
                     "type": "string",
                     "enum": ["navigate"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
+            },
+            "openDrawer": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openDrawer"]
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
+            },
+            "openModal": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openModal"]
                   },
                   "name": {
                     "type": "string"
