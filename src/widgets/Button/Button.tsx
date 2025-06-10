@@ -74,6 +74,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
               message: `${json.status} - ${json.reason}`,
               placement: 'bottomLeft',
             })
+            break
           }
 
           const actionName = method === 'DELETE' ? 'deleted' : 'created'
@@ -82,6 +83,11 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
             message: json.message,
             placement: 'bottomLeft',
           })
+
+          if (action.onSuccessNavigateTo) {
+            void navigate(action.onSuccessNavigateTo)
+          }
+
           break
         }
         case 'openDrawer': {
