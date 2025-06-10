@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { Widget } from '../../types/Widget'
+import { getAccessToken } from '../../utils/getAccessToken'
 import BarChart from '../../widgets/BarChart'
 import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
@@ -17,6 +18,7 @@ import EventList from '../../widgets/EventList'
 import type { EventListWidgetData } from '../../widgets/EventList/EventList'
 import type { FlowChartWidgetData } from '../../widgets/FlowChart/FlowChart'
 import FlowChart from '../../widgets/FlowChart/FlowChart'
+import Form, { type FormWidgetData } from '../../widgets/Form/Form'
 import LineChart from '../../widgets/LineChart'
 import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
 import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
@@ -39,8 +41,6 @@ import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
 
 import styles from './WidgetRenderer.module.css'
-import { getAccessToken } from '../../utils/getAccessToken'
-import Form, { type FormWidgetData } from '../../widgets/Form/Form'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
   const { kind, metadata, spec, status } = widget
@@ -194,6 +194,10 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
         />
       </div>
     )
+  }
+
+  if (widget.kind === 'Status' && widget?.code === 401) {
+    void navigate('/login')
   }
 
   if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
