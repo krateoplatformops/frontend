@@ -50,6 +50,12 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
   /* if the form is inside a Drawer, button will be already rendered in the Drawer  */
   const shouldRenderButtonsInsideForm = !drawerContext.insideDrawer
 
+  if (!widgetData.schema && !widgetData.stringSchema) {
+    throw new Error('received no widgetData.schema or widgetData.stringSchema')
+  }
+
+  const schema = (widgetData.schema as JSONSchema4) || JSON.parse(widgetData.stringSchema as string)
+
   return (
     <div>
       {shouldRenderButtonsInsideForm ? (
@@ -200,7 +206,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           //   }
           // }
         }}
-        schema={widgetData.schema as JSONSchema4}
+        schema={schema}
         showFormStructure={true}
       />
       {/* <pre>{JSON.stringify(widgetData, null, 2)}</pre> */}

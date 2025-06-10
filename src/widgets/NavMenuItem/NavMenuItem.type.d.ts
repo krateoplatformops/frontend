@@ -7,6 +7,10 @@ export interface NavMenuItem {
       icon: string
       path: string
       resourceRefId: string
+      /**
+       * a weight to be used to sort the items in the menu
+       */
+      order?: number
     }
     apiRef?: {
       name: string

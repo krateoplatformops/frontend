@@ -13,9 +13,13 @@ export interface Form {
      */
     widgetData: {
       /**
-       * the schema of the form
+       * the schema of the form as an object
        */
-      schema: {}
+      schema?: {}
+      /**
+       * the schema of the form as a string
+       */
+      stringSchema?: string
       /**
        * the id of the action to be called when the form is submitted
        */
