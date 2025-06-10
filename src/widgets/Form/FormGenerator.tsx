@@ -1,9 +1,10 @@
-import { Anchor, Button, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
+import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
+import type { JSONSchema4 } from 'json-schema'
 import _ from 'lodash'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
+
 import ListEditor from '../../components/ListEditor'
 
-import { JSONSchema4 } from 'json-schema'
 import styles from './Form.module.css'
 
 type FormGeneratorType = {
@@ -13,9 +14,10 @@ type FormGeneratorType = {
   formId: string
   // onClose?: () => void,
   // disableButtons?: (value: boolean) => void
+  onSubmit: (values: object) => Promise<void>
 }
 
-const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure = false, schema }: FormGeneratorType) => {
+const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields = schema.required as string[]
 
@@ -43,24 +45,14 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
         const currentName = name ? `${name}.${key}` : key
         if (currentProperties[key].type === 'object') {
           return parseData(currentProperties[key], currentName)
-        } else {
-          const required = (Array.isArray(node?.required) && node.required.indexOf(key) > -1) || requiredFields.indexOf(key) > -1
-          const label = currentProperties[key].title || key
-          return renderField(label, currentName, currentProperties[key], required)
         }
+        const required = (Array.isArray(node?.required) && node.required.indexOf(key) > -1) || requiredFields.indexOf(key) > -1
+        const label = currentProperties[key].title || key
+        return renderField(label, currentName, currentProperties[key], required)
       })
-    } else {
-      return []
     }
+    return []
   }
-
-  const renderFields = () => {
-    return parseData(schema)
-  }
-
-  useEffect(() => {
-    setInitialValues()
-  }, [schema])
 
   const setInitialValues = () => {
     const parseData = (node: JSONSchema4, name: string = '') => {
@@ -70,16 +62,14 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
           const currentName = name ? `${name}.${key}` : key
           if (currentProperties[key].type === 'object') {
             return parseData(currentProperties[key], currentName)
-          } else {
-            // set default value
-            if (currentProperties[key].default) {
-              form.setFieldValue(currentName.split('.'), currentProperties[key].default)
-            }
+          }
+          // set default value
+          if (currentProperties[key].default) {
+            form.setFieldValue(currentName.split('.'), currentProperties[key].default)
           }
         })
-      } else {
-        return []
       }
+      return []
     }
 
     parseData(schema)
@@ -90,33 +80,31 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
     breadcrumb.splice(-1)
 
     return (
-      <Space size='small' direction='vertical' className={styles.labelField}>
+      <Space className={styles.labelField} direction='vertical' size='small'>
         <Typography.Text strong>{label}</Typography.Text>
-        <Space title={breadcrumb.join(' > ')} className={styles.breadcrumb}>
+        <Space className={styles.breadcrumb} title={breadcrumb.join(' > ')}>
           {breadcrumb.map((el, index) => {
             if (index < breadcrumb.length - 1) {
               if (index === 2 && breadcrumb.length > 3) {
                 return (
-                  <Typography.Text key={`label_breadcrumb_${index}`} className={styles.breadcrumbDots}>
+                  <Typography.Text className={styles.breadcrumbDots} key={`label_breadcrumb_${index}`}>
                     ... <span> &rsaquo; </span>
                   </Typography.Text>
                 )
               } else if (index > 2 && index < breadcrumb.length - 1 && breadcrumb.length > 3) {
                 return ''
-              } else {
-                return (
-                  <Typography.Text key={`label_breadcrumb_${index}`} ellipsis>
-                    {el} <span> &rsaquo; </span>
-                  </Typography.Text>
-                )
               }
-            } else {
               return (
-                <Typography.Text key={`label_breadcrumb_${index}`} ellipsis>
-                  {el}
+                <Typography.Text ellipsis key={`label_breadcrumb_${index}`}>
+                  {el} <span> &rsaquo; </span>
                 </Typography.Text>
               )
             }
+            return (
+              <Typography.Text ellipsis key={`label_breadcrumb_${index}`}>
+                {el}
+              </Typography.Text>
+            )
           })}
         </Space>
       </Space>
@@ -126,27 +114,27 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
   const renderField = (label: string, name: string, node: any, required: boolean) => {
     const rules: any[] = []
     if (required) {
-      rules.push({ required: true, message: 'Insert a value' })
+      rules.push({ message: 'Insert a value', required: true })
     }
     if (node.pattern) {
-      rules.push({ pattern: node.pattern, message: 'Insert right value' })
+      rules.push({ message: 'Insert right value', pattern: node.pattern })
     }
 
     switch (node.type) {
       case 'string':
         return (
-          <div id={name} className={styles.formField}>
+          <div className={styles.formField} id={name}>
             <Form.Item
+              extra={!descriptionTooltip && node.description ? node.description : undefined}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
             >
               {node.enum ? (
                 node.enum.length > 4 ? (
-                  <Select options={node.enum.map((opt) => ({ value: opt, label: opt }))} allowClear />
+                  <Select allowClear options={node.enum.map((opt) => ({ label: opt, value: opt }))} />
                 ) : (
                   <Radio.Group>
                     {node.enum.map((el) => (
@@ -166,16 +154,16 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
       case 'boolean':
         form.setFieldValue(name.split('.'), false)
         return (
-          <div id={name} className={styles.formField}>
+          <div className={styles.formField} id={name}>
             <Space direction='vertical' style={{ width: '100%' }}>
               <Form.Item
+                extra={!descriptionTooltip && node.description ? node.description : undefined}
                 key={name}
                 label={renderLabel(name, label)}
                 name={name.split('.')}
-                valuePropName='checked'
                 rules={rules}
                 tooltip={descriptionTooltip && node.description ? node.description : undefined}
-                extra={!descriptionTooltip && node.description ? node.description : undefined}
+                valuePropName='checked'
               >
                 <Switch />
               </Form.Item>
@@ -185,14 +173,14 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
 
       case 'array':
         return (
-          <div id={name} className={styles.formField}>
+          <div className={styles.formField} id={name}>
             <Form.Item
+              extra={!descriptionTooltip && node.description ? node.description : undefined}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
             >
               <ListEditor
                 onChange={(values) => {
@@ -208,19 +196,19 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
         const min = node.minimum
         const max = node.maximum
         return (
-          <div id={name} className={styles.formField}>
+          <div className={styles.formField} id={name}>
             <Form.Item
+              extra={!descriptionTooltip && node.description ? node.description : undefined}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
             >
               {min && max && max - min < 100 ? (
-                <Slider step={1} min={min} max={max} />
+                <Slider max={max} min={min} step={1} />
               ) : (
-                <InputNumber min={min ? min : 0} max={max ? max : undefined} step={1} style={{ width: '100%' }} />
+                <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
               )}
             </Form.Item>
           </div>
@@ -239,26 +227,24 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
           if (currentProperties[key].type === 'object') {
             // create children
             return {
+              children: parseData(currentProperties[key], currentName),
               key: currentName,
               title: (
-                <span key={key} className={styles.anchorObjectLabel}>
+                <span className={styles.anchorObjectLabel} key={key}>
                   {label}
                 </span>
               ),
-              children: parseData(currentProperties[key], currentName),
-            }
-          } else {
-            // return obj
-            return {
-              key: currentName,
-              href: `#${currentName}`,
-              title: label,
             }
           }
+          // return obj
+          return {
+            href: `#${currentName}`,
+            key: currentName,
+            title: label,
+          }
         })
-      } else {
-        return []
       }
+      return []
     }
 
     return [...parseData(schema)]
@@ -343,82 +329,6 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
     }
   }
 
-  const onSubmit = async (values: object) => {
-    debugger
-    // // convert all dayjs date to ISOstring
-    // Object.keys(values).forEach(k => {
-    // 	if (dayjs.isDayjs(values[k])) {
-    // 		values[k] = (values[k] as unknown as Dayjs).toISOString()
-    // 	}
-    // });
-    // 			const formProps = data.status.props
-    // 			const template = data.status.actions.find(el => ((el.template?.id?.toLowerCase() === formProps?.onSubmitId?.toLowerCase()) && (el.template?.verb.toLowerCase() === formProps?.onSubmitVerb.toLowerCase())))
-    // 			if (template?.template) {
-    // 				const formEndpoint = template.template.path;
-    // 				const formVerb = template.template.verb;
-    // 				const formOverride = template.template.payloadToOverride;
-    // 				const formKey = template.template.payloadFormKey || data.status.props.payloadFormKey || "spec";
-    // 				let payload = {...template.template.payload, ...values};
-    // 				// send all data values to specific endpoint as POST
-    // 				if (formEndpoint && formVerb) {
-    // 					// update payload by payloadToOverride
-    // 					if (formOverride?.length > 0) {
-    // 						formOverride.forEach(el => {
-    // 							payload = updateJson(payload, el.name, el.value)
-    // 						});
-    // 					}
-    // 					const valuesKeys = Object.keys(payload).filter(el => Object.keys(template.template.payload).indexOf(el) === -1);
-    // 					// move all values data under formKey
-    // 					payload[formKey] = {}
-    // 					valuesKeys.forEach(el => {
-    // 						payload[formKey][el] = (typeof payload[el] === 'object' && !Array.isArray(payload[el])) ? {...payload[el]} : payload[el]
-    // 						delete payload[el]
-    // 					})
-    // 					const endpointUrl = updateNameNamespace(formEndpoint, payload.metadata.name, payload.metadata.namespace)
-    // 					// Sets correct redirect route value to be used on success
-    // 					if (formProps?.redirectRoute) {
-    // 						handleRedirectRoute(payload, formProps?.redirectRoute)
-    // 					}
-    // 					// submit payload
-    // 					switch (formVerb.toLowerCase()) {
-    // 						case "put":
-    // 							if (!isPutLoading && !isPutError && !isPutSuccess) {
-    // 								await putContent({
-    // 									endpoint: endpointUrl,
-    // 									body: payload,
-    // 								});
-    // 								// if into a panel -> close panel
-    // 								if (onClose && !formProps?.redirectRoute) {
-    // 									onClose()
-    // 								}
-    // 								if (!onClose) {
-    // 									// clear form
-    // 									simpleForm.resetFields()
-    // 								}
-    // 							}
-    // 						break;
-    // 						case "post":
-    // 						default:
-    // 							if (!isPostLoading && !isPostError && !isPostSuccess) {
-    // 								await postContent({
-    // 									endpoint: endpointUrl,
-    // 									body: payload,
-    // 								});
-    // 								// if into a panel -> close panel
-    // 								if (onClose && !formProps?.redirectRoute) {
-    // 									onClose()
-    // 								}
-    // 								if (!onClose) {
-    // 									// clear form
-    // 									simpleForm.resetFields()
-    // 								}
-    // 							}
-    // 						break;
-    // 					}
-    // 				}
-    // 			}
-  }
-
   const onFinishFailed = useCallback(({ errorFields }: any) => {
     const errorField = errorFields[0].name.join('.')
     const errorFieldElement = document.querySelector(`#${CSS.escape(errorField)}`)
@@ -438,8 +348,6 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
       anchorLink.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }, [])
-
-  const fields = renderFields()
 
   // Handles redirect
   // useEffect(() => {
@@ -490,31 +398,32 @@ const FormGenerator = ({ formId, descriptionTooltip = false, showFormStructure =
           <Col className={styles.formWrapper} span={showFormStructure ? 12 : 24}>
             <div className={styles.form} id='anchor-content'>
               <Form
-                id={formId}
+                autoComplete='off'
                 form={form}
+                id={formId}
                 layout='vertical'
-                onFinish={onSubmit}
+                name='formGenerator'
+                onFinish={(values: object) => onSubmit(values)}
+                onFinishFailed={onFinishFailed}
                 onReset={(e) => {
                   debugger
                   e.preventDefault()
                   setInitialValues()
                 }}
-                onFinishFailed={onFinishFailed}
-                name='formGenerator'
-                autoComplete='off'
               >
-                {fields}
+                {parseData(schema)}
+                {setInitialValues()}
               </Form>
             </div>
           </Col>
 
           {showFormStructure && (
-            <Col span={12} className={styles.anchorLabelWrapper}>
+            <Col className={styles.anchorLabelWrapper} span={12}>
               <Anchor
                 affix={false}
-                onClick={handleAnchorClick}
                 getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
                 items={getAnchorList()}
+                onClick={handleAnchorClick}
               />
             </Col>
           )}

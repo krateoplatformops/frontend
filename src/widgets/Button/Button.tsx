@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
+import { getAccessToken } from '../../utils/getAccessToken'
 import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 
 import type { Button as WidgetType } from './Button.type'
-import { getAccessToken } from '../../utils/getAccessToken'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
 

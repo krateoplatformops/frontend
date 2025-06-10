@@ -31,10 +31,23 @@ spec:
         resourceRefId: resource-ref-1
         type: rest
         onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+        payloadToOverride:
+        - name: metadata.name
+          value: ${ git.toRepo.name }
+        # - name: metadata.namespace
+        #   value: ${ "fireworksapp-system" }
 
   widgetDataTemplate:
     - forPath: schema
       expression: ${ .getSchema | .spec.versions[] | select(.name == "v1-1-15") | .schema.openAPIV3Schema.properties.spec }
+  
+  resourcesRefs:
+    - id: resource-ref-1
+      apiVersion: composition.krateo.io/v1-1-15
+      name: new-app
+      namespace: krateo-system
+      resource: fireworksapps
+      verb: POST
   apiRef:
     name: firework-schema
     namespace: krateo-system

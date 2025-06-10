@@ -35,12 +35,14 @@ export interface Widget<WidgetDataType = unknown> {
       }
     }
   }
-  status: {
-    widgetData: WidgetDataType
-    widgets: Widget[]
-    events: unknown /* EventsType */
-    resourcesRefs: ResourcesRefs
-  } | string
+  status:
+    | {
+        widgetData: WidgetDataType
+        widgets: Widget[]
+        events: unknown /* EventsType */
+        resourcesRefs: ResourcesRefs
+      }
+    | string
 }
 
 export type WidgetActions = {
@@ -54,6 +56,10 @@ export type WidgetActions = {
     requireConfirmation?: boolean
     onSuccessNavigateTo?: string
     loading?: 'global' | 'inline' | 'none'
+    payloadToOverride?: {
+      name: string
+      value: string
+    }[]
   }[]
   navigate?: {
     id: string
