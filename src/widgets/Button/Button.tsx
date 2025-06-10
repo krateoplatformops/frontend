@@ -1,5 +1,6 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useQueryClient } from '@tanstack/react-query'
 import { Button as AntdButton } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import { useNavigate } from 'react-router'
@@ -18,6 +19,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
   const { clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { config } = useConfigContext()
   const { notification } = useApp()
 
@@ -84,6 +86,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
             placement: 'bottomLeft',
           })
 
+          await queryClient.invalidateQueries()
           if (action.onSuccessNavigateTo) {
             void navigate(action.onSuccessNavigateTo)
           }
