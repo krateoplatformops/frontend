@@ -194,10 +194,13 @@ jobs:
 
       - name: Send schemas
         working-directory: $GITHUB_WORKSPACE
-        run: npm run send-schemas
+        run: |
+          cd $GITHUB_WORKSPACE
+          npm run send-schemas
 
       - name: List files in /scripts/smithery-output
-        working-directory: $GITHUB_WORKSPACE
-        run: ls -la ./scripts/smithery-output
+        run: |
+          cd $GITHUB_WORKSPACE
+          ls -la ./scripts/smithery-output
 
 
