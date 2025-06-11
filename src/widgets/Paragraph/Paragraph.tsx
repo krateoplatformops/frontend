@@ -1,4 +1,5 @@
 import { Typography } from 'antd'
+import Linkify from 'linkify-react'
 
 import type { WidgetProps } from '../../types/Widget'
 
@@ -12,7 +13,14 @@ const Paragraph = ({ uid, widgetData }: WidgetProps<ParagraphWidgetData>) => {
 
   return (
     <Typography.Paragraph className={styles.paragraph} key={uid}>
-      {text}
+      <Linkify
+        options={{
+          rel: 'noopener noreferrer',
+          target: '_blank',
+        }}
+      >
+        {text}
+      </Linkify>
     </Typography.Paragraph>
   )
 }
