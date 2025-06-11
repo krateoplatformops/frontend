@@ -168,11 +168,12 @@ jobs:
           EOF
 
       - name: Get access token
-        working-directory: $GITHUB_WORKSPACE
         env:
           ADMIN_USERNAME: admin
           ADMIN_PASSWORD: ${{ steps.genpass.outputs.password }}
-        run: npm run get-access-token
+        run: |
+          cd $GITHUB_WORKSPACE
+          npm run get-access-token
 
       - name: Send schemas
         working-directory: $GITHUB_WORKSPACE
