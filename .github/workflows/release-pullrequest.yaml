@@ -60,6 +60,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      pull_requests: write
 
     steps:
       - name: Set up Helm
