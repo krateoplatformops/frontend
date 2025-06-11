@@ -144,6 +144,9 @@ jobs:
             apiGroup: rbac.authorization.k8s.io
           EOF
 
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: List files in /
         run: ls -la /
 
