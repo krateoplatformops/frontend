@@ -177,3 +177,21 @@ spec:
       namespace: krateo-system
       resource: barcharts
       verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-filters
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Composition Filters
+    items:
+      - resourceRefId: my-filters
+  resourcesRefs:
+    - id: my-filters
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-filters
+      namespace: krateo-system
+      resource: filters
+      verb: GET

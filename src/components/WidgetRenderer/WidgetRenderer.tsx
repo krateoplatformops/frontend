@@ -11,6 +11,8 @@ import Button from '../../widgets/Button'
 import type { ButtonWidgetData } from '../../widgets/Button/Button'
 import Column from '../../widgets/Column'
 import type { ColumnWidgetData } from '../../widgets/Column/Column'
+import type { DataGridWidgetData } from '../../widgets/DataGrid/DataGrid'
+import DataGrid from '../../widgets/DataGrid/DataGrid'
 import EventList from '../../widgets/EventList'
 import type { EventListWidgetData } from '../../widgets/EventList/EventList'
 import LineChart from '../../widgets/LineChart'
@@ -33,10 +35,11 @@ import TabList from '../../widgets/TabList'
 import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
+import { useFilter } from '../FiltesProvider/FiltersProvider'
 
 import styles from './WidgetRenderer.module.css'
 
-function parseData(widget: Widget, widgetEndpoint: string) {
+function parseData(widget: Widget, widgetEndpoint: string, setData: (prefix: string, componentId: string, data: unknown[]) => void, getFilteredData: (prefix: string, componentId: string) => unknown[]) {
   const { kind, status } = widget
 
   if (!status) {
@@ -113,7 +116,16 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Route':
       return <Route actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RouteWidgetData} />
     case 'Table':
-      return <Table actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as TableWidgetData} />
+    {
+      const props: TableWidgetData = { ...widgetData as TableWidgetData }
+      if (props?.prefix && props?.componentId && props?.data) {
+        setData(props.prefix, props.componentId, props.data || [])
+        props.data = getFilteredData(props.prefix, props.componentId) as { [k: string]: unknown }[]
+      }
+      return <Table actions={actions} resourcesRefs={resourcesRefs} widgetData={props} />
+    }
+    case 'DataGrid':
+      return <DataGrid actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as DataGridWidgetData} />
     case 'TabList':
       return <TabList actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
@@ -123,8 +135,9 @@ function parseData(widget: Widget, widgetEndpoint: string) {
   }
 }
 
-const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
+const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; prefix?: string }) => {
   const navigate = useNavigate()
+  const { getFilteredData, isWidgetFilteredByProps, setData } = useFilter()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(
@@ -153,6 +166,15 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
     },
     queryKey: ['widgets', widgetFullUrl],
   })
+
+  // check if widget is filtered out by filters
+  if (typeof widget?.status === 'object' && widget?.status?.widgetData) {
+    if (prefix) {
+      if (isWidgetFilteredByProps(widget.status.widgetData, prefix)) {
+        return
+      }
+    }
+  }
 
   if (isLoading) {
     return (
@@ -192,7 +214,7 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
     void navigate('/login')
   }
 
-  return parseData(widget, widgetEndpoint)
+  return parseData(widget, widgetEndpoint, setData, getFilteredData)
 }
 
 export default WidgetRenderer

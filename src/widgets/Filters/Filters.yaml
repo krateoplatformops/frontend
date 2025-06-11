@@ -1,0 +1,19 @@
+kind: Filters
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: my-filters
+  namespace: krateo-system
+spec:
+  widgetData:
+    prefix: compositionFilter
+    fields:
+      - label: composition name
+        name: name
+        type: string
+      - label: status
+        name: status
+        type: string
+        options:
+          - active
+          - inactive
+          - pending
