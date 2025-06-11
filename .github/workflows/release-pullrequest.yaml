@@ -152,7 +152,7 @@ jobs:
 
       - name: Override /public/config/config.json
         run: |
-          cat <<EOF > /public/config/config.json
+          cat <<EOF > $GITHUB_WORKSPACE/public/config/config.json
           {
             "api": {
               "AUTHN_API_BASE_URL": "http://127.0.0.1:30082",
