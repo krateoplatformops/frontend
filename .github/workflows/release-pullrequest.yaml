@@ -247,6 +247,7 @@ jobs:
 
           # Check for changes and push
           if [[ -n "$(git status --porcelain chart/crds)" ]]; then
+            git pull
             git add chart/crds
             git commit -m "Add Smithery output YAMLs from ${REF_NAME}"
             git push --set-upstream origin "$BRANCH"
