@@ -83,6 +83,12 @@ jobs:
             JWT_SIGN_KEY: ${JWT_SIGN_KEY}
           EOF
 
+      - name: Add Krateo Helm repository
+        run: helm repo add krateo https://charts.krateo.io
+
+      - name: Update Krateo Helm repository
+        run: helm repo update krateo
+
       - name: Install Krateo PlatformOps authn
         run: helm install authn krateo/authn --version=0.20.1 --wait --set service.type=NodePort  --set service.nodePort=30082
 
