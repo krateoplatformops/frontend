@@ -242,7 +242,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/ || true
 
           # Check for changes and push
-          if ! git diff --quiet -- chart/crds; then
+          if [[ -n "$(git status --porcelain chart/crds)" ]]; then
             git add chart/crds
             git commit -m "Add Smithery output YAMLs from ${REF_NAME}"
             git push --set-upstream origin "$BRANCH"
