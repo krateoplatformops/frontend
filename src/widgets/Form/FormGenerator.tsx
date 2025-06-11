@@ -65,7 +65,27 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
           }
           // set default value
           if (currentProperties[key].default) {
-            form.setFieldValue(currentName.split('.'), currentProperties[key].default)
+            let defaultValue = currentProperties[key].default
+
+            /* handle boolean written as string  */
+            if (currentProperties[key].type === 'boolean') {
+              if (typeof defaultValue !== 'boolean') {
+                console.error(
+                  `boolean field ${currentName} has a default value that is not a boolean: defaulting to false. received value=${defaultValue} type=${typeof defaultValue}`
+                )
+                defaultValue = false
+              }
+            }
+
+            if (currentProperties[key].type === 'integer' || currentProperties[key].type === 'number') {
+              if (typeof defaultValue !== 'number') {
+                console.error(
+                  `array field ${currentName} has a default value that is not a number. received value=${defaultValue} type=${typeof defaultValue}`
+                )
+              }
+            }
+
+            form.setFieldValue(currentName.split('.'), defaultValue)
           }
         })
       }
@@ -120,9 +140,12 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
       rules.push({ message: 'Insert right value', pattern: node.pattern })
     }
 
-    /* to handle nodes declared as array like `"type": ["string"] or "type": ["number"], multiple types for the same field is not supported */
-    const nodeType = Array.isArray(node.type) ? node.type[0] : node.type
-    switch (nodeType) {
+    if (Array.isArray(node.type)) {
+      console.error(`type as array is not supported: ${node.type} for field ${name}`)
+      return null
+    }
+
+    switch (node.type) {
       case 'string':
         return (
           <div className={styles.formField} id={name}>
@@ -282,7 +305,9 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
     const substr = valuePath.replace('${', '').replace('}', '')
     const parts = substr.split('+').map((el) => el.trim())
 
-    const value = parts.map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || '')).join('')
+    const value = parts
+      .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
+      .join('')
 
     return _.merge({}, values, convertStringToObject(keyPath, value))
   }
@@ -419,7 +444,12 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
 
           {showFormStructure && (
             <Col className={styles.anchorLabelWrapper} span={12}>
-              <Anchor affix={false} getContainer={() => document.getElementById('anchor-content') as HTMLDivElement} items={getAnchorList()} onClick={handleAnchorClick} />
+              <Anchor
+                affix={false}
+                getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
+                items={getAnchorList()}
+                onClick={handleAnchorClick}
+              />
             </Col>
           )}
         </Row>

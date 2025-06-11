@@ -55,7 +55,6 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
   }
 
   const schema = (widgetData.stringSchema ? JSON.parse(widgetData.stringSchema as string) : widgetData.schema) as JSONSchema4
-  debugger
 
   return (
     <div>
@@ -103,17 +102,18 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
 
           const formKey = 'spec'
           let payload = { ...resourceRef.payload, ...values }
-          debugger
 
           if (submitAction.payloadToOverride && submitAction.payloadToOverride.length > 0) {
+            debugger
             const updateJson = (values: object, keyPath: string, valuePath: string) => {
-              debugger
               const getObjectByPath = (obj: object, path: string) => path.split('.').reduce((acc, part) => acc && acc[part], obj)
 
               const substr = valuePath.replace('${', '').replace('}', '')
               const parts = substr.split('+').map((el) => el.trim())
 
-              const value = parts.map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || '')).join('')
+              const value = parts
+                .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
+                .join('')
 
               return _.merge({}, values, convertStringToObject(keyPath, value))
             }
@@ -122,18 +122,23 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
               payload = updateJson(payload, el.name, el.value)
             })
           }
-          debugger
 
           /* get all the keys that are not in the resourceRef.payload, basically the form values */
           const valuesKeys = Object.keys(payload).filter((el) => Object.keys(resourceRef.payload).indexOf(el) === -1)
           payload[formKey] = {}
+          debugger
           valuesKeys.forEach((el) => {
             payload[formKey][el] = typeof payload[el] === 'object' && !Array.isArray(payload[el]) ? { ...payload[el] } : payload[el]
             delete payload[el]
           })
-          debugger
 
-          const res = await fetch(url, {
+          // const urlWithNewNameAndNamespace = new URL(url)
+          // urlWithNewNameAndNamespace.searchParams.set('name', payload.metadata.name)
+          // urlWithNewNameAndNamespace.searchParams.set('namespace', payload.metadata.namespace)
+          // urlWithNewNameAndNamespace.searchParams.set('apiVersion', 'composition.krateo.io/v2-0-0')
+          const urlWithNewNameAndNamespace = updateNameNamespace(url, payload.metadata.name, payload.metadata.namespace)
+
+          const res = await fetch(urlWithNewNameAndNamespace, {
             body: JSON.stringify(payload),
             headers: {
               // 'X-Krateo-Groups': 'admins',
@@ -229,6 +234,16 @@ function convertStringToObject(dottedString: string, value: unknown) {
   })
 
   return result
+}
+
+const updateNameNamespace = (path, name, namespace) => {
+  // add name and namespace on endpoint querystring from payload.metadata
+  const qsParameters = path
+    .split('?')[1]
+    .split('&')
+    .filter((el) => el.indexOf('name=') === -1 && el.indexOf('namespace=') === -1)
+    .join('&')
+  return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
 }
 
 export default Form

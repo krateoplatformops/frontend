@@ -39,13 +39,13 @@ spec:
 
   widgetDataTemplate:
     - forPath: schema
-      expression: ${ .getSchema | .spec.versions[] | select(.name == "v1-1-15") | .schema.openAPIV3Schema.properties.spec }
+      expression: ${ .getSchema | .spec.versions[] | select(.name == "v2-0-0") | .schema.openAPIV3Schema.properties.spec }
   
   resourcesRefs:
     - id: resource-ref-1
-      apiVersion: composition.krateo.io/v1-1-15
+      apiVersion: composition.krateo.io/v2-0-0
       name: new-app
-      namespace: krateo-system
+      namespace: fireworksapp-system
       resource: fireworksapps
       verb: POST
   apiRef:
