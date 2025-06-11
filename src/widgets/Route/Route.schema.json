@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "Route"
+      "default": "Route",
+      "description": "Route is a wrapper component, typically placed at the top of the component tree, that wraps and renders all nested components.",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -19,12 +20,14 @@
           "properties": {
             "items": {
               "type": "array",
+              "description": "list of resources to be rendered within the route",
               "items": {
                 "type": "object",
                 "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "the identifier of the k8s custom resource that should be rendered, usually a widget"
                   }
                 },
                 "additionalProperties": false

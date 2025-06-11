@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "NavMenuItem"
+      "default": "NavMenuItem",
+      "description": "NavMenuItem represents a single item in the navigation menu and links to a specific resource and route in the application",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -18,21 +19,25 @@
           "required": ["label", "icon", "path", "resourceRefId"],
           "properties": {
             "label": {
-              "type": "string"
+              "type": "string",
+              "description": "text displayed as the menu item's label"
             },
             "icon": {
-              "type": "string"
+              "type": "string",
+              "description": "name of the icon to display alongside the label (font awesome icon name eg: `fa-inbox`)"
             },
             "path": {
-              "type": "string"
+              "type": "string",
+              "description": "route path to navigate to when the menu item is clicked"
             },
             "resourceRefId": {
-              "type": "string"
+              "type": "string",
+              "description": "the identifier of the k8s custom resource that should be represented, usually a widget"
             },
             "order": {
-              "description": "a weight to be used to sort the items in the menu",
               "type": "integer",
-              "default": 100
+              "default": 100,
+              "description": "a weight to be used to sort the items in the menu"
             }
           },
           "additionalProperties": false
@@ -69,7 +74,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "properties": {
               "id": {
                 "type": "string"

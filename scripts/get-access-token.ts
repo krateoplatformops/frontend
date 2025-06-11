@@ -12,6 +12,11 @@ if (!adminPassword) {
   throw new Error('ADMIN_PASSWORD env is not set')
 }
 
+// curl 'http://20.166.174.117:8082/basic/login' \
+//   -H 'authorization: Basic YWRtaW46TlFwTFNicXRjRkdE' \
+//   --insecure
+
+// echo -n 'admin:NQpLSbqtcFGD' | base64
 export async function getAccessToken() {
   const credentials = Buffer.from(`${adminUsername}:${adminPassword}`).toString('base64')
 
@@ -20,14 +25,10 @@ export async function getAccessToken() {
       Authorization: `Basic ${credentials}`,
       'Content-Type': 'application/json',
     },
-  }) // curl 'http://20.166.174.117:8082/basic/login' \
-  //   -H 'authorization: Basic YWRtaW46TlFwTFNicXRjRkdE' \
-  //   --insecure
+  })
 
-  // echo -n 'admin:NQpLSbqtcFGD' | base64
-
-  const data = await response.json()
+  const data = await response.json() as unknown
   writeFileSync(join(process.cwd(), 'scripts', 'login-response.json'), JSON.stringify(data, null, 2))
 }
 
-getAccessToken()
+void getAccessToken()

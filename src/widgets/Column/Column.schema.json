@@ -8,15 +8,14 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "description": "name of the k8s Custom Resource",
-      "default": "Column"
+      "default": "Column",
+      "description": "Column is a layout component that arranges its children in a vertical stack, aligning them one above the other with spacing between them",
+      "type": "string"
     },
     "spec": {
       "type": "object",
       "properties": {
         "widgetData": {
-          "description": "the data that will be passed to the widget on the frontend",
           "type": "object",
           "required": ["items"],
           "properties": {
@@ -28,6 +27,7 @@
                 "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
+                    "description": "the identifier of the k8s Custom Resource that should be represented, usually a widget",
                     "type": "string"
                   }
                 },
