@@ -234,6 +234,9 @@ jobs:
           gh repo clone krateoplatformops/frontend-chart
           cd frontend-chart
 
+          # Fix remote to include token for git push
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/krateoplatformops/frontend-chart.git
+
           # Create a new branch
           git checkout -b "$BRANCH"
 
