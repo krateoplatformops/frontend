@@ -193,7 +193,6 @@ jobs:
           npm run get-access-token
 
       - name: Send schemas
-        working-directory: $GITHUB_WORKSPACE
         run: |
           cd $GITHUB_WORKSPACE
           npm run send-schemas
