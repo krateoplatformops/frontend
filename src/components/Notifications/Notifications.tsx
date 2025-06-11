@@ -31,7 +31,9 @@ const Notifications = () => {
       itemLayout='vertical'
       renderItem={({
         description,
+        firstTimestamp,
         involvedObject: { apiVersion, kind },
+        lastTimestamp,
         message,
         metadata: { creationTimestamp, name, namespace, uid },
         reason,
@@ -43,7 +45,7 @@ const Notifications = () => {
           <Button className={styles.notificationElement} onClick={() => onClickNotification(url)} type='link'>
             <Space direction='vertical'>
               <Typography.Paragraph className={styles.timestamp}>
-                {formatISODate(creationTimestamp, true)}
+                {formatISODate(lastTimestamp || firstTimestamp || creationTimestamp, true)}
               </Typography.Paragraph>
               <Badge
                 color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
