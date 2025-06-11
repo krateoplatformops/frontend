@@ -8,15 +8,14 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "description": "name of the k8s Custom Resource",
-      "default": "Button"
+      "default": "Button",
+      "description": "Button represents an interactive component which, when clicked, triggers a specific business logic defined by its `clickActionId`",
+      "type": "string"
     },
     "spec": {
       "type": "object",
       "properties": {
         "widgetData": {
-          "description": "the data that will be passed to the widget on the frontend",
           "type": "object",
           "properties": {
             "color": {
@@ -46,7 +45,7 @@
               "type": "string"
             },
             "icon": {
-              "description": "the icon of the button (font awesome icon name eg: 'fa-inbox')",
+              "description": "the icon of the button (font awesome icon name eg: `fa-inbox`)",
               "type": "string"
             },
             "shape": {
@@ -76,7 +75,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "additionalProperties": false,
             "properties": {
               "id": {

@@ -17,7 +17,10 @@ interface JSONSchemaProperty {
   type?: string | string[]
   description?: string
   enum?: string[]
+  items?: JSONSchemaPropertyOrContainer
 }
+
+type JSONSchemaPropertyOrContainer = JSONSchemaProperty & Partial<WidgetDataSchema>
 
 interface WidgetDataSchema {
   properties?: Record<string, JSONSchemaProperty>
@@ -35,34 +38,57 @@ interface JSONSchema {
     }
     kind?: {
       default?: string
+      description?: string
     }
   }
 }
 
-function toMarkdownTable(props: WidgetDataSchema): string {
+function toMarkdownTable(widgetData: WidgetDataSchema): string {
   const lines = ['| Property | Required | Description | Type |', '|----------|----------|-------------|------|']
 
-  if (!props.properties) { return '*No props available.*' }
+  if (!widgetData.properties) { return '*No props available.*' }
 
-  for (const [propName, propSchema] of Object.entries(props.properties)) {
-    const isRequired = props.required?.includes(propName)
-    const required = isRequired ? 'yes' : 'no'
+  function walk(
+    schema: WidgetDataSchema,
+    path: string = '',
+  ) {
+    const { properties = {}, required = [] } = schema
 
-    let type = 'unknown'
-    if (propSchema.enum) {
-      // Escape pipe in enum values for markdown table cell
-      type = propSchema.enum.map(value => `\`${value}\``).join(' \\| ')
-    } else if (Array.isArray(propSchema.type)) {
-      type = propSchema.type.join(' | ')
-    } else if (typeof propSchema.type === 'string') {
-      type = propSchema.type
+    for (const [key, prop] of Object.entries(properties)) {
+      const fullPath = path ? `${path}.${key}` : key
+      const isRequired = required.includes(key)
+      const requiredText = isRequired ? 'yes' : 'no'
+
+      let type = 'unknown'
+
+      if (prop.enum) {
+        type = prop.enum.map(value => `\`${value}\``).join(' \\| ')
+      } else if (Array.isArray(prop.type)) {
+        type = prop.type.join(' | ')
+      } else if (prop.type === 'array') {
+        type = 'array'
+      } else if (prop.type === 'object') {
+        type = 'object'
+      } else if (typeof prop.type === 'string') {
+        type = prop.type
+      }
+
+      const description = prop.description ?? ''
+      lines.push(`| ${fullPath} | ${requiredText} | ${description} | ${type} |`)
+
+      if (prop.type === 'object') {
+        const nested = prop as unknown as WidgetDataSchema
+        walk(nested, fullPath)
+      }
+
+      if (prop.type === 'array' && prop.items?.type === 'object' && 'properties' in prop.items) {
+        const arrayItem = prop.items as WidgetDataSchema
+        walk(arrayItem, `${fullPath}[]`)
+      }
     }
-
-    const desc = propSchema.description ?? ''
-
-    lines.push(`| ${propName} | ${required} | ${desc} | ${type} |`)
   }
 
+  walk(widgetData)
   return lines.join('\n')
 }
 
@@ -72,7 +98,7 @@ function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): string {
     = schema.title
     || schema.properties?.kind?.default
     || fileName.replace('.schema.json', '')
-  const description = schema.description || ''
+  const description = schema.description || schema.properties?.kind?.description || ''
   const widgetData = schema.properties?.spec?.properties?.widgetData
 
   const table = toMarkdownTable(widgetData ?? {})
@@ -86,8 +112,12 @@ async function generateWidgetsSection(): Promise<string> {
     return `${WIDGETS_ANCHOR}\n\n⚠️ No widget schemas found at \`${WIDGETS_GLOB}\`\n`
   }
 
+  const sortedSchemaPaths = schemaPaths.sort((schemaA, schemaB) =>
+    path.basename(schemaA).localeCompare(path.basename(schemaB))
+  )
+
   const docs = await Promise.all(
-    schemaPaths.map(async file => {
+    sortedSchemaPaths.map(async file => {
       const content = await fs.readFile(file, 'utf-8')
       const schema: JSONSchema = JSON.parse(content) as JSONSchema
       return formatSchemaToMarkdown(schema, file)

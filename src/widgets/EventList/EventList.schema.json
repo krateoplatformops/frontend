@@ -8,20 +8,20 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "description": "name of the k8s Custom Resource",
-      "default": "EventList"
+      "default": "EventList",
+      "description": "EventList renders data coming from a Kubernetes cluster or Server Sent Events associated to a specific endpoint and topic",
+      "type": "string"
     },
     "spec": {
       "type": "object",
       "properties": {
         "widgetData": {
-          "description": "the data that will be passed to the widget on the frontend",
           "type": "object",
           "required": ["events"],
           "properties": {
             "events": {
               "type": "array",
+              "description": "list of events received from a k8s cluster or server sent event",
               "items": {
                 "type": "object",
                 "required": [
@@ -33,19 +33,57 @@
                   "source"
                 ],
                 "properties": {
-                  "icon": { "type": "string" },
-                  "reason": { "type": "string" },
-                  "message": { "type": "string" },
-                  "type": { "type": "string", "enum": ["Normal", "Warning"] },
-                  "count": { "type": "integer" },
-                  "action": { "type": "string" },
-                  "reportingComponent": { "type": "string" },
-                  "reportingInstance": { "type": "string" },
-                  "firstTimestamp": { "type": "string", "format": "date-time" },
-                  "lastTimestamp": { "type": "string", "format": "date-time" },
-                  "eventTime": { "type": "string", "format": "date-time" },
+                  "icon": {
+                    "type": "string",
+                    "description": "name of the icon associated with the event (font awesome icon name eg: `fa-inbox`)"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "description": "reason or cause of the event"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "descriptive message of the event"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["Normal", "Warning"],
+                    "description": "type of the event, e.g., normal or warning"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "description": "number of times the event has occurred"
+                  },
+                  "action": {
+                    "type": "string",
+                    "description": "action associated with the event, if any"
+                  },
+                  "reportingComponent": {
+                    "type": "string",
+                    "description": "component that reported the event"
+                  },
+                  "reportingInstance": {
+                    "type": "string",
+                    "description": "instance of the component that reported the event"
+                  },
+                  "firstTimestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "timestamp of the first occurrence of the event"
+                  },
+                  "lastTimestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "timestamp of the last occurrence of the event"
+                  },
+                  "eventTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "specific timestamp of the event"
+                  },
                   "metadata": {
                     "type": "object",
+                    "description": "metadata of the event such as name, namespace, and uid",
                     "required": [
                       "name",
                       "namespace",
@@ -53,33 +91,66 @@
                       "creationTimestamp"
                     ],
                     "properties": {
-                      "name": { "type": "string" },
-                      "namespace": { "type": "string" },
-                      "uid": { "type": "string" },
+                      "name": {
+                        "type": "string",
+                        "description": "unique name of the event"
+                      },
+                      "namespace": {
+                        "type": "string",
+                        "description": "namespace the event belongs to"
+                      },
+                      "uid": {
+                        "type": "string",
+                        "description": "unique identifier of the event"
+                      },
                       "creationTimestamp": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "description": "creation date and time of the event"
                       }
                     },
                     "additionalProperties": false
                   },
                   "involvedObject": {
                     "type": "object",
+                    "description": "object involved in the event with key details",
                     "required": ["kind", "name", "namespace", "uid"],
                     "properties": {
-                      "apiVersion": { "type": "string" },
-                      "kind": { "type": "string" },
-                      "name": { "type": "string" },
-                      "namespace": { "type": "string" },
-                      "uid": { "type": "string" }
+                      "apiVersion": {
+                        "type": "string",
+                        "description": "api version of the involved object"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "description": "resource type involved"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "name of the involved object"
+                      },
+                      "namespace": {
+                        "type": "string",
+                        "description": "namespace of the involved object"
+                      },
+                      "uid": {
+                        "type": "string",
+                        "description": "unique identifier of the involved object"
+                      }
                     },
                     "additionalProperties": false
                   },
                   "source": {
                     "type": "object",
+                    "description": "information about the source generating the event",
                     "properties": {
-                      "component": { "type": "string" },
-                      "host": { "type": "string" }
+                      "component": {
+                        "type": "string",
+                        "description": "component source of the event"
+                      },
+                      "host": {
+                        "type": "string",
+                        "description": "host where the event originated"
+                      }
                     },
                     "additionalProperties": false
                   }
@@ -88,8 +159,14 @@
               },
               "tsType": "SSEK8sEvent[]"
             },
-            "sseEndpoint": { "type": "string" },
-            "sseTopic": { "type": "string" }
+            "sseEndpoint": {
+              "type": "string",
+              "description": "endpoint url for server sent events connection"
+            },
+            "sseTopic": {
+              "type": "string",
+              "description": "subscription topic for server sent events"
+            }
           },
           "additionalProperties": false
         },

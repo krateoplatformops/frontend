@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "CompositionCard"
+      "default": "CompositionCard",
+      "description": "CompositionCard represents a container to display information about a Composition",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -17,46 +18,55 @@
           "type": "object",
           "properties": {
             "date": {
-              "type": "string"
+              "type": "string",
+              "description": "date associated with the composition, typically its creation time"
             },
             "description": {
-              "type": "string"
+              "type": "string",
+              "description": "short text describing the composition's purpose or status"
             },
             "icon": {
               "type": "object",
+              "description": "icon displayed on the card",
               "properties": {
                 "name": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "icon name to display (font awesome icon name eg: `fa-inbox`)"
                 },
                 "color": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "color of the icon"
                 }
               },
               "required": ["name"],
               "additionalProperties": false
             },
             "status": {
-              "type": "string"
+              "type": "string",
+              "description": "current status of the composition (e.g., running, failed, pending)"
             },
             "tags": {
               "type": "array",
+              "description": "list of tags for categorizing or filtering the composition",
               "items": {
                 "type": "string"
               }
             },
             "title": {
-              "type": "string"
+              "type": "string",
+              "description": "main title of the card, usually the name of the composition"
             },
             "tooltip": {
-              "type": "string"
+              "type": "string",
+              "description": "optional tooltip text shown on the top right side of the card to provide additional context"
             },
             "deleteCompositionActionId": {
-              "description": "the id of the action to be executed when the delete button is clicked",
-              "type": "string"
+              "type": "string",
+              "description": "id of the action triggered when the delete button is clicked"
             },
             "navigateToDetailActionId": {
-              "description": "the id of the action to be executed when the panel is clicked",
-              "type": "string"
+              "type": "string",
+              "description": "id of the action triggered when the card is clicked"
             }
           },
           "additionalProperties": false

@@ -8,9 +8,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "description": "name of the k8s Custom Resource",
-      "default": "TabList"
+      "default": "TabList",
+      "description": "TabList display a set of tab items for navigation or content grouping",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -21,19 +21,21 @@
           "required": ["items", "label"],
           "properties": {
             "items": {
-              "description": "the items of the tab list",
               "type": "array",
+              "description": "the items of the tab list",
               "items": {
                 "type": "object",
+                "required": ["resourceRefId"],
                 "properties": {
                   "label": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "text displayed on the tab"
                   },
                   "resourceRefId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "the identifier of the k8s custom resource represented by the tab content"
                   }
                 },
-                "required": ["resourceRefId"],
                 "additionalProperties": false
               }
             }
