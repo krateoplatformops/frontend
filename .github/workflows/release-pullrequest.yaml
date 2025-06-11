@@ -230,9 +230,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Authenticate GitHub CLI
-          gh auth login --with-token <<< "$GH_TOKEN"
-
           # Clone the target repo
           gh repo clone krateoplatformops/frontend-chart
           cd frontend-chart
