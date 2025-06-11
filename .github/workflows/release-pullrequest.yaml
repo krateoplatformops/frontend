@@ -147,12 +147,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: List files in /
-        run: ls -la $GITHUB_WORKSPACE
+      - name: Change to GITHUB_WORKSPACE
+        run: cd "$GITHUB_WORKSPACE"
 
       - name: Override /public/config/config.json
         run: |
-          cat <<EOF > $GITHUB_WORKSPACE/public/config/config.json
+          cat <<EOF > /public/config/config.json
           {
             "api": {
               "AUTHN_API_BASE_URL": "http://127.0.0.1:30082",
