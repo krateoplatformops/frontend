@@ -39,7 +39,7 @@ spec:
       verb: GET
     - id: template-form
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: firework-form-not-ordered
+      name: firework-form-from-string-schema
       namespace: fireworksapp-system
       resource: forms
       verb: GET

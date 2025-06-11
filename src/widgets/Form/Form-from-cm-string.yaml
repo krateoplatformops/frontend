@@ -1,0 +1,49 @@
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: firework-form-from-string-schema
+  namespace: fireworksapp-system
+spec:
+  widgetData:
+    schema: {}
+    submitActionId: firework-submit-action-from-string-schema
+  actions:
+    rest:
+      - id: firework-submit-action-from-string-schema
+        resourceRefId: resource-ref-1
+        type: rest
+        onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+        payloadToOverride:
+        - name: metadata.name
+          value: ${ git.toRepo.name }
+        # - name: metadata.namespace
+        #   value: ${ "fireworksapp-system" }
+
+  widgetDataTemplate:
+    - forPath: stringSchema
+      expression: ${ .getSchemaNotOrdered.data["values.schema.json"] }
+  
+  resourcesRefs:
+    - id: resource-ref-1
+      apiVersion: composition.krateo.io/v2-0-0
+      name: new-app
+      namespace: fireworksapp-system
+      resource: fireworksapps
+      verb: POST
+      
+  apiRef:
+    name: fireworksapp-schema-notordered
+    namespace: krateo-system
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: fireworksapp-schema-notordered
+  namespace: krateo-system
+spec:
+  api:
+  - headers:
+    - 'Accept: application/json'
+    name: getSchemaNotOrdered
+    path: /api/v1/namespaces/fireworksapp-system/configmaps/fireworksapps-v2-0-0-jsonschema-configmap
+    verb: GET
