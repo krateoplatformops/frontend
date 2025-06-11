@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    name: Build and Push
+    name: Build and NOT Push
     strategy:
       matrix:
         runner: [buildjet-2vcpu-ubuntu-2204-arm, buildjet-2vcpu-ubuntu-2204]
@@ -53,3 +53,121 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: false
           labels: ${{ steps.meta.outputs.labels }}
+
+  crds:
+    name: Generate crds
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.1.0
+
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1
+        with:
+          node_image: kindest/node:v1.33.1
+
+      - name: Generate and apply JWT signing secret
+        run: |
+          JWT_SIGN_KEY=$(openssl rand -base64 32)
+          cat <<EOF | kubectl apply -f -
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: jwt-sign-key
+          type: Opaque
+          stringData:
+            JWT_SIGN_KEY: ${JWT_SIGN_KEY}
+          EOF
+
+      - name: Install Krateo PlatformOps authn
+        run: helm install authn krateo/authn --version=0.20.1 --wait --set service.type=NodePort  --set service.nodePort=30082
+
+      - name: Install Krateo PlatformOps authn
+        run: helm install smithery krateo/smithery --version=0.6.0 --wait --set service.type=NodePort  --set service.nodePort=30088
+
+      - name: Generate random password
+        id: genpass
+        run: echo "password=$(openssl rand -base64 12)" >> $GITHUB_OUTPUT
+
+      - name: Apply admin Secret and User
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: v1
+          kind: Secret
+          type: kubernetes.io/basic-auth
+          metadata:
+            name: admin-password
+            namespace: default
+          stringData:
+            password: "${{ steps.genpass.outputs.password }}"
+          ---
+          apiVersion: basic.authn.krateo.io/v1alpha1
+          kind: User
+          metadata:
+            name: admin
+            namespace: default
+          spec:
+            displayName: Admin
+            avatarURL: https://i.pravatar.cc/256?img=69
+            groups:
+              - admins
+            passwordRef:
+              namespace: default
+              name: admin-password
+              key: password
+          EOF
+
+      - name: Apply ClusterRoleBinding
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: cluster-admin-binding
+          subjects:
+          - kind: Group
+            name: admins
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: cluster-admin
+            apiGroup: rbac.authorization.k8s.io
+          EOF
+
+      - name: Override /public/config/config.json
+        run: |
+          cat <<EOF > /public/config/config.json
+          {
+            "api": {
+              "AUTHN_API_BASE_URL": "http://127.0.0.1:30082",
+              "BACKEND_API_BASE_URL": "http://127.0.0.1:30081",
+              "EVENTS_API_BASE_URL": "http://127.0.0.1:30083",
+              "EVENTS_PUSH_API_BASE_URL": "http://127.0.0.1:30083",
+              "SMITHERY_API_BASE_URL": "http://127.0.0.1:30088",
+              "INIT": "/call?resource=navmenus&apiVersion=widgets.templates.krateo.io/v1beta1&name=sidebar-nav-menu&namespace=krateo-system",
+              "TERMINAL_SOCKET_URL": "http://localhost:8084"
+            },
+            "params": {
+              "FRONTEND_NAMESPACE": "krateo-system",
+              "DELAY_SAVE_NOTIFICATION": "10000"
+            }
+          }
+          EOF
+
+      - name: Get access token
+        env:
+          ADMIN_USERNAME: admin
+          ADMIN_PASSWORD: ${{ steps.genpass.outputs.password }}
+        run: npm run get-access-token
+
+      - name: Send schemas
+        run: npm run send-schemas
+
+      - name: List files in /scripts/smithery-output
+        run: ls -la /scripts/smithery-output
+
+
