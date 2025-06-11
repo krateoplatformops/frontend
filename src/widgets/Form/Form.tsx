@@ -1,4 +1,5 @@
 import { Button, Space } from 'antd'
+import useApp from 'antd/es/app/useApp'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
@@ -9,6 +10,7 @@ import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import { getResourceRef } from '../../utils/utils'
+import { closeDrawer } from '../Drawer/Drawer'
 import { useDrawerContext } from '../Drawer/DrawerContext'
 
 import type { Form as WidgetType } from './Form.type'
@@ -21,6 +23,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
   const alreadySetDrawerData = useRef(false)
 
   const { config } = useConfigContext()
+  const { notification } = useApp()
 
   const submitAction = Object.values(actions)
     .flat()
@@ -151,6 +154,22 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           // TODO: write this type
           const json = await res.json()
 
+          if (!res.ok) {
+            notification.error({
+              description: json.message,
+              message: `${json.status} - ${json.reason}`,
+              placement: 'bottomLeft',
+            })
+            return
+          }
+
+          const actionName = method === 'DELETE' ? 'deleted' : 'created'
+          notification.success({
+            description: `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
+            message: json.message,
+            placement: 'bottomLeft',
+          })
+
           // send all data values to specific endpoint as POST
           // if (formEndpoint && formVerb) {
           //   // update payload by payloadToOverride
@@ -209,6 +228,8 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           //       break
           //   }
           // }
+
+          closeDrawer()
         }}
         schema={schema}
         showFormStructure={true}
