@@ -147,10 +147,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Change to GITHUB_WORKSPACE
-        run: cd "$GITHUB_WORKSPACE"
-
       - name: Override /public/config/config.json
+        working-directory: $GITHUB_WORKSPACE
         run: |
           cat <<EOF > /public/config/config.json
           {
@@ -171,15 +169,18 @@ jobs:
           EOF
 
       - name: Get access token
+        working-directory: $GITHUB_WORKSPACE
         env:
           ADMIN_USERNAME: admin
           ADMIN_PASSWORD: ${{ steps.genpass.outputs.password }}
         run: npm run get-access-token
 
       - name: Send schemas
+        working-directory: $GITHUB_WORKSPACE
         run: npm run send-schemas
 
       - name: List files in /scripts/smithery-output
-        run: ls -la /scripts/smithery-output
+        working-directory: $GITHUB_WORKSPACE
+        run: ls -la ./scripts/smithery-output
 
 
