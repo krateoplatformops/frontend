@@ -238,6 +238,10 @@ jobs:
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/krateoplatformops/frontend-chart.git
           git fetch origin main
           git checkout main
+          git pull origin main
+
+          # Delete remote branch if it exists
+          git push origin --delete "$BRANCH" 2>/dev/null || echo "Branch didn't exist remotely"
 
           # Ensure target directory exists
           mkdir -p chart/crds
