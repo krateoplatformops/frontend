@@ -73,3 +73,255 @@ Run the following command to execute a script that creates all the custom resour
 ```bash
 npm run apply-all
 ```
+
+## Widgets
+
+List of implemented widgets:
+
+### BarChart
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| data | yes |  | array |
+
+---
+
+### Column
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| items | yes | the items of the column | array |
+| size | no | the number of cells that the column will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
+
+---
+
+### Button
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
+| label | no | the label of the button | string |
+| icon | no | the icon of the button (font awesome icon name eg: 'fa-inbox') | string |
+| shape | no | the shape of the button | `default` \| `circle` \| `round` |
+| size | no | the size of the button | `small` \| `middle` \| `large` |
+| type | no | the visual style of the button | `default` \| `text` \| `link` \| `primary` \| `dashed` |
+| clickActionId | yes | the id of the action to be executed when the button is clicked | string |
+
+---
+
+### CompositionCard
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| date | no |  | string |
+| description | no |  | string |
+| icon | no |  | object |
+| status | no |  | string |
+| tags | no |  | array |
+| title | no |  | string |
+| tooltip | no |  | string |
+| deleteCompositionActionId | no | the id of the action to be executed when the delete button is clicked | string |
+| navigateToDetailActionId | no | the id of the action to be executed when the panel is clicked | string |
+
+---
+
+### EventList
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| events | yes |  | array |
+| sseEndpoint | no |  | string |
+| sseTopic | no |  | string |
+
+---
+
+### FlowChart
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| data | no |  | array |
+
+---
+
+### FormTest
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| schema | no | the schema of the form as an object | object |
+| stringSchema | no | the schema of the form as a string | string |
+| submitActionId | yes | the id of the action to be called when the form is submitted | string |
+
+---
+
+### LineChart
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| lines | yes |  | array |
+| xAxisName | no |  | string |
+| yAxisName | no |  | string |
+
+---
+
+### NavMenu
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| items | yes |  | array |
+
+---
+
+### NavMenuItem
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| label | yes |  | string |
+| icon | yes |  | string |
+| path | yes |  | string |
+| resourceRefId | yes |  | string |
+| order | no | a weight to be used to sort the items in the menu | integer |
+
+---
+
+### Panel
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| clickActionId | no | the id of the action to be executed when the panel is clicked | string |
+| footer | no |  | object |
+| icon | no |  | object |
+| items | yes |  | array |
+| title | no |  | string |
+| tooltip | no |  | string |
+
+---
+
+### Paragraph
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| text | yes |  | string |
+
+---
+
+### PieChart
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| title | yes |  | string |
+| description | no |  | string |
+| series | no |  | object |
+
+---
+
+### Route
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| items | yes |  | array |
+
+---
+
+### Row
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| items | yes | the items of the row | array |
+
+---
+
+### TabList
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| items | yes | the items of the tab list | array |
+
+---
+
+### Table
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| pageSize | no |  | integer |
+| data | yes |  | array |
+| columns | yes |  | array |
+
+---
+
+### YamlViewer
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| json | yes |  | string |

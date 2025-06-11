@@ -32,7 +32,7 @@ async function sendSchemaToSmithery(schemaPath: string) {
 
     const schemaName = schemaPath.split('/').pop()
 
-    const crdName = schemaName.replace('.schema.json', '.crd.yaml')
+    const crdName = schemaName?.replace('.schema.json', '.crd.yaml')
     await fs.writeFile(`scripts/smithery-output/${crdName}`, await response.text())
 
     console.log(schemaName, response.statusText)
