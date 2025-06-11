@@ -216,6 +216,7 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+          repository: krateoplatformops/frontend-chart
 
       - name: Install GitHub CLI
         run: sudo apt-get install gh -y
