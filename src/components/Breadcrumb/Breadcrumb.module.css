@@ -21,10 +21,27 @@
 }
 
 .breadcrumbItem {
+  cursor: pointer;
   display: block;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-transform: capitalize;
   white-space: nowrap;
+
+  &.capitalize {
+    text-transform: capitalize;
+  }
+
+  & .link {
+    display: flex;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
 }

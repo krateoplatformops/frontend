@@ -1,17 +1,17 @@
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: nginx-form-panel
+  name: firework-form-panel
   namespace: krateo-system
 spec:
   widgetData:
-    title: Nginx factory
+    title: Firework App Form
     items:
-      - resourceRefId: nginx-form
+      - resourceRefId: firework-form
   resourcesRefs:
-    - id: nginx-form
+    - id: firework-form
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: nginx-form
+      name: firework-form
       namespace: krateo-system
       resource: forms
       verb: GET
@@ -19,30 +19,48 @@ spec:
 kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: nginx-form
+  name: firework-form
   namespace: krateo-system
 spec:
   widgetData:
     schema: {}
+    submitActionId: firework-submit-action
   actions:
-    rest: []
+    rest:
+      - id: firework-submit-action
+        resourceRefId: resource-ref-1
+        type: rest
+        onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+        payloadToOverride:
+        - name: metadata.name
+          value: ${ git.toRepo.name }
+        # - name: metadata.namespace
+        #   value: ${ "fireworksapp-system" }
 
   widgetDataTemplate:
     - forPath: schema
-      expression: ${ .getNginxSchema | .spec.versions[] | select(.name == "v0-1-0") | .schema.openAPIV3Schema.properties.spec }
+      expression: ${ .getSchema | .spec.versions[] | select(.name == "v1-1-15") | .schema.openAPIV3Schema.properties.spec }
+  
+  resourcesRefs:
+    - id: resource-ref-1
+      apiVersion: composition.krateo.io/v1-1-15
+      name: new-app
+      namespace: krateo-system
+      resource: fireworksapps
+      verb: POST
   apiRef:
-    name: nginx-schema
+    name: firework-schema
     namespace: krateo-system
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  name: nginx-schema
+  name: firework-schema
   namespace: krateo-system
 spec:
   api:
-  - name: getNginxSchema
+  - name: getSchema
     verb: GET
-    path: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/nginxes.composition.krateo.io"
+    path: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/fireworksapps.composition.krateo.io"
     headers:
     - 'Accept: application/json'

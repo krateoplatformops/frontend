@@ -1,10 +1,12 @@
 import logo from '../../assets/images/logo_big.svg'
-import { getResourceEndpoint } from '../../utils/utils'
+import { useConfigContext } from '../../context/ConfigContext'
 import WidgetRenderer from '../WidgetRenderer'
 
 import styles from './Sidebar.module.css'
 
 const Sidebar = () => {
+  const { config } = useConfigContext()
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
@@ -17,14 +19,7 @@ const Sidebar = () => {
       </div>
 
       <div className={styles.content}>
-        <WidgetRenderer
-          widgetEndpoint={getResourceEndpoint({
-            name: 'sidebar-nav-menu',
-            namespace: 'krateo-system',
-            resource: 'navmenus',
-            version: 'v1beta1',
-          })}
-        />
+        <WidgetRenderer key={'sidebar'} widgetEndpoint={config!.api.INIT} />
       </div>
     </div>
   )

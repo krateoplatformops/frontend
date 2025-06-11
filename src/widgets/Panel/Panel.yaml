@@ -12,8 +12,9 @@ spec:
       - resourceRefId: my-table
     tooltip: this is a tooltip!
     footer:
-      - resourceRefId: button-1
-      - resourceRefId: button-1
+      items:
+        - resourceRefId: button-1
+        - resourceRefId: button-1
   resourcesRefs:
     - id: my-table
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -181,6 +182,50 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: composition-test-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    clickActionId: composition-click-action
+    footer:
+      items:
+        - resourceRefId: composition-test-button
+      tag: krateo-system
+    icon:
+      name: fa-solid fa-cubes
+      color: blue
+    items:
+      - resourceRefId: composition-test-paragraph
+    title: composition-test
+  actions:
+    navigate:
+      - id: composition-click-action
+        name: composition-click-action
+        resourceRefId: my-tab-list
+        type: navigate
+  resourcesRefs:
+    - id: composition-test-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: my-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-tab-list
+      namespace: krateo-system
+      resource: tablists
+      verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: panel-filters
   namespace: krateo-system
 spec:
@@ -194,4 +239,3 @@ spec:
       name: my-filters
       namespace: krateo-system
       resource: filters
-      verb: GET

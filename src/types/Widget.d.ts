@@ -8,15 +8,22 @@ export interface ResourceRef {
 export type ResourcesRefs = ResourceRef[]
 
 export interface Widget<WidgetDataType = unknown> {
-  uid: string
-  name: string
-  namespace: string
   apiVersion: string
   kind: string
   code?: number
   message?: string
   reason?: string
+  metadata: {
+    annotations: object
+    creationTimestamp: string
+    generation: number
+    name: string
+    namespace: string
+    resourceVersion: string
+    uid: string
+  }
   spec: {
+    actions: WidgetActions
     widgetData: WidgetDataType
     widgetRefs?: {
       [key: string]: {
@@ -28,13 +35,14 @@ export interface Widget<WidgetDataType = unknown> {
       }
     }
   }
-  status: {
-    widgetData: WidgetDataType
-    widgets: Widget[]
-    actions: WidgetActions
-    events: unknown /* EventsType */
-    resourcesRefs: ResourcesRefs
-  } | string
+  status:
+    | {
+        widgetData: WidgetDataType
+        widgets: Widget[]
+        events: unknown /* EventsType */
+        resourcesRefs: ResourcesRefs
+      }
+    | string
 }
 
 export type WidgetActions = {
@@ -42,11 +50,16 @@ export type WidgetActions = {
     type: 'rest'
     id: string
     name: string
+    payload: object
     verb: 'GET' | 'POST' | 'DELETE'
     resourceRefId: string
     requireConfirmation?: boolean
     onSuccessNavigateTo?: string
     loading?: 'global' | 'inline' | 'none'
+    payloadToOverride?: {
+      name: string
+      value: string
+    }[]
   }[]
   navigate?: {
     id: string
@@ -60,6 +73,7 @@ export type WidgetActions = {
     id: string
     type: 'openDrawer'
     name: string
+    resourceRefId: string
     contentWidgetRef: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
@@ -75,7 +89,8 @@ export type WidgetActions = {
 }
 
 export type WidgetProps<T = unknown> = {
-  widgetData: T
-  actions: Widget['status']['actions']
+  actions: WidgetActions
   resourcesRefs: ResourcesRefs
+  uid: string
+  widgetData: T
 }

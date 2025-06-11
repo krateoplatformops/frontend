@@ -18,12 +18,16 @@
         "widgetData": {
           "description": "the data that will be passed to the widget on the frontend",
           "type": "object",
-          "required": ["schema", "submitActionId"],
+          "required": ["submitActionId"],
           "properties": {
             "schema": {
-              "description": "the schema of the form",
+              "description": "the schema of the form as an object",
               "type": "object",
               "additionalProperties": false
+            },
+            "stringSchema": {
+              "description": "the schema of the form as a string",
+              "type": "string"
             },
             "submitActionId": {
               "description": "the id of the action to be called when the form is submitted",
@@ -61,7 +65,7 @@
           }
         },
         "actions": {
-          "description": "the actions of the button",
+          "description": "the actions of the form",
           "type": "object",
           "properties": {
             "rest": {
@@ -89,6 +93,26 @@
                   "type": {
                     "type": "string",
                     "enum": ["rest"]
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "payloadToOverride": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["name", "value"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
                   }
                 },
                 "required": ["id", "resourceRefId"]

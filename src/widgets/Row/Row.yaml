@@ -7,7 +7,9 @@ spec:
   widgetData:
     items:
       - resourceRefId: table-of-pods
+        size: 18
       - resourceRefId: pie-chart-inside-column
+        size: 6
   resourcesRefs:
     - id: table-of-pods
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -20,4 +22,21 @@ spec:
       name: pie-chart-inside-column
       namespace: krateo-system
       resource: piecharts
+      verb: GET
+---
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-row
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: composition-test-card
+  resourcesRefs:
+    - id: composition-test-card
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-card
+      namespace: krateo-system
+      resource: compositioncards
       verb: GET

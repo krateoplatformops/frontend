@@ -11,7 +11,7 @@ import type { EventList as WidgetType } from './EventList.type'
 
 export type EventListWidgetData = WidgetType['spec']['widgetData']
 
-const EventList = ({ widgetData }: WidgetProps<EventListWidgetData>) => {
+const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
   const { events, sseEndpoint, sseTopic } = widgetData
 
   const { config } = useConfigContext()
@@ -40,14 +40,14 @@ const EventList = ({ widgetData }: WidgetProps<EventListWidgetData>) => {
         icon,
         involvedObject: { apiVersion, kind, name, namespace },
         message,
-        metadata: { creationTimestamp, uid },
+        metadata: { creationTimestamp, uid: rowUid },
         reason,
         type,
       }) => (
         <RichRow
           color={type === 'Normal' ? 'blue' : 'orange'}
           icon={icon || 'fa-ellipsis-h'}
-          key={uid}
+          key={`${uid}-${rowUid}`}
           primaryText={
             <>
               <Typography.Text type='secondary'>name:</Typography.Text> <Typography.Text>{name}</Typography.Text>

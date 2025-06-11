@@ -1,0 +1,158 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "default": "FlowChart"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "type": "object",
+          "required": ["title", "items"],
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["createdAt", "kind", "name", "namespace", "resourceVersion", "uid", "version"],
+                "properties": {
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "health": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string"
+                      },
+                      "reason": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "parentRefs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "health": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string"
+                            },
+                            "reason": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "kind": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "namespace": {
+                          "type": "string"
+                        },
+                        "parentRefs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        "resourceVersion": {
+                          "type": "string"
+                        },
+                        "uid": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "resourceVersion": {
+                    "type": "string"
+                  },
+                  "uid": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"],
+          "additionalProperties": false
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["widgetData"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}

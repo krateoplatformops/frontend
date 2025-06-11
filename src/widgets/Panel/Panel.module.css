@@ -1,4 +1,8 @@
 .panel {
+  &.clickable {
+    cursor: pointer;
+  }
+
   .actions {
     align-items: flex-end;
     border: none;
@@ -17,9 +21,14 @@
     }
 
     .footer {
+      align-items: center;
       display: flex;
       gap: var(--spacing-sm);
-      justify-content: flex-end;
+      justify-content: space-between;
+
+      &.single {
+        justify-content: flex-end;
+      }
     }
   }
 
@@ -29,7 +38,10 @@
   }
 
   .title {
+    align-items: center;
+    display: flex;
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-lighter);
+    gap: var(--spacing-md);
   }
 }

@@ -35,11 +35,15 @@ export interface Button {
       /**
        * the label of the button
        */
-      label: string
+      label?: string
       /**
        * the icon of the button (font awesome icon name eg: 'fa-inbox')
        */
       icon?: string
+      /**
+       * the shape of the button
+       */
+      shape?: 'default' | 'circle' | 'round'
       /**
        * the size of the button
        */
@@ -53,7 +57,7 @@ export interface Button {
        */
       clickActionId: string
     }
-    resourcesRefs: {
+    resourcesRefs?: {
       id: string
       apiVersion: string
       name: string
@@ -72,6 +76,9 @@ export interface Button {
         onSuccessNavigateTo?: string
         loading?: 'global' | 'inline' | 'none'
         type?: 'rest'
+        payload?: {
+          [k: string]: unknown
+        }
       }[]
       navigate?: {
         id: string

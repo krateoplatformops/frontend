@@ -1,0 +1,103 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "default": "NavMenuItem"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "type": "object",
+          "required": ["label", "icon", "path", "resourceRefId"],
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "resourceRefId": {
+              "type": "string"
+            },
+            "order": {
+              "description": "a weight to be used to sort the items in the menu",
+              "type": "integer",
+              "default": 100
+            }
+          },
+          "additionalProperties": false
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"],
+          "additionalProperties": false
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "resourcesRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["widgetData"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}

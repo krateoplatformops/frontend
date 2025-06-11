@@ -11,7 +11,8 @@
     "generate-types": "tsx scripts/generate-types.ts",
     "apply-all": "tsx scripts/apply-k8s-yamls.ts",
     "send-schemas": "tsx scripts/send-schemas-to-smithery.ts",
-    "validate-schemas": "tsx scripts/validate-schemas.ts"
+    "validate-schemas": "tsx scripts/validate-schemas.ts",
+    "get-access-token": "tsx scripts/get-access-token.ts"
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
     "eslint-plugin-stylistic": "^0.0.0-0",
     "eslint-plugin-stylistic-js": "^0.0.0-0",
     "globals": "^15.15.0",
+    "json-schema": "^0.4.0",
     "json-schema-to-typescript": "^15.0.4",
     "stylelint": "^16.19.1",
     "stylelint-config-css-modules": "^4.4.0",
@@ -61,6 +63,7 @@
     "vite": "^6.2.3"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
@@ -68,6 +71,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@tanstack/react-query": "^5.74.11",
     "@tanstack/react-query-devtools": "^5.74.11",
+    "@types/dagre": "^0.7.52",
     "@vitejs/plugin-react": "^4.3.4",
     "ajv": "^8.17.1",
     "antd": "^5.24.0",
@@ -85,6 +89,7 @@
     "react-redux": "^9.2.0",
     "react-router": "^7.5.3",
     "react-syntax-highlighter": "^15.6.1",
+    "reactflow": "^11.11.4",
     "vite-plugin-svgr": "^4.3.0"
   }
 }

@@ -10,16 +10,16 @@ import type { TabList as WidgetType } from './TabList.type'
 
 export type TabListWidgetData = WidgetType['spec']['widgetData']
 
-const TabList = ({ resourcesRefs, widgetData }: WidgetProps<TabListWidgetData>) => {
+const TabList = ({ resourcesRefs, uid, widgetData }: WidgetProps<TabListWidgetData>) => {
   const { items } = widgetData
 
   const tabItems: TabsProps['items'] = useMemo(() => items.map(({ label, resourceRefId }, index) => ({
     children: <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />,
-    key: `tab-${index}`,
+    key: `${uid}-${index}`,
     label,
-  })), [items, resourcesRefs])
+  })), [items, resourcesRefs, uid])
 
-  return <Tabs items={tabItems} />
+  return <Tabs items={tabItems} key={uid} />
 }
 
 export default TabList

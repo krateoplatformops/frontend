@@ -1,0 +1,47 @@
+.compositionCard {
+  &.clickable {
+    cursor: pointer;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+
+    .body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+
+      .info {
+        display: flex;
+        gap: var(--spacing-sm);
+        justify-content: space-between;
+      }
+    }
+
+    .footer {
+      align-items: center;
+      display: flex;
+      gap: var(--spacing-sm);
+      justify-content: space-between;
+
+      &.single {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .header {
+    border-bottom: none;
+    padding: var(--spacing-lg);
+  }
+
+  .title {
+    align-items: center;
+    display: flex;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-lighter);
+    gap: var(--spacing-md);
+  }
+}

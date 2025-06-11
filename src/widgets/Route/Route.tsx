@@ -7,14 +7,14 @@ import type { Route as WidgetType } from './Route.type'
 
 export type RouteWidgetData = WidgetType['spec']['widgetData']
 
-export function Route({ resourcesRefs, widgetData }: WidgetProps<RouteWidgetData>) {
+export function Route({ resourcesRefs, uid, widgetData }: WidgetProps<RouteWidgetData>) {
   const { items } = widgetData
 
   return (
-    <div className={styles.route}>
-      {items.map(({ resourceRefId }) => {
-        return <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-      })}
+    <div className={styles.route} key={uid}>
+      {items.map(({ resourceRefId }, index) => (
+        <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+      ))}
     </div>
   )
 }

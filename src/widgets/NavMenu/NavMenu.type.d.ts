@@ -4,9 +4,6 @@ export interface NavMenu {
   spec: {
     widgetData: {
       items: {
-        label: string
-        icon: string
-        path: string
         resourceRefId: string
       }[]
     }

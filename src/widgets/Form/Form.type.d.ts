@@ -13,9 +13,13 @@ export interface Form {
      */
     widgetData: {
       /**
-       * the schema of the form
+       * the schema of the form as an object
        */
-      schema: {}
+      schema?: {}
+      /**
+       * the schema of the form as a string
+       */
+      stringSchema?: string
       /**
        * the id of the action to be called when the form is submitted
        */
@@ -30,7 +34,7 @@ export interface Form {
       expression?: string
     }[]
     /**
-     * the actions of the button
+     * the actions of the form
      */
     actions: {
       rest?: {
@@ -40,6 +44,13 @@ export interface Form {
         onSuccessNavigateTo?: string
         loading?: 'global' | 'inline' | 'none'
         type?: 'rest'
+        payload?: {
+          [k: string]: unknown
+        }
+        payloadToOverride?: {
+          name: string
+          value: string
+        }[]
       }[]
       navigate?: {
         id: string

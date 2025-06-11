@@ -34,6 +34,12 @@
           color: var(--gray-color);
           font-size: var(--font-size-xxs);
         }
+
+        .timestamp {
+          color: var(--gray-color);
+          font-size: var(--font-size-xxs);
+          text-align: right;
+        }
       }
     }
   }

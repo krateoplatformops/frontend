@@ -8,7 +8,7 @@ import type { LineChart as WidgetType } from './LineChart.type'
 
 export type LineChartWidgetData = WidgetType['spec']['widgetData']
 
-const LineChart = ({ widgetData }: WidgetProps<LineChartWidgetData>) => {
+const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
   const { lines, xAxisName, yAxisName } = widgetData
 
   if (!lines) {
@@ -45,7 +45,7 @@ const LineChart = ({ widgetData }: WidgetProps<LineChartWidgetData>) => {
     },
   }
 
-  return <ReactECharts option={optionLine} style={{ height: '400px' }} />
+  return <ReactECharts key={uid} option={optionLine} style={{ height: '400px' }} />
 }
 
 export default LineChart

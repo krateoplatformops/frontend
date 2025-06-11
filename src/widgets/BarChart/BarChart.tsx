@@ -8,7 +8,7 @@ import type { BarChart as WidgetType } from './BarChart.type'
 
 export type BarChartWidgetData = WidgetType['spec']['widgetData']
 
-const BarChart = ({ widgetData }: WidgetProps<BarChartWidgetData>) => {
+const BarChart = ({ uid, widgetData }: WidgetProps<BarChartWidgetData>) => {
   const { data } = widgetData
 
   if (!data) {
@@ -16,7 +16,7 @@ const BarChart = ({ widgetData }: WidgetProps<BarChartWidgetData>) => {
   }
 
   return (
-    <div className={styles.chart}>
+    <div className={styles.chart} key={uid}>
       {
         data.map(({ bars, label }, index) => (
           <div className={styles.chartBarsRow} key={`multiplebar_${index}`}>

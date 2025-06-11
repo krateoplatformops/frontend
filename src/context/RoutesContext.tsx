@@ -1,13 +1,22 @@
-import React, { createContext, useCallback, useContext, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import type { RouteObject } from 'react-router'
 
 import WidgetPage from '../components/WidgetPage'
 import Auth from '../pages/Auth/Auth'
 import Login from '../pages/Login'
+import type { ResourceRef } from '../types/Widget'
+
+export interface AppRoute {
+  path: string
+  resourceRefId: string
+  resourceRef?: ResourceRef
+}
 
 interface RoutesContextType {
+  menuRoutes: AppRoute[]
   routes: RouteObject[]
   isLoading: boolean
+  updateMenuRoutes: (newRoutes: AppRoute[]) => void
   updateRoutes: (newRoutes: RouteObject[]) => void
 }
 
@@ -21,7 +30,21 @@ const defaultRoutes: RouteObject[] = [
 
 export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [routes, setRoutes] = useState<RouteObject[]>(defaultRoutes)
+  const [menuRoutes, setMenuRoutes] = useState<AppRoute[]>([])
   const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const storedRoutes = localStorage.getItem('routes')
+    if (storedRoutes) {
+      setMenuRoutes(JSON.parse(storedRoutes) as AppRoute[])
+    }
+  }, [])
+
+  const updateMenuRoutes = useCallback((newRoutes: AppRoute[]) => {
+    setIsLoading(true)
+    setMenuRoutes(newRoutes)
+    setIsLoading(false)
+  }, [])
 
   const updateRoutes = useCallback((newRoutes: RouteObject[]) => {
     setIsLoading(true)
@@ -29,7 +52,11 @@ export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsLoading(false)
   }, [])
 
-  return <RoutesContext.Provider value={{ isLoading, routes, updateRoutes }}>{children}</RoutesContext.Provider>
+  return (
+    <RoutesContext.Provider value={{ isLoading, menuRoutes, routes, updateMenuRoutes, updateRoutes }}>
+      {children}
+    </RoutesContext.Provider>
+  )
 }
 
 export const useRoutesContext = () => {

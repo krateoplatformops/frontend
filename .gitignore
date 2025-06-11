@@ -27,3 +27,10 @@ playwright-report/
 coverage/
 
 kubeconfig.yaml
+
+scripts/login-response.json
+*kubeconfig*
+
+scratchpad.md
+
+scripts/smithery-output/*.yaml

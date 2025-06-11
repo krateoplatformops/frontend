@@ -15,20 +15,50 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["title", "items"],
+          "required": ["items"],
           "properties": {
+            "clickActionId": {
+              "description": "the id of the action to be executed when the panel is clicked",
+              "type": "string"
+            },
             "footer": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["resourceRefId"],
-                "properties": {
-                  "resourceRefId": {
-                    "type": "string"
+              "type": "object",
+              "required": ["items"],
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["resourceRefId"],
+                    "properties": {
+                      "resourceRefId": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
                   }
                 },
-                "additionalProperties": false
-              }
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "icon": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                }
+              },
+              "required": ["name"],
+              "additionalProperties": false
             },
             "items": {
               "type": "array",
@@ -101,6 +131,134 @@
           "required": ["name", "namespace"],
           "additionalProperties": false
         },
+        "actions": {
+          "description": "the actions of the panel",
+          "type": "object",
+          "properties": {
+            "rest": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "onSuccessNavigateTo": {
+                    "type": "string"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["rest"]
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "required": ["id", "resourceRefId"]
+              }
+            },
+            "navigate": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["navigate"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
+            },
+            "openDrawer": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openDrawer"]
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
+            },
+            "openModal": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openModal"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
         "widgetDataTemplate": {
           "type": "array",
           "items": {
@@ -117,7 +275,7 @@
           }
         }
       },
-      "required": ["widgetData", "resourcesRefs", "actions"],
+      "required": ["widgetData", "resourcesRefs"],
       "additionalProperties": false
     }
   },

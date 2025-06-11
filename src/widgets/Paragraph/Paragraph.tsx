@@ -7,11 +7,11 @@ import type { Paragraph as WidgetType } from './Paragraph.type'
 
 export type ParagraphWidgetData = WidgetType['spec']['widgetData']
 
-const Paragraph = ({ widgetData }: WidgetProps<ParagraphWidgetData>) => {
+const Paragraph = ({ uid, widgetData }: WidgetProps<ParagraphWidgetData>) => {
   const { text } = widgetData
 
   return (
-    <Typography.Paragraph className={styles.paragraph}>
+    <Typography.Paragraph className={styles.paragraph} key={uid}>
       {text}
     </Typography.Paragraph>
   )

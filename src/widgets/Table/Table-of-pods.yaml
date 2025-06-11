@@ -6,14 +6,14 @@ metadata:
 spec:
   widgetData:
     pageSize: 10
-    data: ""
+    data: []
     columns:
       - valueKey: name
         title: Pod Name
       - valueKey: namespace
         title: Namespace
       - valueKey: image
-        title: ImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImage
+        title: Image
 
   widgetDataTemplate:
     - forPath: data
@@ -33,4 +33,4 @@ spec:
   api:
   - name: pods
     path: "/api/v1/pods"
-    filter: "[.items[] | {name: .metadata.name, namespace: .metadata.namespace, image: .spec.containers[0].image}]"
+    filter: "[.items[] | {key: .metadata.name, name: .metadata.name, namespace: .metadata.namespace, image: .spec.containers[0].image}]"

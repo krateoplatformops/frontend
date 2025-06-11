@@ -8,7 +8,7 @@ import type { PieChart as WidgetType } from './PieChart.type'
 
 export type PieChartWidgetData = WidgetType['spec']['widgetData']
 
-const PieChart = ({ widgetData }: WidgetProps<PieChartWidgetData>) => {
+const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
   const { description, series, title } = widgetData
 
   if (!series) {
@@ -77,7 +77,7 @@ const PieChart = ({ widgetData }: WidgetProps<PieChartWidgetData>) => {
     },
   }
 
-  return <ReactECharts option={options} />
+  return <ReactECharts key={uid} option={options} />
 }
 
 export default PieChart

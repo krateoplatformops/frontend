@@ -21,17 +21,8 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["label", "icon", "path", "resourceRefId"],
+                "required": ["resourceRefId"],
                 "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "icon": {
-                    "type": "string"
-                  },
-                  "path": {
-                    "type": "string"
-                  },
                   "resourceRefId": {
                     "type": "string"
                   }
@@ -74,14 +65,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
             "properties": {
               "id": {
                 "type": "string"

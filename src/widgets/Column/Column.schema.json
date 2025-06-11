@@ -108,7 +108,7 @@
           }
         }
       },
-      "required": ["widgetData", "resourcesRefs", "actions"],
+      "required": ["widgetData", "resourcesRefs"],
       "additionalProperties": false
     }
   },

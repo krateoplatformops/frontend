@@ -1,19 +1,24 @@
 /* eslint-disable no-console */
 import { readFileSync } from 'node:fs'
+import fs from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { glob } from 'glob'
 
+import { api } from '../public/config/config.json'
+
 const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
-const SMITHERY_URL = 'http://127.0.0.1:8081/forge?apply=true'
+
+import { accessToken } from './login-response.json'
 
 async function sendSchemaToSmithery(schemaPath: string) {
   try {
     const schemaContent = readFileSync(schemaPath, 'utf-8')
     // Parse and validate JSON before sending
-    const response = await fetch(SMITHERY_URL, {
+    const response = await fetch(`${api.SMITHERY_API_BASE_URL}/forge?apply=true`, {
       body: schemaContent,
       headers: {
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
       method: 'POST',
@@ -25,7 +30,12 @@ async function sendSchemaToSmithery(schemaPath: string) {
       process.exit(1)
     }
 
-    console.log(schemaPath.split('/').pop(), response.statusText)
+    const schemaName = schemaPath.split('/').pop()
+
+    const crdName = schemaName.replace('.schema.json', '.crd.yaml')
+    await fs.writeFile(`scripts/smithery-output/${crdName}`, await response.text())
+
+    console.log(schemaName, response.statusText)
   } catch (error) {
     console.error(`❌ Failed to send schema to Smithery (${schemaPath})`, error)
   }

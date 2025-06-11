@@ -1,0 +1,10 @@
+.drawer {
+  .drawerContent {
+    width: 100%;
+    height: 100%;
+
+    & > :nth-child(2) {
+      height: 100%;
+    }
+  }
+}

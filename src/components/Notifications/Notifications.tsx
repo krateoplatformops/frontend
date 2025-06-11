@@ -1,11 +1,10 @@
 import { BellFilled } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
 import { Badge, Button, Drawer, List, Skeleton, Space, Typography } from 'antd'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-import { useConfigContext } from '../../context/ConfigContext'
-import type { SSEK8sEvent } from '../../utils/types'
+import { useGetEvents } from '../../hooks/useGetEvents'
+import { formatISODate } from '../../utils/utils'
 
 import styles from './Notifications.module.css'
 
@@ -14,25 +13,16 @@ const Notifications = () => {
 
   const [drawerVisible, setDrawerVisible] = useState(false)
 
-  const { config } = useConfigContext()
-  const eventsApiUrl = `${config!.api.EVENTS_API_BASE_URL}/events`
+  const { data: notifications, isLoading } = useGetEvents({ registerToSSE: true, topic: 'krateo' })
 
-  const { data: notifications, isLoading } = useQuery({
-    enabled: drawerVisible,
-    queryFn: async () => {
-      const res = await fetch(eventsApiUrl, { credentials: 'omit' })
-      const notifications = (await res.json()) as SSEK8sEvent[]
-      return notifications.reverse()
+  const onClickNotification = useCallback(
+    (url: string | undefined) => {
+      if (url && url?.length > 0) {
+        void navigate(url)
+      }
     },
-    queryKey: ['notifications', eventsApiUrl],
-    refetchInterval: 5000,
-  })
-
-  const onClickNotification = useCallback((url: string | undefined) => {
-    if (url && url?.length > 0) {
-      void navigate(url)
-    }
-  }, [navigate])
+    [navigate]
+  )
 
   const notificationList = useMemo(() => (
     <List
@@ -43,7 +33,7 @@ const Notifications = () => {
         description,
         involvedObject: { apiVersion, kind },
         message,
-        metadata: { name, namespace, uid },
+        metadata: { creationTimestamp, name, namespace, uid },
         reason,
         title,
         type,
@@ -52,11 +42,20 @@ const Notifications = () => {
         <List.Item className={styles.listItem} key={uid}>
           <Button className={styles.notificationElement} onClick={() => onClickNotification(url)} type='link'>
             <Space direction='vertical'>
+              <Typography.Paragraph className={styles.timestamp}>
+                {formatISODate(creationTimestamp, true)}
+              </Typography.Paragraph>
               <Badge
                 color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
-                text={<Typography.Text className={styles.title} strong>{title || reason}</Typography.Text>}
+                text={
+                  <Typography.Text className={styles.title} strong>
+                    {title || reason}
+                  </Typography.Text>
+                }
               />
-              <Typography.Text className={styles.description}>{description || message}</Typography.Text>
+              <Typography.Text className={styles.description}>
+                {description || message}
+              </Typography.Text>
               <Typography.Paragraph className={styles.details}>
                 {`${apiVersion}.${kind}/${name}@${namespace}`}
               </Typography.Paragraph>
@@ -74,23 +73,11 @@ const Notifications = () => {
         className={`${styles.badge} ${notifications && notifications?.length > 0 ? styles.hasNotifications : ''}`}
         count={notifications?.length || 0}
       >
-        <Button
-          className={styles.icon}
-          icon={<BellFilled />}
-          onClick={() => setDrawerVisible(true)}
-          shape='circle'
-          type='link'
-        />
+        <Button className={styles.icon} icon={<BellFilled />} onClick={() => setDrawerVisible(true)} shape='circle' type='link' />
       </Badge>
 
-      <Drawer
-        className={styles.drawer}
-        onClose={() => setDrawerVisible(false)}
-        open={drawerVisible}
-        title='Notifications'
-        width={550}
-      >
-        {isLoading ? <Skeleton active /> : notificationList }
+      <Drawer className={styles.drawer} onClose={() => setDrawerVisible(false)} open={drawerVisible} title='Notifications' width={550}>
+        {isLoading ? <Skeleton active /> : notificationList}
       </Drawer>
     </>
   )

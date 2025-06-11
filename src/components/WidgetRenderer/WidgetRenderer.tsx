@@ -5,16 +5,22 @@ import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { Widget } from '../../types/Widget'
+import { getAccessToken } from '../../utils/getAccessToken'
 import BarChart from '../../widgets/BarChart'
 import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
 import type { ButtonWidgetData } from '../../widgets/Button/Button'
 import Column from '../../widgets/Column'
 import type { ColumnWidgetData } from '../../widgets/Column/Column'
+import type { CompositionCardWidgetData } from '../../widgets/CompositionCard/CompositionCard'
+import CompositionCard from '../../widgets/CompositionCard/CompositionCard'
 import type { DataGridWidgetData } from '../../widgets/DataGrid/DataGrid'
 import DataGrid from '../../widgets/DataGrid/DataGrid'
 import EventList from '../../widgets/EventList'
 import type { EventListWidgetData } from '../../widgets/EventList/EventList'
+import type { FlowChartWidgetData } from '../../widgets/FlowChart/FlowChart'
+import FlowChart from '../../widgets/FlowChart/FlowChart'
+import Form, { type FormWidgetData } from '../../widgets/Form/Form'
 import LineChart from '../../widgets/LineChart'
 import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
 import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
@@ -40,16 +46,12 @@ import { useFilter } from '../FiltesProvider/FiltersProvider'
 import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string, setData: (prefix: string, componentId: string, data: unknown[]) => void, getFilteredData: (prefix: string, componentId: string) => unknown[]) {
-  const { kind, status } = widget
+  const { kind, metadata, spec, status } = widget
 
   if (!status) {
     return (
       <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`Widget ${kind} does not have a status specification`}
-          title='Error while rendering widget'
-        />
+        <Result status='error' subTitle={`Widget ${kind} does not have a status specification`} title='Error while rendering widget' />
       </div>
     )
   }
@@ -67,11 +69,17 @@ function parseData(widget: Widget, widgetEndpoint: string, setData: (prefix: str
           >
             <div className={styles.content}>
               <pre className={styles.pre}>
-                <b>Name:</b> {params.get('name')}{'\n'}
-                <b>Namespace:</b> {params.get('namespace')}{'\n'}
-                <b>Version:</b> {params.get('apiVersion')}{'\n'}
-                <b>Endpoint:</b> {widgetEndpoint}{'\n'}{'\n'}
-                <b>Widget:</b> {JSON.stringify(widget, null, 2)}{'\n'}
+                <b>Name:</b> {params.get('name')}
+                {'\n'}
+                <b>Namespace:</b> {params.get('namespace')}
+                {'\n'}
+                <b>Version:</b> {params.get('apiVersion')}
+                {'\n'}
+                <b>Endpoint:</b> {widgetEndpoint}
+                {'\n'}
+                {'\n'}
+                <b>Widget:</b> {JSON.stringify(widget, null, 2)}
+                {'\n'}
               </pre>
             </div>
           </Result>
@@ -81,40 +89,45 @@ function parseData(widget: Widget, widgetEndpoint: string, setData: (prefix: str
 
     return (
       <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`Status for ${kind} widget is in string format: ${status}`}
-          title='Error while rendering widget'
-        />
+        <Result status='error' subTitle={`Status for ${kind} widget is in string format: ${status}`} title='Error while rendering widget' />
       </div>
     )
   }
 
-  const { actions, resourcesRefs, widgetData } = status
+  // TODO: check if actions should be retrieved from status
+  const { actions } = spec
+  const { resourcesRefs, widgetData } = status
+  const uid = metadata?.uid
 
   switch (kind) {
-    case 'Button':
-      return <Button actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ButtonWidgetData }/>
-    case 'Column':
-      return <Column actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ColumnWidgetData} />
-    case 'EventList':
-      return <EventList actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as EventListWidgetData} />
-    case 'NavMenu':
-      return <NavMenu actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as NavMenuWidgetData} />
-    case 'Panel':
-      return <Panel actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as PanelWidgetData} />
-    case 'Paragraph':
-      return <Paragraph actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as ParagraphWidgetData} />
-    case 'PieChart':
-      return <PieChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as PieChartWidgetData} />
-    case 'LineChart':
-      return <LineChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as LineChartWidgetData} />
     case 'BarChart':
-      return <BarChart actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as BarChartWidgetData} />
+      return <BarChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as BarChartWidgetData} />
+    case 'Button':
+      return <Button actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
+    case 'Column':
+      return <Column actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
+    case 'CompositionCard':
+      return (
+        <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
+      )
+    case 'EventList':
+      return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
+    case 'FlowChart':
+      return <FlowChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
+    case 'LineChart':
+      return <LineChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
+    case 'NavMenu':
+      return <NavMenu actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as NavMenuWidgetData} />
+    case 'Panel':
+      return <Panel actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PanelWidgetData} />
+    case 'Paragraph':
+      return <Paragraph actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ParagraphWidgetData} />
+    case 'PieChart':
+      return <PieChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
     case 'Row':
-      return <Row actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RowWidgetData} />
+      return <Row actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
     case 'Route':
-      return <Route actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as RouteWidgetData} />
+      return <Route actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
     case 'Table':
     {
       const props: TableWidgetData = { ...widgetData as TableWidgetData }
@@ -122,14 +135,16 @@ function parseData(widget: Widget, widgetEndpoint: string, setData: (prefix: str
         setData(props.prefix, props.componentId, props.data || [])
         props.data = getFilteredData(props.prefix, props.componentId) as { [k: string]: unknown }[]
       }
-      return <Table actions={actions} resourcesRefs={resourcesRefs} widgetData={props} />
+      return <Table actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={props} />
     }
     case 'DataGrid':
-      return <DataGrid actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as DataGridWidgetData} />
+      return <DataGrid actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
     case 'TabList':
-      return <TabList actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as TabListWidgetData} />
+      return <TabList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
-      return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} widgetData={widgetData as YamlViewerWidgetData} />
+      return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
+    case 'Form':
+      return <Form actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }
@@ -140,9 +155,7 @@ const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; pr
   const { getFilteredData, isWidgetFilteredByProps, setData } = useFilter()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
-    console.warn(
-      `WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`,
-    )
+    console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
   }
 
   const { config } = useConfigContext()
@@ -156,8 +169,7 @@ const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; pr
     queryFn: async () => {
       const res = await fetch(widgetFullUrl, {
         headers: {
-          'X-Krateo-Groups': 'admins',
-          'X-Krateo-User': 'admin',
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       })
 
@@ -187,11 +199,7 @@ const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; pr
   if (!widget) {
     return (
       <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`The widget does not exist`}
-          title='Error while rendering widget'
-        />
+        <Result status='error' subTitle={`The widget does not exist`} title='Error while rendering widget' />
       </div>
     )
   }
@@ -208,6 +216,10 @@ const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; pr
         />
       </div>
     )
+  }
+
+  if (widget.kind === 'Status' && widget?.code === 401) {
+    void navigate('/login')
   }
 
   if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {

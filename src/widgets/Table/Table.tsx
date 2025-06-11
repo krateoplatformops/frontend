@@ -7,13 +7,14 @@ import type { Table as WidgetType } from './Table.type'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
-const Table = ({ widgetData }: WidgetProps<TableWidgetData>) => {
+const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize } = widgetData
 
   return (
     <AntdTable
-      columns={columns?.map(({ title, valueKey }) => ({
+      columns={columns?.map(({ title, valueKey }, index) => ({
         dataIndex: valueKey,
+        key: `${uid}-col-${index}`,
         title: (
           <div className={styles.headerEllipsis}>
             <Typography.Text ellipsis={{ tooltip: true }}>
@@ -23,6 +24,7 @@ const Table = ({ widgetData }: WidgetProps<TableWidgetData>) => {
         ),
       }))}
       dataSource={data}
+      key={uid}
       pagination={data && pageSize && data.length > pageSize ? { defaultPageSize: pageSize } : false}
       scroll={{ x: 'max-content' }}
     />
