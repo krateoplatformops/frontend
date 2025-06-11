@@ -173,6 +173,7 @@ jobs:
           ADMIN_PASSWORD: ${{ steps.genpass.outputs.password }}
         run: |
           cd $GITHUB_WORKSPACE
+          npm install tsx
           npm run get-access-token
 
       - name: Send schemas
