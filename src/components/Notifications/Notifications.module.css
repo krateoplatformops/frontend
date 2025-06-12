@@ -11,6 +11,8 @@
 .drawer {
   .list {
     .listItem {
+      width: 100%;
+
       &:hover {
         background-color: var(--background-color);
       }   
@@ -20,25 +22,41 @@
         padding: 0;
         text-align: left;
         text-wrap: wrap;
+        width: 100%;
 
-        .title {
-          text-wrap: wrap;
-        }
+        .space {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          gap: var(--spacing-sm);
+          width: 100%;
 
-        .description {
-          max-width: 100%;
-          white-space: initial;
-        }
+          .description {
+            max-width: 100%;
+            white-space: initial;
+          }
 
-        .details {
-          color: var(--gray-color);
-          font-size: var(--font-size-xxs);
-        }
+          .details {
+            color: var(--gray-color);
+            font-size: var(--font-size-xxs);
+          }
 
-        .timestamp {
-          color: var(--gray-color);
-          font-size: var(--font-size-xxs);
-          text-align: right;
+          .titleWrapper {
+            display: flex;
+            gap: var(--spacing-sm);
+            justify-content: space-between;
+            width: 100%;
+
+            .timestamp {
+              color: var(--gray-color);
+              font-size: var(--font-size-xxs);
+              text-align: right;
+            }
+
+            .title {
+              text-wrap: wrap;
+            }
+          }
         }
       }
     }

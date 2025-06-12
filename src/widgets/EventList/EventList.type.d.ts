@@ -4,16 +4,22 @@ export interface EventList {
    */
   version: string
   /**
-   * name of the k8s Custom Resource
+   * EventList renders data coming from a Kubernetes cluster or Server Sent Events associated to a specific endpoint and topic
    */
   kind: string
   spec: {
-    /**
-     * the data that will be passed to the widget on the frontend
-     */
     widgetData: {
+      /**
+       * list of events received from a k8s cluster or server sent event
+       */
       events: SSEK8sEvent[]
+      /**
+       * endpoint url for server sent events connection
+       */
       sseEndpoint?: string
+      /**
+       * subscription topic for server sent events
+       */
       sseTopic?: string
     }
     resourcesRefs?: {

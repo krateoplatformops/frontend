@@ -1,7 +1,7 @@
 export interface BarChart {
   version: string
   /**
-   * Bar charts express quantities through a bar's length, using a common baseline. Bar charts series should contain a `data` property containing an array of values
+   * BarChart express quantities through a bar's length, using a common baseline. Bar charts series should contain a `data` property containing an array of values
    */
   kind: string
   spec: {

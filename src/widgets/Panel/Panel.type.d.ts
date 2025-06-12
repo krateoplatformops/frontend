@@ -1,5 +1,8 @@
 export interface Panel {
   version: string
+  /**
+   * Panel is a container to display information
+   */
   kind: string
   spec: {
     widgetData: {
@@ -7,20 +10,53 @@ export interface Panel {
        * the id of the action to be executed when the panel is clicked
        */
       clickActionId?: string
+      /**
+       * footer section of the panel containing additional items and tags
+       */
       footer?: {
+        /**
+         * list of resource references to render in the footer
+         */
         items: {
+          /**
+           * the identifier of the k8s custom resource that should be represented, usually a widget
+           */
           resourceRefId: string
         }[]
+        /**
+         * list of string tags to be displayed in the footer
+         */
         tags?: string[]
       }
+      /**
+       * icon displayed in the panel header
+       */
       icon?: {
+        /**
+         * name of the icon to display (font awesome icon name eg: `fa-inbox`)
+         */
         name: string
+        /**
+         * color of the icon
+         */
         color?: string
       }
+      /**
+       * list of resource references to display as main content in the panel
+       */
       items: {
+        /**
+         * the identifier of the k8s custom resource that should be represented, usually a widget
+         */
         resourceRefId: string
       }[]
+      /**
+       * text to be displayed as the panel title
+       */
       title?: string
+      /**
+       * optional tooltip text shown on the top right side of the card to provide additional context
+       */
       tooltip?: string
     }
     resourcesRefs: {
