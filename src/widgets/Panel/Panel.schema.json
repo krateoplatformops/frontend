@@ -235,7 +235,7 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "resourceRefId"]
+                "required": ["id", "type", "resourceRefId"]
               }
             },
             "openModal": {

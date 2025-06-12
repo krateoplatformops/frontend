@@ -172,7 +172,7 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "contentWidgetRef"]
+                "required": ["id", "type", "contentWidgetRef"]
               }
             },
             "openModal": {

@@ -183,6 +183,63 @@
                 },
                 "required": ["id", "resourceRefId"]
               }
+            },
+            "openDrawer": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openDrawer"]
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "resourceRefId"]
+              }
+            },
+            "openModal": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["openModal"]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resourceRefId": {
+                    "type": "string"
+                  },
+                  "requireConfirmation": {
+                    "type": "boolean"
+                  },
+                  "loading": {
+                    "type": "string",
+                    "enum": ["global", "inline", "none"]
+                  }
+                },
+                "required": ["id", "type", "name", "resourceRefId"]
+              }
             }
           },
           "additionalProperties": false

@@ -84,6 +84,21 @@ export interface CompositionCard {
         loading?: 'global' | 'inline' | 'none'
         type?: 'rest'
       }[]
+      openDrawer?: {
+        id: string
+        type: 'openDrawer'
+        resourceRefId: string
+        requireConfirmation?: boolean
+        loading?: 'global' | 'inline' | 'none'
+      }[]
+      openModal?: {
+        id: string
+        type: 'openModal'
+        name: string
+        resourceRefId: string
+        requireConfirmation?: boolean
+        loading?: 'global' | 'inline' | 'none'
+      }[]
     }
     widgetDataTemplate?: {
       forPath?: string

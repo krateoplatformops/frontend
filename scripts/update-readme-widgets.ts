@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url'
 
 import glob from 'fast-glob'
 
+import type { JSONSchema, WidgetDataSchema } from '../src/utils/types'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -12,36 +14,6 @@ const ROOT_DIR = path.join(__dirname, '../')
 const WIDGETS_GLOB = 'src/widgets/**/**/*.schema.json'
 const README_FILE = path.join(ROOT_DIR, 'README.md')
 const WIDGETS_ANCHOR = '## Widgets'
-
-interface JSONSchemaProperty {
-  type?: string | string[]
-  description?: string
-  enum?: string[]
-  items?: JSONSchemaPropertyOrContainer
-}
-
-type JSONSchemaPropertyOrContainer = JSONSchemaProperty & Partial<WidgetDataSchema>
-
-interface WidgetDataSchema {
-  properties?: Record<string, JSONSchemaProperty>
-  required?: string[]
-}
-
-interface JSONSchema {
-  title?: string
-  description?: string
-  properties?: {
-    spec?: {
-      properties?: {
-        widgetData?: WidgetDataSchema
-      }
-    }
-    kind?: {
-      default?: string
-      description?: string
-    }
-  }
-}
 
 function toMarkdownTable(widgetData: WidgetDataSchema): string {
   const lines = ['| Property | Required | Description | Type |', '|----------|----------|-------------|------|']
@@ -77,7 +49,7 @@ function toMarkdownTable(widgetData: WidgetDataSchema): string {
       lines.push(`| ${fullPath} | ${requiredText} | ${description} | ${type} |`)
 
       if (prop.type === 'object') {
-        const nested = prop as unknown as WidgetDataSchema
+        const nested = prop as WidgetDataSchema
         walk(nested, fullPath)
       }
 
