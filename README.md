@@ -226,7 +226,7 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 
 ---
 
-### FormTest
+### Form
 
 name of the k8s Custom Resource
 
@@ -237,6 +237,7 @@ name of the k8s Custom Resource
 | schema | no | the schema of the form as an object | object |
 | stringSchema | no | the schema of the form as a string | string |
 | submitActionId | yes | the id of the action to be called when the form is submitted | string |
+| fieldDescription | no |  | `tooltip` \| `inline` |
 
 ---
 
