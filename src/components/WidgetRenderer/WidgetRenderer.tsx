@@ -146,7 +146,7 @@ const WidgetRenderer = ({ widgetEndpoint }: { widgetEndpoint: string }) => {
   }
 
   const { config } = useConfigContext()
-  const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
+  const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
 
   const {
     data: widget,

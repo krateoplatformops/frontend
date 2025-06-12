@@ -99,7 +99,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           // const formKey = template.template.payloadFormKey || data.status.props.payloadFormKey || 'spec'
 
           const resourceRef = getResourceRef(submitAction.resourceRefId, resourcesRefs)
-          const url = config?.api.BACKEND_API_BASE_URL + resourceRef.path
+          const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
 
           const method = resourceRef.verb
 

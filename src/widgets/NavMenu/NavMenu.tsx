@@ -1,21 +1,19 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useQueries } from '@tanstack/react-query'
 import { Menu } from 'antd'
 import type { MenuItemType } from 'antd/es/menu/interface'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
-import type { AppRoute } from '../../context/RoutesContext'
+import { useConfigContext } from '../../context/ConfigContext'
 import { useRoutesContext } from '../../context/RoutesContext'
-import type { Widget, WidgetProps } from '../../types/Widget'
+import type { WidgetProps } from '../../types/Widget'
+import { getAccessToken } from '../../utils/getAccessToken'
+import type { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
 
 import styles from './NavMenu.module.css'
 import type { NavMenu as WidgetType } from './NavMenu.type'
-import { useQueries } from '@tanstack/react-query'
-import { getAccessToken } from '../../utils/getAccessToken'
-import { useConfigContext } from '../../context/ConfigContext'
-import { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
-import { Route } from '../Route/Route.type'
 
 export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
@@ -29,11 +27,18 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
   // const { items } = widgetData
   const items = resourcesRefs
 
-  const { navMenuItems, loadedAllMenuItems } = useQueries({
-    queries: items.map((resourcesRef) => {
-      const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${resourcesRef.path}`
+  const { loadedAllMenuItems, navMenuItems } = useQueries({
+    combine: (results) => {
       return {
-        queryKey: ['navmenuitems', resourcesRef.id, widgetFullUrl],
+        isError: results.some((result) => result.isError),
+        isLoading: results.some((result) => result.isLoading),
+        loadedAllMenuItems: results.every((result) => result.status === 'success'),
+        navMenuItems: results.map((result) => result.data),
+      }
+    },
+    queries: items.map((resourcesRef) => {
+      const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${resourcesRef.path}`
+      return {
         queryFn: async () => {
           const res = await fetch(widgetFullUrl, {
             headers: {
@@ -43,16 +48,9 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
           const widget = await res.json()
           return widget
         },
+        queryKey: ['navmenuitems', resourcesRef.id, widgetFullUrl],
       }
     }),
-    combine: (results) => {
-      return {
-        navMenuItems: results.map((result) => result.data),
-        isLoading: results.some((result) => result.isLoading),
-        isError: results.some((result) => result.isError),
-        loadedAllMenuItems: results.every((result) => result.status === 'success'),
-      }
-    },
   })
 
   // const routes: AppRoute[] = useMemo(() => {

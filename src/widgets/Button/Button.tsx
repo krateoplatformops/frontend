@@ -51,7 +51,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
             }
           }
           const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-          const url = config?.api.BACKEND_API_BASE_URL + resourceRef.path
+          const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
 
           const method = resourceRef.verb
           if (method === 'POST' && !payload) {
