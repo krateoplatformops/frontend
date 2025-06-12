@@ -225,78 +225,133 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.authenticate.outputs.token }}
         run: |
-          REF_NAME="${GITHUB_REF_NAME}"
-          BRANCH="smithery-${REF_NAME}"
+          echo "=== DEBUG: Starting workflow ==="
+          echo "REF_NAME: $REF_NAME"
+          echo "BRANCH: $BRANCH"
 
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           # Clone repository
+          echo "=== DEBUG: Cloning repository ==="
           gh repo clone krateoplatformops/frontend-chart
           cd frontend-chart
 
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/krateoplatformops/frontend-chart.git
-          git fetch origin main
+          
+          echo "=== DEBUG: Fetching from origin ==="
+          git fetch origin
+          
+          echo "=== DEBUG: Current branches ==="
+          git branch -a
+          
+          echo "=== DEBUG: Checking out main ==="
           git checkout main
           git pull origin main
 
-          # Delete remote branch if it exists
-          git push origin --delete "$BRANCH" 2>/dev/null || echo "Branch didn't exist remotely"
-
           # Ensure target directory exists
           mkdir -p chart/crds
-
-          # Create a temporary directory to compare
-          TEMP_DIR=$(mktemp -d)
-          cp -r chart/crds "$TEMP_DIR/current" 2>/dev/null || mkdir -p "$TEMP_DIR/current"
-          mkdir -p "$TEMP_DIR/new"
           
-          # Copy new files to temp location
-          cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml "$TEMP_DIR/new/" 2>/dev/null || true
+          echo "=== DEBUG: Current files in chart/crds ==="
+          ls -la chart/crds/ || echo "No files in chart/crds"
 
-          # Compare directories
-          if diff -r "$TEMP_DIR/current" "$TEMP_DIR/new" >/dev/null 2>&1; then
-            echo "No changes detected between current and new YAML files"
+          echo "=== DEBUG: Source files to copy ==="
+          ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" || echo "No source files found"
+
+          # Check for differences first
+          TEMP_DIR=$(mktemp -d)
+          echo "=== DEBUG: Created temp dir: $TEMP_DIR ==="
+          
+          # Copy current state
+          if [ -d "chart/crds" ] && [ "$(ls -A chart/crds)" ]; then
+            cp -r chart/crds "$TEMP_DIR/current"
+            echo "=== DEBUG: Copied current chart/crds ==="
+            ls -la "$TEMP_DIR/current/"
+          else
+            mkdir -p "$TEMP_DIR/current"
+            echo "=== DEBUG: Created empty current directory ==="
+          fi
+          
+          # Copy new files
+          mkdir -p "$TEMP_DIR/new"
+          if ls "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml >/dev/null 2>&1; then
+            cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml "$TEMP_DIR/new/"
+            echo "=== DEBUG: Copied new files ==="
+            ls -la "$TEMP_DIR/new/"
+          else
+            echo "=== DEBUG: No .yaml files found in source directory ==="
             rm -rf "$TEMP_DIR"
             exit 0
           fi
 
-          echo "Changes detected, proceeding with PR creation..."
+          # Compare directories
+          echo "=== DEBUG: Comparing directories ==="
+          if diff -r "$TEMP_DIR/current" "$TEMP_DIR/new" >/dev/null 2>&1; then
+            echo "=== DEBUG: No changes detected ==="
+            rm -rf "$TEMP_DIR"
+            exit 0
+          else
+            echo "=== DEBUG: Changes detected! ==="
+            echo "Differences:"
+            diff -r "$TEMP_DIR/current" "$TEMP_DIR/new" || true
+          fi
+
           rm -rf "$TEMP_DIR"
 
+          echo "=== DEBUG: Creating branch $BRANCH ==="
+          
           # Check if branch exists remotely
           if git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
-            echo "Branch $BRANCH already exists remotely, checking out and updating..."
-            git checkout -b "$BRANCH" origin/"$BRANCH"
+            echo "=== DEBUG: Branch exists remotely, deleting it ==="
+            git push origin --delete "$BRANCH"
+            echo "=== DEBUG: Branch deleted ==="
           else
-            echo "Creating new branch $BRANCH..."
-            git checkout -b "$BRANCH" origin/main
+            echo "=== DEBUG: Branch does not exist remotely ==="
           fi
 
-          # Copy the new files
-          cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/
-
-          # Check if there are actually changes to commit
-          if git diff --quiet -- chart/crds; then
-            echo "No changes after copying files - branch is already up to date"
-            exit 0
-          fi
-
-          # Stage and commit
-          git add chart/crds
-          git commit -m "Update Smithery output YAMLs from ${REF_NAME}"
+          # Create fresh branch from main
+          echo "=== DEBUG: Creating new branch from main ==="
+          git checkout -b "$BRANCH"
           
-          # Push with force to handle any conflicts
-          git push --force-with-lease origin "$BRANCH"
+          echo "=== DEBUG: Current branch after creation ==="
+          git branch --show-current
 
-          # Create PR only if it doesn't exist
-          if ! gh pr view "$BRANCH" --repo krateoplatformops/frontend-chart >/dev/null 2>&1; then
-            gh pr create \
-              --title  "Update Smithery YAMLs (${REF_NAME})" \
-              --body   "Automated PR generated by workflow run $GITHUB_RUN_ID." \
-              --head   "$BRANCH" \
-              --base   main \
-              --repo   krateoplatformops/frontend-chart
-          else
-            echo "PR for branch $BRANCH already exists, updated with new commits"
-          fi
+          # Copy new files
+          echo "=== DEBUG: Copying files to chart/crds ==="
+          cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/
+          
+          echo "=== DEBUG: Files after copying ==="
+          ls -la chart/crds/
+
+          # Check what git sees as changes
+          echo "=== DEBUG: Git status ==="
+          git status
+
+          echo "=== DEBUG: Git diff ==="
+          git diff --name-status
+
+          # Commit and push
+          echo "=== DEBUG: Adding files ==="
+          git add chart/crds
+          
+          echo "=== DEBUG: Git status after add ==="
+          git status
+
+          echo "=== DEBUG: Committing ==="
+          git commit -m "Update Smithery output YAMLs from ${REF_NAME}"
+
+          echo "=== DEBUG: Pushing branch ==="
+          git push --set-upstream origin "$BRANCH"
+
+          echo "=== DEBUG: Branch pushed successfully ==="
+
+          # Create PR
+          echo "=== DEBUG: Creating PR ==="
+          gh pr create \
+            --title  "Update Smithery YAMLs (${REF_NAME})" \
+            --body   "Automated PR generated by workflow run $GITHUB_RUN_ID." \
+            --head   "$BRANCH" \
+            --base   main \
+            --repo   krateoplatformops/frontend-chart
+
+          echo "=== DEBUG: PR created successfully ==="
