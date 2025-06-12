@@ -283,25 +283,27 @@ jobs:
 
           rm -rf "$TEMP_DIR"
 
-          # Check if branch already exists remotely
+          # Check if branch already exists remotely and delete it
           if git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
-            echo "Branch '$BRANCH' already exists - reusing it"
-            git checkout -b "$BRANCH" origin/"$BRANCH"
-            # Pull latest changes to ensure we're up to date
-            git pull origin "$BRANCH"
-          else
-            echo "Creating new branch '$BRANCH' from main"
-            git checkout -b "$BRANCH"
+            echo "Branch '$BRANCH' already exists - deleting it to create fresh"
+            git push origin --delete "$BRANCH"
           fi
+          
+          echo "Creating new branch '$BRANCH' from main"
+          git checkout -b "$BRANCH"
 
           # Copy local YAML files to chart/crds
           echo "Copying local YAML files to chart/crds directory"
           cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/
 
-          # Check if there are changes to commit
+          # Check if there are changes to commit (there should be, since we detected differences earlier)
           if git diff --quiet -- chart/crds; then
-            echo "No changes detected after copying files"
-            exit 0
+            echo "ERROR: No changes detected after copying files - this shouldn't happen!"
+            echo "Debug: Current files in chart/crds:"
+            ls -la chart/crds/
+            echo "Debug: Git status:"
+            git status
+            exit 1
           fi
 
           # Stage and commit changes
