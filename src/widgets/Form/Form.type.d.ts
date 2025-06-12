@@ -24,6 +24,7 @@ export interface Form {
        * the id of the action to be called when the form is submitted
        */
       submitActionId: string
+      fieldDescription?: 'tooltip' | 'inline'
     }
     apiRef?: {
       name: string

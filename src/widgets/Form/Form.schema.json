@@ -32,6 +32,11 @@
             "submitActionId": {
               "description": "the id of the action to be called when the form is submitted",
               "type": "string"
+            },
+            "fieldDescription": {
+              "type": "string",
+              "enum": ["tooltip", "inline"],
+              "default": "inline"
             }
           },
           "additionalProperties": false

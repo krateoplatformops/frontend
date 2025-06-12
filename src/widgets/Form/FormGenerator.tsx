@@ -247,7 +247,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
       if (currentProperties) {
         return Object.keys(currentProperties).map((key) => {
           const currentName = name ? `${name}.${key}` : key
-          const label = currentProperties[key].title || key
+          const label = key
 
           if (currentProperties[key].type === 'object') {
             // create children

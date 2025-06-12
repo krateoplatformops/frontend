@@ -57,7 +57,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
     throw new Error('received no widgetData.schema or widgetData.stringSchema')
   }
 
-  const schema = (widgetData.stringSchema ? JSON.parse(widgetData.stringSchema as string) : widgetData.schema) as JSONSchema4
+  const schema = (widgetData.stringSchema ? JSON.parse(widgetData.stringSchema) : widgetData.schema) as JSONSchema4
 
   return (
     <div>
@@ -73,22 +73,19 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
       ) : null}
 
       <FormGenerator
-        descriptionTooltip={true}
+        descriptionTooltip={widgetData.fieldDescription === 'tooltip'}
         formId={formId}
         onSubmit={async (values) => {
-          console.log(values)
-          console.log({ submitAction })
-
-          // convert all dayjs date to ISOstring
-          Object.keys(values).forEach((k) => {
-            if (dayjs.isDayjs(values[k])) {
-              values[k] = (values[k] as unknown as Dayjs).toISOString()
-            }
-          })
-
           if (!submitAction) {
             throw new Error('Submit action not found')
           }
+
+          // convert all dayjs date to ISOstring
+          Object.keys(values).forEach((key) => {
+            if (dayjs.isDayjs(values[key])) {
+              values[key] = values[key].toISOString()
+            }
+          })
 
           if (submitAction.type !== 'rest') {
             throw new Error('Submit action type is not "rest"')
