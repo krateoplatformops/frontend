@@ -1,0 +1,16 @@
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-row
+  namespace: test-namespace
+spec:
+  widgetData:
+    items:
+      - resourceRefId: composition-test-card
+  resourcesRefs:
+    - id: composition-test-card
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-card
+      namespace: test-namespace
+      resource: compositioncards
+      verb: GET

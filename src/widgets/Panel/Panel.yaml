@@ -190,7 +190,8 @@ spec:
     footer:
       items:
         - resourceRefId: composition-test-button
-      tag: krateo-system
+      tags:
+        - krateo-system
     icon:
       name: fa-solid fa-cubes
       color: blue

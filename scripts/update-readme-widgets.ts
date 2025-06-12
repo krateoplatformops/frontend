@@ -64,18 +64,29 @@ function toMarkdownTable(widgetData: WidgetDataSchema): string {
   return lines.join('\n')
 }
 
-function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): string {
+async function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): Promise<string> {
   const fileName = path.basename(filePath)
-  const title
-    = schema.title
-    || schema.properties?.kind?.default
-    || fileName.replace('.schema.json', '')
+  const title = schema.title || schema.properties?.kind?.default || fileName.replace('.schema.json', '')
   const description = schema.description || schema.properties?.kind?.description || ''
   const widgetData = schema.properties?.spec?.properties?.widgetData
 
   const table = toMarkdownTable(widgetData ?? {})
 
-  return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n`
+  // 🔍 Cerca file .example.yaml nella stessa cartella del file .schema.json
+  const schemaDir = path.dirname(filePath)
+  const exampleFiles = await glob('*.example.yaml', { absolute: true, cwd: schemaDir })
+  let exampleSection = ''
+
+  if (exampleFiles.length > 0) {
+    const exampleFile = exampleFiles.at(0)
+    const exampleContent = exampleFile && await fs.readFile(exampleFile, 'utf-8')
+
+    if (exampleContent) {
+      exampleSection = `\n<details>\n<summary>Example</summary>\n\n\`\`\`yaml\n${exampleContent.trim()}\n\`\`\`\n</details>\n`
+    }
+  }
+
+  return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n${exampleSection}`
 }
 
 async function generateWidgetsSection(): Promise<string> {

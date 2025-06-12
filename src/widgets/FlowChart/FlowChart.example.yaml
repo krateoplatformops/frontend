@@ -1,0 +1,57 @@
+kind: FlowChart
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: my-flow-chart
+  namespace: test-namespace
+spec:
+  widgetData:
+    data: [
+    {
+        "createdAt": "2025-05-29T14:35:56Z",
+        "health": {
+            "message": "Kind: Application - Name: hello-test-2 - Namespace: test-namespace - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
+            "reason": "False",
+            "status": "Degraded",
+            "type": "CompositionStatus"
+        },
+        "kind": "CompositionReference",
+        "name": "hello-test-2",
+        "namespace": "fireworksapp-system",
+        "parentRefs": [
+            {}
+        ],
+        "resourceVersion": "39743",
+        "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
+        "version": "resourcetrees.krateo.io/v1"
+    },
+    {
+        "createdAt": "2025-05-29T14:35:56Z",
+        "health": {},
+        "kind": "ConfigMap",
+        "name": "hello-test-2-fireworks-app-replace-values",
+        "namespace": "fireworksapp-system",
+        "parentRefs": [
+            {
+                "createdAt": "2025-05-29T14:35:56Z",
+                "health": {
+                    "message": "Kind: Application - Name: hello-test-2 - Namespace: test-namespace - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
+                    "reason": "False",
+                    "status": "Degraded",
+                    "type": "CompositionStatus"
+                },
+                "kind": "CompositionReference",
+                "name": "hello-test-2",
+                "namespace": "fireworksapp-system",
+                "parentRefs": [
+                    {}
+                ],
+                "resourceVersion": "39743",
+                "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
+                "version": "resourcetrees.krateo.io/v1"
+            }
+        ],
+        "resourceVersion": "27039",
+        "uid": "4ac6e09f-3ccf-4d65-ad3a-d4c1e1438bbf",
+        "version": "v1"
+    }
+]

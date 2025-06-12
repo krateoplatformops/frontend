@@ -20,10 +20,11 @@ function applyYamlFile(yamlPath: string): boolean {
 
 async function main() {
   try {
-    // Find all .yaml and .yml files in the widgets directory
-    const yamlFiles = await glob('**/*.{yaml,yml}', {
+    // Find all .yaml and .yml files in the widgets directory (exclude those who start with example)
+    const yamlFiles = await glob('**/!(*.example).@(yaml|yml)', {
       absolute: true,
       cwd: WIDGETS_DIR,
+      nocase: true,
     })
 
     if (yamlFiles.length === 0) {
