@@ -10,6 +10,10 @@ RUN npm version $VERSION
 ENV NODE_OPTIONS=--max_old_space_size=4096
 RUN npm run build
 
+# remove config folder that is used for local development
+#in production a volume is mounted in the container
+RUN rm -r dist/config 
+
 # server environment
 FROM bitnami/nginx
 
