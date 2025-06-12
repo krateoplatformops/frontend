@@ -40,8 +40,11 @@ const Notifications = () => {
         title,
         type,
         url,
-      }) => (
-        <List.Item className={styles.listItem} key={uid}>
+      }, index) => (
+        <List.Item
+          className={`${styles.listItem} ${index === 0 ? styles.firstElement : ''} ${notifications?.length && index === notifications.length - 1 ? styles.lastElement : ''}`}
+          key={uid}
+        >
           <Button className={styles.notificationElement} onClick={() => onClickNotification(url)} type='link'>
             <div className={styles.space}>
               <div className={styles.titleWrapper}>
