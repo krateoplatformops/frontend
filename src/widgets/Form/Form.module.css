@@ -6,11 +6,11 @@
   justify-content: space-between;
 
   .anchorWrapper {
-    /* position: relative; */
+    position: relative;
     height: 100%;
 
     .anchorRow {
-      /* position: absolute; */
+      position: absolute;
       top: 0;
       bottom: 0;
       overflow: hidden;
@@ -38,7 +38,7 @@
         }
       }
 
-      :global(label::before) {
+      :global label::before {
         margin-top: -22px;
       }
     }
@@ -48,7 +48,7 @@
         display: none;
       }
 
-      :global(label::before) {
+      :global label::before {
         margin-top: 0px;
       }
     }
@@ -59,7 +59,7 @@
     height: 100%;
     overflow-y: scroll;
 
-    :global(.ant-anchor-link-title-active) {
+    :global .ant-anchor-link-title-active {
       font-weight: 600;
     }
 

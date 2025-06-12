@@ -60,7 +60,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
   const schema = (widgetData.stringSchema ? JSON.parse(widgetData.stringSchema) : widgetData.schema) as JSONSchema4
 
   return (
-    <div>
+    <div style={{ height: '100%', maxHeight: '100%' }}>
       {shouldRenderButtonsInsideForm ? (
         <Space>
           <Button form={formId} htmlType='reset' type='default'>
