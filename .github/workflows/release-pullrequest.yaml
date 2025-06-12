@@ -225,133 +225,118 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.authenticate.outputs.token }}
         run: |
-          echo "=== DEBUG: Starting workflow ==="
-          echo "REF_NAME: $REF_NAME"
-          echo "BRANCH: $BRANCH"
+          # Get the latest tag from the local repository
+          cd $GITHUB_WORKSPACE
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "main")
+          BRANCH="smithery-${LATEST_TAG}"
+          
+          echo "Latest local tag: $LATEST_TAG"
+          echo "Branch name: $BRANCH"
 
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Clone repository
-          echo "=== DEBUG: Cloning repository ==="
-          gh repo clone krateoplatformops/frontend-chart
-          cd frontend-chart
+          # Clone target repository
+          gh repo clone krateoplatformops/frontend-chart /tmp/frontend-chart
+          cd /tmp/frontend-chart
 
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/krateoplatformops/frontend-chart.git
-          
-          echo "=== DEBUG: Fetching from origin ==="
           git fetch origin
-          
-          echo "=== DEBUG: Current branches ==="
-          git branch -a
-          
-          echo "=== DEBUG: Checking out main ==="
           git checkout main
           git pull origin main
 
-          # Ensure target directory exists
+          # Ensure chart/crds directory exists
           mkdir -p chart/crds
+
+          # Compare local YAML files with target repo's chart/crds
+          echo "=== Checking alignment between local and remote YAML files ==="
           
-          echo "=== DEBUG: Current files in chart/crds ==="
-          ls -la chart/crds/ || echo "No files in chart/crds"
-
-          echo "=== DEBUG: Source files to copy ==="
-          ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" || echo "No source files found"
-
-          # Check for differences first
           TEMP_DIR=$(mktemp -d)
-          echo "=== DEBUG: Created temp dir: $TEMP_DIR ==="
           
-          # Copy current state
+          # Copy current remote files
           if [ -d "chart/crds" ] && [ "$(ls -A chart/crds)" ]; then
-            cp -r chart/crds "$TEMP_DIR/current"
-            echo "=== DEBUG: Copied current chart/crds ==="
-            ls -la "$TEMP_DIR/current/"
+            cp chart/crds/*.yaml "$TEMP_DIR/remote/" 2>/dev/null || mkdir -p "$TEMP_DIR/remote"
           else
-            mkdir -p "$TEMP_DIR/current"
-            echo "=== DEBUG: Created empty current directory ==="
+            mkdir -p "$TEMP_DIR/remote"
           fi
           
-          # Copy new files
-          mkdir -p "$TEMP_DIR/new"
+          # Copy local files
+          mkdir -p "$TEMP_DIR/local"
           if ls "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml >/dev/null 2>&1; then
-            cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml "$TEMP_DIR/new/"
-            echo "=== DEBUG: Copied new files ==="
-            ls -la "$TEMP_DIR/new/"
+            cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml "$TEMP_DIR/local/"
           else
-            echo "=== DEBUG: No .yaml files found in source directory ==="
-            rm -rf "$TEMP_DIR"
-            exit 0
+            echo "ERROR: No .yaml files found in local smithery-output directory"
+            exit 1
           fi
 
           # Compare directories
-          echo "=== DEBUG: Comparing directories ==="
-          if diff -r "$TEMP_DIR/current" "$TEMP_DIR/new" >/dev/null 2>&1; then
-            echo "=== DEBUG: No changes detected ==="
+          if diff -r "$TEMP_DIR/remote" "$TEMP_DIR/local" >/dev/null 2>&1; then
+            echo "✅ YAML files are aligned - no changes needed"
             rm -rf "$TEMP_DIR"
             exit 0
           else
-            echo "=== DEBUG: Changes detected! ==="
-            echo "Differences:"
-            diff -r "$TEMP_DIR/current" "$TEMP_DIR/new" || true
+            echo "❌ YAML files are NOT aligned"
+            echo "=== DIFFERENCES ==="
+            diff -r "$TEMP_DIR/remote" "$TEMP_DIR/local" || true
+            echo "==================="
           fi
 
           rm -rf "$TEMP_DIR"
 
-          echo "=== DEBUG: Creating branch $BRANCH ==="
-          
-          # Check if branch exists remotely
+          # Check if branch already exists remotely
           if git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
-            echo "=== DEBUG: Branch exists remotely, deleting it ==="
-            git push origin --delete "$BRANCH"
-            echo "=== DEBUG: Branch deleted ==="
+            echo "Branch '$BRANCH' already exists - reusing it"
+            git checkout -b "$BRANCH" origin/"$BRANCH"
+            # Pull latest changes to ensure we're up to date
+            git pull origin "$BRANCH"
           else
-            echo "=== DEBUG: Branch does not exist remotely ==="
+            echo "Creating new branch '$BRANCH' from main"
+            git checkout -b "$BRANCH"
           fi
 
-          # Create fresh branch from main
-          echo "=== DEBUG: Creating new branch from main ==="
-          git checkout -b "$BRANCH"
-          
-          echo "=== DEBUG: Current branch after creation ==="
-          git branch --show-current
-
-          # Copy new files
-          echo "=== DEBUG: Copying files to chart/crds ==="
+          # Copy local YAML files to chart/crds
+          echo "Copying local YAML files to chart/crds directory"
           cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/
-          
-          echo "=== DEBUG: Files after copying ==="
-          ls -la chart/crds/
 
-          # Check what git sees as changes
-          echo "=== DEBUG: Git status ==="
-          git status
+          # Check if there are changes to commit
+          if git diff --quiet -- chart/crds; then
+            echo "No changes detected after copying files"
+            exit 0
+          fi
 
-          echo "=== DEBUG: Git diff ==="
-          git diff --name-status
-
-          # Commit and push
-          echo "=== DEBUG: Adding files ==="
+          # Stage and commit changes
           git add chart/crds
-          
-          echo "=== DEBUG: Git status after add ==="
-          git status
+          git commit -m "Update Smithery YAML files from tag ${LATEST_TAG}
 
-          echo "=== DEBUG: Committing ==="
-          git commit -m "Update Smithery output YAMLs from ${REF_NAME}"
+          Updated YAML files in chart/crds directory to align with local smithery output.
+          Source tag: ${LATEST_TAG}
+          Workflow run: ${GITHUB_RUN_ID}"
 
-          echo "=== DEBUG: Pushing branch ==="
-          git push --set-upstream origin "$BRANCH"
+          # Push to remote branch
+          echo "Pushing changes to remote branch '$BRANCH'"
+          git push origin "$BRANCH"
 
-          echo "=== DEBUG: Branch pushed successfully ==="
+          # Create or update PR
+          if gh pr view "$BRANCH" --repo krateoplatformops/frontend-chart >/dev/null 2>&1; then
+            echo "PR already exists for branch '$BRANCH' - it has been updated with new commits"
+          else
+            echo "Creating new PR for branch '$BRANCH'"
+            gh pr create \
+              --title "Update Smithery YAML files (${LATEST_TAG})" \
+              --body "## Smithery YAML Update
 
-          # Create PR
-          echo "=== DEBUG: Creating PR ==="
-          gh pr create \
-            --title  "Update Smithery YAMLs (${REF_NAME})" \
-            --body   "Automated PR generated by workflow run $GITHUB_RUN_ID." \
-            --head   "$BRANCH" \
-            --base   main \
-            --repo   krateoplatformops/frontend-chart
+          This PR updates the YAML files in \`chart/crds/\` directory to align with the local smithery output.
 
-          echo "=== DEBUG: PR created successfully ==="
+          **Source Information:**
+          - Local repository tag: \`${LATEST_TAG}\`
+          - Workflow run: \`${GITHUB_RUN_ID}\`
+
+          **Changes:**
+          - Updated YAML files in \`chart/crds/\` directory
+          - Files were not aligned between local and remote repositories
+
+          This PR was automatically generated by the smithery workflow." \
+              --head "$BRANCH" \
+              --base main \
+              --repo krateoplatformops/frontend-chart
+          fi
