@@ -10,7 +10,7 @@
     "kind": {
       "type": "string",
       "description": "name of the k8s Custom Resource",
-      "default": "FormTest"
+      "default": "Form"
     },
     "spec": {
       "type": "object",
