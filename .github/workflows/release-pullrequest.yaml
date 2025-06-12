@@ -332,40 +332,86 @@ jobs:
           git checkout -b "$BRANCH"
 
           # Copy local YAML files to chart/crds
-          echo "Copying local YAML files to chart/crds directory"
-          echo "Before copy - files in chart/crds:"
-          ls -la chart/crds/
+          echo "=== DETAILED COPY DEBUGGING ==="
+          echo "Current working directory: $(pwd)"
+          echo "Current git branch: $(git branch --show-current)"
+          
+          echo "Source directory check:"
+          echo "  Path: $GITHUB_WORKSPACE/scripts/smithery-output/"
+          echo "  Exists: $([ -d "$GITHUB_WORKSPACE/scripts/smithery-output/" ] && echo "YES" || echo "NO")"
+          echo "  Files: $(ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" 2>/dev/null || echo "Directory not accessible")"
+          
+          echo "Destination directory check:"
+          echo "  Path: $(pwd)/chart/crds"
+          echo "  Exists: $([ -d "chart/crds" ] && echo "YES" || echo "NO")"
+          echo "  Before copy: $(ls -la chart/crds/ 2>/dev/null || echo "Directory empty or not accessible")"
+          
+          echo "Git status before copy:"
+          git status --porcelain
+          
+          echo "Checking .gitignore rules:"
+          git check-ignore chart/crds/*.yaml 2>/dev/null && echo "FILES ARE GITIGNORED!" || echo "Files not gitignored"
           
           # Remove all existing .yaml files first, then copy new ones
+          echo "Removing existing .yaml files..."
           rm -f chart/crds/*.yaml 2>/dev/null || true
-          cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/
           
-          echo "After copy - files in chart/crds:"
-          ls -la chart/crds/
+          echo "Copying files..."
+          if cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/ 2>&1; then
+            echo "Copy command succeeded"
+          else
+            echo "Copy command failed with exit code: $?"
+            exit 1
+          fi
+          
+          echo "After copy:"
+          echo "  Files in chart/crds: $(ls -la chart/crds/ 2>/dev/null || echo "Directory empty or not accessible")"
+          echo "  File count: $(ls chart/crds/*.yaml 2>/dev/null | wc -l)"
           
           echo "Git status after copy:"
           git status --porcelain
+          
+          echo "Git diff check:"
+          git diff --name-only
+          
+          echo "Untracked files:"
+          git ls-files --others --exclude-standard
 
           # Check if there are changes to commit
           if git diff --quiet -- chart/crds && git diff --cached --quiet -- chart/crds; then
-            echo "DEBUG: Checking what git sees..."
-            echo "Working directory status:"
+            echo "=== NO CHANGES DETECTED - DEBUGGING ==="
+            echo "Git thinks there are no changes. Let's investigate..."
+            
+            echo "1. Files in chart/crds directory:"
+            find chart/crds -name "*.yaml" -exec echo "  File: {}" \; -exec wc -l {} \;
+            
+            echo "2. Git status (verbose):"
             git status
-            echo "Diff in chart/crds:"
-            git diff -- chart/crds
-            echo "Files that would be added:"
+            
+            echo "3. Are files tracked?"
+            git ls-files chart/crds/
+            
+            echo "4. Are files in working directory different from index?"
+            git diff --name-status -- chart/crds/
+            
+            echo "5. Are there untracked files?"
             git ls-files --others --exclude-standard chart/crds/
             
-            echo "ERROR: No changes detected after copying files"
-            echo "This suggests the files are already identical or there's a git issue"
+            echo "6. What does git see in the directory?"
+            git ls-tree HEAD chart/crds/ 2>/dev/null || echo "No chart/crds in HEAD"
             
-            # Try to add files explicitly
-            git add chart/crds/
+            echo "7. Forcing add to see what happens:"
+            git add chart/crds/ -v
+            
+            echo "8. After forced add:"
+            git status --porcelain
+            
             if git diff --cached --quiet; then
-              echo "Even after explicit add, no staged changes found"
+              echo "CONCLUSION: Even after forced add, no changes are staged"
+              echo "This means the files are identical to what's already in git"
               exit 1
             else
-              echo "Files staged successfully after explicit add"
+              echo "CONCLUSION: Files were successfully staged after forced add"
             fi
           fi
 
