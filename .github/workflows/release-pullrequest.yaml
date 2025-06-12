@@ -306,16 +306,17 @@ jobs:
             done
             
             # Check for files that exist remotely but not locally
-            for remote_file in "$TEMP_DIR/remote"/*.yaml 2>/dev/null; do
-              [ -f "$remote_file" ] || continue
-              filename=$(basename "$remote_file")
-              local_file="$TEMP_DIR/local/$filename"
-              
-              if [ ! -f "$local_file" ]; then
-                echo "--- File: $filename (DELETED) ---"
-                echo "This file exists remotely but not locally"
-              fi
-            done
+            if ls "$TEMP_DIR/remote"/*.yaml >/dev/null 2>&1; then
+              for remote_file in "$TEMP_DIR/remote"/*.yaml; do
+                filename=$(basename "$remote_file")
+                local_file="$TEMP_DIR/local/$filename"
+                
+                if [ ! -f "$local_file" ]; then
+                  echo "--- File: $filename (DELETED) ---"
+                  echo "This file exists remotely but not locally"
+                fi
+              done
+            fi
             echo "==================="
           fi
 
