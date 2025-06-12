@@ -251,25 +251,36 @@ jobs:
           # Compare local YAML files with target repo's chart/crds
           echo "=== Checking alignment between local and remote YAML files ==="
           
-          TEMP_DIR=$(mktemp -d)
+          echo "Files in remote chart/crds:"
+          ls -la chart/crds/ || echo "No files in chart/crds"
           
-          # Copy current remote files
-          if [ -d "chart/crds" ] && [ "$(ls -A chart/crds)" ]; then
-            cp chart/crds/*.yaml "$TEMP_DIR/remote/" 2>/dev/null || mkdir -p "$TEMP_DIR/remote"
+          echo "Files in local smithery-output:"
+          ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" || echo "No files in smithery-output"
+          
+          TEMP_DIR=$(mktemp -d)
+          mkdir -p "$TEMP_DIR/remote" "$TEMP_DIR/local"
+          
+          # Copy current remote files (only .yaml files)
+          if ls chart/crds/*.yaml >/dev/null 2>&1; then
+            cp chart/crds/*.yaml "$TEMP_DIR/remote/"
+            echo "Copied remote .yaml files:"
+            ls -la "$TEMP_DIR/remote/"
           else
-            mkdir -p "$TEMP_DIR/remote"
+            echo "No .yaml files in remote chart/crds directory"
           fi
           
           # Copy local files
-          mkdir -p "$TEMP_DIR/local"
           if ls "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml >/dev/null 2>&1; then
             cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml "$TEMP_DIR/local/"
+            echo "Copied local .yaml files:"
+            ls -la "$TEMP_DIR/local/"
           else
             echo "ERROR: No .yaml files found in local smithery-output directory"
             exit 1
           fi
 
-          # Compare directories
+          # Compare directories with detailed output
+          echo "=== Comparing directories ==="
           if diff -r "$TEMP_DIR/remote" "$TEMP_DIR/local" >/dev/null 2>&1; then
             echo "✅ YAML files are aligned - no changes needed"
             rm -rf "$TEMP_DIR"
@@ -277,7 +288,34 @@ jobs:
           else
             echo "❌ YAML files are NOT aligned"
             echo "=== DIFFERENCES ==="
-            diff -r "$TEMP_DIR/remote" "$TEMP_DIR/local" || true
+            # Show file-by-file comparison
+            for local_file in "$TEMP_DIR/local"/*.yaml; do
+              filename=$(basename "$local_file")
+              remote_file="$TEMP_DIR/remote/$filename"
+              
+              if [ -f "$remote_file" ]; then
+                if ! diff "$remote_file" "$local_file" >/dev/null 2>&1; then
+                  echo "--- File: $filename differs ---"
+                  diff "$remote_file" "$local_file" || true
+                  echo "--- End of $filename ---"
+                fi
+              else
+                echo "--- File: $filename (NEW) ---"
+                echo "This file exists locally but not remotely"
+              fi
+            done
+            
+            # Check for files that exist remotely but not locally
+            for remote_file in "$TEMP_DIR/remote"/*.yaml 2>/dev/null; do
+              [ -f "$remote_file" ] || continue
+              filename=$(basename "$remote_file")
+              local_file="$TEMP_DIR/local/$filename"
+              
+              if [ ! -f "$local_file" ]; then
+                echo "--- File: $filename (DELETED) ---"
+                echo "This file exists remotely but not locally"
+              fi
+            done
             echo "==================="
           fi
 
@@ -294,16 +332,40 @@ jobs:
 
           # Copy local YAML files to chart/crds
           echo "Copying local YAML files to chart/crds directory"
+          echo "Before copy - files in chart/crds:"
+          ls -la chart/crds/
+          
+          # Remove all existing .yaml files first, then copy new ones
+          rm -f chart/crds/*.yaml 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/
+          
+          echo "After copy - files in chart/crds:"
+          ls -la chart/crds/
+          
+          echo "Git status after copy:"
+          git status --porcelain
 
-          # Check if there are changes to commit (there should be, since we detected differences earlier)
-          if git diff --quiet -- chart/crds; then
-            echo "ERROR: No changes detected after copying files - this shouldn't happen!"
-            echo "Debug: Current files in chart/crds:"
-            ls -la chart/crds/
-            echo "Debug: Git status:"
+          # Check if there are changes to commit
+          if git diff --quiet -- chart/crds && git diff --cached --quiet -- chart/crds; then
+            echo "DEBUG: Checking what git sees..."
+            echo "Working directory status:"
             git status
-            exit 1
+            echo "Diff in chart/crds:"
+            git diff -- chart/crds
+            echo "Files that would be added:"
+            git ls-files --others --exclude-standard chart/crds/
+            
+            echo "ERROR: No changes detected after copying files"
+            echo "This suggests the files are already identical or there's a git issue"
+            
+            # Try to add files explicitly
+            git add chart/crds/
+            if git diff --cached --quiet; then
+              echo "Even after explicit add, no staged changes found"
+              exit 1
+            else
+              echo "Files staged successfully after explicit add"
+            fi
           fi
 
           # Stage and commit changes
