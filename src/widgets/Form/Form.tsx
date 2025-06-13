@@ -1,10 +1,10 @@
 import { Button, Space } from 'antd'
 import useApp from 'antd/es/app/useApp'
-import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
 import _ from 'lodash'
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
@@ -18,16 +18,22 @@ import FormGenerator from './FormGenerator'
 
 export type FormWidgetData = WidgetType['spec']['widgetData']
 
-function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
+function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData, WidgetType['spec']['actions']>) {
   const drawerContext = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
+  const [submitting, setSubmitting] = useState(false)
+  const navigate = useNavigate()
 
   const { config } = useConfigContext()
-  const { notification } = useApp()
+  const { message, notification } = useApp()
 
   const submitAction = Object.values(actions)
     .flat()
     .find(({ id }) => id === widgetData.submitActionId)
+
+  if (submitAction?.type === 'rest' && submitAction.onSuccessNavigateTo && submitAction.onEventNavigateTo) {
+    console.warn('submit action has both onSuccessNavigateTo and onEventNavigateTo defined')
+  }
 
   const formId = useId() /* https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#form */
 
@@ -79,6 +85,9 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           if (!submitAction) {
             throw new Error('Submit action not found')
           }
+          if (submitAction.type !== 'rest') {
+            throw new Error('Submit action type is not "rest"')
+          }
 
           // convert all dayjs date to ISOstring
           Object.keys(values).forEach((key) => {
@@ -87,9 +96,6 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
             }
           })
 
-          if (submitAction.type !== 'rest') {
-            throw new Error('Submit action type is not "rest"')
-          }
           // const formEndpoint = template.template.path
           // const formVerb = template.template.verb
           // const formOverride = template.template.payloadToOverride
@@ -100,11 +106,10 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
 
           const method = resourceRef.verb
 
-          const formKey = 'spec'
+          const formKey = submitAction.payloadKey
           let payload = { ...resourceRef.payload, ...values }
 
           if (submitAction.payloadToOverride && submitAction.payloadToOverride.length > 0) {
-            debugger
             const updateJson = (values: object, keyPath: string, valuePath: string) => {
               const getObjectByPath = (obj: object, path: string) => path.split('.').reduce((acc, part) => acc && acc[part], obj)
 
@@ -126,7 +131,6 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           /* get all the keys that are not in the resourceRef.payload, basically the form values */
           const valuesKeys = Object.keys(payload).filter((el) => Object.keys(resourceRef.payload).indexOf(el) === -1)
           payload[formKey] = {}
-          debugger
           valuesKeys.forEach((el) => {
             payload[formKey][el] = typeof payload[el] === 'object' && !Array.isArray(payload[el]) ? { ...payload[el] } : payload[el]
             delete payload[el]
@@ -138,6 +142,59 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           // urlWithNewNameAndNamespace.searchParams.set('apiVersion', 'composition.krateo.io/v2-0-0')
           const urlWithNewNameAndNamespace = updateNameNamespace(url, payload.metadata.name, payload.metadata.namespace)
 
+          /* will ne known aftert the http request */
+          let resourceUid: string | null = null
+          if (submitAction.onEventNavigateTo) {
+            /* FIXME: This is a bit dirty, should disable the already present buttons instead */
+            drawerContext.setDrawerData({
+              extra: (
+                <Space>
+                  <Button disabled form={formId} htmlType='reset' type='default'>
+                    Reset
+                  </Button>
+                  <Button disabled form={formId} htmlType='submit' type='primary'>
+                    Save
+                  </Button>
+                </Space>
+              ),
+              title: 'Widget title',
+            })
+
+            const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
+            const eventSource = new EventSource(eventsEndpoint, {
+              withCredentials: false,
+            })
+
+            const timeoutId = setTimeout(() => {
+              eventSource.close()
+              notification.error({
+                message: `Timeout waiting for event ${submitAction.onEventNavigateTo!.eventReason}`,
+                placement: 'bottomLeft',
+              })
+            }, submitAction.onEventNavigateTo.timeout! * 1000)
+
+            eventSource.addEventListener('krateo', (event) => {
+              const data = JSON.parse(event.data as string) as { reason: string; involvedObject: { uid: string } }
+              if (data?.reason === submitAction.onEventNavigateTo?.eventReason && data.involvedObject.uid === resourceUid) {
+                eventSource.close()
+                clearTimeout(timeoutId)
+
+                const redirectUrl = interpolateRedirectUrl(payload, submitAction.onEventNavigateTo.url)
+                if (!redirectUrl) {
+                  notification.error({
+                    message: 'Impossible to redirect, the route contains an undefined value',
+                    placement: 'bottomLeft',
+                  })
+                  return
+                }
+                message.destroy()
+                closeDrawer()
+                void navigate(redirectUrl)
+              }
+            })
+          }
+
+          setSubmitting(true)
           const res = await fetch(urlWithNewNameAndNamespace, {
             body: JSON.stringify(payload),
             headers: {
@@ -148,8 +205,12 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
             method,
           })
 
+          if (submitAction.onEventNavigateTo) {
+            const loadingMessage = message.loading('Creating the new resource and redirecting...', submitAction.onEventNavigateTo.timeout)
+          }
+
           // TODO: write this type
-          const json = await res.json()
+          const json = (await res.json()) as { metadata: { uid: string } }
 
           if (!res.ok) {
             notification.error({
@@ -157,76 +218,34 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
               message: `${json.status} - ${json.reason}`,
               placement: 'bottomLeft',
             })
+            setSubmitting(false)
             return
           }
 
+          resourceUid = json.metadata.uid
+
           const actionName = method === 'DELETE' ? 'deleted' : 'created'
-          notification.success({
-            description: `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
-            message: json.message,
-            placement: 'bottomLeft',
-          })
 
-          // send all data values to specific endpoint as POST
-          // if (formEndpoint && formVerb) {
-          //   // update payload by payloadToOverride
-          //   if (formOverride?.length > 0) {
-          //     formOverride.forEach((el) => {
-          //       payload = updateJson(payload, el.name, el.value)
-          //     })
-          //   }
+          /* if we are not waiting for an event, we can show a success message */
+          if (!submitAction.onEventNavigateTo) {
+            notification.success({
+              description: `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
+              message: json.message,
+              placement: 'bottomLeft',
+            })
+          }
 
-          //   const valuesKeys = Object.keys(payload).filter((el) => Object.keys(template.template.payload).indexOf(el) === -1)
-          //   // move all values data under formKey
-          //   payload[formKey] = {}
-          //   valuesKeys.forEach((el) => {
-          //     payload[formKey][el] = typeof payload[el] === 'object' && !Array.isArray(payload[el]) ? { ...payload[el] } : payload[el]
-          //     delete payload[el]
-          //   })
-          //   const endpointUrl = updateNameNamespace(formEndpoint, payload.metadata.name, payload.metadata.namespace)
-          //   // Sets correct redirect route value to be used on success
-          //   if (formProps?.redirectRoute) {
-          //     handleRedirectRoute(payload, formProps?.redirectRoute)
-          //   }
-          //   // submit payload
-          //   switch (formVerb.toLowerCase()) {
-          //     case 'put':
-          //       if (!isPutLoading && !isPutError && !isPutSuccess) {
-          //         await putContent({
-          //           body: payload,
-          //           endpoint: endpointUrl,
-          //         })
-          //         // if into a panel -> close panel
-          //         if (onClose && !formProps?.redirectRoute) {
-          //           onClose()
-          //         }
-          //         if (!onClose) {
-          //           // clear form
-          //           simpleForm.resetFields()
-          //         }
-          //       }
-          //       break
-          //     case 'post':
-          //     default:
-          //       if (!isPostLoading && !isPostError && !isPostSuccess) {
-          //         await postContent({
-          //           body: payload,
-          //           endpoint: endpointUrl,
-          //         })
-          //         // if into a panel -> close panel
-          //         if (onClose && !formProps?.redirectRoute) {
-          //           onClose()
-          //         }
-          //         if (!onClose) {
-          //           // clear form
-          //           simpleForm.resetFields()
-          //         }
-          //       }
-          //       break
-          //   }
-          // }
+          if (submitAction.onSuccessNavigateTo) {
+            setSubmitting(false)
+            closeDrawer()
+            void navigate(submitAction.onSuccessNavigateTo)
+          }
 
-          closeDrawer()
+          /* when waiting for event, keeping the drawer open to give
+          a UX sense of something in progress while somethign is created instead of instanty navigate to a black  */
+          if (!submitAction.onEventNavigateTo) {
+            closeDrawer()
+          }
         }}
         schema={schema}
         showFormStructure={true}
@@ -262,6 +281,23 @@ const updateNameNamespace = (path, name, namespace) => {
     .filter((el) => el.indexOf('name=') === -1 && el.indexOf('namespace=') === -1)
     .join('&')
   return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
+}
+
+function interpolateRedirectUrl(payload: object, route: string): string | null {
+  let allReplacementsSuccessful = true
+
+  const interpolatedRoute = route.replace(/\$\{([^}]+)\}/g, (_, key) => {
+    const value = key.split('.').reduce((acc: any, part) => acc?.[part], payload)
+
+    if (value === undefined) {
+      allReplacementsSuccessful = false
+      return ''
+    }
+
+    return String(value)
+  })
+
+  return allReplacementsSuccessful ? interpolatedRoute : null
 }
 
 export default Form

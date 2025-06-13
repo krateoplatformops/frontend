@@ -39,10 +39,22 @@ export interface Form {
      */
     actions: {
       rest?: {
+        /**
+         * the key to nest the payload to
+         */
+        payloadKey: string
         id: string
         resourceRefId: string
         requireConfirmation?: boolean
         onSuccessNavigateTo?: string
+        onEventNavigateTo?: {
+          eventReason: string
+          url: string
+          /**
+           * the timeout in seconds to wait for the event
+           */
+          timeout?: number
+        }
         loading?: 'global' | 'inline' | 'none'
         type?: 'rest'
         payload?: {
