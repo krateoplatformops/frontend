@@ -13,7 +13,7 @@ spec:
         onEventNavigateTo:
           eventReason: "CompositionCreated"
           url: "/compositions/${metadata.name}"
-          timeout: 10
+          timeout: 50
             
         payloadKey: spec
         resourceRefId: resource-ref-1
