@@ -11,9 +11,14 @@ spec:
       - valueKey: name
         title: Pod Name
       - valueKey: namespace
+        color: orange
         title: Namespace
       - valueKey: image
         title: Image
+      - valueKey: testIcon
+        color: red
+        title: Test icon
+        kind: icon
 
   widgetDataTemplate:
     - forPath: data
@@ -33,4 +38,4 @@ spec:
   api:
   - name: pods
     path: "/api/v1/pods"
-    filter: "[.items[] | {key: .metadata.name, name: .metadata.name, namespace: .metadata.namespace, image: .spec.containers[0].image}]"
+    filter: "[.items[] | {key: .metadata.name, name: .metadata.name, namespace: .metadata.namespace, image: .spec.containers[0].image, testIcon: \"fa-rocket\"}]"

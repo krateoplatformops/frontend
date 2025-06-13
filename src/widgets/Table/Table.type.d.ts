@@ -21,13 +21,21 @@ export interface Table {
        */
       columns: {
         /**
-         * key used to extract the value from row data
+         * the color of the value (or the icon) to be represented
          */
-        valueKey?: string
+        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+        /**
+         * type of data to be represented
+         */
+        kind?: 'value' | 'icon'
         /**
          * column header label
          */
-        title?: string
+        title: string
+        /**
+         * key used to extract the value from row data
+         */
+        valueKey: string
       }[]
     }
     resourcesRefs?: {

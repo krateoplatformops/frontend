@@ -1,3 +1,5 @@
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Table as AntdTable, Typography } from 'antd'
 
 import type { WidgetProps } from '../../types/Widget'
@@ -12,9 +14,24 @@ const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
 
   return (
     <AntdTable
-      columns={columns?.map(({ title, valueKey }, index) => ({
+      columns={columns?.map(({ color, kind, title, valueKey }, index) => ({
         dataIndex: valueKey,
         key: `${uid}-col-${index}`,
+        render: (value?: unknown) => {
+          if (kind === 'icon' && typeof value === 'string') {
+            return <FontAwesomeIcon color={color} icon={value as IconProp} />
+          }
+
+          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+            return <span style={{ color }}>{String(value)}</span>
+          }
+
+          if (value === null || value === undefined) {
+            return <span>-</span>
+          }
+
+          return <span style={{ color }}>{JSON.stringify(value)}</span>
+        },
         title: (
           <div className={styles.headerEllipsis}>
             <Typography.Text ellipsis={{ tooltip: true }}>

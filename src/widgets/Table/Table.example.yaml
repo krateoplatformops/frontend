@@ -9,10 +9,16 @@ spec:
     data: 
       - name: Alice
         age: 30
+        icon: fa-rocket
       - name: Bob
         age: 45
+        icon: fa-exclamation-circle
     columns:
       - valueKey: name
         title: Name
       - valueKey: age
         title: Age
+      - valueKey: icon
+        title: Icon
+        kind: icon
+        color: red
