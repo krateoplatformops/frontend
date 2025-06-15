@@ -1,4 +1,5 @@
 import { List } from 'antd'
+import type { ReactElement } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
@@ -11,9 +12,23 @@ export type DataGridWidgetData = WidgetType['spec']['widgetData']
 const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>) => {
   const { asGrid, items, prefix } = widgetData
 
+  const getDatalist = () => {
+    let datalist: ReactElement[] = []
+    if (prefix) {
+      items.forEach(item => {
+        const elem = WidgetRenderer({ prefix, widgetEndpoint: getEndpointUrl(item.resourceRefId, resourcesRefs) })
+        if (elem) { datalist.push(elem) }
+      })
+    } else {
+      // unfiltrable list
+      datalist = items.map(item => <WidgetRenderer widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />)
+    }
+    return datalist
+  }
+
   return (
     <List
-      dataSource={items}
+      dataSource={getDatalist()}
       grid={asGrid && (items && items?.length > 1) ? {
         gutter: 16,
         lg: 3,
@@ -26,7 +41,7 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
       renderItem={(item) => {
         return (
           <List.Item>
-            <WidgetRenderer prefix={prefix} widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />
+            {item}
           </List.Item>
         )
       }}

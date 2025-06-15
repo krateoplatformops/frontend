@@ -8,36 +8,28 @@
     },
     "kind": {
       "type": "string",
-      "default": "Table"
+      "default": "DataGrid"
     },
     "spec": {
       "type": "object",
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["data", "columns"],
+          "required": ["items"],
           "properties": {
             "prefix": {
               "type": "string"
             },
-            "pageSize": {
-              "type": "integer"
+            "asGrid": {
+              "type": "boolean"
             },
-            "data": {
-              "type": "array",
-              "items": {
-                "type": "object"
-              }
-            },
-            "columns": {
+            "items": {
               "type": "array",
               "items": {
                 "type": "object",
+                "required": ["resourceRefId"],
                 "properties": {
-                  "valueKey": {
-                    "type": "string"
-                  },
-                  "title": {
+                  "resourceRefId": {
                     "type": "string"
                   }
                 },
@@ -46,6 +38,34 @@
             }
           },
           "additionalProperties": false
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"],
+          "additionalProperties": false
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
         },
         "resourcesRefs": {
           "type": "array",
@@ -81,34 +101,6 @@
                 "enum": ["GET", "POST", "DELETE"]
               }
             }
-          }
-        },
-        "apiRef": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "namespace": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false,
-          "required": ["name", "namespace"]
-        },
-        "widgetDataTemplate": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "forPath": {
-                "type": "string"
-              },
-              "expression": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
           },
           "additionalProperties": false
         }

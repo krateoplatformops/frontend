@@ -1,4 +1,4 @@
-import { Button, Form, Input, Radio, Select, Space } from 'antd'
+import { Button, DatePicker, Form, Input, Radio, Select, Space } from 'antd'
 
 import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
 import type { WidgetProps } from '../../types/Widget'
@@ -13,7 +13,7 @@ const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
 
   const [filterForm] = Form.useForm()
 
-  const renderField = (item: { label: string; name: string; description?: string; type: 'string' | 'boolean' | 'number'; options?: string[] }) => {
+  const renderField = (item: { label: string; name: string; description?: string; type: 'string' | 'boolean' | 'number' | 'date' | 'daterange'; options?: string[] }) => {
     return (
       <Form.Item
         key={item.name}
@@ -57,6 +57,10 @@ const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
                 </Select>
               )
 
+            case 'date':
+              return <DatePicker allowClear />
+            case 'daterange':
+              return <DatePicker.RangePicker allowClear />
             default:
               return null
           }

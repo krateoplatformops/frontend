@@ -4,7 +4,6 @@ export interface DataGrid {
   spec: {
     widgetData: {
       prefix?: string
-      componentId?: string
       asGrid?: boolean
       items: {
         resourceRefId: string
@@ -17,6 +16,14 @@ export interface DataGrid {
     widgetDataTemplate?: {
       forPath?: string
       expression?: string
+    }[]
+    resourcesRefs?: {
+      id: string
+      apiVersion: string
+      name: string
+      namespace: string
+      resource: string
+      verb: 'GET' | 'POST' | 'DELETE'
     }[]
   }
 }

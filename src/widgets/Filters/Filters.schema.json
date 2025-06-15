@@ -15,7 +15,7 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["fields"],
+          "required": ["fields", "prefix"],
           "properties": {
             "prefix": {
               "type": "string"
@@ -24,7 +24,7 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["label", "type"],
+                "required": ["label", "type", "name"],
                 "properties": {
                   "label": {
                     "type": "string"
@@ -37,7 +37,7 @@
                   },
                   "type": {
                     "type": "string",
-                    "enum": ["string", "boolean", "integer"]
+                    "enum": ["string", "boolean", "number", "date", "daterange"]
                   },
                   "options": {
                     "type": "array",

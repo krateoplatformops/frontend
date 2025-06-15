@@ -3,8 +3,7 @@ export interface Table {
   kind: string
   spec: {
     widgetData: {
-      prefix: string
-      componentId: string
+      prefix?: string
       pageSize?: number
       data: {
         [k: string]: unknown

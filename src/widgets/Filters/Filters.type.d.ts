@@ -8,7 +8,7 @@ export interface Filters {
         label: string
         name: string
         description?: string
-        type: 'string' | 'boolean' | 'number'
+        type: 'string' | 'boolean' | 'number' | 'date' | 'daterange'
         options?: string[]
       }[]
     }

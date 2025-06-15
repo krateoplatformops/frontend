@@ -6,7 +6,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    title: My Panel
+    title: 2025-06-12T15:20:41+00:00 # My Panel
     items:
       - resourceRefId: my-pie-chart
       - resourceRefId: my-table
@@ -60,7 +60,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    title: Panel with Column
+    title: 2025-06-11T15:20:41+00:00 # Panel with Column
     items:
       - resourceRefId: first-column
   resourcesRefs:
@@ -78,7 +78,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    title: Paragraph
+    title: 2025-06-10T15:20:41+00:00 # Paragraph
     items:
       - resourceRefId: my-paragraph
   resourcesRefs:
@@ -190,7 +190,8 @@ spec:
     footer:
       items:
         - resourceRefId: composition-test-button
-      tag: krateo-system
+      tags: 
+        - krateo-system
     icon:
       name: fa-solid fa-cubes
       color: blue
@@ -237,5 +238,22 @@ spec:
     - id: my-filters
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: my-filters
+      namespace: krateo-system
+      resource: filters
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-table-filters
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Table Filters
+    items:
+      - resourceRefId: table-of-pods
+  resourcesRefs:
+    - id: table-of-pods
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: table-of-pods
       namespace: krateo-system
       resource: filters

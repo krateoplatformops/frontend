@@ -274,12 +274,98 @@ spec:
     path: "/api/v1/namespaces"
     filter: "[.items[] | .metadata.name]"
   - name: navmenuitems
-    continueOnError: true
     dependsOn: 
       name: namespaces
       iterator: .[]
     path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/navmenuitems" }
   filter: "{navmenuitems: [.navmenuitems[] | select(.items != null) | .items[]] | sort_by(.spec.widgetData.order)}"
-    
-    
-    
+---
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: nav-menu-item-grid
+  namespace: krateo-system
+spec:
+  widgetData:
+    resourceRefId: grid-route
+    label: Grid
+    icon: fa-shapes
+    path: /grid
+    order: 30
+
+  resourcesRefs:
+    - id: grid-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: grid-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: grid-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: my-filters
+      # - resourceRefId: table-filters
+      - resourceRefId: dashboard-grid
+  resourcesRefs:
+    - id: my-filters
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-filters
+      namespace: krateo-system
+      resource: filters
+      verb: GET
+    - id: dashboard-grid
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: dashboard-grid
+      namespace: krateo-system
+      resource: datagrids
+      verb: GET
+---
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: nav-menu-item-table-filter
+  namespace: krateo-system
+spec:
+  widgetData:
+    resourceRefId: table-filter-route
+    label: Table filter
+    icon: fa-shapes
+    path: /tablefilter
+    order: 30
+  resourcesRefs:
+    - id: table-filter-route
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: table-filter-route
+      namespace: krateo-system
+      resource: routes
+      verb: GET
+---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: table-filter-route
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: table-filters
+      - resourceRefId: panel-with-column
+  resourcesRefs:
+    - id: table-filters
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: table-filters
+      namespace: krateo-system
+      resource: filters
+      verb: GET
+    - id: panel-with-column
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: panel-with-column
+      namespace: krateo-system
+      resource: panels
+      verb: GET
