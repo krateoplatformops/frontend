@@ -1,6 +1,7 @@
+// import { useQuery } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { useParams, useRevalidator, type RouteObject } from 'react-router'
+import React, { createContext, useCallback, useContext, useState } from 'react'
+import { useParams, type RouteObject } from 'react-router'
 
 import WidgetPage from '../components/WidgetPage'
 import Auth from '../pages/Auth/Auth'
@@ -22,7 +23,8 @@ interface RoutesContextType {
   routes: RouteObject[]
   isLoading: boolean
   updateMenuRoutes: (newRoutes: AppRoute[]) => void
-  updateRoutes: (newRoutes: RouteObject[]) => void
+  registerRoutes: (routes: RouteObject[]) => void
+  routerVersion: number
 }
 
 const RoutesContext = createContext<RoutesContextType | undefined>(undefined)
@@ -63,7 +65,7 @@ const substituteEndpointParams = (endpoint: string, routerParams: Record<string,
   })
 }
 
-function createRoute({ endpoint, path }: { endpoint: string; path: string }) {
+export function createRoute({ endpoint, path }: { endpoint: string; path: string }) {
   const reactRouterPath = normalizeRouteParameters(path)
 
   return {
@@ -78,11 +80,17 @@ function createRoute({ endpoint, path }: { endpoint: string; path: string }) {
 
 function useResourcesRouter() {
   const { config } = useConfigContext()
+  // const resourceUrl = getResourceEndpoint({
+  //   name: 'resources-router',
+  //   namespace: 'krateo-system',
+  //   resource: 'resourcesrouters',
+  //   version: 'v1beta1',
+  // })
   const resourceUrl = getResourceEndpoint({
+    apiVersion: 'widgets.templates.krateo.io/v1beta1',
     name: 'resources-router',
     namespace: 'krateo-system',
     resource: 'resourcesrouters',
-    version: 'v1beta1',
   })
 
   return useQuery({
@@ -106,17 +114,27 @@ function useResourcesRouter() {
   })
 }
 
+function useGetRoutes() {
+  const { data: resourcesRouter } = useResourcesRouter()
+
+  // return resourcesRouter
+}
+
 export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // use to force re-render the router when a new route is added
+  const [routerVersion, setRouterVersion] = useState(0)
   const [routes, setRoutes] = useState<RouteObject[]>(defaultRoutes)
   const [menuRoutes, setMenuRoutes] = useState<AppRoute[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const storedRoutes = localStorage.getItem('routes')
-    if (storedRoutes) {
-      setMenuRoutes(JSON.parse(storedRoutes) as AppRoute[])
-    }
-  }, [])
+  // useEffect(() => {
+  //   const storedRoutes = localStorage.getItem('routes')
+  //   if (storedRoutes) {
+  //     setMenuRoutes(JSON.parse(storedRoutes) as AppRoute[])
+  //   }
+  // }, [])
+
+  // useGetRoutes()
 
   const updateMenuRoutes = useCallback((newRoutes: AppRoute[]) => {
     setIsLoading(true)
@@ -124,46 +142,33 @@ export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsLoading(false)
   }, [])
 
-  const updateRoutes = useCallback((newRoutes: RouteObject[]) => {
-    setIsLoading(true)
-    setRoutes([...newRoutes, ...defaultRoutes])
-    setIsLoading(false)
+  const registerRoutes = useCallback((newRoutes: RouteObject[]) => {
+    setRoutes((prevRoutes) => {
+      const filteredNewRoutes = newRoutes.filter((newRoute) => !prevRoutes.find((existingRoute) => existingRoute.path === newRoute.path))
+
+      if (filteredNewRoutes.length === 0) {
+        return prevRoutes
+      }
+
+      const updatedRoutes = [...prevRoutes, ...filteredNewRoutes]
+      setRouterVersion((prev) => prev + 1)
+      return updatedRoutes
+    })
   }, [])
-
-  const registerRoute = useCallback((route: RouteObject) => {
-    setRoutes((routes) => [...routes, route])
-  }, [])
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      registerRoute(
-        createRoute({
-          endpoint: '/call?resource=collections&apiVersion=templates.krateo.io/v1alpha1&name={name}&namespace={namespace}',
-          path: '/compositions/{namespace}/{name}',
-        })
-      )
-      // revalidator.revalidate()
-    }, 2000)
-
-    return () => clearTimeout(timerId)
-  }, [registerRoute])
-
-  // const { data: resourcesRoutes } = useResourcesRouter()
-
-  // useEffect(() => {
-  //   if (resourcesRoutes) {
-  //     const newRoutes = resourcesRoutes.map((route) => {
-  //       return {
-  //         path: route.path,
-  //         resourceRefId: route.resourceRefId,
-  //       }
-  //     })
-  //     updateRoutes(newRoutes)
-  //   }
-  // }, [resourcesRoutes])
 
   return (
-    <RoutesContext.Provider value={{ isLoading, menuRoutes, routes, updateMenuRoutes, updateRoutes }}>{children}</RoutesContext.Provider>
+    <RoutesContext.Provider
+      value={{
+        isLoading,
+        menuRoutes,
+        registerRoutes,
+        routerVersion,
+        routes,
+        updateMenuRoutes,
+      }}
+    >
+      {children}
+    </RoutesContext.Provider>
   )
 }
 

@@ -6,7 +6,7 @@ metadata:
 spec:
   widgetData:
     path: /compositions/${namespace}
-    resourceRefId: compositions
+    resourceRefId: compositions-row
   resourcesRefs:
     - id: compositions-row
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -23,7 +23,7 @@ metadata:
 spec:
   widgetData:
     path: /compositions/${namespace}/${name}
-    resourceRefId: compositions
+    resourceRefId: compositions-row
   resourcesRefs:
     - id: compositions-row
       apiVersion: widgets.templates.krateo.io/v1beta1

@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router'
 
 import { useRoutesContext } from '../../context/RoutesContext'
 import Page404 from '../../pages/Page404'
+import { getResourceEndpoint } from '../../utils/utils'
 import Drawer from '../../widgets/Drawer'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
@@ -35,7 +36,7 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
 
       return searchParams.get('widgetEndpoint') || ''
     })
-  }, [location.pathname, menuRoutes, searchParams, setWidgetEndpoint])
+  }, [location.pathname, menuRoutes, searchParams, setWidgetEndpoint, defaultWidgetEndpoint])
 
   useEffect(() => {
     const userData = localStorage.getItem('K_user')
@@ -55,6 +56,15 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
         </div>
       </div>
       <Drawer />
+      <WidgetRenderer
+        invisible={true}
+        widgetEndpoint={getResourceEndpoint({
+          apiVersion: 'widgets.templates.krateo.io/v1beta1',
+          name: 'resources-router',
+          namespace: 'krateo-system',
+          resource: 'resourcesrouters',
+        })}
+      />
     </div>
   )
 }

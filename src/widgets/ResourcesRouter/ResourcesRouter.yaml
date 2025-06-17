@@ -8,11 +8,6 @@ spec:
     items: []
   resourcesRefs: []
 
-  widgetDataTemplate:
-    - forPath: items
-      expression: >
-        ${ .resourceroutes }
-
   resourcesRefsTemplate:
     - iterator: ${ .resourceroutes }
       template:
