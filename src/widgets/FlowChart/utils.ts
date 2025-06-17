@@ -1,7 +1,7 @@
 import type { Edge } from 'reactflow'
 
+import type { FlowChartWidgetData } from './FlowChart'
 import type { FlowChartElement, NodeElement } from './types'
-import { FlowChartWidgetData } from './FlowChart'
 
 export const getNormalizedLabel = (label: string | boolean): string | boolean => {
   const strLabel = String(label).toLowerCase()

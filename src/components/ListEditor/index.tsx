@@ -1,3 +1,3 @@
-import ListEditor from "./ListEditor";
+import ListEditor from './ListEditor'
 
 export default ListEditor

@@ -1,16 +1,27 @@
+import { noop } from 'lodash'
 import { createContext, useContext } from 'react'
 
-const DrawerContext = createContext<{
-  setDrawerData: (data: { title?: string; extra?: React.ReactNode }) => void
-  insideDrawer: true}>({
-      insideDrawer: true,
-      setDrawerData: () => {},
-    })
+type DrawerData = {
+  extra?: React.ReactNode
+  title?: string
+}
 
-export const DrawerProvider: React.FC<{
+type DrawerContextValue = {
+  insideDrawer: true
+  setDrawerData: (data: DrawerData) => void
+}
+
+type DrawerProviderProps = {
   children: React.ReactNode
-  setDrawerData: (data: { title?: string; extra?: React.ReactNode }) => void
-}> = ({ children, setDrawerData }) => {
+  setDrawerData: (data: DrawerData) => void
+}
+
+const DrawerContext = createContext<DrawerContextValue>({
+  insideDrawer: true,
+  setDrawerData: noop,
+})
+
+export const DrawerProvider: React.FC<DrawerProviderProps> = ({ children, setDrawerData }) => {
   return (
     <DrawerContext.Provider
       value={{
