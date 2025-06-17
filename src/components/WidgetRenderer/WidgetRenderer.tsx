@@ -1,6 +1,5 @@
-import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Result, Spin } from 'antd'
+import { Result, Skeleton } from 'antd'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
@@ -193,7 +192,7 @@ const WidgetRenderer = ({
   if (isLoading) {
     return (
       <div className={styles.loading}>
-        <Spin indicator={<LoadingOutlined />} size='large' spinning />
+        <Skeleton />
       </div>
     )
   }
