@@ -9,15 +9,13 @@ import { App as AntdApp, Spin } from 'antd'
 import { useMemo } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
-import 'reactflow/dist/style.css'
 import '../index.css'
 import '../variables.css'
+import 'reactflow/dist/style.css'
 
 import styles from './App.module.css'
-import WidgetRenderer from './components/WidgetRenderer'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
-import { getResourceEndpoint } from './utils/utils'
 
 library.add(fab, fas, far)
 
@@ -29,7 +27,7 @@ const AppInitializer: React.FC = () => {
 
   // Use useMemo to recreate router only when routes or routeVersion changes
   const router = useMemo(() => {
-    console.log('Creating router with', routes.length, 'routes, version:', routerVersion)
+    console.log('Creating router with', routes.length, 'version:', routerVersion, routes)
     return createBrowserRouter(routes)
   }, [routes, routerVersion])
 
@@ -41,7 +39,7 @@ const AppInitializer: React.FC = () => {
     )
   }
 
-  return <RouterProvider key={routerVersion} router={router} />
+  return <RouterProvider router={router} />
 }
 
 const App: React.FC = () => {
@@ -51,7 +49,6 @@ const App: React.FC = () => {
         <RoutesProvider>
           <AntdApp className={styles.app}>
             <AppInitializer />
-            {/* load the resources router */}
           </AntdApp>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />

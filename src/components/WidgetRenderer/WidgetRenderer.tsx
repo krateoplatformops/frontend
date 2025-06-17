@@ -184,6 +184,9 @@ const WidgetRenderer = ({
   })
 
   if (invisible) {
+    if (widget) {
+      return parseData(widget, widgetEndpoint)
+    }
     return null
   }
 

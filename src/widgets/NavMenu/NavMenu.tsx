@@ -6,10 +6,12 @@ import type { MenuItemType } from 'antd/es/menu/interface'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
+import WidgetRenderer from '../../components/WidgetRenderer'
 import { useConfigContext } from '../../context/ConfigContext'
 import { createRoute, useRoutesContext } from '../../context/RoutesContext'
 import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
+import { getResourceEndpoint } from '../../utils/utils'
 import type { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
 
 import styles from './NavMenu.module.css'
@@ -120,14 +122,26 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
   }
 
   return (
-    <Menu
-      className={styles.menu}
-      defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
-      items={menuItems}
-      key={uid}
-      mode='inline'
-      onClick={(item) => handleClick(item.key)}
-      selectedKeys={[location.pathname]}
-    />
+    <>
+      <Menu
+        className={styles.menu}
+        defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
+        items={menuItems}
+        key={uid}
+        mode='inline'
+        onClick={(item) => handleClick(item.key)}
+        selectedKeys={[location.pathname]}
+      />
+
+      <WidgetRenderer
+        invisible={true}
+        widgetEndpoint={getResourceEndpoint({
+          apiVersion: 'widgets.templates.krateo.io/v1beta1',
+          name: 'resources-router',
+          namespace: 'krateo-system',
+          resource: 'resourcesrouters',
+        })}
+      />
+    </>
   )
 }

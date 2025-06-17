@@ -56,15 +56,6 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
         </div>
       </div>
       <Drawer />
-      <WidgetRenderer
-        invisible={true}
-        widgetEndpoint={getResourceEndpoint({
-          apiVersion: 'widgets.templates.krateo.io/v1beta1',
-          name: 'resources-router',
-          namespace: 'krateo-system',
-          resource: 'resourcesrouters',
-        })}
-      />
     </div>
   )
 }
