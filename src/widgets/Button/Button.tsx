@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button as AntdButton } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import { useRef } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
@@ -35,6 +36,44 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
   const queryClient = useQueryClient()
   const { config } = useConfigContext()
   const { notification } = useApp()
+
+  async function waitForEvent(eventReason: string, resourceUid: string) {
+    return new Promise((resolve, reject) => {
+      const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
+      const eventSource = new EventSource(eventsEndpoint, {
+        withCredentials: false,
+      })
+
+      const timeoutId = setTimeout(() => {
+        eventSource.close()
+        notification.error({
+          message: `Timeout waiting for event ${eventReason}`,
+          placement: 'bottomLeft',
+        })
+        reject(new Error(`Timeout waiting for event ${eventReason}`))
+      }, 10_0000)
+
+      eventSource.addEventListener('krateo', (event) => {
+        const data = JSON.parse(event.data as string) as { reason: string; involvedObject: { uid: string } }
+        if (data?.reason === eventReason && data.involvedObject.uid === resourceUid) {
+          eventSource.close()
+          clearTimeout(timeoutId)
+
+          const redirectUrl = interpolateRedirectUrl(payload, submitAction.onEventNavigateTo.url)
+          if (!redirectUrl) {
+            notification.error({
+              message: 'Impossible to redirect, the route contains an undefined value',
+              placement: 'bottomLeft',
+            })
+            return
+          }
+          message.destroy()
+          closeDrawer()
+          void navigate(redirectUrl)
+        }
+      })
+    })
+  }
 
   const onClick = async () => {
     const action = Object.values(actions)
@@ -96,9 +135,15 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
             placement: 'bottomLeft',
           })
 
-          await queryClient.invalidateQueries()
-          if (action.onSuccessNavigateTo) {
-            void navigate(action.onSuccessNavigateTo)
+          try {
+            await waitForEvent('DeletedExternalResource', json.metadata.uid)
+            await queryClient.invalidateQueries()
+
+            if (action.onSuccessNavigateTo) {
+              void navigate(action.onSuccessNavigateTo)
+            }
+          } catch (error) {
+            console.error('failed waiting for event:', error)
           }
 
           break
