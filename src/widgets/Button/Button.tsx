@@ -15,6 +15,18 @@ import type { Button as WidgetType } from './Button.type'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
 
+type ApiResponse = {
+  status?: string | number
+  reason?: string
+  message?: string
+  metadata?: {
+    name?: string
+    namespace?: string
+    [key: string]: unknown
+  }
+  [key: string]: unknown
+}
+
 const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
   const { clickActionId, color, icon, label, shape, size, type } = widgetData
 
@@ -61,15 +73,12 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           const res = await fetch(url, {
             body: JSON.stringify(payload),
             headers: {
-              // 'X-Krateo-Groups': 'admins',
-              // 'X-Krateo-User': 'admin',
               Authorization: `Bearer ${getAccessToken()}`,
             },
             method,
           })
 
-          // TODO: write this type
-          const json = await res.json()
+          const json = await res.json() as ApiResponse
           if (!res.ok) {
             notification.error({
               description: json.message,
@@ -81,7 +90,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
 
           const actionName = method === 'DELETE' ? 'deleted' : 'created'
           notification.success({
-            description: `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
+            description: `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
             message: json.message,
             placement: 'bottomLeft',
           })
