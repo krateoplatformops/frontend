@@ -1,0 +1,26 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-with-drawer-filters
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Filters
+    icon: fa-rocket
+    size: small
+    type: primary
+    clickActionId: my-click-action
+  actions:
+    openDrawer:
+      - id: my-click-action
+        resourceRefId: my-filters
+        type: openDrawer
+  resourcesRefs:
+    - id: my-filters
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      resource: filters
+      name: my-filters
+      namespace: krateo-system
+      verb: GET
+
+

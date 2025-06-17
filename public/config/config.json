@@ -1,11 +1,12 @@
 {
   "api": {
     "AUTHN_API_BASE_URL": "http://localhost:8082",
-    "EVENTS_API_BASE_URL": "http://132.164.148.255:8083",
-    "EVENTS_PUSH_API_BASE_URL": "http://132.164.148.255:8083",
+    "SNOWPLOW_API_BASE_URL": "http://localhost:8080",
+    "EVENTS_API_BASE_URL": "http://4.209.35.173:8083",
+    "EVENTS_PUSH_API_BASE_URL": "http://4.209.35.173:8083",
     "INIT": "/call?resource=navmenus&apiVersion=widgets.templates.krateo.io/v1beta1&name=sidebar-nav-menu&namespace=krateo-system",
     "SMITHERY_API_BASE_URL": "http://localhost:8081",
-    "SNOWPLOW_API_BASE_URL": "http://localhost:8080"
+    "TERMINAL_SOCKET_URL": "http://localhost:8084"
   },
   "params": {
     "FRONTEND_NAMESPACE": "krateo-v2-system",

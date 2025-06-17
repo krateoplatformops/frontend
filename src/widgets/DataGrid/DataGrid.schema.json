@@ -1,0 +1,113 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "default": "DataGrid"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "type": "object",
+          "required": ["items"],
+          "properties": {
+            "prefix": {
+              "type": "string"
+            },
+            "asGrid": {
+              "type": "boolean"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["resourceRefId"],
+                "properties": {
+                  "resourceRefId": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"],
+          "additionalProperties": false
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "resourcesRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "apiVersion": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "namespace": {
+                "type": "string"
+              },
+              "resource": {
+                "type": "string"
+              },
+              "verb": {
+                "type": "string",
+                "enum": ["GET", "POST", "DELETE"]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["widgetData"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}

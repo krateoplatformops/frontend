@@ -18,6 +18,9 @@
           "type": "object",
           "required": ["data", "columns"],
           "properties": {
+            "prefix": {
+              "type": "string"
+            },
             "pageSize": {
               "description": "number of rows displayed per page",
               "type": "integer"

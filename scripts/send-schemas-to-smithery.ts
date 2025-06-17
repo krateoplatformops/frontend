@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { readFileSync } from 'node:fs'
 import fs from 'node:fs/promises'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 
 import { glob } from 'glob'
 
@@ -30,10 +30,10 @@ async function sendSchemaToSmithery(schemaPath: string) {
       process.exit(1)
     }
 
-    const schemaName = schemaPath.split('/').pop()
+    const schemaName = basename(schemaPath)
 
-    const crdName = schemaName?.replace('.schema.json', '.crd.yaml')
-    await fs.writeFile(`scripts/smithery-output/${crdName}`, await response.text())
+    const crdName = schemaName.replace('.schema.json', '.crd.yaml')
+    await fs.writeFile(join('scripts', 'smithery-output', crdName), await response.text())
 
     console.log(schemaName, response.statusText)
   } catch (error) {

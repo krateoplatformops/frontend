@@ -7,6 +7,7 @@ spec:
   widgetData:
     pageSize: 10
     data: []
+    prefix: filters-pods
     columns:
       - valueKey: name
         title: Pod Name

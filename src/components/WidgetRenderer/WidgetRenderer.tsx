@@ -13,8 +13,12 @@ import Column from '../../widgets/Column'
 import type { ColumnWidgetData } from '../../widgets/Column/Column'
 import type { CompositionCardWidgetData } from '../../widgets/CompositionCard/CompositionCard'
 import CompositionCard from '../../widgets/CompositionCard/CompositionCard'
+import type { DataGridWidgetData } from '../../widgets/DataGrid/DataGrid'
+import DataGrid from '../../widgets/DataGrid/DataGrid'
 import EventList from '../../widgets/EventList'
 import type { EventListWidgetData } from '../../widgets/EventList/EventList'
+import Filters from '../../widgets/Filters'
+import type { FiltersWidgetData } from '../../widgets/Filters/Filters'
 import type { FlowChartWidgetData } from '../../widgets/FlowChart/FlowChart'
 import FlowChart from '../../widgets/FlowChart/FlowChart'
 import Form, { type FormWidgetData } from '../../widgets/Form/Form'
@@ -42,6 +46,7 @@ import TabList from '../../widgets/TabList'
 import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
+import { useFilter } from '../FiltesProvider/FiltersProvider'
 
 import styles from './WidgetRenderer.module.css'
 
@@ -129,7 +134,13 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Route':
       return <Route actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
     case 'Table':
+    {
       return <Table actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
+    }
+    case 'DataGrid':
+      return <DataGrid actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
+    case 'Filters':
+      return <Filters actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FiltersWidgetData} />
     case 'TabList':
       return <TabList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
@@ -149,13 +160,16 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 
 const WidgetRenderer = ({
   invisible = false,
+  prefix,
   widgetEndpoint,
 }: {
+  prefix?: string
   widgetEndpoint: string
   /* for widget tha don't need to be displayed, usually becuase they just fetch other widgets */
   invisible?: boolean
 }) => {
   const navigate = useNavigate()
+  const { isWidgetFilteredByProps } = useFilter()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
@@ -181,6 +195,15 @@ const WidgetRenderer = ({
     },
     queryKey: ['widgets', widgetFullUrl],
   })
+
+  // check if widget is filtered out by filters
+  if (typeof widget?.status === 'object' && widget?.status?.widgetData) {
+    if (prefix) {
+      if (isWidgetFilteredByProps(widget.status.widgetData, prefix)) {
+        return null
+      }
+    }
+  }
 
   if (invisible) {
     if (widget) {

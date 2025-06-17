@@ -178,3 +178,157 @@ spec:
       namespace: krateo-system
       resource: yamlviewers
       verb: GET
+
+---
+kind: CompositionCard
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-filtrable-card-1
+  namespace: krateo-system
+spec:
+  widgetData:
+    date: 2025-06-11T15:20:41+00:00
+    status: pending
+    tooltip: test
+    navigateToDetailActionId: composition-click-action
+    deleteCompositionActionId: composition-delete-action
+    tags: 
+      - krateo-system
+      - test-system
+    icon:
+      name: fa-solid fa-cubes
+      color: blue
+    title: comp 1
+    description: This is a test composition card.
+  actions:
+    navigate:
+      - id: composition-click-action
+        name: composition-click-action
+        resourceRefId: composition-test-tab-list
+        type: navigate
+    rest:
+      - id: composition-delete-action
+        resourceRefId: composition-test-panel
+        type: rest
+  resourcesRefs:
+    - id: composition-test-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: composition-test-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-tab-list
+      namespace: krateo-system
+      resource: tablists
+      verb: GET
+
+---
+kind: CompositionCard
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-filtrable-card-2
+  namespace: krateo-system
+spec:
+  widgetData:
+    date: 2025-06-12T15:20:41+00:00
+    status: active
+    tooltip: test
+    navigateToDetailActionId: composition-click-action
+    deleteCompositionActionId: composition-delete-action
+    tags: 
+      - krateo-system
+      - test-system
+    icon:
+      name: fa-solid fa-cubes
+      color: green
+    title: comp 2
+    description: This is a test composition card.
+  actions:
+    navigate:
+      - id: composition-click-action
+        name: composition-click-action
+        resourceRefId: composition-test-tab-list
+        type: navigate
+    rest:
+      - id: composition-delete-action
+        resourceRefId: composition-test-panel
+        type: rest
+  resourcesRefs:
+    - id: composition-test-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: composition-test-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-tab-list
+      namespace: krateo-system
+      resource: tablists
+      verb: GET
+
+
+---
+kind: CompositionCard
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-filtrable-card-3
+  namespace: krateo-system
+spec:
+  widgetData:
+    date: 2025-06-13T15:20:41+00:00
+    status: disabled
+    tooltip: test
+    navigateToDetailActionId: composition-click-action
+    deleteCompositionActionId: composition-delete-action
+    tags: 
+      - krateo-system
+      - test-system
+    icon:
+      name: fa-solid fa-cubes
+      color: red
+    title: comp 3
+    description: This is a test composition card.
+  actions:
+    navigate:
+      - id: composition-click-action
+        name: composition-click-action
+        resourceRefId: composition-test-tab-list
+        type: navigate
+    rest:
+      - id: composition-delete-action
+        resourceRefId: composition-test-panel
+        type: rest
+  resourcesRefs:
+    - id: composition-test-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: composition-test-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-tab-list
+      namespace: krateo-system
+      resource: tablists
+      verb: GET

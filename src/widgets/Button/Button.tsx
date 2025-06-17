@@ -130,17 +130,19 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
   }
 
   return (
-    <AntdButton
-      color={color || 'default'}
-      icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
-      key={uid}
-      onClick={(event) => handleClick(event)}
-      shape={shape || 'default'}
-      size={size || 'middle'}
-      type={type || 'primary'}
-    >
-      {label}
-    </AntdButton>
+    <div>
+      <AntdButton
+        color={color || 'default'}
+        icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
+        key={uid}
+        onClick={(event) => handleClick(event)}
+        shape={shape || 'default'}
+        size={size || 'middle'}
+        type={type || 'primary'}
+      >
+        {label}
+      </AntdButton>
+    </div>
   )
 }
 

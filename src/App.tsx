@@ -14,6 +14,7 @@ import '../variables.css'
 import 'reactflow/dist/style.css'
 
 import styles from './App.module.css'
+import FiltersProvider from './components/FiltesProvider/FiltersProvider'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
 
@@ -47,7 +48,9 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <RoutesProvider>
           <AntdApp className={styles.app}>
-            <AppInitializer />
+            <FiltersProvider>
+              <AppInitializer />
+            </FiltersProvider>
           </AntdApp>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
