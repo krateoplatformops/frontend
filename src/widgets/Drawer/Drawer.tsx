@@ -2,6 +2,7 @@ import { Drawer as AntdDrawer } from 'antd'
 import { useEffect, useState } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
+
 import styles from './Drawer.module.css'
 import { DrawerProvider } from './DrawerContext'
 
@@ -43,17 +44,17 @@ const Drawer = () => {
   return (
     <AntdDrawer
       extra={drawerData.extra}
-      title={drawerData.title}
-      rootClassName={styles.drawer}
-      size='large'
-      onClose={() => setIsOpen(false)}
-      open={isOpen}
       key={
-        /* This make sure that the content of the drawer is destroyed and recreated when 
+        /* This make sure that the content of the drawer is destroyed and recreated when
         the drawer is closed and reopened, to prevent the form from showing stale data
         */
         isOpen ? 'open' : 'closed'
       }
+      onClose={() => setIsOpen(false)}
+      open={isOpen}
+      rootClassName={styles.drawer}
+      size='large'
+      title={drawerData.title}
     >
       <DrawerProvider setDrawerData={setDrawerData}>
         <WidgetRenderer key={'drawer'} widgetEndpoint={widgetEndpoint} />

@@ -1,6 +1,5 @@
-import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Result, Spin } from 'antd'
+import { Result, Skeleton } from 'antd'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
@@ -33,6 +32,10 @@ import Paragraph from '../../widgets/Paragraph'
 import type { ParagraphWidgetData } from '../../widgets/Paragraph/Paragraph'
 import type { PieChartWidgetData } from '../../widgets/PieChart/PieChart'
 import PieChart from '../../widgets/PieChart/PieChart'
+import type { ResourceRouteWidgetData } from '../../widgets/ResourceRoute/ResourceRoute'
+import { ResourceRoute } from '../../widgets/ResourceRoute/ResourceRoute'
+import type { ResourcesRouterWidgetData } from '../../widgets/ResourcesRouter/ResourcesRouter'
+import { ResourcesRouter } from '../../widgets/ResourcesRouter/ResourcesRouter'
 import type { RouteWidgetData } from '../../widgets/Route/Route'
 import { Route } from '../../widgets/Route/Route'
 import Row from '../../widgets/Row'
@@ -144,12 +147,27 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
     case 'Form':
       return <Form actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
+    case 'ResourcesRouter':
+      return (
+        <ResourcesRouter actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ResourcesRouterWidgetData} />
+      )
+    case 'ResourceRoute':
+      return <ResourceRoute actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ResourceRouteWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }
 }
 
-const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; prefix?: string }) => {
+const WidgetRenderer = ({
+  invisible = false,
+  prefix,
+  widgetEndpoint,
+}: {
+  prefix?: string
+  widgetEndpoint: string
+  /* for widget tha don't need to be displayed, usually becuase they just fetch other widgets */
+  invisible?: boolean
+}) => {
   const navigate = useNavigate()
   const { isWidgetFilteredByProps } = useFilter()
 
@@ -158,7 +176,7 @@ const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; pr
   }
 
   const { config } = useConfigContext()
-  const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${widgetEndpoint}`
+  const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
 
   const {
     data: widget,
@@ -187,10 +205,17 @@ const WidgetRenderer = ({ prefix, widgetEndpoint }: { widgetEndpoint: string; pr
     }
   }
 
+  if (invisible) {
+    if (widget) {
+      return parseData(widget, widgetEndpoint)
+    }
+    return null
+  }
+
   if (isLoading) {
     return (
       <div className={styles.loading}>
-        <Spin indicator={<LoadingOutlined />} size='large' spinning />
+        <Skeleton />
       </div>
     )
   }

@@ -2,11 +2,10 @@ import { createContext, useContext } from 'react'
 
 const DrawerContext = createContext<{
   setDrawerData: (data: { title?: string; extra?: React.ReactNode }) => void
-  insideDrawer: true
-}>({
-  setDrawerData: () => {},
-  insideDrawer: true,
-})
+  insideDrawer: true}>({
+      insideDrawer: true,
+      setDrawerData: () => {},
+    })
 
 export const DrawerProvider: React.FC<{
   children: React.ReactNode
@@ -15,8 +14,8 @@ export const DrawerProvider: React.FC<{
   return (
     <DrawerContext.Provider
       value={{
-        setDrawerData,
         insideDrawer: true,
+        setDrawerData,
       }}
     >
       {children}

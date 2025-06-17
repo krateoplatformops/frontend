@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "PieChart"
+      "default": "PieChart",
+      "description": "PieChart is a visual component used to display categorical data as segments of a pie chart",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -18,20 +19,25 @@
           "required": ["title"],
           "properties": {
             "title": {
-              "type": "string"
+              "type": "string",
+              "description": "title displayed above the chart"
             },
             "description": {
-              "type": "string"
+              "type": "string",
+              "description": "supplementary text displayed below or near the title"
             },
             "series": {
               "type": "object",
+              "description": "data to be visualized in the pie chart",
               "required": ["total", "data"],
               "properties": {
                 "total": {
-                  "type": "integer"
+                  "type": "integer",
+                  "description": "sum of all data values, used to calculate segment sizes"
                 },
                 "data": {
                   "type": "array",
+                  "description": "individual segments of the pie chart",
                   "items": {
                     "type": "object",
                     "required": ["color", "value", "label"],
@@ -45,13 +51,16 @@
                           "gray",
                           "red",
                           "green"
-                        ]
+                        ],
+                        "description": "color used to represent the segment"
                       },
                       "value": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "numeric value for the segment"
                       },
                       "label": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "label for the segment"
                       }
                     },
                     "additionalProperties": false

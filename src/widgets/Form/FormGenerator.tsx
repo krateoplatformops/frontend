@@ -247,7 +247,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
       if (currentProperties) {
         return Object.keys(currentProperties).map((key) => {
           const currentName = name ? `${name}.${key}` : key
-          const label = currentProperties[key].title || key
+          const label = key
 
           if (currentProperties[key].type === 'object') {
             // create children
@@ -339,21 +339,6 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
     return allReplacementsSuccessful ? interpolatedRoute : null
   }
 
-  const handleRedirectRoute = (payload: any, route: string) => {
-    const interpolatedRoute = interpolateRoute(payload, route)
-
-    if (!interpolatedRoute) {
-      // catchError({
-      // 	code: 400,
-      // 	data: {
-      // 		message: "Impossible to redirect, the route contains an undefined value"
-      // 	}
-      // });
-    } else {
-      setSubmitRedirectRoute(interpolatedRoute)
-    }
-  }
-
   const onFinishFailed = useCallback(({ errorFields }: any) => {
     const errorField = errorFields[0].name.join('.')
     const errorFieldElement = document.querySelector(`#${CSS.escape(errorField)}`)
@@ -373,44 +358,6 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
       anchorLink.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }, [])
-
-  // Handles redirect
-  // useEffect(() => {
-  // 	if (shouldRedirect) {
-  // 		if (disableButtons) disableButtons(true)
-  // 		message.destroy();
-
-  // 		const timeout = data.status.props?.redirectTimeout || 5;
-  // 		const hideMessage = message.loading('Creating the new resource and redirecting...', timeout);
-
-  // 		const checkCondition = () => {
-  // 			if (eventReceivedRef.current) {
-  // 				if (onClose) onClose();
-  // 				if (disableButtons) disableButtons(false)
-
-  // 				message.destroy();
-
-  // 				navigate(submitRedirectRoute)
-  // 			} else {
-  // 				requestAnimationFrame(checkCondition);
-  // 			}
-  // 		};
-
-  // 		requestAnimationFrame(checkCondition);
-
-  // 		hideMessage.then(() => {
-  // 			if (onClose) onClose();
-  // 			if (disableButtons) disableButtons(false)
-
-  // 			if (!eventReceivedRef.current) {
-  // 				message.info('The resource is not ready for redirect, access it manually.');
-  // 			}
-
-  // 			setShouldRedirect(false);
-  // 			setEventReceived(false);
-  // 		});
-  // 	}
-  // }, [message, shouldRedirect, submitRedirectRoute, onClose, navigate]);
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault()

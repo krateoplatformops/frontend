@@ -4,18 +4,18 @@ export interface Column {
    */
   version: string
   /**
-   * name of the k8s Custom Resource
+   * Column is a layout component that arranges its children in a vertical stack, aligning them one above the other with spacing between them
    */
   kind: string
   spec: {
-    /**
-     * the data that will be passed to the widget on the frontend
-     */
     widgetData: {
       /**
        * the items of the column
        */
       items: {
+        /**
+         * the identifier of the k8s Custom Resource that should be represented, usually a widget
+         */
         resourceRefId: string
       }[]
       /**

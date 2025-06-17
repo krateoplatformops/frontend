@@ -1,87 +1,92 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useQueries } from '@tanstack/react-query'
 import { Menu } from 'antd'
 import type { MenuItemType } from 'antd/es/menu/interface'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
+import { useConfigContext } from '../../context/ConfigContext'
 import type { AppRoute } from '../../context/RoutesContext'
 import { useRoutesContext } from '../../context/RoutesContext'
-import type { Widget, WidgetProps } from '../../types/Widget'
+import type { WidgetProps } from '../../types/Widget'
+import { getAccessToken } from '../../utils/getAccessToken'
+import type { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
 
 import styles from './NavMenu.module.css'
 import type { NavMenu as WidgetType } from './NavMenu.type'
-import { useQueries } from '@tanstack/react-query'
-import { getAccessToken } from '../../utils/getAccessToken'
-import { useConfigContext } from '../../context/ConfigContext'
-import { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
-import { Route } from '../Route/Route.type'
 
 export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
-export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuWidgetData>) {
+interface ResolvedResourceRef {
+  id: string
+  path: string
+  verb: 'GET' | 'POST' | 'DELETE'
+}
+
+type NavMenuItemResponse = Omit<NavMenuItem, 'status'> & {
+  status: {
+    widgetData: NavMenuItem['spec']['widgetData']
+    resourcesRefs?: ResolvedResourceRef[]
+  }
+}
+
+export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) {
   const location = useLocation()
   const navigate = useNavigate()
   const { menuRoutes, updateMenuRoutes } = useRoutesContext()
   const { config } = useConfigContext()
 
   /* HACK: waiting for the widgetData to return items from the backend via a restaction that sets items from resourcesRefsTemplate */
-  // const { items } = widgetData
   const items = resourcesRefs
 
-  const { navMenuItems, loadedAllMenuItems } = useQueries({
-    queries: items.map((resourcesRef) => {
-      const widgetFullUrl = `${config!.api.BACKEND_API_BASE_URL}${resourcesRef.path}`
+  const { loadedAllMenuItems, navMenuItems } = useQueries({
+    combine: (results) => {
       return {
-        queryKey: ['navmenuitems', resourcesRef.id, widgetFullUrl],
-        queryFn: async () => {
+        isError: results.some(({ isError }) => isError),
+        isLoading: results.some(({ isLoading }) => isLoading),
+        loadedAllMenuItems: results.every(({ status }) => status === 'success'),
+        navMenuItems: results.map(({ data }) => data),
+      }
+    },
+    queries: items.map(({ id, path }) => {
+      const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${path}`
+      return {
+        queryFn: async (): Promise<NavMenuItemResponse> => {
           const res = await fetch(widgetFullUrl, {
             headers: {
               Authorization: `Bearer ${getAccessToken()}`,
             },
           })
-          const widget = await res.json()
+          const widget = await res.json() as NavMenuItemResponse
           return widget
         },
+        queryKey: ['navmenuitems', id, widgetFullUrl],
       }
     }),
-    combine: (results) => {
-      return {
-        navMenuItems: results.map((result) => result.data),
-        isLoading: results.some((result) => result.isLoading),
-        isError: results.some((result) => result.isError),
-        loadedAllMenuItems: results.every((result) => result.status === 'success'),
-      }
-    },
   })
-
-  // const routes: AppRoute[] = useMemo(() => {
-  //   if (!loadedAllRoutes) {
-  //     return []
-  //   }
-  //   return allRoutes.map(({ path, resourceRefId }) => ({
-  //     path,
-  //     resourceRef: resourcesRefs.find(({ id }) => id === resourceRefId),
-  //     resourceRefId,
-  //   }))
-  // }, [items, resourcesRefs, allRoutes, loadedAllRoutes])
 
   useEffect(() => {
     if (loadedAllMenuItems && navMenuItems.length > 0) {
-      const routesToSave = navMenuItems.map((menuItem) => {
-        const { resourceRefId } = menuItem.status.widgetData as unknown as NavMenuItem['spec']['widgetData']
-        const routeResourceRef = menuItem.status.resourcesRefs.find(({ id }) => id === resourceRefId)!
-        return {
-          path: menuItem.status.widgetData.path,
-          resourceRef: routeResourceRef,
-          resourceRefId,
-        }
-      })
+      const validMenuItems = navMenuItems.filter((item): item is NavMenuItemResponse => !!item)
+
+      const routesToSave = validMenuItems
+        .map(({ status: { resourcesRefs, widgetData: { path, resourceRefId } } }) => {
+          const routeResourceRef = resourcesRefs?.find(({ id }) => id === resourceRefId)
+          if (!routeResourceRef) { return null }
+
+          return {
+            path,
+            resourceRef: { ...routeResourceRef, payload: {} },
+            resourceRefId,
+          }
+        })
+        .filter(Boolean) as AppRoute[]
 
       localStorage.setItem('routes', JSON.stringify(routesToSave))
       updateMenuRoutes(routesToSave)
     }
-  }, [loadedAllMenuItems, navMenuItems])
+  }, [loadedAllMenuItems, navMenuItems, updateMenuRoutes])
 
   useEffect(() => {
     if (location.pathname === '/' && menuRoutes.length > 0) {
@@ -93,15 +98,17 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
     if (!loadedAllMenuItems) {
       return []
     }
-    return navMenuItems.map((item) => {
-      const { icon, label, path } = item.status.widgetData as unknown as NavMenuItem['spec']['widgetData']
+
+    const validMenuItems = navMenuItems.filter((item): item is NavMenuItemResponse => !!item)
+
+    return validMenuItems.map(({ status: { widgetData: { icon, label, path } } }) => {
       return {
         icon: <FontAwesomeIcon icon={icon as IconProp} />,
         key: path,
         label,
       }
     })
-  }, [items, navMenuItems, loadedAllMenuItems])
+  }, [navMenuItems, loadedAllMenuItems])
 
   const handleClick = (key: string) => {
     void navigate(key)

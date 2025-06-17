@@ -6,7 +6,7 @@ metadata:
 spec:
   widgetData:
     data:
-      - label: utilizzo CPU
+      - label: CPU usage
         bars:
           - value: "1982"
             percentage: 75
@@ -14,12 +14,12 @@ spec:
           - value: "75"
             percentage: 12
             color: red
-      - label: utilizzo RAM
+      - label: RAM usage
         bars:
           - value: "72"
             percentage: 12
             color: orange
-      - label: Temperatura
+      - label: Temperature
         bars:
           - value: "63"
             percentage: 85

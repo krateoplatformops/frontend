@@ -10,7 +10,7 @@
     "kind": {
       "type": "string",
       "description": "name of the k8s Custom Resource",
-      "default": "FormTest"
+      "default": "Form"
     },
     "spec": {
       "type": "object",
@@ -32,6 +32,11 @@
             "submitActionId": {
               "description": "the id of the action to be called when the form is submitted",
               "type": "string"
+            },
+            "fieldDescription": {
+              "type": "string",
+              "enum": ["tooltip", "inline"],
+              "default": "inline"
             }
           },
           "additionalProperties": false
@@ -74,6 +79,10 @@
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
+                  "payloadKey": {
+                    "type": "string",
+                    "description": "the key to nest the payload to"
+                  },
                   "id": {
                     "type": "string"
                   },
@@ -85,6 +94,24 @@
                   },
                   "onSuccessNavigateTo": {
                     "type": "string"
+                  },
+                  "onEventNavigateTo": {
+                    "type": "object",
+                    "required": ["eventReason", "url"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "eventReason": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "timeout": {
+                        "type": "integer",
+                        "description": "the timeout in seconds to wait for the event",
+                        "default": 50
+                      }
+                    }
                   },
                   "loading": {
                     "type": "string",
@@ -115,7 +142,7 @@
                     }
                   }
                 },
-                "required": ["id", "resourceRefId"]
+                "required": ["id", "resourceRefId", "payloadKey"]
               }
             },
             "navigate": {
@@ -172,7 +199,7 @@
                     "enum": ["global", "inline", "none"]
                   }
                 },
-                "required": ["id", "type", "name", "contentWidgetRef"]
+                "required": ["id", "type", "contentWidgetRef"]
               }
             },
             "openModal": {

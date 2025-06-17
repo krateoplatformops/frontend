@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "BarChart"
+      "default": "BarChart",
+      "description": "BarChart express quantities through a bar's length, using a common baseline. Bar charts series should contain a `data` property containing an array of values",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -19,24 +20,29 @@
           "properties": {
             "data": {
               "type": "array",
+              "description": "Array of grouped data entries for the bar chart",
               "items": {
                 "type": "object",
                 "required": ["bars"],
                 "properties": {
                   "label": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Label for the group/category"
                   },
                   "bars": {
                     "type": "array",
+                    "description": "Bars within the group, each representing a value",
                     "items": {
                       "type": "object",
                       "required": ["value", "percentage"],
                       "properties": {
                         "value": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Label or identifier for the bar"
                         },
                         "percentage": {
-                          "type": "integer"
+                          "type": "integer",
+                          "description": "Height of the bar as a percentage (0–100)"
                         },
                         "color": {
                           "type": "string",
@@ -47,7 +53,8 @@
                             "gray",
                             "red",
                             "green"
-                          ]
+                          ],
+                          "description": "Color of the bar"
                         }
                       },
                       "additionalProperties": false

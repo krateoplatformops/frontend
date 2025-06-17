@@ -4,7 +4,7 @@ export interface TabList {
    */
   version: string
   /**
-   * name of the k8s Custom Resource
+   * TabList display a set of tab items for navigation or content grouping
    */
   kind: string
   spec: {
@@ -16,7 +16,13 @@ export interface TabList {
        * the items of the tab list
        */
       items: {
+        /**
+         * text displayed on the tab
+         */
         label?: string
+        /**
+         * the identifier of the k8s custom resource represented by the tab content
+         */
         resourceRefId: string
       }[]
     }

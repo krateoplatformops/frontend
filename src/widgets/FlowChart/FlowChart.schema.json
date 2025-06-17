@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "FlowChart"
+      "default": "FlowChart",
+      "description": "FlowChart represents a Kubernetes composition as a directed graph. Each node represents a resource, and edges indicate parent-child relationships",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -19,101 +20,136 @@
           "properties": {
             "data": {
               "type": "array",
+              "description": "list of kubernetes resources and their relationships to render as nodes in the flow chart",
               "items": {
                 "type": "object",
-                "required": ["createdAt", "kind", "name", "namespace", "resourceVersion", "uid", "version"],
+                "required": [
+                  "createdAt",
+                  "kind",
+                  "name",
+                  "namespace",
+                  "resourceVersion",
+                  "uid",
+                  "version"
+                ],
                 "properties": {
                   "createdAt": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "timestamp indicating when the resource was created"
                   },
                   "health": {
                     "type": "object",
+                    "description": "health status of the resource",
                     "properties": {
                       "message": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "optional description of the health state"
                       },
                       "reason": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "reason explaining the current health status"
                       },
                       "status": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "short status keyword (e.g. healthy, degraded)"
                       },
                       "type": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "type or category of health check"
                       }
                     }
                   },
                   "kind": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "kubernetes resource type (e.g. Deployment, Service)"
                   },
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "name of the resource"
                   },
                   "namespace": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "namespace in which the resource is defined"
                   },
                   "parentRefs": {
                     "type": "array",
+                    "description": "list of parent resources used to define graph relationships",
                     "items": {
                       "type": "object",
                       "properties": {
                         "createdAt": {
                           "type": "string",
-                          "format": "date-time"
+                          "format": "date-time",
+                          "description": "timestamp indicating when the parent resource was created"
                         },
                         "health": {
                           "type": "object",
+                          "description": "health status of the parent resource",
                           "properties": {
                             "message": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "optional description of the health state"
                             },
                             "reason": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "reason explaining the current health status"
                             },
                             "status": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "short status keyword"
                             },
                             "type": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "type or category of health check"
                             }
                           }
                         },
                         "kind": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "resource type of the parent"
                         },
                         "name": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "name of the parent resource"
                         },
                         "namespace": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "namespace of the parent resource"
                         },
                         "parentRefs": {
                           "type": "array",
+                          "description": "nested parent references for recursive relationships",
                           "items": {
                             "type": "object"
                           }
                         },
                         "resourceVersion": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "internal version string of the parent resource"
                         },
                         "uid": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "unique identifier of the parent resource"
                         },
                         "version": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "api version of the parent resource"
                         }
                       }
                     }
                   },
                   "resourceVersion": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "internal version string of the resource"
                   },
                   "uid": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "unique identifier of the resource"
                   },
                   "version": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "api version of the resource"
                   }
                 }
               }

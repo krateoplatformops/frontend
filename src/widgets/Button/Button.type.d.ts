@@ -4,13 +4,10 @@ export interface Button {
    */
   version: string
   /**
-   * name of the k8s Custom Resource
+   * Button represents an interactive component which, when clicked, triggers a specific business logic defined by its `clickActionId`
    */
   kind: string
   spec: {
-    /**
-     * the data that will be passed to the widget on the frontend
-     */
     widgetData: {
       /**
        * the color of the button
@@ -37,7 +34,7 @@ export interface Button {
        */
       label?: string
       /**
-       * the icon of the button (font awesome icon name eg: 'fa-inbox')
+       * the icon of the button (font awesome icon name eg: `fa-inbox`)
        */
       icon?: string
       /**

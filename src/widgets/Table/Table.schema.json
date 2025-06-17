@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "Table"
+      "default": "Table",
+      "description": "Table displays structured data with customizable columns and pagination",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -21,26 +22,49 @@
               "type": "string"
             },
             "pageSize": {
+              "description": "number of rows displayed per page",
               "type": "integer"
             },
             "data": {
+              "description": "array of objects representing the table's row data",
               "type": "array",
               "items": {
                 "type": "object"
               }
             },
             "columns": {
+              "description": "configuration of the table's columns",
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "valueKey": {
-                    "type": "string"
+                  "color": {
+                    "description": "the color of the value (or the icon) to be represented",
+                    "type": "string",
+                    "enum": [
+                      "blue",
+                      "darkBlue",
+                      "orange",
+                      "gray",
+                      "red",
+                      "green"
+                    ]
+                  },
+                  "kind": {
+                    "description": "type of data to be represented",
+                    "type": "string",
+                    "enum": ["value", "icon"]
                   },
                   "title": {
+                    "description": "column header label",
+                    "type": "string"
+                  },
+                  "valueKey": {
+                    "description": "key used to extract the value from row data",
                     "type": "string"
                   }
                 },
+                "required": ["valueKey", "title"],
                 "additionalProperties": false
               }
             }

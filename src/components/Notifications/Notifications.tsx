@@ -1,5 +1,5 @@
 import { BellFilled } from '@ant-design/icons'
-import { Badge, Button, Drawer, List, Skeleton, Space, Typography } from 'antd'
+import { Badge, Button, Drawer, List, Skeleton, Typography } from 'antd'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -32,36 +32,41 @@ const Notifications = () => {
       renderItem={({
         description,
         firstTimestamp,
-        involvedObject: { apiVersion, kind },
+        involvedObject: { apiVersion, kind, name, namespace },
         lastTimestamp,
         message,
-        metadata: { creationTimestamp, name, namespace, uid },
+        metadata: { creationTimestamp, uid },
         reason,
         title,
         type,
         url,
-      }) => (
-        <List.Item className={styles.listItem} key={uid}>
+      }, index) => (
+        <List.Item
+          className={`${styles.listItem} ${index === 0 ? styles.firstElement : ''} ${notifications?.length && index === notifications.length - 1 ? styles.lastElement : ''}`}
+          key={uid}
+        >
           <Button className={styles.notificationElement} onClick={() => onClickNotification(url)} type='link'>
-            <Space direction='vertical'>
-              <Typography.Paragraph className={styles.timestamp}>
-                {formatISODate(lastTimestamp || firstTimestamp || creationTimestamp, true)}
-              </Typography.Paragraph>
-              <Badge
-                color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
-                text={
-                  <Typography.Text className={styles.title} strong>
-                    {title || reason}
-                  </Typography.Text>
-                }
-              />
+            <div className={styles.space}>
+              <div className={styles.titleWrapper}>
+                <Badge
+                  color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
+                  text={
+                    <Typography.Text className={styles.title} strong>
+                      {title || reason}
+                    </Typography.Text>
+                  }
+                />
+                <Typography.Paragraph className={styles.timestamp}>
+                  {formatISODate(lastTimestamp || firstTimestamp || creationTimestamp, true)}
+                </Typography.Paragraph>
+              </div>
               <Typography.Text className={styles.description}>
                 {description || message}
               </Typography.Text>
               <Typography.Paragraph className={styles.details}>
-                {`${apiVersion}.${kind}/${name}@${namespace}`}
+                {`${kind}.${apiVersion}/${namespace}/${name}`}
               </Typography.Paragraph>
-            </Space>
+            </div>
           </Button>
         </List.Item>
       )}

@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "YamlViewer"
+      "default": "YamlViewer",
+      "description": "YamlViewer receives a JSON string as input and renders its equivalent YAML representation for display.",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -18,6 +19,7 @@
           "required": ["json", "items"],
           "properties": {
             "json": {
+              "description": "json string to be converted and displayed as yaml",
               "type": "string"
             }
           },

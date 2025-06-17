@@ -7,8 +7,9 @@
       "default": "v1beta1"
     },
     "kind": {
-      "type": "string",
-      "default": "NavMenu"
+      "default": "NavMenu",
+      "description": "NavMenu is a container for NavMenuItem widgets, which are used to setup navigation inside the application",
+      "type": "string"
     },
     "spec": {
       "type": "object",
@@ -19,12 +20,14 @@
           "properties": {
             "items": {
               "type": "array",
+              "description": "list of navigation entries each pointing to a k8s custom resource",
               "items": {
                 "type": "object",
                 "required": ["resourceRefId"],
                 "properties": {
                   "resourceRefId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "the identifier of the k8s custom resource that should be represented, usually a NavMenuItem"
                   }
                 },
                 "additionalProperties": false
@@ -65,7 +68,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "properties": {
               "id": {
                 "type": "string"

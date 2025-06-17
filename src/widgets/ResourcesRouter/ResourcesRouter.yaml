@@ -1,0 +1,41 @@
+kind: ResourcesRouter
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: resources-router
+  namespace: krateo-v2-system
+spec:
+  widgetData:
+    items: []
+  resourcesRefs: []
+
+  resourcesRefsTemplate:
+    - iterator: ${ .resourceroutes }
+      template:
+        id: ${ .metadata.namespace + "_" + .metadata.name }
+        name: ${ .metadata.name }
+        apiVersion: ${ .apiVersion }
+        resource: resourceroutes
+        namespace: ${ .metadata.namespace }
+        verb: GET
+
+  apiRef:
+    name: resourceroutes
+    namespace: krateo-v2-system
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: resourceroutes
+  namespace: krateo-v2-system
+spec:
+  api:
+  - name: namespaces
+    path: "/api/v1/namespaces"
+    filter: "[.items[] | .metadata.name]"
+  - name: resourceroutes
+    continueOnError: true
+    dependsOn: 
+      name: namespaces
+      iterator: .[]
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/resourceroutes" }
+  filter: "{resourceroutes: [.resourceroutes[] | select(.items != null) | .items[]]}"

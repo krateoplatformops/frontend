@@ -1,0 +1,21 @@
+kind: PieChart
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: my-pie-chart
+  namespace: test-namespace
+spec:
+  widgetData:
+    title: Pie chart
+    description: This is a description
+    series:
+      total: 100
+      data:
+        - color: blue
+          value: 10
+          label: Blue
+        - color: darkBlue
+          value: 20
+          label: Dark Blue
+        - color: orange
+          value: 30
+          label: Orange

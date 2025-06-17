@@ -24,7 +24,8 @@ spec:
     pageSize: 10
     columns:
       - valueKey: name
-        title: Name
+        title: fa-dots
+        kind: icon
       - valueKey: age
         title: Age
 

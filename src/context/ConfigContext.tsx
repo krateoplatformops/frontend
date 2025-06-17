@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 interface Config {
   api: {
     AUTHN_API_BASE_URL: string
-    BACKEND_API_BASE_URL: string
+    SNOWPLOW_API_BASE_URL: string
     EVENTS_API_BASE_URL: string
     EVENTS_PUSH_API_BASE_URL: string
     INIT: string
