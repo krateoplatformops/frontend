@@ -3,7 +3,6 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router'
 
 import { useRoutesContext } from '../../context/RoutesContext'
 import Page404 from '../../pages/Page404'
-import { getResourceEndpoint } from '../../utils/utils'
 import Drawer from '../../widgets/Drawer'
 import Header from '../Header'
 import Sidebar from '../Sidebar'

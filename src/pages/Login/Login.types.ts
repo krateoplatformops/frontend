@@ -6,12 +6,13 @@ export type LoginFormType = {
 export type FormType = 'basic' | 'ldap'
 
 export type AuthResponseType = {
-  code: number
+  accessToken: string
   user: {
     displayName: string
     username: string
     avatarURL: string
   } | null
+  groups: string[]
   data: {
     apiVersion: string
     clusters: {

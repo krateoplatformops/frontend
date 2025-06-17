@@ -62,7 +62,6 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
 
     return () => {
       refConnected.current = false
-      eventSource
       eventSource.close()
     }
   }, [queryKey, topic])
