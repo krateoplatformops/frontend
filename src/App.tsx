@@ -27,9 +27,8 @@ const AppInitializer: React.FC = () => {
 
   // Use useMemo to recreate router only when routes or routeVersion changes
   const router = useMemo(() => {
-    console.log('Creating router with', routes.length, 'version:', routerVersion, routes)
     return createBrowserRouter(routes)
-  }, [routes, routerVersion])
+  }, [routes])
 
   if (isRoutesLoading || isConfigLoading) {
     return (
@@ -39,7 +38,7 @@ const AppInitializer: React.FC = () => {
     )
   }
 
-  return <RouterProvider router={router} />
+  return <RouterProvider key={routerVersion} router={router} />
 }
 
 const App: React.FC = () => {

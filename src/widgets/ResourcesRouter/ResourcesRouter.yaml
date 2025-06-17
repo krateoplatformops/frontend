@@ -2,7 +2,7 @@ kind: ResourcesRouter
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: resources-router
-  namespace: krateo-system
+  namespace: krateo-v2-system
 spec:
   widgetData:
     items: []
@@ -20,13 +20,13 @@ spec:
 
   apiRef:
     name: resourceroutes
-    namespace: krateo-system
+    namespace: krateo-v2-system
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
   name: resourceroutes
-  namespace: krateo-system
+  namespace: krateo-v2-system
 spec:
   api:
   - name: namespaces

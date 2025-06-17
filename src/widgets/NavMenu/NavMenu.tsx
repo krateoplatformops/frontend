@@ -124,7 +124,7 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
         widgetEndpoint={getResourceEndpoint({
           apiVersion: 'widgets.templates.krateo.io/v1beta1',
           name: 'resources-router',
-          namespace: 'krateo-system',
+          namespace: 'krateo-v2-system',
           resource: 'resourcesrouters',
         })}
       />
