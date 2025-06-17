@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import { useConfigContext } from '../../context/ConfigContext'
-import { createRoute, useRoutesContext } from '../../context/RoutesContext'
+import { useRoutesContext } from '../../context/RoutesContext'
 import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import { getResourceEndpoint } from '../../utils/utils'
@@ -102,20 +102,6 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
       }
     })
   }, [items, navMenuItems, loadedAllMenuItems])
-
-  // const { registerRoute } = useRoutesContext()
-  // useEffect(() => {
-  //   const timerId = setTimeout(() => {
-  //     registerRoute(
-  //       createRoute({
-  //         endpoint: '/call?resource=collections&apiVersion=templates.krateo.io/v1alpha1&name={name}&namespace={namespace}',
-  //         path: '/compositions/{namespace}/{name}',
-  //       })
-  //     )
-  //   }, 2000)
-
-  //   return () => clearTimeout(timerId)
-  // }, [registerRoute])
 
   const handleClick = (key: string) => {
     void navigate(key)
