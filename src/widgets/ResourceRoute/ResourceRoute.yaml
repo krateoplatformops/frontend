@@ -1,0 +1,34 @@
+# kind: ResourceRoute
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: resource-route-compositions-namespace
+#   namespace: krateo-v2-system
+# spec:
+#   widgetData:
+#     path: /compositions/{namespace}
+#     resourceRefId: compositions-row
+#   resourcesRefs:
+#     - id: compositions-row
+#       apiVersion: widgets.templates.krateo.io/v1beta1
+#       name: compositions-row
+#       namespace: krateo-v2-system
+#       resource: rows
+#       verb: GET
+---
+kind: ResourceRoute
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: resource-route-compositions-namespace-name
+  namespace: krateo-v2-system
+spec:
+  widgetData:
+    path: /compositions/{namespace}/{name}
+    resourceRefId: composition-detail-tablist
+  resourcesRefs:
+    - id: composition-detail-tablist
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: "{name}-composition-tablist"
+      namespace: "{namespace}"
+      resource: tablists
+      verb: GET
+  

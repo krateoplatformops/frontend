@@ -3,21 +3,26 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router'
 
 import { useRoutesContext } from '../../context/RoutesContext'
 import Page404 from '../../pages/Page404'
+import { getResourceEndpoint } from '../../utils/utils'
+import Drawer from '../../widgets/Drawer'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
 import WidgetRenderer from '../WidgetRenderer'
 
 import styles from './WidgetPage.module.css'
-import Drawer from '../../widgets/Drawer'
 
-export const WidgetPage = () => {
+export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: string }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const { menuRoutes } = useRoutesContext()
   const [searchParams] = useSearchParams()
-  const [widgetEndpoint, setWidgetEndpoint] = useState<string>('')
+  const [widgetEndpoint, setWidgetEndpoint] = useState<string>(defaultWidgetEndpoint || '')
 
   useEffect(() => {
+    if (defaultWidgetEndpoint) {
+      return
+    }
+
     if (menuRoutes.length === 0) {
       return
     }
@@ -31,7 +36,7 @@ export const WidgetPage = () => {
 
       return searchParams.get('widgetEndpoint') || ''
     })
-  }, [location.pathname, menuRoutes, searchParams, setWidgetEndpoint])
+  }, [location.pathname, menuRoutes, searchParams, setWidgetEndpoint, defaultWidgetEndpoint])
 
   useEffect(() => {
     const userData = localStorage.getItem('K_user')

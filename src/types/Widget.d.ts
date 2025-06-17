@@ -55,6 +55,10 @@ export type WidgetActions = {
     resourceRefId: string
     requireConfirmation?: boolean
     onSuccessNavigateTo?: string
+    onEventNavigateTo?: {
+      url: string
+      eventReason: string
+    }
     loading?: 'global' | 'inline' | 'none'
     payloadToOverride?: {
       name: string
@@ -88,8 +92,8 @@ export type WidgetActions = {
   }[]
 }
 
-export type WidgetProps<T = unknown> = {
-  actions: WidgetActions
+export type WidgetProps<T = unknown, A = WidgetActions> = {
+  actions: A
   resourcesRefs: ResourcesRefs
   uid: string
   widgetData: T

@@ -12,7 +12,7 @@ spec:
       - id: firework-submit-action-from-string-schema
         onEventNavigateTo:
           eventReason: "CompositionCreated"
-          url: "/compositions/${metadata.name}"
+          url: "/compositions/${metadata.namespace}/${metadata.name}"
           timeout: 50
             
         payloadKey: spec
@@ -33,7 +33,7 @@ spec:
   
   resourcesRefs:
     - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
+      apiVersion: composition.krateo.io/v2-0-1
       name: new-app
       namespace: fireworksapp-system
       resource: fireworksapps
@@ -41,17 +41,17 @@ spec:
       
   apiRef:
     name: fireworksapp-schema-notordered
-    namespace: krateo-system
+    namespace: krateo-v2-system
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
   name: fireworksapp-schema-notordered
-  namespace: krateo-system
+  namespace: krateo-v2-system
 spec:
   api:
   - headers:
     - 'Accept: application/json'
     name: getSchemaNotOrdered
-    path: /api/v1/namespaces/fireworksapp-system/configmaps/fireworksapps-v2-0-0-jsonschema-configmap
+    path: /api/v1/namespaces/fireworksapp-system/configmaps/fireworksapps-v2-0-1-jsonschema-configmap
     verb: GET
