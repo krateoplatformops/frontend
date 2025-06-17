@@ -6,13 +6,11 @@ import type { MenuItemType } from 'antd/es/menu/interface'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
-import WidgetRenderer from '../../components/WidgetRenderer'
 import { useConfigContext } from '../../context/ConfigContext'
 import type { AppRoute } from '../../context/RoutesContext'
 import { useRoutesContext } from '../../context/RoutesContext'
 import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
-import { getResourceEndpoint } from '../../utils/utils'
 import type { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
 
 import styles from './NavMenu.module.css'
@@ -20,7 +18,6 @@ import type { NavMenu as WidgetType } from './NavMenu.type'
 
 export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
-// TODO: check correct typing
 interface ResolvedResourceRef {
   id: string
   path: string
@@ -33,6 +30,7 @@ type NavMenuItemResponse = Omit<NavMenuItem, 'status'> & {
     resourcesRefs?: ResolvedResourceRef[]
   }
 }
+
 export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) {
   const location = useLocation()
   const navigate = useNavigate()
@@ -51,8 +49,8 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
         navMenuItems: results.map(({ data }) => data),
       }
     },
-    queries: items.map((resourcesRef) => {
-      const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${resourcesRef.path}`
+    queries: items.map(({ id, path }) => {
+      const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${path}`
       return {
         queryFn: async (): Promise<NavMenuItemResponse> => {
           const res = await fetch(widgetFullUrl, {
@@ -63,7 +61,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
           const widget = await res.json() as NavMenuItemResponse
           return widget
         },
-        queryKey: ['navmenuitems', resourcesRef.id, widgetFullUrl],
+        queryKey: ['navmenuitems', id, widgetFullUrl],
       }
     }),
   })
@@ -117,26 +115,14 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
   }
 
   return (
-    <>
-      <Menu
-        className={styles.menu}
-        defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
-        items={menuItems}
-        key={uid}
-        mode='inline'
-        onClick={(item) => handleClick(item.key)}
-        selectedKeys={[location.pathname]}
-      />
-
-      <WidgetRenderer
-        invisible={true}
-        widgetEndpoint={getResourceEndpoint({
-          apiVersion: 'widgets.templates.krateo.io/v1beta1',
-          name: 'resources-router',
-          namespace: 'krateo-v2-system',
-          resource: 'resourcesrouters',
-        })}
-      />
-    </>
+    <Menu
+      className={styles.menu}
+      defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
+      items={menuItems}
+      key={uid}
+      mode='inline'
+      onClick={(item) => handleClick(item.key)}
+      selectedKeys={[location.pathname]}
+    />
   )
 }
