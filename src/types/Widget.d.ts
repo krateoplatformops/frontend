@@ -87,6 +87,7 @@ export type WidgetActions = {
     type: 'openModal'
     name: string
     contentWidgetRef: string
+    resourceRefId: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
   }[]

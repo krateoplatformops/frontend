@@ -41,13 +41,13 @@ spec:
       
   apiRef:
     name: fireworksapp-schema-notordered
-    namespace: krateo-v2-system
+    namespace: krateo-system
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
   name: fireworksapp-schema-notordered
-  namespace: krateo-v2-system
+  namespace: krateo-system
 spec:
   api:
   - headers:

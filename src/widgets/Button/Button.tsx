@@ -10,6 +10,7 @@ import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
+import { openModal } from '../Modal/Modal'
 
 import type { Button as WidgetType } from './Button.type'
 
@@ -108,7 +109,8 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           break
         }
         case 'openModal': {
-          /* TODO: implement open modal action */
+          const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
+          openModal(widgetEndpoint)
           break
         }
         default:

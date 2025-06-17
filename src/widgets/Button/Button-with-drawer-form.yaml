@@ -11,10 +11,11 @@ spec:
     type: primary
     clickActionId: my-click-action
   actions:
-    openDrawer:
+    openModal:
       - id: my-click-action
+        name: modal
         resourceRefId: firework-form
-        type: openDrawer
+        type: openModal
   resourcesRefs:
     - id: firework-form
       apiVersion: widgets.templates.krateo.io/v1beta1

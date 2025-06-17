@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { useRoutesContext } from '../../context/RoutesContext'
 import Page404 from '../../pages/Page404'
 import Drawer from '../../widgets/Drawer'
+import Modal from '../../widgets/Modal'
 import Header from '../Header'
 import Sidebar from '../Sidebar'
 import WidgetRenderer from '../WidgetRenderer'
@@ -47,14 +48,15 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
 
   return (
     <div className={styles.widgetPage}>
-      <Sidebar />
+      <Sidebar/>
       <div className={styles.container}>
-        <Header breadcrumbVisible={widgetEndpoint !== null} />
+        <Header breadcrumbVisible={widgetEndpoint !== null}/>
         <div className={styles.content}>
           {widgetEndpoint ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} /> : <Page404 />}
         </div>
       </div>
-      <Drawer />
+      <Drawer/>
+      <Modal/>
     </div>
   )
 }

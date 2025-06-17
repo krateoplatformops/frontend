@@ -24,6 +24,7 @@ const Drawer = () => {
       setWidgetEndpoint(event.detail)
       setIsOpen(true)
     }
+
     const handleCloseDrawer = () => {
       setIsOpen(false)
     }
