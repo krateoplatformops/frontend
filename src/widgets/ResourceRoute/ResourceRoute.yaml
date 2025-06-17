@@ -1,0 +1,34 @@
+kind: ResourceRoute
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: resource-route-compositions-namespace
+  namespace: krateo-system
+spec:
+  widgetData:
+    path: /compositions/${namespace}
+    resourceRefId: compositions
+  resourcesRefs:
+    - id: compositions-row
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: compositions-row
+      namespace: krateo-system
+      resource: rows
+      verb: GET
+---
+kind: ResourceRoute
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: resource-route-compositions-namespace-name
+  namespace: krateo-system
+spec:
+  widgetData:
+    path: /compositions/${namespace}/${name}
+    resourceRefId: compositions
+  resourcesRefs:
+    - id: compositions-row
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: compositions-row
+      namespace: krateo-system
+      resource: rows
+      verb: GET
+  

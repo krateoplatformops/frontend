@@ -46,7 +46,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
               Reset
             </Button>
             <Button form={formId} htmlType='submit' type='primary'>
-              Save
+              Submit
             </Button>
           </Space>
         ),
@@ -73,7 +73,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
             Reset
           </Button>
           <Button form={formId} htmlType='submit' type='primary'>
-            Save
+            submit
           </Button>
         </Space>
       ) : null}
@@ -153,7 +153,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
                     Reset
                   </Button>
                   <Button disabled form={formId} htmlType='submit' type='primary'>
-                    Save
+                    submit
                   </Button>
                 </Space>
               ),
