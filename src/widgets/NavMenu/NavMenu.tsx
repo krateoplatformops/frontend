@@ -78,7 +78,7 @@ export function NavMenu({ resourcesRefs, uid, widgetData }: WidgetProps<NavMenuW
         }
       })
 
-      // localStorage.setItem('routes', JSON.stringify(routesToSave))
+      localStorage.setItem('routes', JSON.stringify(routesToSave))
       updateMenuRoutes(routesToSave)
     }
   }, [loadedAllMenuItems, navMenuItems])
