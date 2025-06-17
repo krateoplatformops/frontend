@@ -309,19 +309,18 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: my-filters
-      # - resourceRefId: table-filters
-      - resourceRefId: dashboard-grid
+      - resourceRefId: button-with-drawer-filters
+      - resourceRefId: compositions-grid
   resourcesRefs:
-    - id: my-filters
+    - id: button-with-drawer-filters
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-filters
+      name: button-with-drawer-filters
       namespace: krateo-system
-      resource: filters
+      resource: buttons
       verb: GET
-    - id: dashboard-grid
+    - id: compositions-grid
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: dashboard-grid
+      name: compositions-grid
       namespace: krateo-system
       resource: datagrids
       verb: GET

@@ -11,7 +11,6 @@ export type TableWidgetData = WidgetType['spec']['widgetData']
 const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize, prefix } = widgetData
   const { getFilteredData } = useFilter()
-  // const [dataTable, setDataTable] = useState<{[k: string]: unknown}[]>()
 
   let dataTable: { [k: string]: unknown }[] = data
   if (prefix && uid && data?.length > 0) {

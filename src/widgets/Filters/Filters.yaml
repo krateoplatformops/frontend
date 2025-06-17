@@ -7,12 +7,19 @@ spec:
   widgetData:
     prefix: filters-sample
     fields:
-      # - label: panel name
-      #   name: title
-      #   type: string
-      - label: panel date range
+      - label: composition name
         name: title
+        type: string
+      - label: date range
+        name: date
         type: daterange
+      - label: status
+        name: status
+        type: string
+        options:
+          - active
+          - pending
+          - disabled
 ---
 kind: Filters
 apiVersion: widgets.templates.krateo.io/v1beta1

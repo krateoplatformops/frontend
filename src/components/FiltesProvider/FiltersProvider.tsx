@@ -17,6 +17,7 @@ type FiltersContextType = {
   getFilteredData: (data: DataItem[], prefix: string) => unknown[]
   isWidgetFilteredByProps: (widgetData: unknown, prefix: string) => boolean
   clearFilters: (prefix: string) => void
+  getFilters: (prefix: string) => FilterType[]
 }
 
 type FilterMap = Record<string, FilterType[]>
@@ -39,6 +40,8 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
       [prefix]: filters.filter(el => el.fieldValue !== undefined),
     }))
   }
+
+  const getFilters = (prefix: string) => filterMap[prefix]
 
   const clearFilters = (prefix: string) => {
     setFilterMap((prev) => {
@@ -125,9 +128,8 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <FiltersContext.Provider value={{ clearFilters, getFilteredData, isWidgetFilteredByProps, setFilters }}>
+    <FiltersContext.Provider value={{ clearFilters, getFilteredData, getFilters, isWidgetFilteredByProps, setFilters }}>
       {/* <div>Filtri: {JSON.stringify(filterMap)}</div> */}
-      {/* <div>Dati: {JSON.stringify(dataMap)}</div> */}
       {children}
     </FiltersContext.Provider>
   )

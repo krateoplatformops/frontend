@@ -1,7 +1,9 @@
 import { Button, DatePicker, Form, Input, Radio, Select, Space } from 'antd'
+import { useEffect } from 'react'
 
 import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
 import type { WidgetProps } from '../../types/Widget'
+import { closeDrawer } from '../Drawer/Drawer'
 
 import type { Filters as WidgetType } from './Filters.type'
 
@@ -9,7 +11,7 @@ export type FiltersWidgetData = WidgetType['spec']['widgetData']
 
 const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
   const { fields, prefix } = widgetData
-  const { clearFilters, setFilters } = useFilter()
+  const { clearFilters, getFilters, setFilters } = useFilter()
 
   const [filterForm] = Form.useForm()
 
@@ -72,6 +74,7 @@ const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
   const onReset = () => {
     filterForm.resetFields()
     clearFilters(prefix)
+    closeDrawer()
   }
 
   const onSubmit = (values: Record<string, unknown>) => {
@@ -87,7 +90,17 @@ const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
         }
       })
     )
+    closeDrawer()
   }
+
+  useEffect(() => {
+    const filters = getFilters(prefix)
+    if (filters) {
+      filters.forEach(({ fieldName, fieldValue }) =>
+        filterForm.setFieldValue(fieldName, fieldValue)
+      )
+    }
+  }, [filterForm, getFilters, prefix])
 
   return (
     <>
