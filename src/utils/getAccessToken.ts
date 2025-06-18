@@ -12,7 +12,7 @@ export const getAccessToken = () => {
     throw new Error('No access token found')
   }
 
-  const user = JSON.parse(userData) as AuthResponseType
+  const user = JSON.parse(userData) as NonNullable<AuthResponseType>
   cachedAccessToken = user.accessToken
   return cachedAccessToken
 }

@@ -36,15 +36,14 @@ export const getResourceEndpoint = ({
   return `/call?resource=${resource}&apiVersion=${apiVersion}&name=${name}&namespace=${namespace}`
 }
 
-export const formatISODate = (value: string, showTime: boolean = false) =>
-  (
-    showTime
-      ? new Date(value).toLocaleDateString('en', {
+export const formatISODate = (value: string, showTime: boolean = false) => {
+  return showTime
+    ? new Date(value).toLocaleDateString('en', {
         day: 'numeric',
         hour: 'numeric',
         minute: 'numeric',
         month: 'long',
         year: 'numeric',
       })
-      : new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
-  )
+    : new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+}

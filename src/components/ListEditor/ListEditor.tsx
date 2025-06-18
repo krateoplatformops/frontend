@@ -29,21 +29,14 @@ const ListEditor = ({ data = [], onChange }: ListEditorType) => {
     <Space direction='vertical' style={{ width: '100%' }}>
       <Space.Compact style={{ width: '100%' }}>
         <Input onChange={(value) => setCurrentString(value.target.value)} />
-        <Button onClick={onAdd} type='primary'><PlusCircleOutlined /></Button>
+        <Button onClick={onAdd} type='primary'>
+          <PlusCircleOutlined />
+        </Button>
       </Space.Compact>
       <List
         dataSource={list}
         renderItem={(item, index) => (
-          <List.Item
-            actions={[
-              <Button
-                icon={<DeleteOutlined />}
-                onClick={() => onRemove(index)}
-                shape='circle'
-                type='text'
-              />,
-            ]}
-          >
+          <List.Item actions={[<Button icon={<DeleteOutlined />} onClick={() => onRemove(index)} shape='circle' type='text' />]}>
             <Typography.Text>{item}</Typography.Text>
           </List.Item>
         )}

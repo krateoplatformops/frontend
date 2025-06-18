@@ -1,11 +1,11 @@
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 
-import type { ResourcesRouter as WidgetType } from './ResourcesRouter.type'
+import type { RoutesLoader as WidgetType } from './RoutesLoader.type'
 
-export type ResourcesRouterWidgetData = WidgetType['spec']['widgetData']
+export type RoutesLoaderWidgetData = WidgetType['spec']['widgetData']
 
-export function ResourcesRouter({ resourcesRefs }: WidgetProps<ResourcesRouterWidgetData>) {
+export function RoutesLoader({ resourcesRefs }: WidgetProps<RoutesLoaderWidgetData>) {
   return (
     <>
       {resourcesRefs.map(({ id, path }, index) => (

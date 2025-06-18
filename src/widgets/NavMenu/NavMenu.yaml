@@ -1,7 +1,7 @@
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: dashboard-route
+  name: dashboard-page
   namespace: krateo-system
 spec:
   widgetData:
@@ -43,10 +43,10 @@ spec:
       resource: buttons
       verb: GET
 ---
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: templates-route
+  name: templates-page
   namespace: krateo-system
 spec:
   widgetData:
@@ -102,10 +102,10 @@ spec:
       resource: panels
       verb: GET
 ---
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: compositions-route
+  name: compositions-page
   namespace: krateo-system
 spec:
   widgetData:
@@ -119,10 +119,10 @@ spec:
       resource: rows
       verb: GET
 ---
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: form-route
+  name: form-page
   namespace: krateo-system
 spec:
   widgetData:
@@ -137,7 +137,7 @@ spec:
       verb: GET
 ---
 # ---
-# kind: Route
+# kind: Page
 # apiVersion: widgets.templates.krateo.io/v1beta1
 # metadata:
 #   name: button-post-nginx
@@ -161,16 +161,16 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: dashboard-route
+    resourceRefId: dashboard-page
     label: Dashboard
     icon: fa-chart-line
     path: /dashboard
     order: 10
   
   resourcesRefs:
-    - id: dashboard-route
+    - id: dashboard-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: dashboard-route
+      name: dashboard-page
       namespace: krateo-system
       resource: routes
       verb: GET
@@ -182,16 +182,16 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: templates-route
+    resourceRefId: templates-page
     label: Templates
     icon: fa-rectangle-list
     path: /templates
     order: 20
 
   resourcesRefs:
-    - id: templates-route
+    - id: templates-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-route
+      name: templates-page
       namespace: krateo-system
       resource: routes
       verb: GET
@@ -203,16 +203,16 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: form-route
+    resourceRefId: form-page
     label: Form
     icon: fa-rectangle-list
     path: /form
     order: 50
 
   resourcesRefs:
-    - id: form-route
+    - id: form-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: form-route
+      name: form-page
       namespace: krateo-system
       resource: routes
       verb: GET
@@ -224,16 +224,16 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: compositions-route
+    resourceRefId: compositions-page
     label: Compositions
     icon: fa-shapes
     path: /compositions
     order: 30
 
   resourcesRefs:
-    - id: compositions-route
+    - id: compositions-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: compositions-route
+      name: compositions-page
       namespace: krateo-system
       resource: routes
       verb: GET

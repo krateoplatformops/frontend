@@ -1,41 +1,40 @@
-kind: ResourcesRouter
+kind: RoutesLoader
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: resources-router
-  namespace: krateo-system
+  name: routes-loader
+  namespace: krateo-v2-system
 spec:
-  widgetData:
-    items: []
+  widgetData: {}
   resourcesRefs: []
 
   resourcesRefsTemplate:
-    - iterator: ${ .resourceroutes }
+    - iterator: ${ .routes }
       template:
         id: ${ .metadata.namespace + "_" + .metadata.name }
         name: ${ .metadata.name }
         apiVersion: ${ .apiVersion }
-        resource: resourceroutes
+        resource: routes
         namespace: ${ .metadata.namespace }
         verb: GET
 
   apiRef:
-    name: resourceroutes
-    namespace: krateo-system
+    name: all-routes
+    namespace: krateo-v2-system
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  name: resourceroutes
-  namespace: krateo-system
+  name: all-routes
+  namespace: krateo-v2-system
 spec:
   api:
   - name: namespaces
     path: "/api/v1/namespaces"
     filter: "[.items[] | .metadata.name]"
-  - name: resourceroutes
+  - name: routes
     continueOnError: true
     dependsOn: 
       name: namespaces
       iterator: .[]
-    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/resourceroutes" }
-  filter: "{resourceroutes: [.resourceroutes[] | select(.items != null) | .items[]]}"
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/routes" }
+  filter: "{routes: [.routes[] | select(.items != null) | .items[]]}"

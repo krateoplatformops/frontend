@@ -6,6 +6,7 @@ import type { MenuItemType } from 'antd/es/menu/interface'
 import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
+import WidgetRenderer from '../../components/WidgetRenderer'
 import { useConfigContext } from '../../context/ConfigContext'
 import type { AppRoute } from '../../context/RoutesContext'
 import { useRoutesContext } from '../../context/RoutesContext'
@@ -130,14 +131,18 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
   }
 
   return (
-    <Menu
-      className={styles.menu}
-      defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
-      items={menuItems}
-      key={uid}
-      mode='inline'
-      onClick={(item) => handleClick(item.key)}
-      selectedKeys={[location.pathname]}
-    />
+    <>
+      <Menu
+        className={styles.menu}
+        defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
+        items={menuItems}
+        key={uid}
+        mode='inline'
+        onClick={(item) => handleClick(item.key)}
+        selectedKeys={[location.pathname]}
+      />
+
+      <WidgetRenderer invisible={true} widgetEndpoint={config!.api.ROUTES_LOADER} />
+    </>
   )
 }

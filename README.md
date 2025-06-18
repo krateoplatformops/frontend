@@ -650,6 +650,43 @@ spec:
 
 ---
 
+### Page
+
+Page is a wrapper component, placed at the top of the component tree, that wraps and renders all nested components.
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| title | no | title of the page shown in the browser tab | string |
+| items | yes | list of resources to be rendered within the route | array |
+| items[].resourceRefId | yes | the identifier of the k8s custom resource that should be rendered, usually a widget | string |
+
+<details>
+<summary>Example</summary>
+
+```yaml
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: compositions-route
+  namespace: test-namespace
+spec:
+  widgetData:
+    items:
+      - resourceRefId: composition-test-row
+  resourcesRefs:
+    - id: composition-test-row
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-row
+      namespace: test-namespace
+      resource: rows
+      verb: GET
+```
+</details>
+
+---
+
 ### Panel
 
 Panel is a container to display information
@@ -796,37 +833,24 @@ spec:
 
 ### Route
 
-Route is a wrapper component, typically placed at the top of the component tree, that wraps and renders all nested components.
+Route is a configuration to map a path to show in the frontend URL to a resource, it doesn't render anything by itself
 
 #### Props
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| items | yes | list of resources to be rendered within the route | array |
-| items[].resourceRefId | yes | the identifier of the k8s custom resource that should be rendered, usually a widget | string |
+| path | yes | the url path to that loads the resource | string |
+| resourceRefId | yes | the id matching the resource in the resourcesRefs array, must of kind page | string |
 
-<details>
-<summary>Example</summary>
+---
 
-```yaml
-kind: Route
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: compositions-route
-  namespace: test-namespace
-spec:
-  widgetData:
-    items:
-      - resourceRefId: composition-test-row
-  resourcesRefs:
-    - id: composition-test-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-row
-      namespace: test-namespace
-      resource: rows
-      verb: GET
-```
-</details>
+### RoutesLoader
+
+RoutesLoader loads the Route widgets it doesn't render anything by itself
+
+#### Props
+
+*No props available.*
 
 ---
 
@@ -898,13 +922,19 @@ spec:
     data: 
       - name: Alice
         age: 30
+        icon: fa-rocket
       - name: Bob
         age: 45
+        icon: fa-exclamation-circle
     columns:
       - valueKey: name
         title: Name
       - valueKey: age
         title: Age
+      - valueKey: icon
+        title: Icon
+        kind: icon
+        color: red
 ```
 </details>
 

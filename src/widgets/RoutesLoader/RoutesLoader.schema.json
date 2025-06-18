@@ -7,8 +7,8 @@
       "default": "v1beta1"
     },
     "kind": {
-      "default": "ResourcesRouter",
-      "description": "ResourcesRouter is a wrapper component used to load all the ResourceRoute widgets",
+      "default": "RoutesLoader",
+      "description": "RoutesLoader loads the Route widgets it doesn't render anything by itself",
       "type": "string"
     },
     "spec": {
@@ -16,24 +16,6 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["items"],
-          "properties": {
-            "items": {
-              "type": "array",
-              "description": "list of resources to be rendered within the route",
-              "items": {
-                "type": "object",
-                "required": ["resourceRefId"],
-                "properties": {
-                  "resourceRefId": {
-                    "type": "string",
-                    "description": "the identifier of the k8s custom resource that should be rendered, usually a widget"
-                  }
-                },
-                "additionalProperties": false
-              }
-            }
-          },
           "additionalProperties": false
         },
         "apiRef": {
@@ -75,7 +57,8 @@
                 "type": "string"
               },
               "apiVersion": {
-                "type": "string"
+                "type": "string",
+                "enum": ["widgets.templates.krateo.io/v1beta1"]
               },
               "name": {
                 "type": "string"
@@ -84,11 +67,12 @@
                 "type": "string"
               },
               "resource": {
-                "type": "string"
+                "type": "string",
+                "enum": ["routes"]
               },
               "verb": {
                 "type": "string",
-                "enum": ["GET", "POST", "DELETE"]
+                "enum": ["GET"]
               }
             }
           },

@@ -1,7 +1,7 @@
 export interface Route {
   version: string
   /**
-   * ResourceRoute use to map a path to show in the frontend URL to a resource
+   * Route is a configuration to map a path to show in the frontend URL to a resource, it doesn't render anything by itself
    */
   kind: string
   spec: {
@@ -11,7 +11,7 @@ export interface Route {
        */
       path: string
       /**
-       * the identifier of the k8s custom resource that should be rendered, usually a widget
+       * the id matching the resource in the resourcesRefs array, must of kind page
        */
       resourceRefId: string
     }
@@ -25,11 +25,11 @@ export interface Route {
     }[]
     resourcesRefs?: {
       id: string
-      apiVersion: string
+      apiVersion: 'widgets.templates.krateo.io/v1beta1'
       name: string
       namespace: string
-      resource: string
-      verb: 'GET' | 'POST' | 'DELETE'
+      resource: 'pages'
+      verb: 'GET'
     }[]
   }
 }

@@ -37,11 +37,11 @@ export interface NavMenuItem {
     }[]
     resourcesRefs?: {
       id: string
-      apiVersion: string
+      apiVersion: 'widgets.templates.krateo.io/v1beta1'
       name: string
       namespace: string
-      resource: string
-      verb: 'GET' | 'POST' | 'DELETE'
+      resource: 'pages'
+      verb: 'GET'
     }[]
   }
 }

@@ -33,6 +33,10 @@ import Paragraph from '../../widgets/Paragraph'
 import type { ParagraphWidgetData } from '../../widgets/Paragraph/Paragraph'
 import type { PieChartWidgetData } from '../../widgets/PieChart/PieChart'
 import PieChart from '../../widgets/PieChart/PieChart'
+import type { RouteWidgetData } from '../../widgets/Route/Route'
+import { Route } from '../../widgets/Route/Route'
+import type { RoutesLoaderWidgetData } from '../../widgets/RoutesLoader/RoutesLoader'
+import { RoutesLoader } from '../../widgets/RoutesLoader/RoutesLoader'
 import Row from '../../widgets/Row'
 import type { RowWidgetData } from '../../widgets/Row/Row'
 import type { TableWidgetData } from '../../widgets/Table/Table'
@@ -141,6 +145,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <Form actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
     case 'RoutesLoader':
       return <RoutesLoader actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RoutesLoaderWidgetData} />
+    case 'Route':
+      return <Route actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }
