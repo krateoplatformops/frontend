@@ -104,13 +104,15 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
           break
         }
         case 'openDrawer': {
-          const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
-          openDrawer(widgetEndpoint)
+          const { resourceRefId, size, title } = action
+          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+          openDrawer({ size, title, widgetEndpoint })
           break
         }
         case 'openModal': {
-          const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
-          openModal(widgetEndpoint)
+          const { resourceRefId, title } = action
+          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+          openModal({ title, widgetEndpoint })
           break
         }
         default:

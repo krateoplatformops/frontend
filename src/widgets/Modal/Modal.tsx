@@ -3,10 +3,13 @@ import { useEffect, useState } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 
-import { ModalProvider } from './ModalContext'
+interface ModalProps {
+  widgetEndpoint: string
+  title?: string | undefined
+}
 
-export const openModal = (widgetEndpoint: string) => {
-  window.dispatchEvent(new CustomEvent('openModal', { detail: widgetEndpoint }))
+export const openModal = (properties: ModalProps) => {
+  window.dispatchEvent(new CustomEvent('openModal', { detail: properties }))
 }
 
 export const closeModal = () => {
@@ -15,12 +18,11 @@ export const closeModal = () => {
 
 const Modal = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [widgetEndpoint, setWidgetEndpoint] = useState<string | null>(null)
-  const [modalData, setModalData] = useState<{ footer?: React.ReactNode; title?: string }>({})
+  const [properties, setProperties] = useState<ModalProps | null>(null)
 
   useEffect(() => {
-    const handleOpenModal = (event: CustomEvent<string>) => {
-      setWidgetEndpoint(event.detail)
+    const handleOpenModal = (event: CustomEvent<ModalProps>) => {
+      setProperties(event.detail)
       setIsOpen(true)
     }
 
@@ -37,13 +39,15 @@ const Modal = () => {
     }
   }, [])
 
-  if (!widgetEndpoint) {
+  if (!properties) {
     return null
   }
 
+  const { title, widgetEndpoint } = properties
+
   return (
     <AntdModal
-      footer={modalData.footer || null}
+      footer={null}
       key={
         /* This make sure that the content of the modal is destroyed and recreated when
         the modal is closed and reopened, to prevent the form from showing stale data
@@ -52,11 +56,9 @@ const Modal = () => {
       }
       onCancel={() => setIsOpen(false)}
       open={isOpen}
-      title={modalData.title}
+      title={title}
     >
-      <ModalProvider setModalData={setModalData}>
-        <WidgetRenderer key={'modal'} widgetEndpoint={widgetEndpoint} />
-      </ModalProvider>
+      <WidgetRenderer key={'modal'} widgetEndpoint={widgetEndpoint} />
     </AntdModal>
   )
 }

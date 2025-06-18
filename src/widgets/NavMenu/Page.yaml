@@ -128,10 +128,17 @@ spec:
   widgetData:
     items:
       - resourceRefId: button-with-drawer-form
+      - resourceRefId: button-with-modal-form
   resourcesRefs:
     - id: button-with-drawer-form
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: button-with-drawer-form
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: button-with-modal-form
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-with-modal-form
       namespace: krateo-system
       resource: buttons
       verb: GET

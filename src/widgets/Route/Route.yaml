@@ -2,7 +2,7 @@ kind: Route
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: route-compositions-namespace-name
-  namespace: krateo-v2-system
+  namespace: krateo-system
 spec:
   widgetData:
     path: /compositions/{namespace}/{name}

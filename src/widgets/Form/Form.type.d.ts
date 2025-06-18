@@ -79,6 +79,8 @@ export interface Form {
         resourceRefId?: string
         requireConfirmation?: boolean
         loading?: 'global' | 'inline' | 'none'
+        size?: 'default' | 'large'
+        title?: string
       }[]
       openModal?: {
         id: string
@@ -87,6 +89,7 @@ export interface Form {
         contentWidgetRef: string
         requireConfirmation?: boolean
         loading?: 'global' | 'inline' | 'none'
+        title?: string
       }[]
     }
   }

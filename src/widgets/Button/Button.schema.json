@@ -197,6 +197,13 @@
                   "loading": {
                     "type": "string",
                     "enum": ["global", "inline", "none"]
+                  },
+                  "size": {
+                    "type": "string",
+                    "enum": ["default", "large"]
+                  },
+                  "title": {
+                    "type": "string"
                   }
                 },
                 "required": ["id", "type", "resourceRefId"]
@@ -227,6 +234,9 @@
                   "loading": {
                     "type": "string",
                     "enum": ["global", "inline", "none"]
+                  },
+                  "title": {
+                    "type": "string"
                   }
                 },
                 "required": ["id", "type", "name", "resourceRefId"]

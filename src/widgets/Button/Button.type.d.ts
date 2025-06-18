@@ -91,6 +91,8 @@ export interface Button {
         resourceRefId: string
         requireConfirmation?: boolean
         loading?: 'global' | 'inline' | 'none'
+        size?: 'default' | 'large'
+        title?: string
       }[]
       openModal?: {
         id: string
@@ -99,6 +101,7 @@ export interface Button {
         resourceRefId: string
         requireConfirmation?: boolean
         loading?: 'global' | 'inline' | 'none'
+        title?: string
       }[]
     }
     apiRef?: {

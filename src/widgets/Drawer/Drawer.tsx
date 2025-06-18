@@ -6,8 +6,14 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import styles from './Drawer.module.css'
 import { DrawerProvider } from './DrawerContext'
 
-export const openDrawer = (widgetEndpoint: string) => {
-  window.dispatchEvent(new CustomEvent('openDrawer', { detail: widgetEndpoint }))
+interface DrawerProps {
+  widgetEndpoint: string
+  size?: 'default' | 'large' | undefined
+  title?: string | undefined
+}
+
+export const openDrawer = (properties: DrawerProps) => {
+  window.dispatchEvent(new CustomEvent('openDrawer', { detail: properties }))
 }
 
 export const closeDrawer = () => {
@@ -16,12 +22,12 @@ export const closeDrawer = () => {
 
 const Drawer = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [widgetEndpoint, setWidgetEndpoint] = useState<string | null>(null)
+  const [properties, setProperties] = useState<DrawerProps | null>(null)
   const [drawerData, setDrawerData] = useState<{ title?: string; extra?: React.ReactNode }>({})
 
   useEffect(() => {
-    const handleOpenDrawer = (event: CustomEvent<string>) => {
-      setWidgetEndpoint(event.detail)
+    const handleOpenDrawer = (event: CustomEvent<DrawerProps>) => {
+      setProperties(event.detail)
       setIsOpen(true)
     }
 
@@ -38,9 +44,11 @@ const Drawer = () => {
     }
   }, [])
 
-  if (!widgetEndpoint) {
+  if (!properties) {
     return null
   }
+
+  const { size, title, widgetEndpoint } = properties
 
   return (
     <AntdDrawer
@@ -54,8 +62,8 @@ const Drawer = () => {
       onClose={() => setIsOpen(false)}
       open={isOpen}
       rootClassName={styles.drawer}
-      size='large'
-      title={drawerData.title}
+      size={size || 'default'}
+      title={drawerData.title || title}
     >
       <DrawerProvider setDrawerData={setDrawerData}>
         <WidgetRenderer key={'drawer'} widgetEndpoint={widgetEndpoint} />

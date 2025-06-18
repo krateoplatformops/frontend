@@ -48,8 +48,9 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
           break
         }
         case 'openDrawer': {
+          const { size, title } = action
           const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
-          openDrawer(widgetEndpoint)
+          openDrawer({ size, title, widgetEndpoint })
           break
         }
         default:
