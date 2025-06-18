@@ -99,7 +99,6 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     )
   }
 
-  // TODO: check if actions should be retrieved from status
   const { actions } = spec
   const { resourcesRefs, widgetData } = status
   const uid = metadata?.uid
@@ -112,9 +111,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Column':
       return <Column actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'CompositionCard':
-      return (
-        <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
-      )
+      return <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
     case 'EventList':
       return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'FlowChart':
@@ -134,9 +131,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Route':
       return <Route actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
     case 'Table':
-    {
       return <Table actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
-    }
     case 'DataGrid':
       return <DataGrid actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
     case 'Filters':
@@ -148,9 +143,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Form':
       return <Form actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
     case 'ResourcesRouter':
-      return (
-        <ResourcesRouter actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ResourcesRouterWidgetData} />
-      )
+      return <ResourcesRouter actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ResourcesRouterWidgetData} />
     case 'ResourceRoute':
       return <ResourceRoute actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ResourceRouteWidgetData} />
     default:
