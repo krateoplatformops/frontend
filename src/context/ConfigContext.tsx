@@ -33,7 +33,16 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     const getConfig = async () => {
       try {
-        const configFile = await fetch('/config/config.json')
+        // In development, use VITE_CONFIG_NAME if set, otherwise fallback to config.json
+        // e.g., VITE_CONFIG_NAME=local will load config.local.json
+        let configPath = '/config/config.json'
+
+        const configName = import.meta.env.VITE_CONFIG_NAME
+        if (import.meta.env.DEV && configName) {
+          configPath = `/config/config.${configName}.json`
+        }
+
+        const configFile = await fetch(configPath)
 
         if (!configFile.ok) {
           throw new Error(`Failed to fetch config: ${configFile.statusText}`)
