@@ -171,6 +171,7 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
                 message: `Timeout waiting for event ${submitAction.onEventNavigateTo!.eventReason}`,
                 placement: 'bottomLeft',
               })
+              message.destroy()
             }, submitAction.onEventNavigateTo.timeout! * 1000)
 
             eventSource.addEventListener('krateo', (event) => {
@@ -206,13 +207,14 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
           })
 
           if (submitAction.onEventNavigateTo) {
-            const loadingMessage = message.loading('Creating the new resource and redirecting...', submitAction.onEventNavigateTo.timeout)
+            message.loading('Creating the new resource and redirecting...', submitAction.onEventNavigateTo.timeout)
           }
 
           // TODO: write this type
           const json = (await res.json()) as { metadata: { uid: string } }
 
           if (!res.ok) {
+            message.destroy()
             notification.error({
               description: json.message,
               message: `${json.status} - ${json.reason}`,
