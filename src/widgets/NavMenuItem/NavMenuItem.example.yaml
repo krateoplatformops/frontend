@@ -5,16 +5,16 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
-    resourceRefId: templates-route
+    resourceRefId: templates-page
     label: Templates
     icon: fa-rectangle-list
     path: /templates
     order: 20
 
   resourcesRefs:
-    - id: templates-route
+    - id: templates-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-route
+      name: templates-page
       namespace: test-namespace
-      resource: routes
+      resource: pages
       verb: GET
