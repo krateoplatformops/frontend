@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useIsFetching } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router'
 
 import { useRoutesContext } from '../../context/RoutesContext'
@@ -16,27 +17,9 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
   const navigate = useNavigate()
   const { menuRoutes } = useRoutesContext()
   const [searchParams] = useSearchParams()
-  const [widgetEndpoint, setWidgetEndpoint] = useState<string>(defaultWidgetEndpoint || '')
-
-  useEffect(() => {
-    if (defaultWidgetEndpoint) {
-      return
-    }
-
-    if (menuRoutes.length === 0) {
-      return
-    }
-
-    const currentRoute = menuRoutes.find(({ path }) => path === location.pathname)
-
-    setWidgetEndpoint(() => {
-      if (currentRoute && currentRoute.resourceRef) {
-        return currentRoute.resourceRef.path
-      }
-
-      return searchParams.get('widgetEndpoint') || ''
-    })
-  }, [location.pathname, menuRoutes, searchParams, setWidgetEndpoint, defaultWidgetEndpoint])
+  const queryParamWidgetEndpoint = searchParams.get('widgetEndpoint')
+  const currentRoute = menuRoutes.find(({ path }) => path === location.pathname)
+  const widgetEndpoint = queryParamWidgetEndpoint || currentRoute?.resourceRef?.path || defaultWidgetEndpoint || ''
 
   useEffect(() => {
     const userData = localStorage.getItem('K_user')
@@ -46,17 +29,27 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
     }
   }, [navigate])
 
+  const isFetchingRoutes = useIsFetching({
+    predicate: (query) => {
+      return (
+        (query.queryKey[1] as string).includes('resource=routes') ||
+        (query.queryKey[1] as string).includes('resource=routesloaders') ||
+        (query.queryKey[1] as string).includes('resource=navmenus')
+      )
+    },
+  })
+
   return (
     <div className={styles.widgetPage}>
-      <Sidebar/>
+      <Sidebar />
       <div className={styles.container}>
-        <Header breadcrumbVisible={widgetEndpoint !== null}/>
+        <Header breadcrumbVisible={widgetEndpoint !== null} />
         <div className={styles.content}>
-          {widgetEndpoint ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} /> : <Page404 />}
+          {widgetEndpoint || isFetchingRoutes ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} /> : <Page404 />}
         </div>
       </div>
-      <Drawer/>
-      <Modal/>
+      <Drawer />
+      <Modal />
     </div>
   )
 }
