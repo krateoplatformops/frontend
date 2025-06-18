@@ -172,7 +172,7 @@ spec:
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: dashboard-page
       namespace: krateo-system
-      resource: routes
+      resource: pages
       verb: GET
 ---
 kind: NavMenuItem
@@ -193,7 +193,7 @@ spec:
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: templates-page
       namespace: krateo-system
-      resource: routes
+      resource: pages
       verb: GET
 ---
 kind: NavMenuItem
@@ -214,7 +214,7 @@ spec:
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: form-page
       namespace: krateo-system
-      resource: routes
+      resource: pages
       verb: GET
 ---
 kind: NavMenuItem
@@ -235,7 +235,7 @@ spec:
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: compositions-page
       namespace: krateo-system
-      resource: routes
+      resource: pages
       verb: GET
 ---
 kind: NavMenu
@@ -287,24 +287,24 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: grid-route
+    resourceRefId: grid-page
     label: Grid
     icon: fa-shapes
     path: /grid
     order: 30
 
   resourcesRefs:
-    - id: grid-route
+    - id: grid-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: grid-route
+      name: grid-page
       namespace: krateo-system
-      resource: routes
+      resource: pages
       verb: GET
 ---
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: grid-route
+  name: grid-page
   namespace: krateo-system
 spec:
   widgetData:
@@ -332,23 +332,23 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    resourceRefId: table-filter-route
+    resourceRefId: table-filter-page
     label: Table filter
     icon: fa-shapes
     path: /tablefilter
     order: 30
   resourcesRefs:
-    - id: table-filter-route
+    - id: table-filter-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-filter-route
+      name: table-filter-page
       namespace: krateo-system
-      resource: routes
+      resource: pages
       verb: GET
 ---
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: table-filter-route
+  name: table-filter-page
   namespace: krateo-system
 spec:
   widgetData:

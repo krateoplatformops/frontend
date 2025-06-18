@@ -1,4 +1,4 @@
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: compositions-route
