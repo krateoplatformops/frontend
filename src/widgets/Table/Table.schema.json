@@ -19,6 +19,7 @@
           "required": ["data", "columns"],
           "properties": {
             "prefix": {
+              "description": "it's the filters prefix to get right values",
               "type": "string"
             },
             "pageSize": {

@@ -6,6 +6,9 @@ export interface Table {
   kind: string
   spec: {
     widgetData: {
+      /**
+       * it's the filters prefix to get right values
+       */
       prefix?: string
       /**
        * number of rows displayed per page

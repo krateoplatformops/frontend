@@ -3,7 +3,13 @@ export interface DataGrid {
   kind: string
   spec: {
     widgetData: {
+      /**
+       * it's the filters prefix to get right values
+       */
       prefix?: string
+      /**
+       * to show children as list or grid
+       */
       asGrid?: boolean
       items: {
         resourceRefId: string

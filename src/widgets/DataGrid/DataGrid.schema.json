@@ -18,9 +18,11 @@
           "required": ["items"],
           "properties": {
             "prefix": {
+              "description": "it's the filters prefix to get right values",
               "type": "string"
             },
             "asGrid": {
+              "description": "to show children as list or grid",
               "type": "boolean"
             },
             "items": {

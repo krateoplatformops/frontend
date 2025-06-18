@@ -18,6 +18,7 @@
           "required": ["fields", "prefix"],
           "properties": {
             "prefix": {
+              "description": "the prefix to share filters values to other widgets",
               "type": "string"
             },
             "fields": {
@@ -27,19 +28,24 @@
                 "required": ["label", "type", "name"],
                 "properties": {
                   "label": {
+                    "description": "the label of the field",
                     "type": "string"
                   },
                   "name": {
+                    "description": "the name of the field, it must to be identical to widget prop name to filter",
                     "type": "string"
                   },
                   "description": {
+                    "description": "text to show as tooltip",
                     "type": "string"
                   },
                   "type": {
+                    "description": "it's the filter type, to render input, select, radio buttons, date picker or daterange picker",
                     "type": "string",
                     "enum": ["string", "boolean", "number", "date", "daterange"]
                   },
                   "options": {
+                    "description": "they're the options for select or radio, the type must be 'string'",
                     "type": "array",
                     "items": {
                       "type": "string"

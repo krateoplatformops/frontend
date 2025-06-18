@@ -295,6 +295,21 @@ spec:
 
 ---
 
+### DataGrid
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| prefix | no | it's the filters prefix to get right values | string |
+| asGrid | no | to show children as list or grid | boolean |
+| items | yes |  | array |
+| items[].resourceRefId | yes |  | string |
+
+---
+
 ### EventList
 
 EventList renders data coming from a Kubernetes cluster or Server Sent Events associated to a specific endpoint and topic
@@ -386,6 +401,24 @@ spec:
     sseTopic: "k8s-event"
 ```
 </details>
+
+---
+
+### Filters
+
+
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| prefix | yes | the prefix to share filters values to other widgets | string |
+| fields | yes |  | array |
+| fields[].label | yes | the label of the field | string |
+| fields[].name | yes | the name of the field, it must to be identical to widget prop name to filter | string |
+| fields[].description | no | text to show as tooltip | string |
+| fields[].type | yes | it's the filter type, to render input, select, radio buttons, date picker or daterange picker | `string` \| `boolean` \| `number` \| `date` \| `daterange` |
+| fields[].options | no | they're the options for select or radio, the type must be 'string' | array |
 
 ---
 
@@ -632,18 +665,18 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
-    resourceRefId: templates-route
+    resourceRefId: templates-page
     label: Templates
     icon: fa-rectangle-list
     path: /templates
     order: 20
 
   resourcesRefs:
-    - id: templates-route
+    - id: templates-page
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-route
+      name: templates-page
       namespace: test-namespace
-      resource: routes
+      resource: pages
       verb: GET
 ```
 </details>
@@ -666,7 +699,7 @@ Page is a wrapper component, placed at the top of the component tree, that wraps
 <summary>Example</summary>
 
 ```yaml
-kind: Route
+kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: compositions-route
@@ -899,6 +932,7 @@ Table displays structured data with customizable columns and pagination
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
+| prefix | no | it's the filters prefix to get right values | string |
 | pageSize | no | number of rows displayed per page | integer |
 | data | yes | array of objects representing the table's row data | array |
 | columns | yes | configuration of the table's columns | array |
