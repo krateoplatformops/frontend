@@ -74,20 +74,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
             "properties": {
               "id": {
                 "type": "string"
               },
               "apiVersion": {
-                "type": "string"
+                "type": "string",
+                "enum": ["widgets.templates.krateo.io/v1beta1"]
               },
               "name": {
                 "type": "string"
@@ -96,11 +90,12 @@
                 "type": "string"
               },
               "resource": {
-                "type": "string"
+                "type": "string",
+                "enum": ["pages"]
               },
               "verb": {
                 "type": "string",
-                "enum": ["GET", "POST", "DELETE"]
+                "enum": ["GET"]
               }
             },
             "additionalProperties": false

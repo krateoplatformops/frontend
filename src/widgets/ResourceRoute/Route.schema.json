@@ -7,8 +7,8 @@
       "default": "v1beta1"
     },
     "kind": {
-      "default": "ResourceRoute",
-      "description": "ResourceRoute use to map a path to show in the frontend URL to a resource",
+      "default": "Route",
+      "description": "Route is a configuration to map a path to show in the frontend URL to a resource, it doesn't render anything by itself",
       "type": "string"
     },
     "spec": {
@@ -24,7 +24,7 @@
             },
             "resourceRefId": {
               "type": "string",
-              "description": "the identifier of the k8s custom resource that should be rendered, usually a widget"
+              "description": "the id matching the resource in the resourcesRefs array, must of kind page"
             }
           },
           "additionalProperties": false
@@ -68,7 +68,8 @@
                 "type": "string"
               },
               "apiVersion": {
-                "type": "string"
+                "type": "string",
+                "enum": ["widgets.templates.krateo.io/v1beta1"]
               },
               "name": {
                 "type": "string"
@@ -77,11 +78,12 @@
                 "type": "string"
               },
               "resource": {
-                "type": "string"
+                "type": "string",
+                "enum": ["pages"]
               },
               "verb": {
                 "type": "string",
-                "enum": ["GET", "POST", "DELETE"]
+                "enum": ["GET"]
               }
             }
           },

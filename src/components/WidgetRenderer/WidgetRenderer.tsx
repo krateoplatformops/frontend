@@ -26,18 +26,13 @@ import LineChart from '../../widgets/LineChart'
 import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
 import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
 import { NavMenu } from '../../widgets/NavMenu/NavMenu'
+import { Page, type PageWidgetData } from '../../widgets/Page/Page'
 import type { PanelWidgetData } from '../../widgets/Panel/Panel'
 import Panel from '../../widgets/Panel/Panel'
 import Paragraph from '../../widgets/Paragraph'
 import type { ParagraphWidgetData } from '../../widgets/Paragraph/Paragraph'
 import type { PieChartWidgetData } from '../../widgets/PieChart/PieChart'
 import PieChart from '../../widgets/PieChart/PieChart'
-import type { ResourceRouteWidgetData } from '../../widgets/ResourceRoute/ResourceRoute'
-import { ResourceRoute } from '../../widgets/ResourceRoute/ResourceRoute'
-import type { ResourcesRouterWidgetData } from '../../widgets/ResourcesRouter/ResourcesRouter'
-import { ResourcesRouter } from '../../widgets/ResourcesRouter/ResourcesRouter'
-import type { RouteWidgetData } from '../../widgets/Route/Route'
-import { Route } from '../../widgets/Route/Route'
 import Row from '../../widgets/Row'
 import type { RowWidgetData } from '../../widgets/Row/Row'
 import type { TableWidgetData } from '../../widgets/Table/Table'
@@ -111,7 +106,9 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Column':
       return <Column actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'CompositionCard':
-      return <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
+      return (
+        <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
+      )
     case 'EventList':
       return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'FlowChart':
@@ -128,8 +125,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <PieChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
     case 'Row':
       return <Row actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
-    case 'Route':
-      return <Route actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
+    case 'Page':
+      return <Page actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PageWidgetData} />
     case 'Table':
       return <Table actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
     case 'DataGrid':
@@ -142,10 +139,8 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
     case 'Form':
       return <Form actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
-    case 'ResourcesRouter':
-      return <ResourcesRouter actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ResourcesRouterWidgetData} />
-    case 'ResourceRoute':
-      return <ResourceRoute actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ResourceRouteWidgetData} />
+    case 'RoutesLoader':
+      return <RoutesLoader actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RoutesLoaderWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }

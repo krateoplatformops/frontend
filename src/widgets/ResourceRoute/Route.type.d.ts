@@ -1,20 +1,19 @@
 export interface Route {
   version: string
   /**
-   * Route is a wrapper component, typically placed at the top of the component tree, that wraps and renders all nested components.
+   * ResourceRoute use to map a path to show in the frontend URL to a resource
    */
   kind: string
   spec: {
     widgetData: {
       /**
-       * list of resources to be rendered within the route
+       * the url path to that loads the resource
        */
-      items: {
-        /**
-         * the identifier of the k8s custom resource that should be rendered, usually a widget
-         */
-        resourceRefId: string
-      }[]
+      path: string
+      /**
+       * the identifier of the k8s custom resource that should be rendered, usually a widget
+       */
+      resourceRefId: string
     }
     apiRef?: {
       name: string

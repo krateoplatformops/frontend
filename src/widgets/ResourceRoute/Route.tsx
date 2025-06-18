@@ -4,11 +4,11 @@ import { createRoute, useRoutesContext } from '../../context/RoutesContext'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-import type { ResourceRoute as WidgetType } from './ResourceRoute.type'
+import type { Route as WidgetType } from './Route.type'
 
-export type ResourceRouteWidgetData = WidgetType['spec']['widgetData']
+export type RouteWidgetData = WidgetType['spec']['widgetData']
 
-export function ResourceRoute({ resourcesRefs, widgetData }: WidgetProps<ResourceRouteWidgetData>) {
+export function Route({ resourcesRefs, widgetData }: WidgetProps<RouteWidgetData>) {
   const { registerRoutes } = useRoutesContext()
 
   useEffect(() => {

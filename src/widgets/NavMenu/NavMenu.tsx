@@ -58,7 +58,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
               Authorization: `Bearer ${getAccessToken()}`,
             },
           })
-          const widget = await res.json() as NavMenuItemResponse
+          const widget = (await res.json()) as NavMenuItemResponse
           return widget
         },
         queryKey: ['navmenuitems', id, widgetFullUrl],
@@ -71,16 +71,25 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
       const validMenuItems = navMenuItems.filter((item): item is NavMenuItemResponse => !!item)
 
       const routesToSave = validMenuItems
-        .map(({ status: { resourcesRefs, widgetData: { path, resourceRefId } } }) => {
-          const routeResourceRef = resourcesRefs?.find(({ id }) => id === resourceRefId)
-          if (!routeResourceRef) { return null }
+        .map(
+          ({
+            status: {
+              resourcesRefs,
+              widgetData: { path, resourceRefId },
+            },
+          }) => {
+            const routeResourceRef = resourcesRefs?.find(({ id }) => id === resourceRefId)
+            if (!routeResourceRef) {
+              return null
+            }
 
-          return {
-            path,
-            resourceRef: { ...routeResourceRef, payload: {} },
-            resourceRefId,
+            return {
+              path,
+              resourceRef: { ...routeResourceRef, payload: {} },
+              resourceRefId,
+            }
           }
-        })
+        )
         .filter(Boolean) as AppRoute[]
 
       localStorage.setItem('routes', JSON.stringify(routesToSave))
@@ -101,13 +110,19 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
 
     const validMenuItems = navMenuItems.filter((item): item is NavMenuItemResponse => !!item)
 
-    return validMenuItems.map(({ status: { widgetData: { icon, label, path } } }) => {
-      return {
-        icon: <FontAwesomeIcon icon={icon as IconProp} />,
-        key: path,
-        label,
+    return validMenuItems.map(
+      ({
+        status: {
+          widgetData: { icon, label, path },
+        },
+      }) => {
+        return {
+          icon: <FontAwesomeIcon icon={icon as IconProp} />,
+          key: path,
+          label,
+        }
       }
-    })
+    )
   }, [navMenuItems, loadedAllMenuItems])
 
   const handleClick = (key: string) => {
