@@ -15,7 +15,7 @@ const Row = ({ resourcesRefs, uid, widgetData }: WidgetProps<RowWidgetData>) => 
   const defaultSize = Math.floor(24 / items.length) || 24
 
   return (
-    <AntdRow align={'middle'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} justify={'center'} key={uid} wrap>
+    <AntdRow align={'middle'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} key={uid} wrap>
       {items.map(({ resourceRefId, size }, index) => (
         <AntdColumn className={styles.column} key={`${uid}-col-${index}`} span={size ?? defaultSize}>
           <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
