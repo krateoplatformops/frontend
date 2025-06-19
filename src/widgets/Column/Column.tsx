@@ -4,6 +4,7 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
+import styles from './Column.module.css'
 import type { Column as WidgetType } from './Column.type'
 
 export type ColumnWidgetData = WidgetType['spec']['widgetData']
@@ -12,7 +13,7 @@ const Column = ({ resourcesRefs, uid, widgetData }: WidgetProps<ColumnWidgetData
   const { items, size } = widgetData
 
   return (
-    <AntdColumn key={uid} span={size}>
+    <AntdColumn className={styles.column} key={uid} span={size}>
       {items.map(({ resourceRefId }, index) => (
         <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
       ))}
