@@ -1,6 +1,7 @@
 {
   "api": {
     "AUTHN_API_BASE_URL": "http://localhost:8082",
+    "SNOWPLOW_API_BASE_URL": "http://localhost:8080",
     "EVENTS_API_BASE_URL": "http://132.164.148.255:8083",
     "ROUTES_LOADER": "/call?resource=routesloaders&apiVersion=widgets.templates.krateo.io/v1beta1&name=routes-loader&namespace=krateo-system",
     "SMITHERY_API_BASE_URL": "http://localhost:8081",
