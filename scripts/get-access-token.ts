@@ -140,7 +140,7 @@ try {
 
 export async function getAccessToken(configType: string) {
   const loginUrl = `${api.AUTHN_API_BASE_URL}/basic/login`
-  
+
   try {
     console.log(chalk.blue(`🔐 Authenticating with ${chalk.bold(configType)} configuration...`))
     console.log(chalk.gray(`   API URL: ${api.AUTHN_API_BASE_URL}`))
@@ -166,18 +166,18 @@ export async function getAccessToken(configType: string) {
     console.log(chalk.green(`✅ Token (.gitignored) saved to ${chalk.cyan(`scripts/${outputFileName}`)}`))
   } catch (error) {
     console.error(`\n${chalk.red('❌ Failed to get access token:')}`)
-    
+
     if (error instanceof Error && error.message === 'fetch failed') {
       console.error(`   ${chalk.red('Connection failed:')} Could not connect to ${chalk.cyan(loginUrl)}`)
       console.error(`   ${chalk.yellow('💡 Possible causes:')}`)
       console.error(`   • The authentication service is not running`)
-      console.error(`   • Wrong port or URL in config (check ${chalk.cyan(`config.${configType === 'default' ? 'json' : configType + '.json'}`)})`)
+      console.error(`   • Wrong port or URL in config (check ${chalk.cyan(`config.${configType === 'default' ? 'json' : `${configType}.json`}`)})`)
       console.error(`   • Network connectivity issues`)
       console.error(`   • Firewall blocking the connection`)
     } else {
       console.error(`   ${error instanceof Error ? error.message : String(error)}`)
     }
-    
+
     process.exit(1)
   }
 }

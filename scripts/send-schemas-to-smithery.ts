@@ -1,13 +1,11 @@
 /* eslint-disable no-console */
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import { basename, join } from 'node:path'
 
-import { glob } from 'glob'
 import select from '@inquirer/select'
 import chalk from 'chalk'
-
-import { readdirSync } from 'node:fs'
+import { glob } from 'glob'
 
 const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
 
@@ -46,7 +44,7 @@ function getConfigSmitheryUrl(config: string): string {
 async function selectConfig(): Promise<string> {
   try {
     const validConfigs = getAvailableConfigs()
-    
+
     if (validConfigs.length === 0) {
       console.error('No config files found in public/config/')
       process.exit(1)
@@ -65,7 +63,7 @@ async function selectConfig(): Promise<string> {
       choices,
       message: 'Select workspace configuration:',
     })
-  } catch (error) {
+  } catch {
     console.error('Configuration selection cancelled')
     process.exit(1)
   }
@@ -73,11 +71,11 @@ async function selectConfig(): Promise<string> {
 
 function findLoginResponse(configType: string): { accessToken: string } {
   const scriptsDir = join(process.cwd(), 'scripts')
-  
+
   try {
     const expectedFileName = configType === 'default' ? 'login-response.json' : `login-response.${configType}.json`
     const loginPath = join(scriptsDir, expectedFileName)
-    
+
     console.log(`📄 Using login response: ${expectedFileName}`)
     return JSON.parse(readFileSync(loginPath, 'utf-8'))
   } catch (error) {
@@ -90,11 +88,11 @@ function findLoginResponse(configType: string): { accessToken: string } {
 
 function getConfig(configType: string): { api: { SMITHERY_API_BASE_URL: string } } {
   const configDir = join(process.cwd(), 'public', 'config')
-  
+
   try {
     const configFileName = configType === 'default' ? 'config.json' : `config.${configType}.json`
     const configPath = join(configDir, configFileName)
-    
+
     console.log(`⚙️  Using config: ${configFileName}`)
     return JSON.parse(readFileSync(configPath, 'utf-8'))
   } catch (error) {
@@ -107,7 +105,7 @@ function getConfig(configType: string): { api: { SMITHERY_API_BASE_URL: string }
 async function sendSchemaToSmithery(schemaPath: string, api: { SMITHERY_API_BASE_URL: string }, accessToken: string, configType: string) {
   const forgeUrl = `${api.SMITHERY_API_BASE_URL}/forge?apply=true`
   const schemaName = basename(schemaPath)
-  
+
   try {
     const schemaContent = readFileSync(schemaPath, 'utf-8')
     // Parse and validate JSON before sending
@@ -135,7 +133,7 @@ async function sendSchemaToSmithery(schemaPath: string, api: { SMITHERY_API_BASE
       console.error(`❌ ${chalk.red('Connection failed:')} Could not send ${schemaName} to ${chalk.cyan(forgeUrl)}`)
       console.error(`   ${chalk.yellow('💡 Possible causes:')}`)
       console.error(`   • Smithery service is not running`)
-      console.error(`   • Wrong port or URL in config (check ${chalk.cyan(`config.${configType === 'default' ? 'json' : configType + '.json'}`)})`)
+      console.error(`   • Wrong port or URL in config (check ${chalk.cyan(`config.${configType === 'default' ? 'json' : `${configType}.json`}`)})`)
       console.error(`   • Network connectivity issues`)
       console.error(`   • Firewall blocking the connection`)
     } else {
@@ -148,8 +146,8 @@ async function sendSchemaToSmithery(schemaPath: string, api: { SMITHERY_API_BASE
 async function main() {
   try {
     const validConfigs = getAvailableConfigs()
-    
-    let configType = process.argv[2]
+
+    let configType = process.argv.at(2)
 
     if (!configType) {
       configType = await selectConfig()
@@ -159,10 +157,10 @@ async function main() {
     }
 
     console.log(chalk.blue(`🚀 Processing schemas for ${chalk.bold(configType)} workspace...`))
-    
+
     const { accessToken } = findLoginResponse(configType)
     const { api } = getConfig(configType)
-    
+
     console.log(chalk.gray(`   Smithery API: ${api.SMITHERY_API_BASE_URL}`))
 
     // Find all .schema.json files in the widgets directory

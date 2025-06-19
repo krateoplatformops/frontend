@@ -209,7 +209,7 @@ const WidgetRenderer = ({
   if (isLoading) {
     return (
       <div className={styles.loading}>
-        <Skeleton />
+        <Skeleton active/>
       </div>
     )
   }

@@ -72,7 +72,7 @@ const Login = () => {
 
   const content = useMemo(() => {
     if (isMethodLoading) {
-      return <Skeleton />
+      return <Skeleton active />
     }
 
     if (isMethodsError) {
