@@ -97,11 +97,11 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
           ))}
         </div>
         {footer && (
-          <div className={`${styles.footer} ${!footer.tags && footer.items.length === 1 ? styles.single : ''} `}>
+          <div className={`${styles.footer} ${!footer.tags && footer.items?.length === 1 ? styles.single : ''} `}>
             <div>
               {footer.tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
             </div>
-            {footer.items.map(({ resourceRefId }, index) => (
+            {footer.items?.map(({ resourceRefId }, index) => (
               <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
             ))}
           </div>

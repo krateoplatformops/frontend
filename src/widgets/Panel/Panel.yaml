@@ -63,6 +63,10 @@ spec:
     title: 2025-06-11T15:20:41+00:00 # Panel with Column
     items:
       - resourceRefId: first-column
+    footer:
+      tags:
+        - tag1
+        - tag2
   resourcesRefs:
     - id: first-column
       apiVersion: widgets.templates.krateo.io/v1beta1

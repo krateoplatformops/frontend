@@ -17,7 +17,7 @@ export interface Panel {
         /**
          * list of resource references to render in the footer
          */
-        items: {
+        items?: {
           /**
            * the identifier of the k8s custom resource that should be represented, usually a widget
            */

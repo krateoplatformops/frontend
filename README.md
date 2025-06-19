@@ -730,7 +730,7 @@ Panel is a container to display information
 |----------|----------|-------------|------|
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
 | footer | no | footer section of the panel containing additional items and tags | object |
-| footer.items | yes | list of resource references to render in the footer | array |
+| footer.items | no | list of resource references to render in the footer | array |
 | footer.items[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
 | footer.tags | no | list of string tags to be displayed in the footer | array |
 | icon | no | icon displayed in the panel header | object |

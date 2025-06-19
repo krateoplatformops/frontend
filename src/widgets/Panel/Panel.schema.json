@@ -25,7 +25,6 @@
             "footer": {
               "type": "object",
               "description": "footer section of the panel containing additional items and tags",
-              "required": ["items"],
               "properties": {
                 "items": {
                   "type": "array",
