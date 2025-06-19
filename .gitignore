@@ -28,9 +28,13 @@ coverage/
 
 kubeconfig.yaml
 
-scripts/login-response.json
+scripts/login-response*.json
+scripts/credentials*.json
 *kubeconfig*
 
 scratchpad.md
 
 scripts/smithery-output/*.yaml
+
+.env
+.env.local
