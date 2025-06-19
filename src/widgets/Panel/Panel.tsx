@@ -2,6 +2,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
+import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
@@ -19,7 +20,7 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { clickActionId, footer, icon, items, title, tooltip } = widgetData
+  const { clickActionId, footer, headerLeft, headerRight, icon, items, title, tooltip } = widgetData
 
   const action = Object.values(actions ?? {})
     .flat()
@@ -67,6 +68,42 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
     })
   }
 
+  const panelHeader = useMemo(() => {
+    if (!headerLeft && !headerRight) {
+      return <></>
+    }
+
+    return (
+      <div className={`${styles.bodyHeader} ${!headerLeft && headerRight ? styles.right : ''}`}>
+        <div>{headerLeft}</div>
+        <div>{headerRight}</div>
+      </div>
+    )
+  }, [headerLeft, headerRight])
+
+  const panelFooter = useMemo(() => {
+    if (!footer) {
+      return <></>
+    }
+
+    return (
+      <div className={`${styles.footer} ${!footer.tags && footer.items?.length === 1 ? styles.single : ''} `}>
+        {footer.tags && footer.tags.length > 1 && (
+          <div>
+            {footer.tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
+          </div>
+        )}
+        {footer.items && footer.items.length > 1 && (
+          <div className={styles.items}>
+            {footer.items?.map(({ resourceRefId }, index) => (
+              <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }, [footer, resourcesRefs, uid])
+
   return (
     <AntdCard
       className={`${styles.panel} ${action ? styles.clickable : ''}`}
@@ -91,27 +128,13 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
       variant={'borderless'}
     >
       <div className={styles.content}>
+        {panelHeader}
         <div className={styles.body}>
           {items.map(({ resourceRefId }, index) => (
             <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
           ))}
         </div>
-        {footer && (
-          <div className={`${styles.footer} ${!footer.tags && footer.items?.length === 1 ? styles.single : ''} `}>
-            {footer.tags && footer.tags.length > 1 && (
-              <div>
-                {footer.tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
-              </div>
-            )}
-            {footer.items && footer.items.length > 1 && (
-              <div className={styles.items}>
-                {footer.items?.map(({ resourceRefId }, index) => (
-                  <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {panelFooter}
       </div>
     </AntdCard>
   )

@@ -20,6 +20,17 @@
       gap: var(--spacing-md);
     }
 
+    .bodyHeader {
+      align-items: center;
+      display: flex;
+      gap: var(--spacing-sm);
+      justify-content: space-between;
+
+      &.right {
+        justify-content: flex-end;
+      }
+    }
+
     .footer {
       align-items: center;
       display: flex;

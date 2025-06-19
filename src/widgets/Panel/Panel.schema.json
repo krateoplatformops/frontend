@@ -51,6 +51,14 @@
               },
               "additionalProperties": false
             },
+            "headerLeft": {
+              "type": "string",
+              "description": "optional text to be displayed under the title, on the left side of the Panel"
+            },
+            "headerRight": {
+              "type": "string",
+              "description": "optional text to be displayed under the title, on the right side of the Panel"
+            },
             "icon": {
               "type": "object",
               "description": "icon displayed in the panel header",

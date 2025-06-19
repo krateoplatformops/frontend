@@ -29,6 +29,14 @@ export interface Panel {
         tags?: string[]
       }
       /**
+       * optional text to be displayed under the title, on the left side of the Panel
+       */
+      headerLeft?: string
+      /**
+       * optional text to be displayed under the title, on the right side of the Panel
+       */
+      headerRight?: string
+      /**
        * icon displayed in the panel header
        */
       icon?: {

@@ -742,6 +742,8 @@ Panel is a container to display information
 | footer.items | no | list of resource references to render in the footer | array |
 | footer.items[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
 | footer.tags | no | list of string tags to be displayed in the footer | array |
+| headerLeft | no | optional text to be displayed under the title, on the left side of the Panel | string |
+| headerRight | no | optional text to be displayed under the title, on the right side of the Panel | string |
 | icon | no | icon displayed in the panel header | object |
 | icon.name | yes | name of the icon to display (font awesome icon name eg: `fa-inbox`) | string |
 | icon.color | no | color of the icon | string |
