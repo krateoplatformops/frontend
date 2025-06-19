@@ -98,12 +98,18 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
         </div>
         {footer && (
           <div className={`${styles.footer} ${!footer.tags && footer.items?.length === 1 ? styles.single : ''} `}>
-            <div>
-              {footer.tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
-            </div>
-            {footer.items?.map(({ resourceRefId }, index) => (
-              <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-            ))}
+            {footer.tags && footer.tags.length > 1 && (
+              <div>
+                {footer.tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
+              </div>
+            )}
+            {footer.items && footer.items.length > 1 && (
+              <div className={styles.items}>
+                {footer.items?.map(({ resourceRefId }, index) => (
+                  <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

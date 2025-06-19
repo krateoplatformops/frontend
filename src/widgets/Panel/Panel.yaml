@@ -64,6 +64,8 @@ spec:
     items:
       - resourceRefId: first-column
     footer:
+      items:
+        - resourceRefId: button-with-drawer-filters
       tags:
         - tag1
         - tag2
@@ -73,6 +75,18 @@ spec:
       name: first-column
       namespace: krateo-system
       resource: columns
+      verb: GET
+    - id: button-with-drawer-filters
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-with-drawer-filters
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: button-1
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-1
+      namespace: krateo-system
+      resource: buttons
       verb: GET
 ---
 kind: Panel

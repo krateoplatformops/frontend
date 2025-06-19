@@ -26,6 +26,12 @@
       gap: var(--spacing-sm);
       justify-content: space-between;
 
+      & .items {
+        align-items: center;
+        display: flex;
+        gap: var(--spacing-sm)
+      }
+
       &.single {
         justify-content: flex-end;
       }
