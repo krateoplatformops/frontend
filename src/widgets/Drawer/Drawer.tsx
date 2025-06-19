@@ -52,6 +52,7 @@ const Drawer = () => {
 
   return (
     <AntdDrawer
+      destroyOnHidden
       extra={drawerData.extra}
       key={
         /* This make sure that the content of the drawer is destroyed and recreated when
@@ -59,7 +60,10 @@ const Drawer = () => {
         */
         isOpen ? 'open' : 'closed'
       }
-      onClose={() => setIsOpen(false)}
+      onClose={() => {
+        setIsOpen(false)
+        setDrawerData({})
+      }}
       open={isOpen}
       rootClassName={styles.drawer}
       size={size || 'default'}
