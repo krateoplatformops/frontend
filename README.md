@@ -305,6 +305,15 @@ spec:
 |----------|----------|-------------|------|
 | prefix | no | it's the filters prefix to get right values | string |
 | asGrid | no | to show children as list or grid | boolean |
+| grid | no | The grid type of list. You can set grid to something like {gutter: 16, column: 4} or specify the integer for columns based on their size, e.g. sm, md, etc. to make it responsive. | object |
+| grid.gutter | no | The spacing between grid | integer |
+| grid.column | no | The column of grid | integer |
+| grid.xs | no | <576px column of grid | integer |
+| grid.sm | no | ≥576px column of grid | integer |
+| grid.md | no | ≥768px column of grid | integer |
+| grid.lg | no | ≥992px column of grid | integer |
+| grid.xl | no | ≥1200px column of grid | integer |
+| grid.xxl | no | ≥1600px column of grid | integer |
 | items | yes |  | array |
 | items[].resourceRefId | yes |  | string |
 

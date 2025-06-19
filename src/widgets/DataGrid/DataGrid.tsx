@@ -1,5 +1,7 @@
 import { List } from 'antd'
+import type { ListGridType } from 'antd/es/list'
 import type { ReactElement } from 'react'
+import { useMemo } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
@@ -10,26 +12,30 @@ import type { DataGrid as WidgetType } from './DataGrid.type'
 export type DataGridWidgetData = WidgetType['spec']['widgetData']
 
 const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>) => {
-  const { asGrid, items, prefix } = widgetData
+  const { asGrid, grid, items, prefix } = widgetData
 
   const getDatalist = () => {
-    let datalist: ReactElement[] = []
     if (prefix) {
-      items.forEach(item => {
-        const elem = WidgetRenderer({ prefix, widgetEndpoint: getEndpointUrl(item.resourceRefId, resourcesRefs) })
+      const datalist: ReactElement[] = []
+
+      items.forEach(({ resourceRefId }) => {
+        const elem = WidgetRenderer({ prefix, widgetEndpoint: getEndpointUrl(resourceRefId, resourcesRefs) })
         if (elem) { datalist.push(elem) }
       })
-    } else {
-      // unfiltrable list
-      datalist = items.map(item => <WidgetRenderer widgetEndpoint={getEndpointUrl(item.resourceRefId, resourcesRefs)} />)
+
+      return datalist
     }
-    return datalist
+
+    return items.map(({ resourceRefId }) => (
+      <WidgetRenderer key={resourceRefId} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+    ))
   }
 
-  return (
-    <List
-      dataSource={getDatalist()}
-      grid={asGrid && (items && items?.length > 1) ? {
+  const renderedGrid: ListGridType = useMemo(() => {
+    if (asGrid && items && items.length > 1) {
+      if (grid) { return grid }
+
+      return {
         gutter: 16,
         lg: 3,
         md: 2,
@@ -37,14 +43,21 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
         xl: 3,
         xs: 1,
         xxl: 4,
-      } : { column: 1, gutter: 16 }}
-      renderItem={(item) => {
-        return (
-          <List.Item>
-            {item}
-          </List.Item>
-        )
-      }}
+      }
+    }
+
+    return { column: 1, gutter: 16 }
+  }, [asGrid, grid, items])
+
+  return (
+    <List
+      dataSource={getDatalist()}
+      grid={renderedGrid}
+      renderItem={(item, index) => (
+        <List.Item key={`datagrid-item-${item.key || index}`}>
+          {item}
+        </List.Item>
+      )}
     />
   )
 }

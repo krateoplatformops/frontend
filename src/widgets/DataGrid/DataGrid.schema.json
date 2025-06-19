@@ -25,6 +25,45 @@
               "description": "to show children as list or grid",
               "type": "boolean"
             },
+            "grid": {
+              "description": "The grid type of list. You can set grid to something like {gutter: 16, column: 4} or specify the integer for columns based on their size, e.g. sm, md, etc. to make it responsive.",
+              "type": "object",
+              "properties": {
+                "gutter": {
+                  "type": "integer",
+                  "description": "The spacing between grid"
+                },
+                "column": {
+                  "type": "integer",
+                  "description": "The column of grid"
+                },
+                "xs": {
+                  "type": "integer",
+                  "description": "<576px column of grid"
+                },
+                "sm": {
+                  "type": "integer",
+                  "description": "≥576px column of grid"
+                },
+                "md": {
+                  "type": "integer",
+                  "description": "≥768px column of grid"
+                },
+                "lg": {
+                  "type": "integer",
+                  "description": "≥992px column of grid"
+                },
+                "xl": {
+                  "type": "integer",
+                  "description": "≥1200px column of grid"
+                },
+                "xxl": {
+                  "type": "integer",
+                  "description": "≥1600px column of grid"
+                }
+              },
+              "additionalProperties": false
+            },
             "items": {
               "type": "array",
               "items": {
