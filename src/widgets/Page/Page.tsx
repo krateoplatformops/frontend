@@ -9,6 +9,7 @@ export type PageWidgetData = WidgetType['spec']['widgetData']
 
 export function Page({ resourcesRefs, uid, widgetData }: WidgetProps<PageWidgetData>) {
   const { items, title } = widgetData
+
   return (
     <>
       {/* https://react.dev/reference/react-dom/components/title */}

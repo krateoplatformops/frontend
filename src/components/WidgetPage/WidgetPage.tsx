@@ -32,9 +32,9 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
   const isFetchingRoutes = useIsFetching({
     predicate: (query) => {
       return (
-        (query.queryKey[1] as string).includes('resource=routes') ||
-        (query.queryKey[1] as string).includes('resource=routesloaders') ||
-        (query.queryKey[1] as string).includes('resource=navmenus')
+        (query.queryKey[1] as string).includes('resource=routes')
+        || (query.queryKey[1] as string).includes('resource=routesloaders')
+        || (query.queryKey[1] as string).includes('resource=navmenus')
       )
     },
   })

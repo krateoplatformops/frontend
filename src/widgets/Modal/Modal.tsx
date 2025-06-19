@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 
+import styles from './Modal.module.css'
+
 interface ModalProps {
   widgetEndpoint: string
   title?: string | undefined
@@ -47,6 +49,7 @@ const Modal = () => {
 
   return (
     <AntdModal
+      className={styles.modal}
       footer={null}
       key={
         /* This make sure that the content of the modal is destroyed and recreated when
