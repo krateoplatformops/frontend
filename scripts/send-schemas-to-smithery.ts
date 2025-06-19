@@ -147,10 +147,16 @@ async function main() {
   try {
     const validConfigs = getAvailableConfigs()
 
-    let configType = process.argv.at(2)
+    // eslint-disable-next-line prefer-destructuring
+    let configType = process.argv[2]
 
     if (!configType) {
-      configType = await selectConfig()
+      if (process.stdout.isTTY) {
+        configType = await selectConfig()
+      } else {
+        configType = 'default'
+        console.log(`Using default config '${configType}' in non-interactive mode`)
+      }
     } else if (!validConfigs.includes(configType)) {
       console.error(`Invalid config type: ${configType}. Valid options: ${validConfigs.join(', ')}`)
       process.exit(1)

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -58,16 +59,22 @@ async function selectConfig(): Promise<string> {
       choices,
       message: 'Select workspace configuration:',
     })
-  } catch (error) {
+  } catch {
     console.error('Configuration selection cancelled')
     process.exit(1)
   }
 }
 
+// eslint-disable-next-line prefer-destructuring
 let configType = process.argv[2]
 
 if (!configType) {
-  configType = await selectConfig()
+  if (process.stdout.isTTY) {
+    configType = await selectConfig()
+  } else {
+    configType = 'default'
+    console.log(`Using default config '${configType}' in non-interactive mode`)
+  }
 } else if (!validConfigs.includes(configType)) {
   console.error(`Invalid config type: ${configType}. Valid options: ${validConfigs.join(', ')}`)
   process.exit(1)
@@ -115,7 +122,7 @@ try {
   if (!adminUsername || !adminPassword) {
     throw new Error('Missing ADMIN_USERNAME or ADMIN_PASSWORD in credentials file')
   }
-} catch (credentialsError) {
+} catch {
   console.warn(`\n${chalk.yellow('⚠️  Could not load credentials file:')} ${chalk.cyan(credentialsFileName)}`)
   console.warn(chalk.blue('🔄 Falling back to environment variables...'))
 
