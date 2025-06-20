@@ -73,6 +73,7 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
       top: '35%',
     },
     tooltip: {
+      confine: 'true',
       trigger: 'item',
     },
   }
