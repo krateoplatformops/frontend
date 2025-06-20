@@ -1,0 +1,52 @@
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: form-example
+  namespace: test-namespace
+spec:
+  widgetData:
+    submitActionId: firework-submit-action
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your fireworks app"
+          },
+          "image": {
+            "type": "string",
+            "title": "Container Image",
+            "description": "Full image path (e.g., ghcr.io/org/image:tag)"
+          },
+          "replicas": {
+            "type": "integer",
+            "title": "Number of Replicas",
+            "default": 1
+          },
+          "enableMetrics": {
+            "type": "boolean",
+            "title": "Enable Metrics",
+            "default": false
+          }
+        },
+        "required": ["name", "image"]
+      }
+  actions:
+    rest:
+      - id: firework-submit-action
+        resourceRefId: resource-ref-1
+        type: rest
+        payloadKey: spec
+        onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+        payloadToOverride:
+          - name: metadata.name
+            value: ${ git.toRepo.name }
+  resourcesRefs:
+    - id: resource-ref-1
+      apiVersion: composition.krateo.io/v2-0-0
+      name: new-app
+      namespace: test-namespace
+      resource: fireworksapps
+      verb: POST

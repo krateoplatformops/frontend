@@ -13,13 +13,14 @@ spec:
   actions:
     openDrawer:
       - id: open-drawer-action
-        resourceRefId: firework-form
+        resourceRefId: test-firework-form
         type: openDrawer
-        title: From in Drawer
+        title: Form in Drawer
+        size: large
   resourcesRefs:
-    - id: firework-form
+    - id: test-firework-form
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: firework-form
+      name: test-firework-form
       namespace: krateo-system
       resource: forms
       verb: GET

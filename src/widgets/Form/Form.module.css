@@ -1,19 +1,19 @@
 .formGenerator {
-  margin: 0 -20px 0 0;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
   justify-content: space-between;
+  margin: 0 -20px 0 0;
 
   .anchorWrapper {
-    position: relative;
     height: 100%;
+    position: relative;
 
     .anchorRow {
-      position: absolute;
-      top: 0;
       bottom: 0;
       overflow: hidden;
+      position: absolute;
+      top: 0;
       width: 100%;
     }
   }
@@ -22,8 +22,8 @@
     height: 100%;
 
     .form {
-      overflow: auto;
       height: 100%;
+      overflow: auto;
       padding: 0 40px 0 10px;
 
       .formField {
@@ -49,15 +49,15 @@
       }
 
       :global label::before {
-        margin-top: 0px;
+        margin-top: 0;
       }
     }
   }
 
   .anchorLabelWrapper {
-    padding: 0 20px;
     height: 100%;
     overflow-y: scroll;
+    padding: 0 20px;
 
     :global .ant-anchor-link-title-active {
       font-weight: 600;
