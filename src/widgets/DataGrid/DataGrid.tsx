@@ -7,6 +7,7 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
+import styles from './DataGrid.module.css'
 import type { DataGrid as WidgetType } from './DataGrid.type'
 
 export type DataGridWidgetData = WidgetType['spec']['widgetData']
@@ -50,15 +51,17 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
   }, [asGrid, grid, items])
 
   return (
-    <List
-      dataSource={getDatalist()}
-      grid={renderedGrid}
-      renderItem={(item, index) => (
-        <List.Item key={`datagrid-item-${item.key || index}`}>
-          {item}
-        </List.Item>
-      )}
-    />
+    <div className={styles.list}>
+      <List
+        dataSource={getDatalist()}
+        grid={renderedGrid}
+        renderItem={(item, index) => (
+          <List.Item key={`datagrid-item-${item.key || index}`}>
+            {item}
+          </List.Item>
+        )}
+      />
+    </div>
   )
 }
 

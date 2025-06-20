@@ -199,7 +199,7 @@ spec:
       name: fa-solid fa-cubes
       color: blue
     title: comp 1
-    description: This is a test composition card.
+    description: This is a test composition card. With a long description to make sure it overflow and the Row is bigger than expected.
   actions:
     navigate:
       - id: composition-click-action

@@ -41,7 +41,7 @@ spec:
     prefix: filters-sample
     asGrid: true
     grid:
-      column: 4
+      column: 2
       gutter: 16
     items:
       - resourceRefId: composition-filtrable-card-1
