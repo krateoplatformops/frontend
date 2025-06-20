@@ -50,7 +50,6 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
             </Button>
           </Space>
         ),
-        title: 'Widget title',
       })
       alreadySetDrawerData.current = true
     }
@@ -157,7 +156,6 @@ function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData
                   </Button>
                 </Space>
               ),
-              title: 'Widget title',
             })
 
             const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
