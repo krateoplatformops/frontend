@@ -32,11 +32,18 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: composition-test-card
+      - resourceRefId: composition-filtrable-card-1
+      - resourceRefId: composition-filtrable-card-2
   resourcesRefs:
-    - id: composition-test-card
+    - id: composition-filtrable-card-1
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-card
+      name: composition-filtrable-card-1
+      namespace: krateo-system
+      resource: compositioncards
+      verb: GET
+    - id: composition-filtrable-card-2
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-filtrable-card-2
       namespace: krateo-system
       resource: compositioncards
       verb: GET

@@ -60,7 +60,7 @@ const CompositionCard = ({ actions, resourcesRefs, uid, widgetData }: WidgetProp
   return (
     <AntdCard
       className={`${styles.compositionCard} ${clickAction ? styles.clickable : ''}`}
-      classNames={{ header: styles.header, title: styles.title }}
+      classNames={{ body: styles.bodyWrapper, header: styles.header, title: styles.title }}
       extra={tooltip && (
         <Tooltip title={tooltip}>
           <Button icon={<QuestionCircleOutlined />} type='text' />

@@ -107,7 +107,7 @@ const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWid
   return (
     <AntdCard
       className={`${styles.panel} ${action ? styles.clickable : ''}`}
-      classNames={{ header: styles.header, title: styles.title }}
+      classNames={{ body: styles.bodyWrapper, header: styles.header, title: styles.title }}
       extra={
         tooltip && (
           <Tooltip title={tooltip}>

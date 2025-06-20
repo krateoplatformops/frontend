@@ -1,4 +1,8 @@
 .panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;  
+
   &.clickable {
     cursor: pointer;
   }
@@ -11,6 +15,7 @@
 
   .content {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: var(--spacing-lg);
 
@@ -36,6 +41,7 @@
       display: flex;
       gap: var(--spacing-sm);
       justify-content: space-between;
+      margin-top: auto;
 
       & .items {
         align-items: center;
@@ -47,6 +53,12 @@
         justify-content: flex-end;
       }
     }
+  }
+
+  .bodyWrapper {
+    display: flex;
+    flex: 1;
+    height: 100%;
   }
 
   .header {
