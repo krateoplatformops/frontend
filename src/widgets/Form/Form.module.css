@@ -27,8 +27,6 @@
       padding: 0 40px 0 10px;
 
       .formField {
-        margin-bottom: 40px;
-
         .labelField {
           row-gap: 0;
         }
@@ -36,10 +34,6 @@
         .breadcrumbDots {
           text-wrap: nowrap;
         }
-      }
-
-      :global label::before {
-        margin-top: -22px;
       }
     }
 
