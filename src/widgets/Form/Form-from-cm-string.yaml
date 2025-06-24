@@ -7,24 +7,24 @@ spec:
   widgetData:
     schema: {}
     submitActionId: firework-submit-action-from-string-schema
-  actions:
-    rest:
-      - id: firework-submit-action-from-string-schema
-        onEventNavigateTo:
-          eventReason: "CompositionCreated"
-          url: "/compositions/${metadata.name}"
-          timeout: 50
-            
-        payloadKey: spec
-        resourceRefId: resource-ref-1
-        type: rest
-        # onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+    actions:
+      rest:
+        - id: firework-submit-action-from-string-schema
+          onEventNavigateTo:
+            eventReason: "CompositionCreated"
+            url: "/compositions/${metadata.name}"
+            timeout: 50
+              
+          payloadKey: spec
+          resourceRefId: resource-ref-1
+          type: rest
+          # onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
 
-        payloadToOverride:
-        - name: metadata.name
-          value: ${ git.toRepo.name }
-        # - name: metadata.namespace
-        #   value: ${ "fireworksapp-system" }
+          payloadToOverride:
+          - name: metadata.name
+            value: ${ git.toRepo.name }
+          # - name: metadata.namespace
+          #   value: ${ "fireworksapp-system" }
         
 
   widgetDataTemplate:

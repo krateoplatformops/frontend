@@ -33,16 +33,16 @@ spec:
         },
         "required": ["name", "image"]
       }
-  actions:
-    rest:
-      - id: firework-submit-action
-        resourceRefId: resource-ref-1
-        type: rest
-        payloadKey: spec
-        onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
-        payloadToOverride:
-          - name: metadata.name
-            value: ${ git.toRepo.name }
+    actions:
+      rest:
+        - id: firework-submit-action
+          resourceRefId: resource-ref-1
+          type: rest
+          payloadKey: spec
+          onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+          payloadToOverride:
+            - name: metadata.name
+              value: ${ git.toRepo.name }
   resourcesRefs:
     - id: resource-ref-1
       apiVersion: composition.krateo.io/v2-0-0

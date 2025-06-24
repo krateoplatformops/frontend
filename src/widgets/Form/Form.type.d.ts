@@ -13,6 +13,65 @@ export interface Form {
      */
     widgetData: {
       /**
+       * the actions of the form
+       */
+      actions: {
+        rest?: {
+          /**
+           * the key to nest the payload to
+           */
+          payloadKey: string
+          id: string
+          resourceRefId: string
+          requireConfirmation?: boolean
+          onSuccessNavigateTo?: string
+          onEventNavigateTo?: {
+            eventReason: string
+            url: string
+            /**
+             * the timeout in seconds to wait for the event
+             */
+            timeout?: number
+          }
+          loading?: 'global' | 'inline' | 'none'
+          type?: 'rest'
+          payload?: {
+            [k: string]: unknown
+          }
+          payloadToOverride?: {
+            name: string
+            value: string
+          }[]
+        }[]
+        navigate?: {
+          id: string
+          type: 'navigate'
+          name: string
+          resourceRefId: string
+          requireConfirmation?: boolean
+          loading?: 'global' | 'inline' | 'none'
+        }[]
+        openDrawer?: {
+          id: string
+          type: 'openDrawer'
+          resourceRefId: string
+          requireConfirmation?: boolean
+          loading?: 'global' | 'inline' | 'none'
+          size?: 'default' | 'large'
+          title?: string
+        }[]
+        openModal?: {
+          id: string
+          type: 'openModal'
+          name: string
+          contentWidgetRef: string
+          resourceRefId: string
+          requireConfirmation?: boolean
+          loading?: 'global' | 'inline' | 'none'
+          title?: string
+        }[]
+      }
+      /**
        * the schema of the form as an object
        */
       schema?: {}
@@ -34,63 +93,5 @@ export interface Form {
       forPath?: string
       expression?: string
     }[]
-    /**
-     * the actions of the form
-     */
-    actions: {
-      rest?: {
-        /**
-         * the key to nest the payload to
-         */
-        payloadKey: string
-        id: string
-        resourceRefId: string
-        requireConfirmation?: boolean
-        onSuccessNavigateTo?: string
-        onEventNavigateTo?: {
-          eventReason: string
-          url: string
-          /**
-           * the timeout in seconds to wait for the event
-           */
-          timeout?: number
-        }
-        loading?: 'global' | 'inline' | 'none'
-        type?: 'rest'
-        payload?: {
-          [k: string]: unknown
-        }
-        payloadToOverride?: {
-          name: string
-          value: string
-        }[]
-      }[]
-      navigate?: {
-        id: string
-        type: 'navigate'
-        name: string
-        resourceRefId: string
-        requireConfirmation?: boolean
-        loading?: 'global' | 'inline' | 'none'
-      }[]
-      openDrawer?: {
-        id: string
-        type: 'openDrawer'
-        resourceRefId?: string
-        requireConfirmation?: boolean
-        loading?: 'global' | 'inline' | 'none'
-        size?: 'default' | 'large'
-        title?: string
-      }[]
-      openModal?: {
-        id: string
-        type: 'openModal'
-        name: string
-        contentWidgetRef: string
-        requireConfirmation?: boolean
-        loading?: 'global' | 'inline' | 'none'
-        title?: string
-      }[]
-    }
   }
 }

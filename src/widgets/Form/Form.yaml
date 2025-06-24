@@ -5,6 +5,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    actions: {}
     title: Firework App Form
     items:
       - resourceRefId: firework-form
@@ -25,19 +26,18 @@ spec:
   widgetData:
     schema: {}
     submitActionId: firework-submit-action
-  actions:
-    rest:
-      - id: firework-submit-action
-        resourceRefId: resource-ref-1
-        type: rest
-        onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
-        payloadToOverride:
-        - name: metadata.name
-          value: ${ git.toRepo.name }
+    actions:
+      rest:
+        - id: firework-submit-action
+          resourceRefId: resource-ref-1
+          type: rest
+          onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+          payloadToOverride:
+          - name: metadata.name
+            value: ${ git.toRepo.name }
   widgetDataTemplate:
     - forPath: schema
       expression: ${ .getSchema | .spec.versions[] | select(.name == "v2-0-0") | .schema.openAPIV3Schema.properties.spec }
-  
   resourcesRefs:
     - id: resource-ref-1
       apiVersion: composition.krateo.io/v2-0-0
@@ -97,16 +97,16 @@ spec:
         },
         "required": ["name", "image"]
       }
-  actions:
-    rest:
-      - id: firework-submit-action
-        resourceRefId: resource-ref-1
-        type: rest
-        payloadKey: spec
-        onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
-        payloadToOverride:
-          - name: metadata.name
-            value: ${ git.toRepo.name }
+    actions:
+      rest:
+        - id: firework-submit-action
+          resourceRefId: resource-ref-1
+          type: rest
+          payloadKey: spec
+          onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+          payloadToOverride:
+            - name: metadata.name
+              value: ${ git.toRepo.name }
   resourcesRefs:
     - id: resource-ref-1
       apiVersion: composition.krateo.io/v2-0-0
