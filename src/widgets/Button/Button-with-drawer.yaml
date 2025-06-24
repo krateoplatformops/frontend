@@ -10,11 +10,11 @@ spec:
     size: large
     type: primary
     clickActionId: my-click-action
-  actions:
-    openDrawer:
-      - id: my-click-action
-        resourceRefId: my-backend-endpoint
-        type: openDrawer
+    actions:
+      openDrawer:
+        - id: my-click-action
+          resourceRefId: my-backend-endpoint
+          type: openDrawer
   resourcesRefs:
     - id: my-backend-endpoint
       apiVersion: widgets.templates.krateo.io/v1beta1

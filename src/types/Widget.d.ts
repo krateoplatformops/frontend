@@ -96,8 +96,7 @@ export type WidgetActions = {
   }[]
 }
 
-export type WidgetProps<T = unknown, A = WidgetActions> = {
-  actions: A
+export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs
   uid: string
   widgetData: T

@@ -28,8 +28,8 @@ type ApiResponse = {
   [key: string]: unknown
 }
 
-const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
-  const { clickActionId, color, icon, label, shape, size, type } = widgetData
+const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
+  const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -37,7 +37,7 @@ const Button = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<ButtonW
   const { notification } = useApp()
 
   const onClick = async () => {
-    const action = Object.values(actions ?? {})
+    const action = Object.values(actions)
       .flat()
       .find(({ id }) => id === clickActionId)
 

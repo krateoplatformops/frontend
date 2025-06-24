@@ -9,12 +9,12 @@ spec:
     type: default
     shape: circle
     clickActionId: delete
-  actions:
-    rest:
-      - id: delete
-        resourceRefId: delete
-        type: rest
-        requireConfirmation: true
+    actions:
+      rest:
+        - id: delete
+          resourceRefId: delete
+          type: rest
+          requireConfirmation: true
   resourcesRefs:
     - id: delete
       apiVersion: composition.krateo.io/v1-1-15

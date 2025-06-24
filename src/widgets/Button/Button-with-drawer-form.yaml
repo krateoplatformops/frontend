@@ -10,13 +10,13 @@ spec:
     size: large
     type: primary
     clickActionId: open-drawer-action
-  actions:
-    openDrawer:
-      - id: open-drawer-action
-        resourceRefId: test-firework-form
-        type: openDrawer
-        title: Form in Drawer
-        size: large
+    actions:
+      openDrawer:
+        - id: open-drawer-action
+          resourceRefId: test-firework-form
+          type: openDrawer
+          title: Form in Drawer
+          size: large
   resourcesRefs:
     - id: test-firework-form
       apiVersion: widgets.templates.krateo.io/v1beta1
