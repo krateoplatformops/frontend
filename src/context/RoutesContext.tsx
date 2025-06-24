@@ -1,5 +1,3 @@
-// import { useQuery } from '@tanstack/react-query'
-import { useQuery } from '@tanstack/react-query'
 import React, { createContext, useCallback, useContext, useState } from 'react'
 import { useParams, type RouteObject } from 'react-router'
 
@@ -7,10 +5,6 @@ import WidgetPage from '../components/WidgetPage'
 import Auth from '../pages/Auth/Auth'
 import Login from '../pages/Login'
 import type { ResourceRef } from '../types/Widget'
-import { getAccessToken } from '../utils/getAccessToken'
-import { getResourceEndpoint } from '../utils/utils'
-
-import { useConfigContext } from './ConfigContext'
 
 export interface AppRoute {
   path: string
@@ -78,63 +72,12 @@ export function createRoute({ endpoint, path }: { endpoint: string; path: string
   }
 }
 
-function useResourcesRouter() {
-  const { config } = useConfigContext()
-  // const resourceUrl = getResourceEndpoint({
-  //   name: 'resources-router',
-  //   namespace: 'krateo-system',
-  //   resource: 'resourcesrouters',
-  //   version: 'v1beta1',
-  // })
-  const resourceUrl = getResourceEndpoint({
-    apiVersion: 'widgets.templates.krateo.io/v1beta1',
-    name: 'resources-router',
-    namespace: 'krateo-system',
-    resource: 'resourcesrouters',
-  })
-
-  return useQuery({
-    enabled: Boolean(config),
-    queryFn: async () => {
-      const url = `${config!.api.SNOWPLOW_API_BASE_URL}${resourceUrl}`
-      const router = await fetch(url, {
-        headers: { Authorization: `Bearer ${getAccessToken()}` },
-      })
-
-      const data = await router.json()
-      return data
-
-      // return data.resourcesRefs.map((item) => {
-      //   return {
-      //     path: item.path,
-      //   }
-      // })
-    },
-    queryKey: ['resources-router', resourceUrl, config?.api.SNOWPLOW_API_BASE_URL],
-  })
-}
-
-function useGetRoutes() {
-  const { data: resourcesRouter } = useResourcesRouter()
-
-  // return resourcesRouter
-}
-
 export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // use to force re-render the router when a new route is added
   const [routerVersion, setRouterVersion] = useState(0)
   const [routes, setRoutes] = useState<RouteObject[]>(defaultRoutes)
   const [menuRoutes, setMenuRoutes] = useState<AppRoute[]>([])
   const [isLoading, setIsLoading] = useState(false)
-
-  // useEffect(() => {
-  //   const storedRoutes = localStorage.getItem('routes')
-  //   if (storedRoutes) {
-  //     setMenuRoutes(JSON.parse(storedRoutes) as AppRoute[])
-  //   }
-  // }, [])
-
-  // useGetRoutes()
 
   const updateMenuRoutes = useCallback((newRoutes: AppRoute[]) => {
     setIsLoading(true)
