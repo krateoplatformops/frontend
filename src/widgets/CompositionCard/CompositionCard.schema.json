@@ -334,140 +334,6 @@
           "required": ["name", "namespace"],
           "additionalProperties": false
         },
-        "actions": {
-          "description": "the actions of the panel",
-          "type": "object",
-          "properties": {
-            "navigate": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["navigate"]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  }
-                },
-                "required": ["id", "type", "name", "resourceRefId"]
-              }
-            },
-            "rest": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "onSuccessNavigateTo": {
-                    "type": "string"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["rest"]
-                  }
-                },
-                "required": ["id", "resourceRefId"]
-              }
-            },
-            "openDrawer": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["openDrawer"]
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  },
-                  "size": {
-                    "type": "string",
-                    "enum": ["default", "large"]
-                  },
-                  "title": {
-                    "type": "string"
-                  }
-                },
-                "required": ["id", "type", "resourceRefId"]
-              }
-            },
-            "openModal": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["openModal"]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  },
-                  "title": {
-                    "type": "string"
-                  }
-                },
-                "required": ["id", "type", "name", "resourceRefId"]
-              }
-            }
-          },
-          "additionalProperties": false
-        },
         "widgetDataTemplate": {
           "type": "array",
           "items": {
@@ -484,7 +350,7 @@
           }
         }
       },
-      "required": ["widgetData", "resourcesRefs", "actions"],
+      "required": ["widgetData", "resourcesRefs"],
       "additionalProperties": false
     }
   },

@@ -1,4 +1,3 @@
-
 kind: CompositionCard
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -78,7 +77,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    actions: {}
     items:
       - label: Overview
         resourceRefId: composition-test-panel-paragraph
@@ -129,8 +127,8 @@ metadata:
   name: composition-test-panel-paragraph
   namespace: krateo-system
 spec:
-  actions: {}
   widgetData:
+    actions: {}
     items:
       - resourceRefId: my-paragraph
   resourcesRefs:
@@ -148,8 +146,8 @@ metadata:
   name: composition-test-panel-event-list
   namespace: krateo-system
 spec:
-  actions: {}
   widgetData:
+    actions: {}
     items:
       - resourceRefId: my-event-list
   resourcesRefs:
@@ -168,8 +166,8 @@ metadata:
   name: composition-test-panel-yaml-viewer
   namespace: krateo-system
 spec: 
-  actions: {}
   widgetData:
+    actions: {}
     items:
       - resourceRefId: my-yaml-viewer
   resourcesRefs:

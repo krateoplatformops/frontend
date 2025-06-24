@@ -16,7 +16,6 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "required": ["items"],
           "properties": {
             "actions": {
               "description": "the actions of the widget",
@@ -312,6 +311,7 @@
               "description": "optional tooltip text shown on the top right side of the card to provide additional context"
             }
           },
+          "required": ["items", "actions"],
           "additionalProperties": false
         },
         "resourcesRefs": {
@@ -361,144 +361,6 @@
             }
           },
           "required": ["name", "namespace"],
-          "additionalProperties": false
-        },
-        "actions": {
-          "description": "the actions of the panel",
-          "type": "object",
-          "properties": {
-            "rest": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "onSuccessNavigateTo": {
-                    "type": "string"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["rest"]
-                  },
-                  "payload": {
-                    "type": "object",
-                    "additionalProperties": true
-                  }
-                },
-                "required": ["id", "resourceRefId"]
-              }
-            },
-            "navigate": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["navigate"]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  }
-                },
-                "required": ["id", "type", "name", "resourceRefId"]
-              }
-            },
-            "openDrawer": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["openDrawer"]
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  },
-                  "size": {
-                    "type": "string",
-                    "enum": ["default", "large"]
-                  },
-                  "title": {
-                    "type": "string"
-                  }
-                },
-                "required": ["id", "type", "resourceRefId"]
-              }
-            },
-            "openModal": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": ["openModal"]
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "resourceRefId": {
-                    "type": "string"
-                  },
-                  "requireConfirmation": {
-                    "type": "boolean"
-                  },
-                  "loading": {
-                    "type": "string",
-                    "enum": ["global", "inline", "none"]
-                  },
-                  "title": {
-                    "type": "string"
-                  }
-                },
-                "required": ["id", "type", "name", "resourceRefId"]
-              }
-            }
-          },
           "additionalProperties": false
         },
         "widgetDataTemplate": {

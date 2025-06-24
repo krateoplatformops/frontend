@@ -2,7 +2,7 @@ kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: firework-form-from-string-schema
-  namespace: fireworksapp-system
+  namespace: krateo-system
 spec:
   widgetData:
     schema: {}
@@ -24,7 +24,7 @@ spec:
           - name: metadata.name
             value: ${ git.toRepo.name }
           # - name: metadata.namespace
-          #   value: ${ "fireworksapp-system" }
+          #   value: ${ "krateo-system" }
         
 
   widgetDataTemplate:
@@ -35,7 +35,7 @@ spec:
     - id: resource-ref-1
       apiVersion: composition.krateo.io/v2-0-0
       name: new-app
-      namespace: fireworksapp-system
+      namespace: krateo-system
       resource: fireworksapps
       verb: POST
       
@@ -53,5 +53,5 @@ spec:
   - headers:
     - 'Accept: application/json'
     name: getSchemaNotOrdered
-    path: /api/v1/namespaces/fireworksapp-system/configmaps/fireworksapps-v2-0-0-jsonschema-configmap
+    path: /api/v1/namespaces/krateo-system/configmaps/fireworksapps-v2-0-0-jsonschema-configmap
     verb: GET

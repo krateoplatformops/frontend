@@ -233,45 +233,6 @@ export interface CompositionCard {
       name: string
       namespace: string
     }
-    /**
-     * the actions of the panel
-     */
-    actions: {
-      navigate?: {
-        id: string
-        type: 'navigate'
-        name: string
-        resourceRefId: string
-        requireConfirmation?: boolean
-        loading?: 'global' | 'inline' | 'none'
-      }[]
-      rest?: {
-        id: string
-        resourceRefId: string
-        requireConfirmation?: boolean
-        onSuccessNavigateTo?: string
-        loading?: 'global' | 'inline' | 'none'
-        type?: 'rest'
-      }[]
-      openDrawer?: {
-        id: string
-        type: 'openDrawer'
-        resourceRefId: string
-        requireConfirmation?: boolean
-        loading?: 'global' | 'inline' | 'none'
-        size?: 'default' | 'large'
-        title?: string
-      }[]
-      openModal?: {
-        id: string
-        type: 'openModal'
-        name: string
-        resourceRefId: string
-        requireConfirmation?: boolean
-        loading?: 'global' | 'inline' | 'none'
-        title?: string
-      }[]
-    }
     widgetDataTemplate?: {
       forPath?: string
       expression?: string

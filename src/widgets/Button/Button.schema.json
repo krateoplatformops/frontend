@@ -349,7 +349,7 @@
           }
         }
       },
-      "required": ["widgetData", "actions"],
+      "required": ["widgetData"],
       "additionalProperties": false
     }
   },

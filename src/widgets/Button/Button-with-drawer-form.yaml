@@ -37,13 +37,13 @@ spec:
     size: large
     type: primary
     clickActionId: open-modal-action
-  actions:
-    openModal:
-      - id: open-modal-action
-        name: open-modal-action
-        resourceRefId: firework-form
-        type: openModal
-        title: Form in Modal
+    actions:
+      openModal:
+        - id: open-modal-action
+          name: open-modal-action
+          resourceRefId: firework-form
+          type: openModal
+          title: Form in Modal
   resourcesRefs:
     - id: firework-form
       apiVersion: widgets.templates.krateo.io/v1beta1

@@ -9,13 +9,13 @@ spec:
       - name: linea blu
         color: blue
         coords:
-          - xAxis: "0"
+          - xAxis: 0
             yAxis: 15
-          - xAxis: "1"
+          - xAxis: 1
             yAxis: 52
-          - xAxis: "2"
+          - xAxis: 2
             yAxis: 15
-          - xAxis: "3"
+          - xAxis: 3
             yAxis: 52
       - name: linea rossa
         color: red
