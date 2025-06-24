@@ -3,6 +3,7 @@ import { Result, Skeleton } from 'antd'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
+import useCatchError from '../../hooks/useCatchError'
 import type { Widget } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import BarChart from '../../widgets/BarChart'
@@ -162,6 +163,7 @@ const WidgetRenderer = ({
 }) => {
   const navigate = useNavigate()
   const { isWidgetFilteredByProps } = useFilter()
+  const { catchError } = useCatchError()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
@@ -235,10 +237,19 @@ const WidgetRenderer = ({
   }
 
   if (widget.kind === 'Status' && widget?.code === 401) {
-    void navigate('/login')
+    catchError({
+      data: {
+        message: widget?.message,
+      },
+      message: `Authentication error (code: ${widget.code})`,
+      status: widget.code,
+    }, 'notification')
   }
 
   if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
+    catchError({
+      status: widget.code,
+    }, 'notification')
     void navigate('/login')
   }
 

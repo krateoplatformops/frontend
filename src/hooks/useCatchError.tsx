@@ -21,6 +21,7 @@ const useCatchError = () => {
     let description: React.ReactNode = 'Unable to complete the operation, please try later'
 
     if ((error?.status === 401 || error?.code === 401)) {
+      description = error?.data?.message || 'You are not authorized to access this page.'
       void navigate('/login')
     } else if (error?.status === 500 || error?.code === 500) {
       message = 'Internal Server Error'
@@ -40,6 +41,7 @@ const useCatchError = () => {
         notification.error({
           description,
           duration: 4,
+          key: 'unique',
           message,
         })
     }
