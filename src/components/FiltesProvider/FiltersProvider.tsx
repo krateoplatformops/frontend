@@ -148,7 +148,6 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <FiltersContext.Provider value={{ clearFilters, getFilteredData, getFilters, isWidgetFilteredByProps, setFilters }}>
-      <div>Filtri: {JSON.stringify(filterMap)}</div>
       {children}
     </FiltersContext.Provider>
   )
