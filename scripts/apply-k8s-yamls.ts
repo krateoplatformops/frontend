@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { execSync } from 'node:child_process'
-import { join, resolve } from 'node:path'
 import { homedir } from 'node:os'
+import { join, resolve } from 'node:path'
 
 import { confirm } from '@inquirer/prompts'
 import chalk from 'chalk'
@@ -23,7 +23,7 @@ function getCurrentKubeContext(): string {
 async function confirmKubeContext(): Promise<void> {
   try {
     const currentContext = getCurrentKubeContext()
-    
+
     // Get kubeconfig path, always show absolute path for clarity
     let kubeconfigPath: string
     if (process.env.KUBECONFIG) {
@@ -33,14 +33,14 @@ async function confirmKubeContext(): Promise<void> {
       const defaultPath = join(homedir(), '.kube', 'config')
       kubeconfigPath = defaultPath.replace(homedir(), '~')
     }
-    
+
     console.log(chalk.blue(`🔧 Current kubectl context: ${chalk.bold(currentContext)}`))
     if (process.env.KUBECONFIG) {
       console.log(chalk.gray(`📁 KUBECONFIG (from env): ${kubeconfigPath}`))
     } else {
       console.log(chalk.gray(`📁 KUBECONFIG (default): ${kubeconfigPath}`))
     }
-    
+
     const shouldContinue = await confirm({
       default: false,
       message: 'Do you want to apply YAML files to this Kubernetes context?',

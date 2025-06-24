@@ -13,11 +13,11 @@ import type { CompositionCard as WidgetType } from './CompositionCard.type'
 
 export type CompositionCardWidgetData = WidgetType['spec']['widgetData']
 
-const CompositionCard = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<CompositionCardWidgetData>) => {
+const CompositionCard = ({ resourcesRefs, uid, widgetData }: WidgetProps<CompositionCardWidgetData>) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { date, description, icon, navigateToDetailActionId, status, tags, title, tooltip } = widgetData
+  const { actions, date, description, icon, navigateToDetailActionId, status, tags, title, tooltip } = widgetData
 
   const clickAction = Object.values(actions ?? {})
     .flat()

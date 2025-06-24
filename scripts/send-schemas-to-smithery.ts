@@ -77,7 +77,7 @@ function findLoginResponse(configType: string): { accessToken: string } {
     const loginPath = join(scriptsDir, expectedFileName)
 
     console.log(`📄 Using login response: ${expectedFileName}`)
-    return JSON.parse(readFileSync(loginPath, 'utf-8'))
+    return JSON.parse(readFileSync(loginPath, 'utf-8')) as { accessToken: string }
   } catch (error) {
     console.error(`\n❌ Failed to load login response for ${configType} workspace:`)
     console.error(error instanceof Error ? error.message : String(error))
@@ -94,7 +94,7 @@ function getConfig(configType: string): { api: { SMITHERY_API_BASE_URL: string }
     const configPath = join(configDir, configFileName)
 
     console.log(`⚙️  Using config: ${configFileName}`)
-    return JSON.parse(readFileSync(configPath, 'utf-8'))
+    return JSON.parse(readFileSync(configPath, 'utf-8')) as { api: { SMITHERY_API_BASE_URL: string } }
   } catch (error) {
     console.error(`\n❌ Failed to load config for ${configType} workspace:`)
     console.error(error instanceof Error ? error.message : String(error))

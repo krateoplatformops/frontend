@@ -37,9 +37,8 @@ export interface Widget<WidgetDataType = unknown> {
   }
   status:
     | {
+        actions: WidgetActions
         widgetData: WidgetDataType
-        widgets: Widget[]
-        events: unknown /* EventsType */
         resourcesRefs: ResourcesRefs
       }
     | string
@@ -78,7 +77,6 @@ export type WidgetActions = {
     type: 'openDrawer'
     name: string
     resourceRefId: string
-    contentWidgetRef: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
     size?: 'default' | 'large'
@@ -88,7 +86,6 @@ export type WidgetActions = {
     id: string
     type: 'openModal'
     name: string
-    contentWidgetRef: string
     resourceRefId: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
@@ -96,8 +93,7 @@ export type WidgetActions = {
   }[]
 }
 
-export type WidgetProps<T = unknown, A = WidgetActions> = {
-  actions: A
+export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs
   uid: string
   widgetData: T

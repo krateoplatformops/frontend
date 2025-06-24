@@ -1,4 +1,3 @@
-
 kind: CompositionCard
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -19,16 +18,16 @@ spec:
       color: blue
     title: composition-test
     description: This is a test composition card.
-  actions:
-    navigate:
-      - id: composition-click-action
-        name: composition-click-action
-        resourceRefId: composition-test-tab-list
-        type: navigate
-    rest:
-      - id: composition-delete-action
-        resourceRefId: composition-test-panel
-        type: rest
+    actions:
+      navigate:
+        - id: composition-click-action
+          name: composition-click-action
+          resourceRefId: composition-test-tab-list
+          type: navigate
+      rest:
+        - id: composition-delete-action
+          resourceRefId: composition-test-panel
+          type: rest
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -128,8 +127,8 @@ metadata:
   name: composition-test-panel-paragraph
   namespace: krateo-system
 spec:
-  actions: {}
   widgetData:
+    actions: {}
     items:
       - resourceRefId: my-paragraph
   resourcesRefs:
@@ -147,8 +146,8 @@ metadata:
   name: composition-test-panel-event-list
   namespace: krateo-system
 spec:
-  actions: {}
   widgetData:
+    actions: {}
     items:
       - resourceRefId: my-event-list
   resourcesRefs:
@@ -167,8 +166,8 @@ metadata:
   name: composition-test-panel-yaml-viewer
   namespace: krateo-system
 spec: 
-  actions: {}
   widgetData:
+    actions: {}
     items:
       - resourceRefId: my-yaml-viewer
   resourcesRefs:
@@ -200,16 +199,16 @@ spec:
       color: blue
     title: comp 1
     description: This is a test composition card. With a long description to make sure it overflow and the Row is bigger than expected.
-  actions:
-    navigate:
-      - id: composition-click-action
-        name: composition-click-action
-        resourceRefId: composition-test-tab-list
-        type: navigate
-    rest:
-      - id: composition-delete-action
-        resourceRefId: composition-test-panel
-        type: rest
+    actions:
+      navigate:
+        - id: composition-click-action
+          name: composition-click-action
+          resourceRefId: composition-test-tab-list
+          type: navigate
+      rest:
+        - id: composition-delete-action
+          resourceRefId: composition-test-panel
+          type: rest
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -252,16 +251,16 @@ spec:
       color: green
     title: comp 2
     description: This is a test composition card.
-  actions:
-    navigate:
-      - id: composition-click-action
-        name: composition-click-action
-        resourceRefId: composition-test-tab-list
-        type: navigate
-    rest:
-      - id: composition-delete-action
-        resourceRefId: composition-test-panel
-        type: rest
+    actions:
+      navigate:
+        - id: composition-click-action
+          name: composition-click-action
+          resourceRefId: composition-test-tab-list
+          type: navigate
+      rest:
+        - id: composition-delete-action
+          resourceRefId: composition-test-panel
+          type: rest
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -305,16 +304,16 @@ spec:
       color: red
     title: comp 3
     description: This is a test composition card.
-  actions:
-    navigate:
-      - id: composition-click-action
-        name: composition-click-action
-        resourceRefId: composition-test-tab-list
-        type: navigate
-    rest:
-      - id: composition-delete-action
-        resourceRefId: composition-test-panel
-        type: rest
+    actions:
+      navigate:
+        - id: composition-click-action
+          name: composition-click-action
+          resourceRefId: composition-test-tab-list
+          type: navigate
+      rest:
+        - id: composition-delete-action
+          resourceRefId: composition-test-panel
+          type: rest
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -356,16 +355,16 @@ spec:
       color: green
     title: comp 4
     description: This is a test composition card.
-  actions:
-    navigate:
-      - id: composition-click-action
-        name: composition-click-action
-        resourceRefId: composition-test-tab-list
-        type: navigate
-    rest:
-      - id: composition-delete-action
-        resourceRefId: composition-test-panel
-        type: rest
+    actions:
+      navigate:
+        - id: composition-click-action
+          name: composition-click-action
+          resourceRefId: composition-test-tab-list
+          type: navigate
+      rest:
+        - id: composition-delete-action
+          resourceRefId: composition-test-panel
+          type: rest
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -409,16 +408,16 @@ spec:
       color: red
     title: comp 5
     description: This is a test composition card.
-  actions:
-    navigate:
-      - id: composition-click-action
-        name: composition-click-action
-        resourceRefId: composition-test-tab-list
-        type: navigate
-    rest:
-      - id: composition-delete-action
-        resourceRefId: composition-test-panel
-        type: rest
+    actions:
+      navigate:
+        - id: composition-click-action
+          name: composition-click-action
+          resourceRefId: composition-test-tab-list
+          type: navigate
+      rest:
+        - id: composition-delete-action
+          resourceRefId: composition-test-panel
+          type: rest
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1

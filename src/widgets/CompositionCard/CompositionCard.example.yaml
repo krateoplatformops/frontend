@@ -19,16 +19,16 @@ spec:
       color: blue
     title: composition-test
     description: This is a test composition card.
-  actions:
-    navigate:
-      - id: composition-click-action
-        name: composition-click-action
-        resourceRefId: composition-test-tab-list
-        type: navigate
-    rest:
-      - id: composition-delete-action
-        resourceRefId: composition-test-panel
-        type: rest
+    actions:
+      navigate:
+        - id: composition-click-action
+          name: composition-click-action
+          resourceRefId: composition-test-tab-list
+          type: navigate
+      rest:
+        - id: composition-delete-action
+          resourceRefId: composition-test-panel
+          type: rest
   resourcesRefs:
     - id: composition-test-panel
       apiVersion: widgets.templates.krateo.io/v1beta1

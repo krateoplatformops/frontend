@@ -4,6 +4,7 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    actions: {}
     title: My Panel
     items:
       - resourceRefId: my-pie-chart

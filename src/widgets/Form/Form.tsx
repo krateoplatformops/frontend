@@ -18,7 +18,8 @@ import FormGenerator from './FormGenerator'
 
 export type FormWidgetData = WidgetType['spec']['widgetData']
 
-function Form({ actions, resourcesRefs, widgetData }: WidgetProps<FormWidgetData, WidgetType['spec']['actions']>) {
+function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
+  const { actions } = widgetData
   const drawerContext = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
   const [submitting, setSubmitting] = useState(false)

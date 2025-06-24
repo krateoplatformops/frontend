@@ -10,13 +10,13 @@ spec:
     size: small
     type: primary
     clickActionId: my-click-action
-  actions:
-    openDrawer:
-      - id: my-click-action
-        resourceRefId: my-filters
-        type: openDrawer
-        title: Filter compositions
-        size: large
+    actions:
+      openDrawer:
+        - id: my-click-action
+          resourceRefId: my-filters
+          type: openDrawer
+          title: Filter compositions
+          size: large
   resourcesRefs:
     - id: my-filters
       apiVersion: widgets.templates.krateo.io/v1beta1
