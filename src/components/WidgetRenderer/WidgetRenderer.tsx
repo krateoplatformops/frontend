@@ -50,7 +50,7 @@ import { useFilter } from '../FiltesProvider/FiltersProvider'
 import styles from './WidgetRenderer.module.css'
 
 function parseData(widget: Widget, widgetEndpoint: string) {
-  const { kind, metadata, spec, status } = widget
+  const { kind, metadata, status } = widget
 
   if (!status) {
     return (
@@ -98,53 +98,52 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     )
   }
 
-  const { actions } = spec
   const { resourcesRefs, widgetData } = status
   const uid = metadata?.uid
 
   switch (kind) {
     case 'BarChart':
-      return <BarChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as BarChartWidgetData} />
+      return <BarChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as BarChartWidgetData} />
     case 'Button':
-      return <Button actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
+      return <Button resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
     case 'Column':
-      return <Column actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
+      return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'CompositionCard':
-      return <CompositionCard actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
+      return <CompositionCard resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
     case 'EventList':
-      return <EventList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
+      return <EventList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'FlowChart':
-      return <FlowChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
+      return <FlowChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
     case 'LineChart':
-      return <LineChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
+      return <LineChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
     case 'NavMenu':
-      return <NavMenu actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as NavMenuWidgetData} />
+      return <NavMenu resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as NavMenuWidgetData} />
     case 'Panel':
-      return <Panel actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PanelWidgetData} />
+      return <Panel resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PanelWidgetData} />
     case 'Paragraph':
-      return <Paragraph actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ParagraphWidgetData} />
+      return <Paragraph resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ParagraphWidgetData} />
     case 'PieChart':
-      return <PieChart actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
+      return <PieChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
     case 'Row':
-      return <Row actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
+      return <Row resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
     case 'Page':
-      return <Page actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PageWidgetData} />
+      return <Page resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PageWidgetData} />
     case 'Table':
-      return <Table actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
+      return <Table resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
     case 'DataGrid':
-      return <DataGrid actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
+      return <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
     case 'Filters':
-      return <Filters actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FiltersWidgetData} />
+      return <Filters resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FiltersWidgetData} />
     case 'TabList':
-      return <TabList actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
+      return <TabList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
-      return <YamlViewer actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
+      return <YamlViewer resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
     case 'Form':
-      return <Form actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
+      return <Form resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
     case 'RoutesLoader':
-      return <RoutesLoader actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RoutesLoaderWidgetData} />
+      return <RoutesLoader resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RoutesLoaderWidgetData} />
     case 'Route':
-      return <Route actions={actions} resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
+      return <Route resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }

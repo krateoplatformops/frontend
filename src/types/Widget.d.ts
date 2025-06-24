@@ -37,9 +37,8 @@ export interface Widget<WidgetDataType = unknown> {
   }
   status:
     | {
+        actions: WidgetActions
         widgetData: WidgetDataType
-        widgets: Widget[]
-        events: unknown /* EventsType */
         resourcesRefs: ResourcesRefs
       }
     | string
