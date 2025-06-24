@@ -19,41 +19,49 @@
           "type": "object",
           "properties": {
             "actions": {
-              "description": "the actions of the form",
+              "description": "the actions of the widget",
               "type": "object",
               "properties": {
                 "rest": {
                   "type": "array",
+                  "description": "rest api call actions triggered by the widget",
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
                     "properties": {
                       "payloadKey": {
                         "type": "string",
-                        "description": "the key to nest the payload to"
+                        "description": "key used to nest the payload in the request body"
                       },
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "unique identifier for the action"
                       },
                       "resourceRefId": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "the identifier of the k8s custom resource that should be represented"
                       },
                       "requireConfirmation": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before triggering the action"
                       },
                       "onSuccessNavigateTo": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "url to navigate to after successful execution"
                       },
                       "onEventNavigateTo": {
                         "type": "object",
                         "required": ["eventReason", "url"],
                         "additionalProperties": false,
+                        "description": "conditional navigation triggered by a specific event",
                         "properties": {
                           "eventReason": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "identifier of the awaited event reason"
                           },
                           "url": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "url to navigate to when the event is received"
                           },
                           "timeout": {
                             "type": "integer",
@@ -64,28 +72,34 @@
                       },
                       "loading": {
                         "type": "string",
-                        "enum": ["global", "inline", "none"]
+                        "enum": ["global", "inline", "none"],
+                        "description": "defines the loading indicator behavior for the action"
                       },
                       "type": {
                         "type": "string",
-                        "enum": ["rest"]
+                        "enum": ["rest"],
+                        "description": "type of action to execute"
                       },
                       "payload": {
                         "type": "object",
-                        "additionalProperties": true
+                        "additionalProperties": true,
+                        "description": "static payload sent with the request"
                       },
                       "payloadToOverride": {
                         "type": "array",
+                        "description": "list of payload fields to override dynamically",
                         "items": {
                           "type": "object",
                           "additionalProperties": false,
                           "required": ["name", "value"],
                           "properties": {
                             "name": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "name of the field to override"
                             },
                             "value": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "value to use for overriding the field"
                             }
                           }
                         }
@@ -96,29 +110,36 @@
                 },
                 "navigate": {
                   "type": "array",
+                  "description": "client-side navigation actions",
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "unique identifier for the action"
                       },
                       "type": {
                         "type": "string",
-                        "enum": ["navigate"]
+                        "enum": ["navigate"],
+                        "description": "type of navigation action"
                       },
                       "name": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "name of the navigation action"
                       },
                       "resourceRefId": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "the identifier of the k8s custom resource that should be represented"
                       },
                       "requireConfirmation": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before navigating"
                       },
                       "loading": {
                         "type": "string",
-                        "enum": ["global", "inline", "none"]
+                        "enum": ["global", "inline", "none"],
+                        "description": "defines the loading indicator behavior during navigation"
                       }
                     },
                     "required": ["id", "type", "name", "resourceRefId"]
@@ -126,33 +147,45 @@
                 },
                 "openDrawer": {
                   "type": "array",
+                  "description": "actions to open side drawer components",
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "unique identifier for the drawer action"
                       },
                       "type": {
                         "type": "string",
-                        "enum": ["openDrawer"]
+                        "enum": ["openDrawer"],
+                        "description": "type of drawer action"
                       },
                       "resourceRefId": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "the identifier of the k8s custom resource that should be represented"
                       },
                       "requireConfirmation": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before opening"
                       },
                       "loading": {
                         "type": "string",
-                        "enum": ["global", "inline", "none"]
+                        "enum": ["global", "inline", "none"],
+                        "description": "defines the loading indicator behavior for the drawer"
                       },
                       "size": {
                         "type": "string",
-                        "enum": ["default", "large"]
+                        "enum": ["default", "large"],
+                        "description": "drawer size to be displayed"
                       },
                       "title": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "title shown in the drawer header"
+                      },
+                      "contentWidgetRef": {
+                        "type": "string",
+                        "description": "reference to the widget shown inside the drawer"
                       }
                     },
                     "required": [
@@ -165,35 +198,44 @@
                 },
                 "openModal": {
                   "type": "array",
+                  "description": "actions to open modal dialog components",
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
                     "properties": {
                       "id": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "unique identifier for the modal action"
                       },
                       "type": {
                         "type": "string",
-                        "enum": ["openModal"]
+                        "enum": ["openModal"],
+                        "description": "type of modal action"
                       },
                       "name": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "name of the modal action"
                       },
                       "contentWidgetRef": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "reference to the widget shown inside the modal"
                       },
                       "resourceRefId": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "the identifier of the k8s custom resource that should be represented"
                       },
                       "requireConfirmation": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before opening"
                       },
                       "loading": {
                         "type": "string",
-                        "enum": ["global", "inline", "none"]
+                        "enum": ["global", "inline", "none"],
+                        "description": "defines the loading indicator behavior for the modal"
                       },
                       "title": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "title shown in the modal header"
                       }
                     },
                     "required": [

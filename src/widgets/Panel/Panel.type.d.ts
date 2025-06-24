@@ -7,61 +7,179 @@ export interface Panel {
   spec: {
     widgetData: {
       /**
-       * the actions of the form
+       * the actions of the widget
        */
       actions?: {
+        /**
+         * rest api call actions triggered by the widget
+         */
         rest?: {
           /**
-           * the key to nest the payload to
+           * key used to nest the payload in the request body
            */
           payloadKey: string
+          /**
+           * unique identifier for the action
+           */
           id: string
+          /**
+           * the identifier of the k8s custom resource that should be represented
+           */
           resourceRefId: string
+          /**
+           * whether user confirmation is required before triggering the action
+           */
           requireConfirmation?: boolean
+          /**
+           * url to navigate to after successful execution
+           */
           onSuccessNavigateTo?: string
+          /**
+           * conditional navigation triggered by a specific event
+           */
           onEventNavigateTo?: {
+            /**
+             * identifier of the awaited event reason
+             */
             eventReason: string
+            /**
+             * url to navigate to when the event is received
+             */
             url: string
             /**
              * the timeout in seconds to wait for the event
              */
             timeout?: number
           }
+          /**
+           * defines the loading indicator behavior for the action
+           */
           loading?: 'global' | 'inline' | 'none'
+          /**
+           * type of action to execute
+           */
           type?: 'rest'
+          /**
+           * static payload sent with the request
+           */
           payload?: {
             [k: string]: unknown
           }
+          /**
+           * list of payload fields to override dynamically
+           */
           payloadToOverride?: {
+            /**
+             * name of the field to override
+             */
             name: string
+            /**
+             * value to use for overriding the field
+             */
             value: string
           }[]
         }[]
+        /**
+         * client-side navigation actions
+         */
         navigate?: {
+          /**
+           * unique identifier for the action
+           */
           id: string
+          /**
+           * type of navigation action
+           */
           type: 'navigate'
+          /**
+           * name of the navigation action
+           */
           name: string
+          /**
+           * the identifier of the k8s custom resource that should be represented
+           */
           resourceRefId: string
+          /**
+           * whether user confirmation is required before navigating
+           */
           requireConfirmation?: boolean
+          /**
+           * defines the loading indicator behavior during navigation
+           */
           loading?: 'global' | 'inline' | 'none'
         }[]
+        /**
+         * actions to open side drawer components
+         */
         openDrawer?: {
+          /**
+           * unique identifier for the drawer action
+           */
           id: string
+          /**
+           * type of drawer action
+           */
           type: 'openDrawer'
+          /**
+           * the identifier of the k8s custom resource that should be represented
+           */
           resourceRefId: string
+          /**
+           * whether user confirmation is required before opening
+           */
           requireConfirmation?: boolean
+          /**
+           * defines the loading indicator behavior for the drawer
+           */
           loading?: 'global' | 'inline' | 'none'
+          /**
+           * drawer size to be displayed
+           */
           size?: 'default' | 'large'
+          /**
+           * title shown in the drawer header
+           */
           title?: string
-        }[]
-        openModal?: {
-          id: string
-          type: 'openModal'
-          name: string
+          /**
+           * reference to the widget shown inside the drawer
+           */
           contentWidgetRef: string
+        }[]
+        /**
+         * actions to open modal dialog components
+         */
+        openModal?: {
+          /**
+           * unique identifier for the modal action
+           */
+          id: string
+          /**
+           * type of modal action
+           */
+          type: 'openModal'
+          /**
+           * name of the modal action
+           */
+          name: string
+          /**
+           * reference to the widget shown inside the modal
+           */
+          contentWidgetRef: string
+          /**
+           * the identifier of the k8s custom resource that should be represented
+           */
           resourceRefId: string
+          /**
+           * whether user confirmation is required before opening
+           */
           requireConfirmation?: boolean
+          /**
+           * defines the loading indicator behavior for the modal
+           */
           loading?: 'global' | 'inline' | 'none'
+          /**
+           * title shown in the modal header
+           */
           title?: string
         }[]
       }
