@@ -17,6 +17,196 @@
         "widgetData": {
           "type": "object",
           "properties": {
+            "actions": {
+              "description": "the actions of the form",
+              "type": "object",
+              "properties": {
+                "rest": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "payloadKey": {
+                        "type": "string",
+                        "description": "the key to nest the payload to"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "resourceRefId": {
+                        "type": "string"
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean"
+                      },
+                      "onSuccessNavigateTo": {
+                        "type": "string"
+                      },
+                      "onEventNavigateTo": {
+                        "type": "object",
+                        "required": ["eventReason", "url"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "eventReason": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "timeout": {
+                            "type": "integer",
+                            "description": "the timeout in seconds to wait for the event",
+                            "default": 50
+                          }
+                        }
+                      },
+                      "loading": {
+                        "type": "string",
+                        "enum": ["global", "inline", "none"]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["rest"]
+                      },
+                      "payload": {
+                        "type": "object",
+                        "additionalProperties": true
+                      },
+                      "payloadToOverride": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": ["name", "value"],
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "required": ["id", "resourceRefId", "payloadKey"]
+                  }
+                },
+                "navigate": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["navigate"]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "resourceRefId": {
+                        "type": "string"
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean"
+                      },
+                      "loading": {
+                        "type": "string",
+                        "enum": ["global", "inline", "none"]
+                      }
+                    },
+                    "required": ["id", "type", "name", "resourceRefId"]
+                  }
+                },
+                "openDrawer": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["openDrawer"]
+                      },
+                      "resourceRefId": {
+                        "type": "string"
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean"
+                      },
+                      "loading": {
+                        "type": "string",
+                        "enum": ["global", "inline", "none"]
+                      },
+                      "size": {
+                        "type": "string",
+                        "enum": ["default", "large"]
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "contentWidgetRef",
+                      "resourceRefId"
+                    ]
+                  }
+                },
+                "openModal": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["openModal"]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "contentWidgetRef": {
+                        "type": "string"
+                      },
+                      "resourceRefId": {
+                        "type": "string"
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean"
+                      },
+                      "loading": {
+                        "type": "string",
+                        "enum": ["global", "inline", "none"]
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "name",
+                      "contentWidgetRef",
+                      "resourceRefId"
+                    ]
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
             "date": {
               "type": "string",
               "description": "date associated with the composition, typically its creation time"
@@ -69,6 +259,7 @@
               "description": "id of the action triggered when the card is clicked"
             }
           },
+          "required": ["actions"],
           "additionalProperties": false
         },
         "resourcesRefs": {
