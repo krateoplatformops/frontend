@@ -32,8 +32,11 @@
                     "type": "string"
                   },
                   "name": {
-                    "description": "the name of the field, it must to be identical to widget prop name to filter",
-                    "type": "string"
+                    "description": "the name of the fields, it must to be identical to widget prop name to filter or data in dataset",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "description": {
                     "description": "text to show as tooltip",

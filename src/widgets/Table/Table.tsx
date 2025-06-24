@@ -15,8 +15,7 @@ const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { getFilteredData } = useFilter()
 
   let dataTable: { [k: string]: unknown }[] = data
-  if (prefix && uid && data?.length > 0) {
-    // setData(prefix, uid, data || [])
+  if (prefix && data?.length > 0) {
     dataTable = getFilteredData(data, prefix) as { [k: string]: unknown }[]
   }
 

@@ -246,6 +246,7 @@ spec:
     tags: 
       - krateo-system
       - test-system
+      - lorem-ipsum
     icon:
       name: fa-solid fa-cubes
       color: green
@@ -298,6 +299,7 @@ spec:
     tags: 
       - krateo-system
       - test-system
+      - dolor-sit-amet
     icon:
       name: fa-solid fa-cubes
       color: red
@@ -348,6 +350,7 @@ spec:
     tags: 
       - krateo-system
       - test-system
+      - consectetur-adipiscing
     icon:
       name: fa-solid fa-cubes
       color: green
@@ -400,6 +403,7 @@ spec:
     tags: 
       - krateo-system
       - test-system
+      - morbi-dictum-est
     icon:
       name: fa-solid fa-cubes
       color: red

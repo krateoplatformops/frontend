@@ -1,6 +1,7 @@
 import { Empty } from 'antd'
 import ReactECharts from 'echarts-for-react'
 
+import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
 import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 
@@ -9,13 +10,22 @@ import type { LineChart as WidgetType } from './LineChart.type'
 export type LineChartWidgetData = WidgetType['spec']['widgetData']
 
 const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
-  const { lines, xAxisName, yAxisName } = widgetData
+  const { lines, prefix, xAxisName, yAxisName } = widgetData
+  const { getFilteredData } = useFilter()
 
   if (!lines) {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   }
 
-  const xValues = lines[0]?.coords?.map(({ xAxis }) => xAxis) || []
+  const dataChart = [...lines]
+
+  dataChart.forEach((line) => {
+    if (prefix && line?.coords && line.coords.length > 0) {
+      line.coords = getFilteredData(line.coords, prefix) as { xAxis: string; yAxis: number }[]
+    }
+  })
+
+  const xValues = dataChart[0]?.coords?.map(({ xAxis }) => xAxis) || []
 
   const optionLine = {
     grid: {

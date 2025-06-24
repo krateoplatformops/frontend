@@ -13,9 +13,9 @@ export interface Filters {
          */
         label: string
         /**
-         * the name of the field, it must to be identical to widget prop name to filter
+         * the name of the fields, it must to be identical to widget prop name to filter or data in dataset
          */
-        name: string
+        name: string[]
         /**
          * text to show as tooltip
          */

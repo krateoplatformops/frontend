@@ -15,12 +15,12 @@ const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
 
   const [filterForm] = Form.useForm()
 
-  const renderField = (item: { label: string; name: string; description?: string; type: 'string' | 'boolean' | 'number' | 'date' | 'daterange'; options?: string[] }) => {
+  const renderField = (item: { label: string; name: string[]; description?: string; type: 'string' | 'boolean' | 'number' | 'date' | 'daterange'; options?: string[] }) => {
     return (
       <Form.Item
-        key={item.name}
+        key={item.name.join('.')}
         label={item.label}
-        name={item.name}
+        name={item.name.join('.')}
         tooltip={item.description}
       >
         {(() => {
@@ -82,9 +82,9 @@ const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
     setFilters(
       prefix,
       Object.keys(values).map(fieldName => {
-        const field = fields.find(el => el.name === fieldName)
+        const field = fields.find(el => el.name.join('.') === fieldName)
         return {
-          fieldName,
+          fieldName: Array.isArray(fieldName) ? fieldName : [fieldName],
           fieldType: field?.type ?? 'string',
           fieldValue: values[fieldName],
         }

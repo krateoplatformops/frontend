@@ -17,8 +17,11 @@
         "widgetData": {
           "type": "object",
           "description": "data used to render the chart including lines and axis labels",
-          "required": ["lines"],
           "properties": {
+            "prefix": {
+              "description": "it's the filters prefix to get right values",
+              "type": "string"
+            },
             "lines": {
               "type": "array",
               "description": "list of data series to be rendered as individual lines",
@@ -50,7 +53,7 @@
                       "required": ["xAxis", "yAxis"],
                       "properties": {
                         "xAxis": {
-                          "type": "integer",
+                          "type": "string",
                           "description": "value on the x axis"
                         },
                         "yAxis": {
@@ -74,6 +77,7 @@
               "description": "label for the y axis"
             }
           },
+          "required": ["lines"],
           "additionalProperties": false
         },
         "apiRef": {

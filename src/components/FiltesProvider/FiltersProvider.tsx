@@ -6,7 +6,7 @@ import { useEvents } from '../../hooks/useEvents'
 
 export type FilterType = {
   fieldType: 'string' | 'number' | 'boolean' | 'date' | 'daterange'
-  fieldName: string
+  fieldName: string[]
   fieldValue: unknown
 }
 
@@ -65,7 +65,11 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
 
     switch (fieldType) {
       case 'string':
+        if (Array.isArray(itemValue)) {
+          return itemValue.filter((val: string) => val.toLowerCase().includes((fieldValue as string).toLowerCase())).length > 0
+        }
         return (itemValue as string).toLowerCase().includes((fieldValue as string).toLowerCase())
+
       case 'number':
       case 'boolean':
         return itemValue === fieldValue
@@ -99,10 +103,12 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
     if (filters.length === 0) { return data }
 
     return data.filter((item: DataItem) =>
-      filters.every((filter: FilterType) => {
-        const itemValue = item[filter.fieldName]
-        return matchesFilter(itemValue, filter)
-      })
+      filters.every((filter: FilterType) => (
+        filter.fieldName.map((fieldName) => {
+          const itemValue = item[fieldName]
+          return matchesFilter(itemValue, filter)
+        })
+      ))
     )
   }
 
@@ -115,21 +121,34 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
 
     if (filters.length === 0) { return false }
 
-    for (const [key, value] of Object.entries(dataObj)) {
-      const filter = filters.find(el => el.fieldName === key)
-      if (filter) {
-        if (!matchesFilter(value, filter)) {
-          // The widget is filtered out by this filter
-          return true
-        }
+    // for (const [key, value] of Object.entries(dataObj)) {
+    //   const filter = filters.find(el => el.fieldName === key)
+    //   if (filter) {
+    //     if (!matchesFilter(value, filter)) {
+    //       // The widget is filtered out by this filter
+    //       return true
+    //     }
+    //   }
+    // }
+
+    for (const filter of filters) {
+      const allFieldsFail = filter.fieldName.every(fieldName => {
+        const value = dataObj[fieldName]
+        return value === undefined || !matchesFilter(value, filter)
+      })
+
+      if (allFieldsFail) {
+        // None of the specified properties match the filter → The widget is filtered out by this filter
+        return true
       }
     }
+
     return false
   }
 
   return (
     <FiltersContext.Provider value={{ clearFilters, getFilteredData, getFilters, isWidgetFilteredByProps, setFilters }}>
-      {/* <div>Filtri: {JSON.stringify(filterMap)}</div> */}
+      <div>Filtri: {JSON.stringify(filterMap)}</div>
       {children}
     </FiltersContext.Provider>
   )

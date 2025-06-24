@@ -10,6 +10,10 @@ export interface LineChart {
      */
     widgetData: {
       /**
+       * it's the filters prefix to get right values
+       */
+      prefix?: string
+      /**
        * list of data series to be rendered as individual lines
        */
       lines: {
@@ -28,7 +32,7 @@ export interface LineChart {
           /**
            * value on the x axis
            */
-          xAxis: number
+          xAxis: string
           /**
            * value on the y axis
            */

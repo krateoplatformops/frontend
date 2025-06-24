@@ -361,7 +361,9 @@ spec:
   widgetData:
     items:
       - resourceRefId: table-filters
-      - resourceRefId: panel-with-column
+      # - resourceRefId: panel-with-column
+      - resourceRefId: line-chart-with-dates
+      - resourceRefId: line-chart-with-dates-2
   resourcesRefs:
     - id: table-filters
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -369,9 +371,21 @@ spec:
       namespace: krateo-system
       resource: filters
       verb: GET
-    - id: panel-with-column
+    # - id: panel-with-column
+    #   apiVersion: widgets.templates.krateo.io/v1beta1
+    #   name: panel-with-column
+    #   namespace: krateo-system
+    #   resource: panels
+    #   verb: GET
+    - id: line-chart-with-dates
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-with-column
+      name: line-chart-with-dates
       namespace: krateo-system
-      resource: panels
+      resource: linecharts
+      verb: GET
+    - id: line-chart-with-dates-2
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: line-chart-with-dates-2
+      namespace: krateo-system
+      resource: linecharts
       verb: GET

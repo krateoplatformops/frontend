@@ -8,13 +8,20 @@ spec:
     prefix: filters-sample
     fields:
       - label: composition name
-        name: title
+        name: 
+        - title
         type: string
       - label: date range
-        name: date
+        name: 
+        - date
         type: daterange
+      - label: tag
+        name:
+        - tags
+        type: string
       - label: status
-        name: status
+        name: 
+        - status
         type: string
         options:
           - active
@@ -31,14 +38,34 @@ spec:
     prefix: filters-pods
     fields:
       - label: pod name
-        name: name # Column name
+        name: 
+        - name # Column name
         type: string
       - label: pod image
-        name: image # Column name
+        name:
+        - image # Column name
         type: string
       # - label: table to filter
         # name: title
         # type: date
-      # - label: date range
-      #   name: title
-      #   type: daterange
+      - label: period
+        name:
+          - date
+          - xAxis
+        type: daterange
+
+---
+kind: Filters
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: dashboard-filters
+  namespace: krateo-system
+spec:
+  widgetData:
+    prefix: filters-dashboard
+    fields:
+      - label: date range
+        name: 
+        - date
+        - xAxis
+        type: daterange
