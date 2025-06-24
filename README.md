@@ -917,7 +917,7 @@ Panel is a container to display information
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| actions | no | the actions of the widget | object |
+| actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
 | actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
 | actions.rest[].id | yes | unique identifier for the action | string |
