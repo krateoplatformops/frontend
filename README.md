@@ -140,7 +140,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | yes | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -170,12 +170,10 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
-| actions.openDrawer[].contentWidgetRef | yes | reference to the widget shown inside the drawer | string |
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].name | yes | name of the modal action | string |
-| actions.openModal[].contentWidgetRef | yes | reference to the widget shown inside the modal | string |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
@@ -275,7 +273,7 @@ CompositionCard represents a container to display information about a Compositio
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | yes | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -305,12 +303,10 @@ CompositionCard represents a container to display information about a Compositio
 | actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
-| actions.openDrawer[].contentWidgetRef | yes | reference to the widget shown inside the drawer | string |
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].name | yes | name of the modal action | string |
-| actions.openModal[].contentWidgetRef | yes | reference to the widget shown inside the modal | string |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
@@ -627,7 +623,7 @@ name of the k8s Custom Resource
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | yes | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -657,12 +653,10 @@ name of the k8s Custom Resource
 | actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
-| actions.openDrawer[].contentWidgetRef | yes | reference to the widget shown inside the drawer | string |
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].name | yes | name of the modal action | string |
-| actions.openModal[].contentWidgetRef | yes | reference to the widget shown inside the modal | string |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
@@ -925,7 +919,7 @@ Panel is a container to display information
 |----------|----------|-------------|------|
 | actions | no | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | yes | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -955,12 +949,10 @@ Panel is a container to display information
 | actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
-| actions.openDrawer[].contentWidgetRef | yes | reference to the widget shown inside the drawer | string |
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].name | yes | name of the modal action | string |
-| actions.openModal[].contentWidgetRef | yes | reference to the widget shown inside the modal | string |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |

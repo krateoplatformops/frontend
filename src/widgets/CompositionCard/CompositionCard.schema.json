@@ -104,7 +104,7 @@
                         }
                       }
                     },
-                    "required": ["id", "resourceRefId", "payloadKey"]
+                    "required": ["id", "resourceRefId"]
                   }
                 },
                 "navigate": {
@@ -181,18 +181,9 @@
                       "title": {
                         "type": "string",
                         "description": "title shown in the drawer header"
-                      },
-                      "contentWidgetRef": {
-                        "type": "string",
-                        "description": "reference to the widget shown inside the drawer"
                       }
                     },
-                    "required": [
-                      "id",
-                      "type",
-                      "contentWidgetRef",
-                      "resourceRefId"
-                    ]
+                    "required": ["id", "type", "resourceRefId"]
                   }
                 },
                 "openModal": {
@@ -215,10 +206,6 @@
                         "type": "string",
                         "description": "name of the modal action"
                       },
-                      "contentWidgetRef": {
-                        "type": "string",
-                        "description": "reference to the widget shown inside the modal"
-                      },
                       "resourceRefId": {
                         "type": "string",
                         "description": "the identifier of the k8s custom resource that should be represented"
@@ -237,13 +224,7 @@
                         "description": "title shown in the modal header"
                       }
                     },
-                    "required": [
-                      "id",
-                      "type",
-                      "name",
-                      "contentWidgetRef",
-                      "resourceRefId"
-                    ]
+                    "required": ["id", "type", "name", "resourceRefId"]
                   }
                 }
               },

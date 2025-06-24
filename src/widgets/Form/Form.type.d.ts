@@ -23,7 +23,7 @@ export interface Form {
           /**
            * key used to nest the payload in the request body
            */
-          payloadKey: string
+          payloadKey?: string
           /**
            * unique identifier for the action
            */
@@ -146,10 +146,6 @@ export interface Form {
            * title shown in the drawer header
            */
           title?: string
-          /**
-           * reference to the widget shown inside the drawer
-           */
-          contentWidgetRef: string
         }[]
         /**
          * actions to open modal dialog components
@@ -167,10 +163,6 @@ export interface Form {
            * name of the modal action
            */
           name: string
-          /**
-           * reference to the widget shown inside the modal
-           */
-          contentWidgetRef: string
           /**
            * the identifier of the k8s custom resource that should be represented
            */

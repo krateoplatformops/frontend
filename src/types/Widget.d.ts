@@ -78,7 +78,6 @@ export type WidgetActions = {
     type: 'openDrawer'
     name: string
     resourceRefId: string
-    contentWidgetRef: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
     size?: 'default' | 'large'
@@ -88,7 +87,6 @@ export type WidgetActions = {
     id: string
     type: 'openModal'
     name: string
-    contentWidgetRef: string
     resourceRefId: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
