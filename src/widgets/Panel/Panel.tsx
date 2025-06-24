@@ -16,11 +16,11 @@ import type { Panel as WidgetType } from './Panel.type'
 
 export type PanelWidgetData = WidgetType['spec']['widgetData']
 
-const Panel = ({ actions, resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
+const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { clickActionId, footer, headerLeft, headerRight, icon, items, title, tooltip } = widgetData
+  const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, title, tooltip } = widgetData
 
   const action = Object.values(actions ?? {})
     .flat()
