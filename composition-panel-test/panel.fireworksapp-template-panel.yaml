@@ -9,10 +9,9 @@ spec:
   widgetData:
     clickActionId: template-click-action
     footer:
-      items:
-        - resourceRefId: template-panel-button
-      tags:
-        - fireworksapp-system
+      - resourceRefId: template-panel-button
+    tags:
+      - fireworksapp-system
     icon:
       name: fa-solid fa-cubes
       color: blue

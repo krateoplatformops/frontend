@@ -20,7 +20,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, title, tooltip } = widgetData
+  const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, tags, title, tooltip } = widgetData
 
   const action = Object.values(actions ?? {})
     .flat()
@@ -87,22 +87,22 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
     }
 
     return (
-      <div className={`${styles.footer} ${!footer.tags && footer.items?.length === 1 ? styles.single : ''} `}>
-        {footer.tags && footer.tags.length > 0 && (
+      <div className={`${styles.footer} ${!tags && footer?.length === 1 ? styles.single : ''} `}>
+        {tags && tags.length > 0 && (
           <div>
-            {footer.tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
+            {tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
           </div>
         )}
-        {footer.items && footer.items.length > 0 && (
+        {footer && footer.length > 0 && (
           <div className={styles.items}>
-            {footer.items?.map(({ resourceRefId }, index) => (
+            {footer?.map(({ resourceRefId }, index) => (
               <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
             ))}
           </div>
         )}
       </div>
     )
-  }, [footer, resourcesRefs, uid])
+  }, [footer, resourcesRefs, tags, uid])
 
   return (
     <AntdCard

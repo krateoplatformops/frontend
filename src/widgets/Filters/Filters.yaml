@@ -83,3 +83,7 @@ spec:
         name:
         - title
         type: string
+      - label: Tags
+        name:
+        - tags
+        type: string

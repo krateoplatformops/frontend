@@ -958,10 +958,9 @@ Panel is a container to display information
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
 | actions.openModal[].title | no | title shown in the modal header | string |
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
-| footer | no | footer section of the panel containing additional items and tags | object |
-| footer.items | no | list of resource references to render in the footer | array |
-| footer.items[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
-| footer.tags | no | list of string tags to be displayed in the footer | array |
+| footer | no | footer section of the panel containing additional items | array |
+| footer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
+| tags | no | list of string tags to be displayed in the footer | array |
 | headerLeft | no | optional text to be displayed under the title, on the left side of the Panel | string |
 | headerRight | no | optional text to be displayed under the title, on the right side of the Panel | string |
 | icon | no | icon displayed in the panel header | object |

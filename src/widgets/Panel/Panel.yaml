@@ -13,9 +13,8 @@ spec:
       - resourceRefId: my-table
     tooltip: this is a tooltip!
     footer:
-      items:
-        - resourceRefId: button-1
-        - resourceRefId: button-1
+      - resourceRefId: button-1
+      - resourceRefId: button-1
   resourcesRefs:
     - id: my-table
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -69,11 +68,10 @@ spec:
     items:
       - resourceRefId: first-column
     footer:
-      items:
-        - resourceRefId: button-with-drawer-filters
-      tags:
-        - tag1
-        - tag2
+      - resourceRefId: button-with-drawer-filters
+    tags:
+      - tag1
+      - tag2
   resourcesRefs:
     - id: first-column
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -217,10 +215,9 @@ spec:
   widgetData:
     clickActionId: composition-click-action
     footer:
-      items:
-        - resourceRefId: composition-test-button
-      tags: 
-        - krateo-system
+      - resourceRefId: composition-test-button
+    tags: 
+      - krateo-system
     icon:
       name: fa-solid fa-cubes
       color: blue
@@ -301,11 +298,10 @@ spec:
     clickActionId: template-click-action
     headerLeft: Ready:Unknown
     footer:
-      items:
-        - resourceRefId: composition-test-button
-      tags:
-        - krateo-system
-        - 2.0.1
+      - resourceRefId: composition-test-button
+    tags:
+      - krateo-system
+      - 2.0.1
     icon:
       name: fa-solid fa-cubes
       color: blue
@@ -351,17 +347,16 @@ spec:
     clickActionId: template-click-action
     headerLeft: Ready:Unknown
     footer:
-      items:
-        - resourceRefId: composition-test-button
-      tags:
-        - krateo-system
-        - other-tag
+      - resourceRefId: composition-test-button
+    tags:
+      - krateo-system
+      - other-tag
     icon:
       name: fa-solid fa-cubes
       color: blue
     items:
       - resourceRefId: my-paragraph
-    title: Different title!
+    title: Different title and tags!
     actions:
       openDrawer:
         - id: template-click-action

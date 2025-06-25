@@ -180,23 +180,18 @@ export interface Panel {
        */
       clickActionId?: string
       /**
-       * footer section of the panel containing additional items and tags
+       * footer section of the panel containing additional items
        */
       footer?: {
         /**
-         * list of resource references to render in the footer
+         * the identifier of the k8s custom resource that should be represented, usually a widget
          */
-        items?: {
-          /**
-           * the identifier of the k8s custom resource that should be represented, usually a widget
-           */
-          resourceRefId: string
-        }[]
-        /**
-         * list of string tags to be displayed in the footer
-         */
-        tags?: string[]
-      }
+        resourceRefId: string
+      }[]
+      /**
+       * list of string tags to be displayed in the footer
+       */
+      tags?: string[]
       /**
        * optional text to be displayed under the title, on the left side of the Panel
        */
