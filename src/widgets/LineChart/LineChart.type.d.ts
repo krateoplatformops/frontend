@@ -36,7 +36,7 @@ export interface LineChart {
           /**
            * value on the y axis
            */
-          yAxis: number
+          yAxis: string
         }[]
       }[]
       /**

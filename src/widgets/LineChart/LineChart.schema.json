@@ -57,7 +57,7 @@
                           "description": "value on the x axis"
                         },
                         "yAxis": {
-                          "type": "integer",
+                          "type": "string",
                           "description": "value on the y axis"
                         }
                       },

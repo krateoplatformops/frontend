@@ -21,7 +21,7 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
 
   dataChart.forEach((line) => {
     if (prefix && line?.coords && line.coords.length > 0) {
-      line.coords = getFilteredData(line.coords, prefix) as { xAxis: string; yAxis: number }[]
+      line.coords = getFilteredData(line.coords, prefix) as { xAxis: string; yAxis: string }[]
     }
   })
 

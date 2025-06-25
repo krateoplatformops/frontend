@@ -44,13 +44,13 @@ spec:
       - name: blue line
         color: blue
         coords:
-          - xAxis: 2025-06-01T00:00:00+00:00
+          - xAxis: 3
             yAxis: 15
-          - xAxis: 2025-07-02T00:00:00+00:00
+          - xAxis: 10
             yAxis: 52
-          - xAxis: 2025-06-03T00:00:00+00:00
+          - xAxis: 7
             yAxis: 24
-          - xAxis: 2025-06-04T00:00:00+00:00
+          - xAxis: 9
             yAxis: 4
     xAxisName: time
     yAxisName: cost
@@ -68,17 +68,17 @@ spec:
       - name: blue line
         color: blue
         coords:
-          - xAxis: 2025-06-03T00:00:00+00:00
+          - xAxis: 5
             yAxis: 31
-          - xAxis: 2025-06-04T00:00:00+00:00
+          - xAxis: 3
             yAxis: 49
-          - xAxis: 2025-06-05T00:00:00+00:00
+          - xAxis: 14
             yAxis: 18
-          - xAxis: 2025-06-06T00:00:00+00:00
+          - xAxis: 22
             yAxis: 9
-          - xAxis: 2025-06-07T00:00:00+00:00
+          - xAxis: 36
             yAxis: 27
-          - xAxis: 2025-06-08T00:00:00+00:00
+          - xAxis: 66
             yAxis: 36
     xAxisName: time
     yAxisName: cost
