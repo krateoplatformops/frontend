@@ -7,8 +7,8 @@ spec:
   widgetData:
     label: Filters
     icon: fa-rocket
-    size: small
-    type: primary
+    size: middle
+    type: default
     clickActionId: my-click-action
     actions:
       openDrawer:
@@ -22,6 +22,33 @@ spec:
       apiVersion: widgets.templates.krateo.io/v1beta1
       resource: filters
       name: my-filters
+      namespace: krateo-system
+      verb: GET
+---
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-with-drawer-filters-2
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Filters
+    icon: fa-filter
+    size: middle
+    type: default
+    clickActionId: my-click-action
+    actions:
+      openDrawer:
+        - id: my-click-action
+          resourceRefId: panel-filters
+          type: openDrawer
+          title: Filter compositions
+          size: large
+  resourcesRefs:
+    - id: panel-filters
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      resource: filters
+      name: panel-filters
       namespace: krateo-system
       verb: GET
 

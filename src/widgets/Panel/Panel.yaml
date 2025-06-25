@@ -288,3 +288,103 @@ spec:
       name: table-of-pods
       namespace: krateo-system
       resource: filters
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: fireworksapp-template-panel-schema-notordered
+  namespace: krateo-system
+  labels:
+    krateo.io/portal-page: templates
+spec:
+  widgetData:
+    clickActionId: template-click-action
+    headerLeft: Ready:Unknown
+    footer:
+      items:
+        - resourceRefId: composition-test-button
+      tags:
+        - krateo-system
+        - 2.0.1
+    icon:
+      name: fa-solid fa-cubes
+      color: blue
+    items:
+      - resourceRefId: my-paragraph
+    title: FireworksApp (Not Ordered Schema)
+    actions:
+      openDrawer:
+        - id: template-click-action
+          resourceRefId: test-firework-form
+          type: openDrawer
+          size: large
+          title: Fireworksapp
+  resourcesRefs:
+    - id: my-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: test-firework-form
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: test-firework-form
+      namespace: krateo-system
+      resource: forms
+      verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: fireworksapp-template-panel-schema-notordered-2
+  namespace: krateo-system
+  labels:
+    krateo.io/portal-page: templates
+spec:
+  widgetData:
+    clickActionId: template-click-action
+    headerLeft: Ready:Unknown
+    footer:
+      items:
+        - resourceRefId: composition-test-button
+      tags:
+        - krateo-system
+        - other-tag
+    icon:
+      name: fa-solid fa-cubes
+      color: blue
+    items:
+      - resourceRefId: my-paragraph
+    title: Different title!
+    actions:
+      openDrawer:
+        - id: template-click-action
+          resourceRefId: test-firework-form
+          type: openDrawer
+          size: large
+          title: Fireworksapp
+  resourcesRefs:
+    - id: my-paragraph
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-paragraph
+      namespace: krateo-system
+      resource: paragraphs
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: test-firework-form
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: test-firework-form
+      namespace: krateo-system
+      resource: forms
+      verb: GET

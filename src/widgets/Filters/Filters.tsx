@@ -116,7 +116,7 @@ const Filters = ({ widgetData }: WidgetProps<FiltersWidgetData>) => {
         ))}
       </Form>
       <Space>
-        <Button onClick={onReset} type='text'>Reset</Button>
+        <Button onClick={onReset} type='default'>Reset</Button>
         <Button onClick={() => filterForm.submit()} type='primary'>Apply</Button>
       </Space>
     </>

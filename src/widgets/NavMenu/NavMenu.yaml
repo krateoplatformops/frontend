@@ -9,7 +9,6 @@ spec:
       - resourceRefId: panel-with-row
       - resourceRefId: panel-with-column
       - resourceRefId: panel-backend-endpoint-id
-      - resourceRefId: button-3-backend-endpoint-id
       - resourceRefId: button-with-drawer-backend-endpoint-id
   resourcesRefs:
     - id: panel-with-row
@@ -29,12 +28,6 @@ spec:
       name: my-panel
       namespace: krateo-system
       resource: panels
-      verb: GET
-    - id: button-3-backend-endpoint-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-3
-      namespace: krateo-system
-      resource: buttons
       verb: GET
     - id: button-with-drawer-backend-endpoint-id
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -129,6 +122,8 @@ spec:
     items:
       - resourceRefId: button-with-drawer-form
       - resourceRefId: button-with-modal-form
+      - resourceRefId: button-with-drawer-filters-2
+      - resourceRefId: panel-grid
   resourcesRefs:
     - id: button-with-drawer-form
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -141,6 +136,18 @@ spec:
       name: button-with-modal-form
       namespace: krateo-system
       resource: buttons
+      verb: GET
+    - id: button-with-drawer-filters-2
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-with-drawer-filters-2
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: panel-grid
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: panel-grid
+      namespace: krateo-system
+      resource: datagrids
       verb: GET
 ---
 # ---

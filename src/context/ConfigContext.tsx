@@ -7,6 +7,7 @@ interface Config {
     SNOWPLOW_API_BASE_URL: string
     EVENTS_API_BASE_URL: string
     EVENTS_PUSH_API_BASE_URL: string
+    ROUTES_LOADER: string
     INIT: string
     TERMINAL_SOCKET_URL: string
   }
