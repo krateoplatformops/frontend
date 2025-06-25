@@ -23,6 +23,7 @@
             },
             "fields": {
               "type": "array",
+              "description": "it defines the filters as fields of a Form",
               "items": {
                 "type": "object",
                 "required": ["label", "type", "name"],
@@ -32,7 +33,7 @@
                     "type": "string"
                   },
                   "name": {
-                    "description": "the name of the fields, it must to be identical to widget prop name to filter or data in dataset",
+                    "description": "the name of the filter field, it must to be identical to the widget prop name to filter or data in dataset",
                     "type": "array",
                     "items": {
                       "type": "string"
@@ -43,7 +44,7 @@
                     "type": "string"
                   },
                   "type": {
-                    "description": "it's the filter type, to render input, select, radio buttons, date picker or daterange picker",
+                    "description": "it's the filter field type, to render input, select, radio buttons, date picker or daterange picker",
                     "type": "string",
                     "enum": ["string", "boolean", "number", "date", "daterange"]
                   },

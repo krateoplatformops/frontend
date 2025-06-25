@@ -502,11 +502,11 @@ spec:
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
 | prefix | yes | the prefix to share filters values to other widgets | string |
-| fields | yes |  | array |
+| fields | yes | it defines the filters as fields of a Form | array |
 | fields[].label | yes | the label of the field | string |
-| fields[].name | yes | the name of the fields, it must to be identical to widget prop name to filter or data in dataset | array |
+| fields[].name | yes | the name of the filter field, it must to be identical to the widget prop name to filter or data in dataset | array |
 | fields[].description | no | text to show as tooltip | string |
-| fields[].type | yes | it's the filter type, to render input, select, radio buttons, date picker or daterange picker | `string` \| `boolean` \| `number` \| `date` \| `daterange` |
+| fields[].type | yes | it's the filter field type, to render input, select, radio buttons, date picker or daterange picker | `string` \| `boolean` \| `number` \| `date` \| `daterange` |
 | fields[].options | no | they're the options for select or radio, the type must be 'string' | array |
 
 ---
@@ -741,7 +741,7 @@ LineChart displays a customizable line chart based on time series or numerical d
 | lines[].color | no | color used to render the line | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
 | lines[].coords | no | data points that define the line | array |
 | lines[].coords[].xAxis | yes | value on the x axis | string |
-| lines[].coords[].yAxis | yes | value on the y axis | integer |
+| lines[].coords[].yAxis | yes | value on the y axis | string |
 | xAxisName | no | label for the x axis | string |
 | yAxisName | no | label for the y axis | string |
 
