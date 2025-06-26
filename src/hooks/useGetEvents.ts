@@ -1,20 +1,26 @@
 import type { QueryKey } from '@tanstack/react-query'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { SSEK8sEvent } from '../utils/types'
 
+const MAX_EVENTS = 200
+// 10 seconds
+const CLEANUP_INTERVAL = 10000
+
 export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic?: string; registerToSSE?: boolean }) {
   const { config } = useConfigContext()
   const refConnected = useRef(false)
+  const eventSourceRef = useRef<EventSource | null>(null)
 
-  /* list of events */
+  // list of events
   const eventsUrl = `${config!.api.EVENTS_API_BASE_URL}/events`
 
-  /* stream of events */
+  // stream of events
   const notificationsUrl = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
-  const queryKey: QueryKey = ['events', eventsUrl, 'topic', topic]
+
+  const queryKey: QueryKey = useMemo(() => ['events', eventsUrl, 'topic', topic], [eventsUrl, topic])
 
   const queryClient = useQueryClient()
   const queryResult = useQuery({
@@ -24,6 +30,7 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
       const notifications = (await res.json()) as SSEK8sEvent[]
       return notifications
     },
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps -- we want to re-fetch when the url changes
     queryKey,
     /* Prevent all automatic refetching, SSE will handle new events  */
     refetchOnMount: false,
@@ -32,30 +39,52 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
     staleTime: Infinity,
   })
 
+  // Cleanup old events periodically to prevent memory issues
+  useEffect(() => {
+    const interval = setInterval(() => {
+      queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => {
+        if (!prev || prev.length <= MAX_EVENTS) {
+          return prev
+        }
+        return prev.slice(0, MAX_EVENTS)
+      })
+    }, CLEANUP_INTERVAL)
+
+    return () => clearInterval(interval)
+  }, [queryClient, queryKey])
+
   useEffect(() => {
     if (!registerToSSE) {
       return
     }
-    if (refConnected.current) {
-      console.warn('already connected to SSE')
-      return
+
+    // Clean up any existing connection before creating a new one
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close()
+      eventSourceRef.current = null
+      refConnected.current = false
     }
 
     const eventSource = new EventSource(notificationsUrl, {
       withCredentials: false,
     })
+    eventSourceRef.current = eventSource
+
     eventSource.onopen = () => {
       refConnected.current = true
     }
 
     eventSource.onerror = (event) => {
-      console.error('error', event)
+      console.error('[SSE] Connection error:', event)
       refConnected.current = false
+      // Close the connection on error to prevent orphaned connections
+      eventSource.close()
+      eventSourceRef.current = null
     }
 
     const handler = (event: MessageEvent<string>) => {
       const data = JSON.parse(event.data) as SSEK8sEvent[]
-      queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => [data, ...prev])
+      queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => [data, ...(prev || [])])
     }
 
     eventSource.addEventListener(topic, handler)
@@ -63,8 +92,9 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
     return () => {
       refConnected.current = false
       eventSource.close()
+      eventSourceRef.current = null
     }
-  }, [queryKey, topic])
+  }, [notificationsUrl, topic, queryClient, queryKey, registerToSSE])
 
   return queryResult
 }
