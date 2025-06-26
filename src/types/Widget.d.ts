@@ -53,6 +53,8 @@ export type WidgetActions = {
     verb: 'GET' | 'POST' | 'DELETE'
     resourceRefId: string
     requireConfirmation?: boolean
+    successMessage?: string
+    errorMessage?: string
     onSuccessNavigateTo?: string
     onEventNavigateTo?: {
       url: string

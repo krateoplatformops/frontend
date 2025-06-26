@@ -41,6 +41,14 @@ export interface Form {
            */
           onSuccessNavigateTo?: string
           /**
+           * a message that will be displayed inside a toast in case of error
+           */
+          errorMessage?: string
+          /**
+           * a message that will be displayed inside a toast in case of success
+           */
+          successMessage?: string
+          /**
            * conditional navigation triggered by a specific event
            */
           onEventNavigateTo?: {

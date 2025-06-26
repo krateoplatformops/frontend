@@ -144,6 +144,8 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
+| actions.rest[].errorMessage | no | a message that will be displayed inside a toast in case of error | string |
+| actions.rest[].successMessage | no | a message that will be displayed inside a toast in case of success | string |
 | actions.rest[].onSuccessNavigateTo | no | url to navigate to after successful execution | string |
 | actions.rest[].onEventNavigateTo | no | conditional navigation triggered by a specific event | object |
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
@@ -628,6 +630,8 @@ name of the k8s Custom Resource
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
 | actions.rest[].onSuccessNavigateTo | no | url to navigate to after successful execution | string |
+| actions.rest[].errorMessage | no | a message that will be displayed inside a toast in case of error | string |
+| actions.rest[].successMessage | no | a message that will be displayed inside a toast in case of success | string |
 | actions.rest[].onEventNavigateTo | no | conditional navigation triggered by a specific event | object |
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
@@ -924,6 +928,8 @@ Panel is a container to display information
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
 | actions.rest[].onSuccessNavigateTo | no | url to navigate to after successful execution | string |
+| actions.rest[].errorMessage | no | a message that will be displayed inside a toast in case of error | string |
+| actions.rest[].successMessage | no | a message that will be displayed inside a toast in case of success | string |
 | actions.rest[].onEventNavigateTo | no | conditional navigation triggered by a specific event | object |
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |

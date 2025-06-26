@@ -45,6 +45,14 @@
                         "type": "boolean",
                         "description": "whether user confirmation is required before triggering the action"
                       },
+                      "errorMessage": {
+                        "type": "string",
+                        "description": "a message that will be displayed inside a toast in case of error"
+                      },
+                      "successMessage": {
+                        "type": "string",
+                        "description": "a message that will be displayed inside a toast in case of success"
+                      },
                       "onSuccessNavigateTo": {
                         "type": "string",
                         "description": "url to navigate to after successful execution"

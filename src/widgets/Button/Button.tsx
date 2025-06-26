@@ -6,8 +6,9 @@ import useApp from 'antd/es/app/useApp'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
-import type { WidgetProps } from '../../types/Widget'
+import type { ResourceRef, WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
+import type { RestApiResponse } from '../../utils/types'
 import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 import { openModal } from '../Modal/Modal'
@@ -15,18 +16,6 @@ import { openModal } from '../Modal/Modal'
 import type { Button as WidgetType } from './Button.type'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
-
-type ApiResponse = {
-  status?: string | number
-  reason?: string
-  message?: string
-  metadata?: {
-    name?: string
-    namespace?: string
-    [key: string]: unknown
-  }
-  [key: string]: unknown
-}
 
 const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
   const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
@@ -55,7 +44,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
           break
         }
         case 'rest': {
-          const { id, payload } = action
+          const { errorMessage, id, payload, successMessage } = action
 
           if (requireConfirmation) {
             const confirmed = window.confirm('Are you sure?')
@@ -63,7 +52,19 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
               break
             }
           }
-          const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
+
+          let resourceRef: ResourceRef
+          try {
+            resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
+          } catch (error) {
+            notification.error({
+              description: error instanceof Error ? error.message : String(error),
+              message: `Error while retrieving the resource`,
+              placement: 'bottomLeft',
+            })
+            break
+          }
+
           const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
 
           const method = resourceRef.verb
@@ -79,10 +80,10 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
             method,
           })
 
-          const json = await res.json() as ApiResponse
+          const json = await res.json() as RestApiResponse
           if (!res.ok) {
             notification.error({
-              description: json.message,
+              description: errorMessage || json.message,
               message: `${json.status} - ${json.reason}`,
               placement: 'bottomLeft',
             })
@@ -91,7 +92,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
 
           const actionName = method === 'DELETE' ? 'deleted' : 'created'
           notification.success({
-            description: `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
+            description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
             message: json.message,
             placement: 'bottomLeft',
           })
