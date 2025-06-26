@@ -23,27 +23,3 @@ spec:
       namespace: krateo-system
       resource: piecharts
       verb: GET
----
-kind: Row
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: composition-test-row
-  namespace: krateo-system
-spec:
-  widgetData:
-    items:
-      - resourceRefId: composition-filtrable-card-1
-      - resourceRefId: composition-filtrable-card-2
-  resourcesRefs:
-    - id: composition-filtrable-card-1
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-filtrable-card-1
-      namespace: krateo-system
-      resource: compositioncards
-      verb: GET
-    - id: composition-filtrable-card-2
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-filtrable-card-2
-      namespace: krateo-system
-      resource: compositioncards
-      verb: GET

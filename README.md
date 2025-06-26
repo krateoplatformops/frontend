@@ -263,118 +263,6 @@ spec:
 
 ---
 
-### CompositionCard
-
-CompositionCard represents a container to display information about a Composition
-
-#### Props
-
-| Property | Required | Description | Type |
-|----------|----------|-------------|------|
-| actions | yes | the actions of the widget | object |
-| actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
-| actions.rest[].id | yes | unique identifier for the action | string |
-| actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
-| actions.rest[].onSuccessNavigateTo | no | url to navigate to after successful execution | string |
-| actions.rest[].onEventNavigateTo | no | conditional navigation triggered by a specific event | object |
-| actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
-| actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
-| actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
-| actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
-| actions.rest[].type | no | type of action to execute | `rest` |
-| actions.rest[].payload | no | static payload sent with the request | object |
-| actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
-| actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
-| actions.rest[].payloadToOverride[].value | yes | value to use for overriding the field | string |
-| actions.navigate | no | client-side navigation actions | array |
-| actions.navigate[].id | yes | unique identifier for the action | string |
-| actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].name | yes | name of the navigation action | string |
-| actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
-| actions.navigate[].loading | no | defines the loading indicator behavior during navigation | `global` \| `inline` \| `none` |
-| actions.openDrawer | no | actions to open side drawer components | array |
-| actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
-| actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
-| actions.openDrawer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.openDrawer[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
-| actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
-| actions.openDrawer[].title | no | title shown in the drawer header | string |
-| actions.openModal | no | actions to open modal dialog components | array |
-| actions.openModal[].id | yes | unique identifier for the modal action | string |
-| actions.openModal[].type | yes | type of modal action | `openModal` |
-| actions.openModal[].name | yes | name of the modal action | string |
-| actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
-| actions.openModal[].title | no | title shown in the modal header | string |
-| date | no | date associated with the composition, typically its creation time | string |
-| description | no | short text describing the composition's purpose or status | string |
-| icon | no | icon displayed on the card | object |
-| icon.name | yes | icon name to display (font awesome icon name eg: `fa-inbox`) | string |
-| icon.color | no | color of the icon | string |
-| status | no | current status of the composition (e.g., running, failed, pending) | string |
-| tags | no | list of tags for categorizing or filtering the composition | array |
-| title | no | main title of the card, usually the name of the composition | string |
-| tooltip | no | optional tooltip text shown on the top right side of the card to provide additional context | string |
-| deleteCompositionActionId | no | id of the action triggered when the delete button is clicked | string |
-| navigateToDetailActionId | no | id of the action triggered when the card is clicked | string |
-
-<details>
-<summary>Example</summary>
-
-```yaml
-kind: CompositionCard
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: composition-test-card
-  namespace: test-namespace
-spec:
-  widgetData:
-    date: 2023-08-20'T'13:20:10*633+0000
-    status: Ready
-    tooltip: test
-    navigateToDetailActionId: composition-click-action
-    deleteCompositionActionId: composition-delete-action
-    tags: 
-      - test-namespace
-      - test-system
-    icon:
-      name: fa-solid fa-cubes
-      color: blue
-    title: composition-test
-    description: This is a test composition card.
-    actions:
-      navigate:
-        - id: composition-click-action
-          name: composition-click-action
-          resourceRefId: composition-test-tab-list
-          type: navigate
-      rest:
-        - id: composition-delete-action
-          resourceRefId: composition-test-panel
-          type: rest
-  resourcesRefs:
-    - id: composition-test-panel
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-panel
-      namespace: test-namespace
-      resource: panels
-      verb: GET
-    - id: composition-test-tab-list
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-tab-list
-      namespace: test-namespace
-      resource: tablists
-      verb: GET
-```
-</details>
-
----
-
 ### DataGrid
 
 
@@ -810,17 +698,10 @@ spec:
   widgetData:
     items:
       - resourceRefId: nav-menu-item-templates
-      - resourceRefId: nav-menu-item-compositions
   resourcesRefs:
     - id: nav-menu-item-templates
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: nav-menu-item-templates
-      namespace: test-namespace
-      resource: navemenuitems
-      verb: GET
-    - id: nav-menu-item-compositions
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: nav-menu-item-compositions
       namespace: test-namespace
       resource: navemenuitems
       verb: GET
@@ -1142,13 +1023,13 @@ metadata:
 spec:
   widgetData:
     items:
-      - resourceRefId: composition-test-card
+      - resourceRefId: composition-test-panel
   resourcesRefs:
-    - id: composition-test-card
+    - id: composition-test-panel
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-card
+      name: composition-test-panel
       namespace: test-namespace
-      resource: compositioncards
+      resource: panels
       verb: GET
 ```
 </details>
