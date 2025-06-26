@@ -73,7 +73,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
             Reset
           </Button>
           <Button form={formId} htmlType='submit' type='primary'>
-            submit
+            Submit
           </Button>
         </Space>
       ) : null}
