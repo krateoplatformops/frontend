@@ -4,6 +4,7 @@ import type { ReactElement } from 'react'
 import { useMemo } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
+import { useProgressiveLoading } from '../../hooks/useProgressiveLoading'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
@@ -13,15 +14,25 @@ import type { DataGrid as WidgetType } from './DataGrid.type'
 export type DataGridWidgetData = WidgetType['spec']['widgetData']
 
 const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>) => {
-  const { asGrid, grid, items, prefix } = widgetData
+  const { asGrid, grid, items: _items, prefix } = widgetData
+
+  const visibleCount = useProgressiveLoading({
+    batchIncrement: 10,
+    initialBatchSize: 10,
+    maxConcurrentRequests: 5,
+    totalItems: _items.length,
+  })
+
+  /* while this looks like we are refetching some widgets, these are cached by react-query */
+  const items = _items.slice(0, visibleCount)
 
   const getDatalist = () => {
     if (prefix) {
       const datalist: ReactElement[] = []
 
       items.forEach(({ resourceRefId }) => {
-        const elem = WidgetRenderer({ prefix, widgetEndpoint: getEndpointUrl(resourceRefId, resourcesRefs) })
-        if (elem) { datalist.push(elem) }
+        const elem = <WidgetRenderer key={resourceRefId} prefix={prefix} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
+        datalist.push(elem)
       })
 
       return datalist
@@ -34,7 +45,9 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
 
   const renderedGrid: ListGridType = useMemo(() => {
     if (asGrid && items && items.length > 1) {
-      if (grid) { return grid }
+      if (grid) {
+        return grid
+      }
 
       return {
         gutter: 16,
@@ -55,11 +68,7 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
       <List
         dataSource={getDatalist()}
         grid={renderedGrid}
-        renderItem={(item, index) => (
-          <List.Item key={`datagrid-item-${item.key || index}`}>
-            {item}
-          </List.Item>
-        )}
+        renderItem={(item, index) => <List.Item key={`datagrid-item-${item.key || index}`}>{item}</List.Item>}
       />
     </div>
   )
