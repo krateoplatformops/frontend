@@ -83,8 +83,12 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
     }
 
     const handler = (event: MessageEvent<string>) => {
-      const data = JSON.parse(event.data) as SSEK8sEvent[]
-      queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => [data, ...(prev || [])])
+      try {
+        const data = JSON.parse(event.data) as SSEK8sEvent
+        queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => [data, ...(prev || [])])
+      } catch (error) {
+        console.error('Error parsing event data:', error)
+      }
     }
 
     eventSource.addEventListener(topic, handler)

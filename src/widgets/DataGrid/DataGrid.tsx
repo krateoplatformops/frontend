@@ -1,6 +1,5 @@
 import { List } from 'antd'
 import type { ListGridType } from 'antd/es/list'
-import type { ReactElement } from 'react'
 import { useMemo } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
@@ -26,22 +25,14 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
   /* while this looks like we are refetching some widgets, these are cached by react-query */
   const items = _items.slice(0, visibleCount)
 
-  const getDatalist = () => {
-    if (prefix) {
-      const datalist: ReactElement[] = []
-
-      items.forEach(({ resourceRefId }) => {
-        const elem = <WidgetRenderer key={resourceRefId} prefix={prefix} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-        datalist.push(elem)
-      })
-
-      return datalist
-    }
-
-    return items.map(({ resourceRefId }) => (
-      <WidgetRenderer key={resourceRefId} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-    ))
-  }
+  const datalist = useMemo(() => items.map(({ resourceRefId }) => (
+    <WidgetRenderer
+      key={resourceRefId}
+      prefix={prefix}
+      widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)}
+      wrapper={{ component: List.Item }}
+    />
+  )), [items, prefix, resourcesRefs])
 
   const renderedGrid: ListGridType = useMemo(() => {
     if (asGrid && items && items.length > 1) {
@@ -65,11 +56,7 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
 
   return (
     <div className={styles.list}>
-      <List
-        dataSource={getDatalist()}
-        grid={renderedGrid}
-        renderItem={(item, index) => <List.Item key={`datagrid-item-${item.key || index}`}>{item}</List.Item>}
-      />
+      <List dataSource={datalist} grid={renderedGrid} renderItem={item => item} />
     </div>
   )
 }
