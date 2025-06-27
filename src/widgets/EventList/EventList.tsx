@@ -26,8 +26,12 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
       })
 
       eventSource.addEventListener(sseTopic, (event: MessageEvent<string>) => {
-        const data = JSON.parse(event.data) as SSEK8sEvent[]
-        setEventList(prev => [...data, ...prev])
+        try {
+          const data = JSON.parse(event.data) as SSEK8sEvent
+          setEventList((prev) => [data, ...prev].slice(0, 200)) /* limit to 200 events to prevent memory leak */
+        } catch (error) {
+          console.error('Error parsing event data:', error)
+        }
       })
 
       return () => eventSource.close()
@@ -36,34 +40,36 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
 
   return (
     <>
-      {eventList.map(({
-        icon,
-        involvedObject: { apiVersion, kind, name, namespace },
-        message,
-        metadata: { creationTimestamp, uid: rowUid },
-        reason,
-        type,
-      }) => (
-        <RichRow
-          color={type === 'Normal' ? 'blue' : 'orange'}
-          icon={icon || 'fa-ellipsis-h'}
-          key={`${uid}-${rowUid}`}
-          primaryText={
-            <>
-              <Typography.Text type='secondary'>name:</Typography.Text> <Typography.Text>{name}</Typography.Text>
-              <Divider type='vertical' />
-              <Typography.Text type='secondary'>namespace:</Typography.Text> <Typography.Text>{namespace}</Typography.Text>
-              <Divider type='vertical' />
-              <Typography.Text type='secondary'>kind:</Typography.Text> <Typography.Text>{kind}</Typography.Text>
-              <Divider type='vertical' />
-              <Typography.Text type='secondary'>apiVersion:</Typography.Text> <Typography.Text>{apiVersion}</Typography.Text>
-            </>
-          }
-          secondaryText={formatISODate(creationTimestamp, true)}
-          subPrimaryText={message}
-          subSecondaryText={reason}
-        />
-      ))}
+      {eventList.map(
+        ({
+          icon,
+          involvedObject: { apiVersion, kind, name, namespace },
+          message,
+          metadata: { creationTimestamp, uid: rowUid },
+          reason,
+          type,
+        }) => (
+          <RichRow
+            color={type === 'Normal' ? 'blue' : 'orange'}
+            icon={icon || 'fa-ellipsis-h'}
+            key={`${uid}-${rowUid}`}
+            primaryText={
+              <>
+                <Typography.Text type='secondary'>name:</Typography.Text> <Typography.Text>{name}</Typography.Text>
+                <Divider type='vertical' />
+                <Typography.Text type='secondary'>namespace:</Typography.Text> <Typography.Text>{namespace}</Typography.Text>
+                <Divider type='vertical' />
+                <Typography.Text type='secondary'>kind:</Typography.Text> <Typography.Text>{kind}</Typography.Text>
+                <Divider type='vertical' />
+                <Typography.Text type='secondary'>apiVersion:</Typography.Text> <Typography.Text>{apiVersion}</Typography.Text>
+              </>
+            }
+            secondaryText={formatISODate(creationTimestamp, true)}
+            subPrimaryText={message}
+            subSecondaryText={reason}
+          />
+        )
+      )}
     </>
   )
 }
