@@ -85,5 +85,5 @@ spec:
         type: string
       - label: Tags
         name:
-        - tags
+        - footer.tags
         type: string
