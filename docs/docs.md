@@ -31,7 +31,7 @@ spec:
 
 ## widgetDataTemplate
 
-Every widget support a the property `spec.widgetDataTemplate` that allows overriding a specific value defined in `spec.widgetData`, this is useful to inject dynamic content inside a widget.
+Every widget supports the property `spec.widgetDataTemplate` that allows overriding a specific value defined in `spec.widgetData`, this is useful to inject dynamic content inside a widget.
 
 ```
  widgetDataTemplate:
@@ -39,15 +39,15 @@ Every widget support a the property `spec.widgetDataTemplate` that allows overri
       expression: ${ .namespaces }
 ```
 
-widgetDataTemplate accepts an array of objects with `forPath` and `expression` keys.
+`widgetDataTemplate` accepts an array of objects with `forPath` and `expression` keys.
 
-`forPath` is used to chose what key in widgetData to override, is support dot notation to override nested data eg `parentProperty.childProperty`
+`forPath` is used to chose what key in `widgetData` to override, it uses dot notation to reference nested data eg `parentProperty.childProperty`
 
 `expression` is a [jq](https://jqlang.org/) expression that uses the result of the jq expression as the data to be injected in the specified path
 
 ### Simple example
 
-In the example below, the label of the button will be the date when the widget is fetched, as the data from widgetDataTemplate is substituted dynamically at the moment of loading a widget
+In the example below, the label of the button will be the date when the widget is loaded, as the data from widgetDataTemplate is substituted dynamically at the moment of loading a widget
 
 ```
 kind: Button
@@ -103,7 +103,7 @@ spec:
 ```
 
 In the example above, we declared a table with a single column `name` to display all namespaces of the cluster.
-The data is fetched directly from the k8s api server
+The data is loaded directly from the k8s api server
 
 ### Hoes does it work?
 
@@ -115,9 +115,9 @@ widgetDataTemplate:
 
 What is `.namespaces`?
 
-in the expression `.namespace` reference the result of an api called `namespaces`.
+In the expression `.namespace` reference the result of an api called `namespaces`.
 
-The Table widget has a field `spec.apiRef` that references a RESTAction by name (`cluster-namespaces`), the namespaces api is declared in the RESTAction's `spec.api` array
+The Table widget has a field `spec.apiRef` that references a RESTAction by name (`cluster-namespaces`), an `api` with name `namespaces` is declared in the RESTAction's `spec.api` array
 
 By this chain of references `Widget -> apiRef -> RESTAction -> api` widgetDataTemplate is able to refecence an api by name
 
@@ -139,7 +139,8 @@ As shown above, the endpoint called is `/api/v1/namespaces` which call the k8s a
 ## actions
 
 Actions are a way to declare widget behavious and user interactions.
-There a different kind of actions:
+
+The currencly supported actions are:
 
 - rest
 - navigate
@@ -326,7 +327,7 @@ if `resourcesRefs` has some manually filled items they will be merged with the r
 
 As a quick recap of what is happing:
 
-- the widget references a RESTAction with name templates-panels in apiRef
+- the widget references a RESTAction with name templates-panels in `apiRef`
 - templates-panels RESTAction declares an api called `templatespanels`
 - resourcesRefsTemplate's iterator uss the result of `templatespanels` to populate them items that will be part of resourcesRefs
 
