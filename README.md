@@ -76,3 +76,7 @@ npm run apply-all
 ## Widgets
 
 Api reference for widgets is found at [docs/widgets-api-reference.md](docs/widgets-api-reference.md)
+
+## Documentation and guides
+
+Documentation and guides can be found in [docs/](docs/)
