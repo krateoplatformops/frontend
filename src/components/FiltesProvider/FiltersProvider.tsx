@@ -97,6 +97,10 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const getValueByPath = (obj: DataItem, path: string): unknown => {
+    return path.split('.').reduce<unknown>((acc, part) => (acc as Record<string, unknown>)?.[part], obj)
+  }
+
   const getFilteredData = (data: DataItem[], prefix: string): unknown[] => {
     const filters: FilterType[] = (filterMap[prefix] as FilterType[] | undefined) ?? []
 
@@ -121,19 +125,9 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
 
     if (filters.length === 0) { return false }
 
-    // for (const [key, value] of Object.entries(dataObj)) {
-    //   const filter = filters.find(el => el.fieldName === key)
-    //   if (filter) {
-    //     if (!matchesFilter(value, filter)) {
-    //       // The widget is filtered out by this filter
-    //       return true
-    //     }
-    //   }
-    // }
-
     for (const filter of filters) {
-      const allFieldsFail = filter.fieldName.every(fieldName => {
-        const value = dataObj[fieldName]
+      const allFieldsFail = filter.fieldName.every(fieldPath => {
+        const value = getValueByPath(dataObj, fieldPath)
         return value === undefined || !matchesFilter(value, filter)
       })
 
@@ -148,6 +142,7 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <FiltersContext.Provider value={{ clearFilters, getFilteredData, getFilters, isWidgetFilteredByProps, setFilters }}>
+      {/* <div>FILTERS: {JSON.stringify(filterMap)}</div> */}
       {children}
     </FiltersContext.Provider>
   )
