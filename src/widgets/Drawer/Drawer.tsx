@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import WidgetRenderer from '../../components/WidgetRenderer'
 
 import styles from './Drawer.module.css'
+import type { DrawerData } from './DrawerContext'
 import { DrawerProvider } from './DrawerContext'
 
 interface DrawerProps {
@@ -23,7 +24,7 @@ export const closeDrawer = () => {
 const Drawer = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [properties, setProperties] = useState<DrawerProps | null>(null)
-  const [drawerData, setDrawerData] = useState<{ title?: string; extra?: React.ReactNode }>({})
+  const [drawerData, setDrawerData] = useState<DrawerData>({})
 
   useEffect(() => {
     const handleOpenDrawer = (event: CustomEvent<DrawerProps>) => {
@@ -53,7 +54,7 @@ const Drawer = () => {
   return (
     <AntdDrawer
       destroyOnHidden
-      extra={drawerData.extra}
+      extra={drawerData.extra ? <fieldset disabled={drawerData.fieldSetDisabled}>{drawerData.extra}</fieldset> : undefined}
       key={
         /* This make sure that the content of the drawer is destroyed and recreated when
         the drawer is closed and reopened, to prevent the form from showing stale data

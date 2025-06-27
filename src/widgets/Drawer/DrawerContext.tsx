@@ -1,19 +1,22 @@
 import { noop } from 'lodash'
 import { createContext, useContext } from 'react'
 
-type DrawerData = {
+export type DrawerData = {
   extra?: React.ReactNode
   title?: string
+  fieldSetDisabled?: boolean
 }
+
+type DrawerDataSetter = React.Dispatch<React.SetStateAction<DrawerData>>
 
 type DrawerContextValue = {
   insideDrawer: true
-  setDrawerData: (data: DrawerData) => void
+  setDrawerData: DrawerDataSetter
 }
 
 type DrawerProviderProps = {
   children: React.ReactNode
-  setDrawerData: (data: DrawerData) => void
+  setDrawerData: DrawerDataSetter
 }
 
 const DrawerContext = createContext<DrawerContextValue>({

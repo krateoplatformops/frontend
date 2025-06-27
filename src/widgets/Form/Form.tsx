@@ -146,18 +146,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
           let resourceUid: string | null = null
           if (submitAction.onEventNavigateTo) {
             /* FIXME: This is a bit dirty, should disable the already present buttons instead */
-            drawerContext.setDrawerData({
-              extra: (
-                <Space>
-                  <Button disabled form={formId} htmlType='reset' type='default'>
-                    Reset
-                  </Button>
-                  <Button disabled form={formId} htmlType='submit' type='primary'>
-                    submit
-                  </Button>
-                </Space>
-              ),
-            })
+            drawerContext.setDrawerData((prev) => ({ ...prev, fieldSetDisabled: true }))
 
             const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
             const eventSource = new EventSource(eventsEndpoint, {
@@ -167,11 +156,15 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
             const timeoutId = setTimeout(() => {
               eventSource.close()
               notification.error({
+                duration: 0 /* doesn't close automatically */,
                 message: `Timeout waiting for event ${submitAction.onEventNavigateTo!.eventReason}`,
                 placement: 'bottomLeft',
               })
               message.destroy()
-            }, submitAction.onEventNavigateTo.timeout! * 1000)
+              drawerContext.setDrawerData((prev) => ({ ...prev, fieldSetDisabled: false }))
+
+              // }, submitAction.onEventNavigateTo.timeout! * 1000)
+            }, 3000)
 
             eventSource.addEventListener('krateo', (event) => {
               const data = JSON.parse(event.data as string) as { reason: string; involvedObject: { uid: string } }
