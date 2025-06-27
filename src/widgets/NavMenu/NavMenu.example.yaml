@@ -7,17 +7,10 @@ spec:
   widgetData:
     items:
       - resourceRefId: nav-menu-item-templates
-      - resourceRefId: nav-menu-item-compositions
   resourcesRefs:
     - id: nav-menu-item-templates
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: nav-menu-item-templates
-      namespace: test-namespace
-      resource: navemenuitems
-      verb: GET
-    - id: nav-menu-item-compositions
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: nav-menu-item-compositions
       namespace: test-namespace
       resource: navemenuitems
       verb: GET

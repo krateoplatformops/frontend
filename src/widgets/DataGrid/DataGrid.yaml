@@ -34,56 +34,6 @@ spec:
 kind: DataGrid
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: compositions-grid
-  namespace: krateo-system
-spec:
-  widgetData:
-    prefix: filters-sample
-    asGrid: true
-    grid:
-      column: 2
-      gutter: 16
-    items:
-      - resourceRefId: composition-filtrable-card-1
-      - resourceRefId: composition-filtrable-card-2
-      - resourceRefId: composition-filtrable-card-3
-      - resourceRefId: composition-filtrable-card-4
-      - resourceRefId: composition-filtrable-card-5
-  resourcesRefs:
-    - id: composition-filtrable-card-1
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-filtrable-card-1
-      namespace: krateo-system
-      resource: compositioncards
-      verb: GET
-    - id: composition-filtrable-card-2
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-filtrable-card-2
-      namespace: krateo-system
-      resource: compositioncards
-      verb: GET
-    - id: composition-filtrable-card-3
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-filtrable-card-3
-      namespace: krateo-system
-      resource: compositioncards
-      verb: GET
-    - id: composition-filtrable-card-4
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-filtrable-card-4
-      namespace: krateo-system
-      resource: compositioncards
-      verb: GET
-    - id: composition-filtrable-card-5
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-filtrable-card-5
-      namespace: krateo-system
-      resource: compositioncards
-      verb: GET
----
-kind: DataGrid
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
   name: panel-grid
   namespace: krateo-system
 spec:

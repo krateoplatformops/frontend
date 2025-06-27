@@ -98,23 +98,6 @@ spec:
 kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: compositions-page
-  namespace: krateo-system
-spec:
-  widgetData:
-    items:
-      - resourceRefId: composition-test-row
-  resourcesRefs:
-    - id: composition-test-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-row
-      namespace: krateo-system
-      resource: rows
-      verb: GET
----
-kind: Page
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
   name: form-page
   namespace: krateo-system
 spec:
@@ -231,27 +214,6 @@ spec:
       resource: pages
       verb: GET
 ---
-kind: NavMenuItem
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: nav-menu-item-compositions
-  namespace: krateo-system
-spec:
-  widgetData:
-    resourceRefId: compositions-page
-    label: Compositions
-    icon: fa-shapes
-    path: /compositions
-    order: 30
-
-  resourcesRefs:
-    - id: compositions-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: compositions-page
-      namespace: krateo-system
-      resource: pages
-      verb: GET
----
 kind: NavMenu
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -324,19 +286,12 @@ spec:
   widgetData:
     items:
       - resourceRefId: button-with-drawer-filters
-      - resourceRefId: compositions-grid
   resourcesRefs:
     - id: button-with-drawer-filters
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: button-with-drawer-filters
       namespace: krateo-system
       resource: buttons
-      verb: GET
-    - id: compositions-grid
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: compositions-grid
-      namespace: krateo-system
-      resource: datagrids
       verb: GET
 ---
 kind: NavMenuItem

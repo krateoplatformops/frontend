@@ -12,8 +12,6 @@ import Button from '../../widgets/Button'
 import type { ButtonWidgetData } from '../../widgets/Button/Button'
 import Column from '../../widgets/Column'
 import type { ColumnWidgetData } from '../../widgets/Column/Column'
-import type { CompositionCardWidgetData } from '../../widgets/CompositionCard/CompositionCard'
-import CompositionCard from '../../widgets/CompositionCard/CompositionCard'
 import type { DataGridWidgetData } from '../../widgets/DataGrid/DataGrid'
 import DataGrid from '../../widgets/DataGrid/DataGrid'
 import EventList from '../../widgets/EventList'
@@ -109,8 +107,6 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <Button resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
     case 'Column':
       return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
-    case 'CompositionCard':
-      return <CompositionCard resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as CompositionCardWidgetData} />
     case 'EventList':
       return <EventList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'FlowChart':
@@ -150,16 +146,22 @@ function parseData(widget: Widget, widgetEndpoint: string) {
   }
 }
 
+type WidgetRendererProps = {
+  widgetEndpoint: string
+  invisible?: boolean
+  prefix?: string
+  wrapper?: {
+    component: React.ComponentType<{ children: React.ReactNode }>
+    props?: Record<string, unknown>
+  }
+}
+
 const WidgetRenderer = ({
   invisible = false,
   prefix,
   widgetEndpoint,
-}: {
-  prefix?: string
-  widgetEndpoint: string
-  /* for widget tha don't need to be displayed, usually becuase they just fetch other widgets */
-  invisible?: boolean
-}) => {
+  wrapper,
+}: WidgetRendererProps) => {
   const navigate = useNavigate()
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
@@ -250,6 +252,16 @@ const WidgetRenderer = ({
       status: widget.code,
     }, 'notification')
     void navigate('/login')
+  }
+
+  if (wrapper) {
+    const Wrapper = wrapper.component
+
+    return (
+      <Wrapper {...wrapper.props}>
+        {parseData(widget, widgetEndpoint)}
+      </Wrapper>
+    )
   }
 
   return parseData(widget, widgetEndpoint)
