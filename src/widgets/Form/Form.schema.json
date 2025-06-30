@@ -51,6 +51,14 @@
                         "type": "string",
                         "description": "url to navigate to after successful execution"
                       },
+                      "errorMessage": {
+                        "type": "string",
+                        "description": "a message that will be displayed inside a toast in case of error"
+                      },
+                      "successMessage": {
+                        "type": "string",
+                        "description": "a message that will be displayed inside a toast in case of success"
+                      },
                       "onEventNavigateTo": {
                         "type": "object",
                         "required": ["eventReason", "url"],

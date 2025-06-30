@@ -34,6 +34,14 @@ export interface Button {
            */
           requireConfirmation?: boolean
           /**
+           * a message that will be displayed inside a toast in case of error
+           */
+          errorMessage?: string
+          /**
+           * a message that will be displayed inside a toast in case of success
+           */
+          successMessage?: string
+          /**
            * url to navigate to after successful execution
            */
           onSuccessNavigateTo?: string

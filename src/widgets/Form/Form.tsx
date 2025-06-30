@@ -7,7 +7,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
-import type { WidgetProps } from '../../types/Widget'
+import type { ResourceRef, WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import { getResourceRef } from '../../utils/utils'
 import { closeDrawer } from '../Drawer/Drawer'
@@ -101,7 +101,18 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
           // const formOverride = template.template.payloadToOverride
           // const formKey = template.template.payloadFormKey || data.status.props.payloadFormKey || 'spec'
 
-          const resourceRef = getResourceRef(submitAction.resourceRefId, resourcesRefs)
+          let resourceRef: ResourceRef
+          try {
+            resourceRef = getResourceRef(submitAction.resourceRefId, resourcesRefs)
+          } catch (error) {
+            notification.error({
+              description: error instanceof Error ? error.message : String(error),
+              message: `Error while retrieving the resource`,
+              placement: 'bottomLeft',
+            })
+            return
+          }
+
           const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
 
           const method = resourceRef.verb
@@ -215,7 +226,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
           if (!res.ok) {
             message.destroy()
             notification.error({
-              description: json.message,
+              description: submitAction.errorMessage || json.message,
               message: `${json.status} - ${json.reason}`,
               placement: 'bottomLeft',
             })
@@ -230,7 +241,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
           /* if we are not waiting for an event, we can show a success message */
           if (!submitAction.onEventNavigateTo) {
             notification.success({
-              description: `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
+              description: submitAction.successMessage || `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
               message: json.message,
               placement: 'bottomLeft',
             })

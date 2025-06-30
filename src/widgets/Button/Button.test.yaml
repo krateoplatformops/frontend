@@ -19,9 +19,22 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    actions: {}
+    actions: 
+      rest:
+      - id: cleanup
+        errorMessage: Error!
+        successMessage: Success!
+        resourceRefId: cleanup
+        type: rest
+        onSuccessNavigateTo: /templates
     icon: fa-trash
     type: default
     shape: circle
-    clickActionId: action-1
-  resourcesRefs: []
+    clickActionId: cleanup
+  resourcesRefs:
+    - id: cleanup
+      apiVersion: templates.krateo.io/v1
+      resource: restactions
+      name: fireworksapp-template-restaction-cleanup
+      namespace: krateo-system
+      verb: GET

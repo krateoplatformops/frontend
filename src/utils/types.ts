@@ -77,3 +77,15 @@ export interface SSEK8sEvent extends K8sEvent {
   title?: string
   url?: string
 }
+
+export type RestApiResponse = {
+  status?: string | number
+  reason?: string
+  message?: string
+  metadata?: {
+    name?: string
+    namespace?: string
+    [key: string]: unknown
+  }
+  [key: string]: unknown
+}
