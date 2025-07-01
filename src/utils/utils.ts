@@ -2,7 +2,7 @@ import type { ResourcesRefs } from '../types/Widget'
 
 export const getResourceRef = (resourceRefId: string, resourcesRefs: ResourcesRefs) => {
   if (!resourcesRefs || resourcesRefs.length === 0) {
-    throw new Error('Cannot find resources refs')
+    console.error(`Cannot find resources refs for resource ref with ID ${resourceRefId}`)
   }
 
   const backendEndpoint = resourcesRefs.find((endpoint) => {
@@ -10,16 +10,16 @@ export const getResourceRef = (resourceRefId: string, resourcesRefs: ResourcesRe
   })
 
   if (!backendEndpoint) {
-    throw new Error(`Cannot find resource ref with ID ${resourceRefId}`)
+    console.error(`Cannot find resource ref with ID ${resourceRefId}`)
   }
 
   return backendEndpoint
 }
 
-export const getEndpointUrl = (resourceRefId: string, resourcesRefs: ResourcesRefs): string => {
+export const getEndpointUrl = (resourceRefId: string, resourcesRefs: ResourcesRefs) => {
   const backendEndpoint = getResourceRef(resourceRefId, resourcesRefs)
 
-  return backendEndpoint.path
+  return backendEndpoint?.path
 }
 
 export const getResourceEndpoint = ({

@@ -17,11 +17,19 @@ const Row = ({ resourcesRefs, uid, widgetData }: WidgetProps<RowWidgetData>) => 
   return (
     <div className={styles.row}>
       <AntdRow align={'stretch'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} key={uid} wrap>
-        {items.map(({ resourceRefId, size }, index) => (
-          <AntdColumn className={styles.column} key={`${uid}-col-${index}`} span={size ?? defaultSize}>
-            <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-          </AntdColumn>
-        ))}
+        {items
+          .map(({ resourceRefId, size }, index) => {
+            const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+            if (!endpoint) { return null }
+
+            return (
+              <AntdColumn className={styles.column} key={`${uid}-col-${index}`} span={size ?? defaultSize}>
+                <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={endpoint} />
+              </AntdColumn>
+            )
+          })
+          .filter(Boolean)
+        }
       </AntdRow>
     </div>
   )

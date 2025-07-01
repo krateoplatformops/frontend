@@ -2,6 +2,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
+import useApp from 'antd/es/app/useApp'
 import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -10,6 +11,7 @@ import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 import { getEndpointUrl } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
+import { openModal } from '../Modal/Modal'
 
 import styles from './Panel.module.css'
 import type { Panel as WidgetType } from './Panel.type'
@@ -19,6 +21,7 @@ export type PanelWidgetData = WidgetType['spec']['widgetData']
 const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
   const location = useLocation()
   const navigate = useNavigate()
+  const { notification } = useApp()
 
   const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, tags, title, tooltip } = widgetData
 
@@ -32,14 +35,26 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
 
       switch (type) {
         case 'navigate': {
-          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl(action.resourceRefId, resourcesRefs))}`
+          const endpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
 
-          if (!url) {
-            console.warn('No url found for action', action)
-            return
+          if (!endpoint) {
+            notification.warning({
+              description: `It is not possible to retrieve a valid endpoint for the resource ${action.resourceRefId}`,
+              message: `Error while navigating`,
+              placement: 'bottomLeft',
+            })
+            break
           }
 
-          if (requireConfirmation) {
+          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(endpoint)}`
+
+          if (!url) {
+            notification.warning({
+              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+              message: `Error while navigating`,
+              placement: 'bottomLeft',
+            })
+          } else if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
               await navigate(url)
             }
@@ -49,9 +64,35 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
           break
         }
         case 'openDrawer': {
-          const { size, title } = action
-          const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
-          openDrawer({ size, title, widgetEndpoint })
+          const { resourceRefId, size, title } = action
+          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+
+          if (!widgetEndpoint) {
+            notification.warning({
+              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+              message: `Error while opening drawer`,
+              placement: 'bottomLeft',
+            })
+          } else {
+            openDrawer({ size, title, widgetEndpoint })
+          }
+
+          break
+        }
+        case 'openModal': {
+          const { resourceRefId, title } = action
+          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+
+          if (!widgetEndpoint) {
+            notification.warning({
+              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+              message: `Error while opening modal`,
+              placement: 'bottomLeft',
+            })
+          } else {
+            openModal({ title, widgetEndpoint })
+          }
+
           break
         }
         default:
@@ -95,9 +136,15 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
         )}
         {footer && footer.length > 0 && (
           <div className={styles.items}>
-            {footer?.map(({ resourceRefId }, index) => (
-              <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-            ))}
+            {footer
+              ?.map(({ resourceRefId }, index) => {
+                const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+                if (!endpoint) { return null }
+
+                return <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={endpoint} />
+              })
+              .filter(Boolean)
+            }
           </div>
         )}
       </div>
@@ -130,9 +177,15 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       <div className={styles.content}>
         {panelHeader}
         <div className={styles.body}>
-          {items.map(({ resourceRefId }, index) => (
-            <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-          ))}
+          {items
+            .map(({ resourceRefId }, index) => {
+              const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+              if (!endpoint) { return null }
+
+              return <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={endpoint} />
+            })
+            .filter(Boolean)
+          }
         </div>
         {panelFooter}
       </div>

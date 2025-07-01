@@ -25,14 +25,20 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
   /* while this looks like we are refetching some widgets, these are cached by react-query */
   const items = _items.slice(0, visibleCount)
 
-  const datalist = useMemo(() => items.map(({ resourceRefId }) => (
-    <WidgetRenderer
-      key={resourceRefId}
-      prefix={prefix}
-      widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)}
-      wrapper={{ component: List.Item }}
-    />
-  )), [items, prefix, resourcesRefs])
+  const datalist = useMemo(() => items
+    .map(({ resourceRefId }) => {
+      const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+      if (!endpoint) { return null }
+
+      return <WidgetRenderer
+        key={resourceRefId}
+        prefix={prefix}
+        widgetEndpoint={endpoint}
+        wrapper={{ component: List.Item }}
+      />
+    })
+    .filter(Boolean),
+  [items, prefix, resourcesRefs])
 
   const renderedGrid: ListGridType = useMemo(() => {
     if (asGrid && items && items.length > 1) {

@@ -35,9 +35,16 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
 
       switch (type) {
         case 'navigate': {
-          if (requireConfirmation) {
-            if (window.confirm('Are you sure?')) {
-              const url = getEndpointUrl(action.resourceRefId, resourcesRefs)
+          if (requireConfirmation && window.confirm('Are you sure?')) {
+            const url = getEndpointUrl(action.resourceRefId, resourcesRefs)
+
+            if (!url) {
+              notification.warning({
+                description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+                message: `Error while navigating`,
+                placement: 'bottomLeft',
+              })
+            } else {
               await navigate(url)
             }
           }
@@ -53,7 +60,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
             }
           }
 
-          let resourceRef: ResourceRef
+          let resourceRef: ResourceRef | undefined
           try {
             resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
           } catch (error) {
@@ -65,41 +72,49 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
             break
           }
 
-          const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
-
-          const method = resourceRef.verb
-          if (method === 'POST' && !payload) {
-            console.warn(`Payload not found for POST action ${id}`)
-          }
-
-          const res = await fetch(url, {
-            body: JSON.stringify(payload),
-            headers: {
-              Authorization: `Bearer ${getAccessToken()}`,
-            },
-            method,
-          })
-
-          const json = await res.json() as RestApiResponse
-          if (!res.ok) {
+          if (!resourceRef) {
             notification.error({
-              description: errorMessage || json.message,
-              message: `${json.status} - ${json.reason}`,
+              description: `The resource ref for the resource ${action.resourceRefId} is undefined`,
+              message: `Error while retrieving the resource`,
               placement: 'bottomLeft',
             })
-            break
-          }
+          } else {
+            const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
 
-          const actionName = method === 'DELETE' ? 'deleted' : 'created'
-          notification.success({
-            description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
-            message: json.message,
-            placement: 'bottomLeft',
-          })
+            const method = resourceRef.verb
+            if (method === 'POST' && !payload) {
+              console.warn(`Payload not found for POST action ${id}`)
+            }
 
-          await queryClient.invalidateQueries()
-          if (action.onSuccessNavigateTo) {
-            void navigate(action.onSuccessNavigateTo)
+            const res = await fetch(url, {
+              body: JSON.stringify(payload),
+              headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+              },
+              method,
+            })
+
+            const json = await res.json() as RestApiResponse
+            if (!res.ok) {
+              notification.error({
+                description: errorMessage || json.message,
+                message: `${json.status} - ${json.reason}`,
+                placement: 'bottomLeft',
+              })
+              break
+            }
+
+            const actionName = method === 'DELETE' ? 'deleted' : 'created'
+            notification.success({
+              description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
+              message: json.message,
+              placement: 'bottomLeft',
+            })
+
+            await queryClient.invalidateQueries()
+            if (action.onSuccessNavigateTo) {
+              void navigate(action.onSuccessNavigateTo)
+            }
           }
 
           break
@@ -107,13 +122,33 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
         case 'openDrawer': {
           const { resourceRefId, size, title } = action
           const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-          openDrawer({ size, title, widgetEndpoint })
+
+          if (!widgetEndpoint) {
+            notification.warning({
+              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+              message: `Error while opening drawer`,
+              placement: 'bottomLeft',
+            })
+          } else {
+            openDrawer({ size, title, widgetEndpoint })
+          }
+
           break
         }
         case 'openModal': {
           const { resourceRefId, title } = action
           const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-          openModal({ title, widgetEndpoint })
+
+          if (!widgetEndpoint) {
+            notification.warning({
+              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+              message: `Error while opening modal`,
+              placement: 'bottomLeft',
+            })
+          } else {
+            openModal({ title, widgetEndpoint })
+          }
+
           break
         }
         default:

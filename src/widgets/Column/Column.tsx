@@ -14,9 +14,15 @@ const Column = ({ resourcesRefs, uid, widgetData }: WidgetProps<ColumnWidgetData
 
   return (
     <AntdColumn className={styles.column} key={uid} span={size}>
-      {items.map(({ resourceRefId }, index) => (
-        <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-      ))}
+      {items
+        .map(({ resourceRefId }, index) => {
+          const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+          if (!endpoint) { return null }
+
+          return <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={endpoint} />
+        })
+        .filter(Boolean)
+      }
     </AntdColumn>
   )
 }
