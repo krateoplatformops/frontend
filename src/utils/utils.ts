@@ -5,8 +5,8 @@ export const getResourceRef = (resourceRefId: string, resourcesRefs: ResourcesRe
     console.error(`Cannot find resources refs for resource ref with ID ${resourceRefId}`)
   }
 
-  const backendEndpoint = resourcesRefs.find((endpoint) => {
-    return endpoint.id === resourceRefId
+  const backendEndpoint = resourcesRefs.find(({ id }) => {
+    return id === resourceRefId
   })
 
   if (!backendEndpoint) {

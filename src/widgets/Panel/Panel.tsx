@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router'
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
-import { getEndpointUrl } from '../../utils/utils'
+import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 import { openModal } from '../Modal/Modal'
 
@@ -31,22 +31,15 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
 
   const onClick = async () => {
     if (action) {
+      const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
+      if (!resourceRef) { return }
+
       const { requireConfirmation, type } = action
+      const { path } = resourceRef
 
       switch (type) {
         case 'navigate': {
-          const endpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
-
-          if (!endpoint) {
-            notification.warning({
-              description: `It is not possible to retrieve a valid endpoint for the resource ${action.resourceRefId}`,
-              message: `Error while navigating`,
-              placement: 'bottomLeft',
-            })
-            break
-          }
-
-          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(endpoint)}`
+          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(path)}`
 
           if (!url) {
             notification.warning({
@@ -64,34 +57,14 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
           break
         }
         case 'openDrawer': {
-          const { resourceRefId, size, title } = action
-          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-
-          if (!widgetEndpoint) {
-            notification.warning({
-              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
-              message: `Error while opening drawer`,
-              placement: 'bottomLeft',
-            })
-          } else {
-            openDrawer({ size, title, widgetEndpoint })
-          }
+          const { size, title } = action
+          openDrawer({ size, title, widgetEndpoint: path })
 
           break
         }
         case 'openModal': {
-          const { resourceRefId, title } = action
-          const widgetEndpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-
-          if (!widgetEndpoint) {
-            notification.warning({
-              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
-              message: `Error while opening modal`,
-              placement: 'bottomLeft',
-            })
-          } else {
-            openModal({ title, widgetEndpoint })
-          }
+          const { title } = action
+          openModal({ title, widgetEndpoint: path })
 
           break
         }
