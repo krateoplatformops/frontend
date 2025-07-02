@@ -2,14 +2,16 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
+import useApp from 'antd/es/app/useApp'
 import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
-import { getEndpointUrl } from '../../utils/utils'
+import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
+import { openModal } from '../Modal/Modal'
 
 import styles from './Panel.module.css'
 import type { Panel as WidgetType } from './Panel.type'
@@ -19,6 +21,7 @@ export type PanelWidgetData = WidgetType['spec']['widgetData']
 const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
   const location = useLocation()
   const navigate = useNavigate()
+  const { notification } = useApp()
 
   const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, tags, title, tooltip } = widgetData
 
@@ -28,18 +31,23 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
 
   const onClick = async () => {
     if (action) {
+      const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
+      if (!resourceRef) { return }
+
       const { requireConfirmation, type } = action
+      const { path } = resourceRef
 
       switch (type) {
         case 'navigate': {
-          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(getEndpointUrl(action.resourceRefId, resourcesRefs))}`
+          const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(path)}`
 
           if (!url) {
-            console.warn('No url found for action', action)
-            return
-          }
-
-          if (requireConfirmation) {
+            notification.warning({
+              description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+              message: `Error while navigating`,
+              placement: 'bottomLeft',
+            })
+          } else if (requireConfirmation) {
             if (window.confirm('Are you sure?')) {
               await navigate(url)
             }
@@ -50,8 +58,14 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
         }
         case 'openDrawer': {
           const { size, title } = action
-          const widgetEndpoint = getEndpointUrl(action.resourceRefId, resourcesRefs)
-          openDrawer({ size, title, widgetEndpoint })
+          openDrawer({ size, title, widgetEndpoint: path })
+
+          break
+        }
+        case 'openModal': {
+          const { title } = action
+          openModal({ title, widgetEndpoint: path })
+
           break
         }
         default:
@@ -95,9 +109,15 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
         )}
         {footer && footer.length > 0 && (
           <div className={styles.items}>
-            {footer?.map(({ resourceRefId }, index) => (
-              <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-            ))}
+            {footer
+              ?.map(({ resourceRefId }, index) => {
+                const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+                if (!endpoint) { return null }
+
+                return <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={endpoint} />
+              })
+              .filter(Boolean)
+            }
           </div>
         )}
       </div>
@@ -130,9 +150,15 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       <div className={styles.content}>
         {panelHeader}
         <div className={styles.body}>
-          {items.map(({ resourceRefId }, index) => (
-            <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />
-          ))}
+          {items
+            .map(({ resourceRefId }, index) => {
+              const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+              if (!endpoint) { return null }
+
+              return <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={endpoint} />
+            })
+            .filter(Boolean)
+          }
         </div>
         {panelFooter}
       </div>

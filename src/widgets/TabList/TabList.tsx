@@ -13,11 +13,20 @@ export type TabListWidgetData = WidgetType['spec']['widgetData']
 const TabList = ({ resourcesRefs, uid, widgetData }: WidgetProps<TabListWidgetData>) => {
   const { items } = widgetData
 
-  const tabItems: TabsProps['items'] = useMemo(() => items.map(({ label, resourceRefId }, index) => ({
-    children: <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)} />,
-    key: `${uid}-${index}`,
-    label,
-  })), [items, resourcesRefs, uid])
+  const tabItems = useMemo(() => {
+    return items.reduce<NonNullable<TabsProps['items']>>((acc, { label, resourceRefId }, index) => {
+      const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+      if (!endpoint) { return acc }
+
+      acc.push({
+        children: <WidgetRenderer widgetEndpoint={endpoint} />,
+        key: `${uid}-${index}`,
+        label,
+      })
+
+      return acc
+    }, [])
+  }, [items, resourcesRefs, uid])
 
   return <Tabs items={tabItems} key={uid} />
 }

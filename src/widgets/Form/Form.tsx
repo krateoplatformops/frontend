@@ -1,4 +1,4 @@
-import { Button, Space } from 'antd'
+import { Button, Result, Space } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
@@ -7,19 +7,20 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
-import type { ResourceRef, WidgetProps } from '../../types/Widget'
+import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import { getResourceRef } from '../../utils/utils'
 import { closeDrawer } from '../Drawer/Drawer'
 import { useDrawerContext } from '../Drawer/DrawerContext'
 
+import styles from './Form.module.css'
 import type { Form as WidgetType } from './Form.type'
 import FormGenerator from './FormGenerator'
 
 export type FormWidgetData = WidgetType['spec']['widgetData']
 
 function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
-  const { actions } = widgetData
+  const { actions, submitActionId } = widgetData
   const drawerContext = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
   const [submitting, setSubmitting] = useState(false)
@@ -27,14 +28,6 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
 
   const { config } = useConfigContext()
   const { message, notification } = useApp()
-
-  const submitAction = Object.values(actions)
-    .flat()
-    .find(({ id }) => id === widgetData.submitActionId)
-
-  if (submitAction?.type === 'rest' && submitAction.onSuccessNavigateTo && submitAction.onEventNavigateTo) {
-    console.warn('submit action has both onSuccessNavigateTo and onEventNavigateTo defined')
-  }
 
   const formId = useId() /* https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#form */
 
@@ -55,6 +48,26 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
       alreadySetDrawerData.current = true
     }
   }, [drawerContext, drawerContext.insideDrawer, formId])
+
+  const action = Object.values(actions)
+    .flat()
+    .find(({ id }) => id === submitActionId)
+
+  if (!action) {
+    return (
+      <div className={styles.message}>
+        <Result
+          status='error'
+          subTitle={`The widget definition does not include an action with the ID ${submitActionId}`}
+          title='Error while rendering widget'
+        />
+      </div>
+    )
+  }
+
+  if (action.type === 'rest' && action.onSuccessNavigateTo && action.onEventNavigateTo) {
+    console.warn('submit action has both onSuccessNavigateTo and onEventNavigateTo defined')
+  }
 
   /* if the form is inside a Drawer, button will be already rendered in the Drawer  */
   const shouldRenderButtonsInsideForm = !drawerContext.insideDrawer
@@ -82,10 +95,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
         descriptionTooltip={widgetData.fieldDescription === 'tooltip'}
         formId={formId}
         onSubmit={async (values) => {
-          if (!submitAction) {
-            throw new Error('Submit action not found')
-          }
-          if (submitAction.type !== 'rest') {
+          if (action.type !== 'rest') {
             throw new Error('Submit action type is not "rest"')
           }
 
@@ -101,62 +111,9 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
           // const formOverride = template.template.payloadToOverride
           // const formKey = template.template.payloadFormKey || data.status.props.payloadFormKey || 'spec'
 
-          let resourceRef: ResourceRef
-          try {
-            resourceRef = getResourceRef(submitAction.resourceRefId, resourcesRefs)
-          } catch (error) {
-            notification.error({
-              description: error instanceof Error ? error.message : String(error),
-              message: `Error while retrieving the resource`,
-              placement: 'bottomLeft',
-            })
-            return
-          }
+          const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
 
-          const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
-
-          const method = resourceRef.verb
-
-          const formKey = submitAction.payloadKey
-          let payload = { ...resourceRef.payload, ...values }
-
-          if (submitAction.payloadToOverride && submitAction.payloadToOverride.length > 0) {
-            const updateJson = (values: object, keyPath: string, valuePath: string) => {
-              const getObjectByPath = (obj: object, path: string) => path.split('.').reduce((acc, part) => acc && acc[part], obj)
-
-              const substr = valuePath.replace('${', '').replace('}', '')
-              const parts = substr.split('+').map((el) => el.trim())
-
-              const value = parts
-                .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
-                .join('')
-
-              return _.merge({}, values, convertStringToObject(keyPath, value))
-            }
-
-            submitAction.payloadToOverride.forEach((el) => {
-              payload = updateJson(payload, el.name, el.value)
-            })
-          }
-
-          /* get all the keys that are not in the resourceRef.payload, basically the form values */
-          const valuesKeys = Object.keys(payload).filter((el) => Object.keys(resourceRef.payload).indexOf(el) === -1)
-          payload[formKey] = {}
-          valuesKeys.forEach((el) => {
-            payload[formKey][el] = typeof payload[el] === 'object' && !Array.isArray(payload[el]) ? { ...payload[el] } : payload[el]
-            delete payload[el]
-          })
-
-          // const urlWithNewNameAndNamespace = new URL(url)
-          // urlWithNewNameAndNamespace.searchParams.set('name', payload.metadata.name)
-          // urlWithNewNameAndNamespace.searchParams.set('namespace', payload.metadata.namespace)
-          // urlWithNewNameAndNamespace.searchParams.set('apiVersion', 'composition.krateo.io/v2-0-0')
-          const urlWithNewNameAndNamespace = updateNameNamespace(url, payload.metadata.name, payload.metadata.namespace)
-
-          /* will ne known aftert the http request */
-          let resourceUid: string | null = null
-          if (submitAction.onEventNavigateTo) {
-            /* FIXME: This is a bit dirty, should disable the already present buttons instead */
+          if (!resourceRef) {
             drawerContext.setDrawerData({
               extra: (
                 <Space>
@@ -164,99 +121,157 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
                     Reset
                   </Button>
                   <Button disabled form={formId} htmlType='submit' type='primary'>
-                    submit
+                    Submit
                   </Button>
                 </Space>
               ),
             })
+          } else {
+            const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
 
-            const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
-            const eventSource = new EventSource(eventsEndpoint, {
-              withCredentials: false,
-            })
+            const method = resourceRef.verb
 
-            const timeoutId = setTimeout(() => {
-              eventSource.close()
-              notification.error({
-                message: `Timeout waiting for event ${submitAction.onEventNavigateTo!.eventReason}`,
-                placement: 'bottomLeft',
-              })
-              message.destroy()
-            }, submitAction.onEventNavigateTo.timeout! * 1000)
+            const formKey = action.payloadKey
+            let payload = { ...resourceRef.payload, ...values }
 
-            eventSource.addEventListener('krateo', (event) => {
-              const data = JSON.parse(event.data as string) as { reason: string; involvedObject: { uid: string } }
-              if (data?.reason === submitAction.onEventNavigateTo?.eventReason && data.involvedObject.uid === resourceUid) {
-                eventSource.close()
-                clearTimeout(timeoutId)
+            if (action.payloadToOverride && action.payloadToOverride.length > 0) {
+              const updateJson = (values: object, keyPath: string, valuePath: string) => {
+                const getObjectByPath = (obj: object, path: string) => path.split('.').reduce((acc, part) => acc && acc[part], obj)
 
-                const redirectUrl = interpolateRedirectUrl(payload, submitAction.onEventNavigateTo.url)
-                if (!redirectUrl) {
-                  notification.error({
-                    message: 'Impossible to redirect, the route contains an undefined value',
-                    placement: 'bottomLeft',
-                  })
-                  return
-                }
-                message.destroy()
-                closeDrawer()
-                void navigate(redirectUrl)
+                const substr = valuePath.replace('${', '').replace('}', '')
+                const parts = substr.split('+').map((el) => el.trim())
+
+                const value = parts
+                  .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
+                  .join('')
+
+                return _.merge({}, values, convertStringToObject(keyPath, value))
               }
-            })
-          }
 
-          setSubmitting(true)
-          const res = await fetch(urlWithNewNameAndNamespace, {
-            body: JSON.stringify(payload),
-            headers: {
+              action.payloadToOverride.forEach((el) => {
+                payload = updateJson(payload, el.name, el.value)
+              })
+            }
+
+            /* get all the keys that are not in the resourceRef.payload, basically the form values */
+            const valuesKeys = Object.keys(payload).filter((el) => Object.keys(resourceRef.payload).indexOf(el) === -1)
+            payload[formKey] = {}
+            valuesKeys.forEach((el) => {
+              payload[formKey][el] = typeof payload[el] === 'object' && !Array.isArray(payload[el]) ? { ...payload[el] } : payload[el]
+              delete payload[el]
+            })
+
+            // const urlWithNewNameAndNamespace = new URL(url)
+            // urlWithNewNameAndNamespace.searchParams.set('name', payload.metadata.name)
+            // urlWithNewNameAndNamespace.searchParams.set('namespace', payload.metadata.namespace)
+            // urlWithNewNameAndNamespace.searchParams.set('apiVersion', 'composition.krateo.io/v2-0-0')
+            const urlWithNewNameAndNamespace = updateNameNamespace(url, payload.metadata.name, payload.metadata.namespace)
+
+            /* will ne known aftert the http request */
+            let resourceUid: string | null = null
+            if (action.onEventNavigateTo) {
+            /* FIXME: This is a bit dirty, should disable the already present buttons instead */
+              drawerContext.setDrawerData({
+                extra: (
+                  <Space>
+                    <Button disabled form={formId} htmlType='reset' type='default'>
+                      Reset
+                    </Button>
+                    <Button disabled form={formId} htmlType='submit' type='primary'>
+                      Submit
+                    </Button>
+                  </Space>
+                ),
+              })
+
+              const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
+              const eventSource = new EventSource(eventsEndpoint, {
+                withCredentials: false,
+              })
+
+              const timeoutId = setTimeout(() => {
+                eventSource.close()
+                notification.error({
+                  message: `Timeout waiting for event ${action.onEventNavigateTo!.eventReason}`,
+                  placement: 'bottomLeft',
+                })
+                message.destroy()
+              }, action.onEventNavigateTo.timeout! * 1000)
+
+              eventSource.addEventListener('krateo', (event) => {
+                const data = JSON.parse(event.data as string) as { reason: string; involvedObject: { uid: string } }
+                if (data?.reason === action.onEventNavigateTo?.eventReason && data.involvedObject.uid === resourceUid) {
+                  eventSource.close()
+                  clearTimeout(timeoutId)
+
+                  const redirectUrl = interpolateRedirectUrl(payload, action.onEventNavigateTo.url)
+                  if (!redirectUrl) {
+                    notification.error({
+                      message: 'Impossible to redirect, the route contains an undefined value',
+                      placement: 'bottomLeft',
+                    })
+                    return
+                  }
+                  message.destroy()
+                  closeDrawer()
+                  void navigate(redirectUrl)
+                }
+              })
+            }
+
+            setSubmitting(true)
+            const res = await fetch(urlWithNewNameAndNamespace, {
+              body: JSON.stringify(payload),
+              headers: {
               // 'X-Krateo-Groups': 'admins',
               // 'X-Krateo-User': 'admin',
-              Authorization: `Bearer ${getAccessToken()}`,
-            },
-            method,
-          })
-
-          if (submitAction.onEventNavigateTo) {
-            message.loading('Creating the new resource and redirecting...', submitAction.onEventNavigateTo.timeout)
-          }
-
-          // TODO: write this type
-          const json = (await res.json()) as { metadata: { uid: string } }
-
-          if (!res.ok) {
-            message.destroy()
-            notification.error({
-              description: submitAction.errorMessage || json.message,
-              message: `${json.status} - ${json.reason}`,
-              placement: 'bottomLeft',
+                Authorization: `Bearer ${getAccessToken()}`,
+              },
+              method,
             })
-            setSubmitting(false)
-            return
-          }
 
-          resourceUid = json.metadata.uid
+            if (action.onEventNavigateTo) {
+              message.loading('Creating the new resource and redirecting...', action.onEventNavigateTo.timeout)
+            }
 
-          const actionName = method === 'DELETE' ? 'deleted' : 'created'
+            // TODO: write this type
+            const json = (await res.json()) as { metadata: { uid: string } }
 
-          /* if we are not waiting for an event, we can show a success message */
-          if (!submitAction.onEventNavigateTo) {
-            notification.success({
-              description: submitAction.successMessage || `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
-              message: json.message,
-              placement: 'bottomLeft',
-            })
-          }
+            if (!res.ok) {
+              message.destroy()
+              notification.error({
+                description: action.errorMessage || json.message,
+                message: `${json.status} - ${json.reason}`,
+                placement: 'bottomLeft',
+              })
+              setSubmitting(false)
+              return
+            }
 
-          if (submitAction.onSuccessNavigateTo) {
-            setSubmitting(false)
-            closeDrawer()
-            void navigate(submitAction.onSuccessNavigateTo)
-          }
+            resourceUid = json.metadata.uid
 
-          /* when waiting for event, keeping the drawer open to give
+            const actionName = method === 'DELETE' ? 'deleted' : 'created'
+
+            /* if we are not waiting for an event, we can show a success message */
+            if (!action.onEventNavigateTo) {
+              notification.success({
+                description: action.successMessage || `Successfully ${actionName} ${json.metadata.name} in ${json.metadata.namespace}`,
+                message: json.message,
+                placement: 'bottomLeft',
+              })
+            }
+
+            if (action.onSuccessNavigateTo) {
+              setSubmitting(false)
+              closeDrawer()
+              void navigate(action.onSuccessNavigateTo)
+            }
+
+            /* when waiting for event, keeping the drawer open to give
           a UX sense of something in progress while somethign is created instead of instanty navigate to a black  */
-          if (!submitAction.onEventNavigateTo) {
-            closeDrawer()
+            if (!action.onEventNavigateTo) {
+              closeDrawer()
+            }
           }
         }}
         schema={schema}
