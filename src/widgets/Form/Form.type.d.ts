@@ -24,6 +24,7 @@ export interface Form {
            * key used to nest the payload in the request body
            */
           payloadKey?: string
+          headers?: string[]
           /**
            * unique identifier for the action
            */

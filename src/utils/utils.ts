@@ -40,11 +40,22 @@ export const getResourceEndpoint = ({
 export const formatISODate = (value: string, showTime: boolean = false) => {
   return showTime
     ? new Date(value).toLocaleDateString('en', {
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
     : new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
+export const getHeadersObject = (headers: string[]) => {
+  return headers.reduce(
+    (acc, header) => {
+      const [key, value] = header.split(':')
+      acc[key.trim()] = value.trim()
+      return acc
+    },
+    {} as Record<string, string>
+  )
 }

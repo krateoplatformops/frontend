@@ -32,6 +32,13 @@
                         "type": "string",
                         "description": "key used to nest the payload in the request body"
                       },
+                      "headers": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "key and value as a single, example: 'x-custom-header: value'"
+                        }
+                      },
                       "id": {
                         "type": "string",
                         "description": "unique identifier for the action"
@@ -319,14 +326,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
             "additionalProperties": false,
             "properties": {
               "id": {

@@ -9,7 +9,7 @@ import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import type { RestApiResponse } from '../../utils/types'
-import { getResourceRef } from '../../utils/utils'
+import { getHeadersObject, getResourceRef } from '../../utils/utils'
 import { openDrawer } from '../Drawer/Drawer'
 import { openModal } from '../Modal/Modal'
 
@@ -44,7 +44,9 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
 
   const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
 
-  if (!resourceRef) { return null }
+  if (!resourceRef) {
+    return null
+  }
 
   const { path, verb } = resourceRef
 
@@ -60,7 +62,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
           break
         }
         case 'rest': {
-          const { errorMessage, id, onSuccessNavigateTo, payload, successMessage } = action
+          const { errorMessage, headers = [], id, onSuccessNavigateTo, payload, successMessage } = action
 
           if (requireConfirmation) {
             const confirmed = window.confirm('Are you sure?')
@@ -78,12 +80,13 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
           const res = await fetch(url, {
             body: JSON.stringify(payload),
             headers: {
+              ...getHeadersObject(headers),
               Authorization: `Bearer ${getAccessToken()}`,
             },
             method: verb,
           })
 
-          const json = await res.json() as RestApiResponse
+          const json = (await res.json()) as RestApiResponse
           if (!res.ok) {
             notification.error({
               description: errorMessage || json.message,

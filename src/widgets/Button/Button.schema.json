@@ -88,6 +88,13 @@
                         "enum": ["rest"],
                         "description": "type of action to execute"
                       },
+                      "headers": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "description": "key and value as a single, example: 'x-custom-header: value'"
+                        }
+                      },
                       "payload": {
                         "type": "object",
                         "additionalProperties": true,
@@ -296,14 +303,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
+            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
             "additionalProperties": false,
             "properties": {
               "id": {

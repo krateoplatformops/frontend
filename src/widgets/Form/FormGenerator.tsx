@@ -378,7 +378,6 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
                 onFinish={(values: object) => onSubmit(values)}
                 onFinishFailed={onFinishFailed}
                 onReset={(e) => {
-                  debugger
                   e.preventDefault()
                   setInitialValues()
                 }}

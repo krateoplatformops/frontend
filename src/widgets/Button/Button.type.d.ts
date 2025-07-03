@@ -70,6 +70,7 @@ export interface Button {
            * type of action to execute
            */
           type?: 'rest'
+          headers?: string[]
           /**
            * static payload sent with the request
            */

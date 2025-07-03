@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router'
 import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
-import { getResourceRef } from '../../utils/utils'
+import { getHeadersObject, getResourceRef } from '../../utils/utils'
 import { closeDrawer } from '../Drawer/Drawer'
 import { useDrawerContext } from '../Drawer/DrawerContext'
 
@@ -170,7 +170,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
             /* will ne known aftert the http request */
             let resourceUid: string | null = null
             if (action.onEventNavigateTo) {
-            /* FIXME: This is a bit dirty, should disable the already present buttons instead */
+              /* FIXME: This is a bit dirty, should disable the already present buttons instead */
               drawerContext.setDrawerData({
                 extra: (
                   <Space>
@@ -220,11 +220,12 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
             }
 
             setSubmitting(true)
+            const headers = action.headers || []
+
             const res = await fetch(urlWithNewNameAndNamespace, {
               body: JSON.stringify(payload),
               headers: {
-              // 'X-Krateo-Groups': 'admins',
-              // 'X-Krateo-User': 'admin',
+                ...getHeadersObject(headers),
                 Authorization: `Bearer ${getAccessToken()}`,
               },
               method,
