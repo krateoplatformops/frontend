@@ -77,6 +77,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
 | actions.rest[].type | no | type of action to execute | `rest` |
+| actions.rest[].headers | no |  | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
 | actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
@@ -438,6 +439,7 @@ name of the k8s Custom Resource
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
 | actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
+| actions.rest[].headers | no |  | array |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -729,6 +731,7 @@ Panel is a container to display information
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
 | actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
+| actions.rest[].headers | no |  | array |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
