@@ -3,6 +3,7 @@ import type { ResourcesRefs } from '../types/Widget'
 export const getResourceRef = (resourceRefId: string, resourcesRefs: ResourcesRefs) => {
   if (!resourcesRefs || resourcesRefs.length === 0) {
     console.error(`Cannot find resources refs for resource ref with ID ${resourceRefId}`)
+    return
   }
 
   const backendEndpoint = resourcesRefs.find(({ id }) => {
