@@ -49,7 +49,7 @@ export type WidgetActions = {
     type: 'rest'
     id: string
     name: string
-    payload: object
+    payload: Record<string, unknown>
     verb: 'GET' | 'POST' | 'DELETE'
     resourceRefId: string
     requireConfirmation?: boolean
@@ -94,6 +94,17 @@ export type WidgetActions = {
     title?: string
   }[]
 }
+
+type RestAction = NonNullable<WidgetActions['rest']>[number]
+type NavigateAction = NonNullable<WidgetActions['navigate']>[number]
+type OpenDrawerAction = NonNullable<WidgetActions['openDrawer']>[number]
+type OpenModalAction = NonNullable<WidgetActions['openModal']>[number]
+
+export type WidgetAction =
+  | RestAction
+  | NavigateAction
+  | OpenDrawerAction
+  | OpenModalAction
 
 export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs
