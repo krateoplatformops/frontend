@@ -138,10 +138,6 @@
                         "enum": ["navigate"],
                         "description": "type of navigation action"
                       },
-                      "name": {
-                        "type": "string",
-                        "description": "name of the navigation action"
-                      },
                       "resourceRefId": {
                         "type": "string",
                         "description": "the identifier of the k8s custom resource that should be represented"
@@ -156,7 +152,7 @@
                         "description": "defines the loading indicator behavior during navigation"
                       }
                     },
-                    "required": ["id", "type", "name", "resourceRefId"]
+                    "required": ["id", "type", "resourceRefId"]
                   }
                 },
                 "openDrawer": {
@@ -217,10 +213,6 @@
                         "enum": ["openModal"],
                         "description": "type of modal action"
                       },
-                      "name": {
-                        "type": "string",
-                        "description": "name of the modal action"
-                      },
                       "resourceRefId": {
                         "type": "string",
                         "description": "the identifier of the k8s custom resource that should be represented"
@@ -239,7 +231,7 @@
                         "description": "title shown in the modal header"
                       }
                     },
-                    "required": ["id", "type", "name", "resourceRefId"]
+                    "required": ["id", "type", "resourceRefId"]
                   }
                 }
               },
@@ -326,7 +318,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "additionalProperties": false,
             "properties": {
               "id": {

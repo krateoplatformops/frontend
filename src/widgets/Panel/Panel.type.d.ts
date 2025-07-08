@@ -101,10 +101,6 @@ export interface Panel {
            */
           type: 'navigate'
           /**
-           * name of the navigation action
-           */
-          name: string
-          /**
            * the identifier of the k8s custom resource that should be represented
            */
           resourceRefId: string
@@ -162,10 +158,6 @@ export interface Panel {
            * type of modal action
            */
           type: 'openModal'
-          /**
-           * name of the modal action
-           */
-          name: string
           /**
            * the identifier of the k8s custom resource that should be represented
            */
