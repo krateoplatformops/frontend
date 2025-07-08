@@ -7,11 +7,10 @@ import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
+import { handleAction } from '../../utils/actionHandler'
 import { getAccessToken } from '../../utils/getAccessToken'
 import type { RestApiResponse } from '../../utils/types'
 import { getHeadersObject, getResourceRef } from '../../utils/utils'
-import { openDrawer } from '../Drawer/Drawer'
-import { openModal } from '../Modal/Modal'
 
 import styles from './Button.module.css'
 import type { Button as WidgetType } from './Button.type'
@@ -51,82 +50,54 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
   const { path, verb } = resourceRef
 
   const onClick = async () => {
-    if (action) {
-      const { requireConfirmation, type } = action
+    if (action.type === 'rest') {
+      const { errorMessage, headers = [], id, onSuccessNavigateTo, payload, requireConfirmation, successMessage } = action
 
-      switch (type) {
-        case 'navigate': {
-          if (requireConfirmation && window.confirm('Are you sure?')) {
-            await navigate(path)
-          }
-          break
+      if (requireConfirmation) {
+        const confirmed = window.confirm('Are you sure?')
+        if (!confirmed) {
+          return
         }
-        case 'rest': {
-          const { errorMessage, headers = [], id, onSuccessNavigateTo, payload, successMessage } = action
+      }
 
-          if (requireConfirmation) {
-            const confirmed = window.confirm('Are you sure?')
-            if (!confirmed) {
-              break
-            }
-          }
+      const url = config?.api.SNOWPLOW_API_BASE_URL + path
 
-          const url = config?.api.SNOWPLOW_API_BASE_URL + path
+      if (verb === 'POST' && !payload) {
+        console.warn(`Payload not found for POST action ${id}`)
+      }
 
-          if (verb === 'POST' && !payload) {
-            console.warn(`Payload not found for POST action ${id}`)
-          }
+      const res = await fetch(url, {
+        body: JSON.stringify(payload),
+        headers: {
+          ...getHeadersObject(headers),
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        method: verb,
+      })
 
-          const res = await fetch(url, {
-            body: JSON.stringify(payload),
-            headers: {
-              ...getHeadersObject(headers),
-              Authorization: `Bearer ${getAccessToken()}`,
-            },
-            method: verb,
-          })
+      const json = (await res.json()) as RestApiResponse
+      if (!res.ok) {
+        notification.error({
+          description: errorMessage || json.message,
+          message: `${json.status} - ${json.reason}`,
+          placement: 'bottomLeft',
+        })
+        return
+      }
 
-          const json = (await res.json()) as RestApiResponse
-          if (!res.ok) {
-            notification.error({
-              description: errorMessage || json.message,
-              message: `${json.status} - ${json.reason}`,
-              placement: 'bottomLeft',
-            })
-            break
-          }
+      const actionName = verb === 'DELETE' ? 'deleted' : 'created'
+      notification.success({
+        description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
+        message: json.message,
+        placement: 'bottomLeft',
+      })
 
-          const actionName = verb === 'DELETE' ? 'deleted' : 'created'
-          notification.success({
-            description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
-            message: json.message,
-            placement: 'bottomLeft',
-          })
-
-          await queryClient.invalidateQueries()
-          if (onSuccessNavigateTo) {
-            void navigate(onSuccessNavigateTo)
-          }
-
-          break
-        }
-        case 'openDrawer': {
-          const { size, title } = action
-          openDrawer({ size, title, widgetEndpoint: path })
-
-          break
-        }
-        case 'openModal': {
-          const { title } = action
-          openModal({ title, widgetEndpoint: path })
-
-          break
-        }
-        default:
-          throw new Error(`Unsupported action type}`)
+      await queryClient.invalidateQueries()
+      if (onSuccessNavigateTo) {
+        void navigate(onSuccessNavigateTo)
       }
     } else {
-      throw new Error(`Actions with id ${clickActionId} not found`)
+      await handleAction(action, path)
     }
   }
 
