@@ -48,9 +48,8 @@ export type WidgetActions = {
   rest?: {
     type: 'rest'
     id: string
-    name: string
-    payload: Record<string, unknown>
-    verb: 'GET' | 'POST' | 'DELETE'
+    payload?: Record<string, unknown>
+    payloadKey?: string
     resourceRefId: string
     requireConfirmation?: boolean
     successMessage?: string
@@ -59,17 +58,18 @@ export type WidgetActions = {
     onEventNavigateTo?: {
       url: string
       eventReason: string
+      timeout?: number
     }
     loading?: 'global' | 'inline' | 'none'
     payloadToOverride?: {
       name: string
       value: string
     }[]
+    headers?: string[]
   }[]
   navigate?: {
     id: string
     type: 'navigate'
-    name: string
     resourceRefId: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
@@ -77,7 +77,6 @@ export type WidgetActions = {
   openDrawer?: {
     id: string
     type: 'openDrawer'
-    name: string
     resourceRefId: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'
@@ -87,7 +86,6 @@ export type WidgetActions = {
   openModal?: {
     id: string
     type: 'openModal'
-    name: string
     resourceRefId: string
     requireConfirmation?: boolean
     loading?: 'global' | 'inline' | 'none'

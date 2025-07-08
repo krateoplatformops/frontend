@@ -76,7 +76,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
-| actions.rest[].type | no | type of action to execute | `rest` |
+| actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].headers | no |  | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -85,7 +85,6 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].name | yes | name of the navigation action | string |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no | defines the loading indicator behavior during navigation | `global` \| `inline` \| `none` |
@@ -100,7 +99,6 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
-| actions.openModal[].name | yes | name of the modal action | string |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
@@ -451,7 +449,7 @@ name of the k8s Custom Resource
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
-| actions.rest[].type | no | type of action to execute | `rest` |
+| actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
 | actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
@@ -459,7 +457,6 @@ name of the k8s Custom Resource
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].name | yes | name of the navigation action | string |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no | defines the loading indicator behavior during navigation | `global` \| `inline` \| `none` |
@@ -474,7 +471,6 @@ name of the k8s Custom Resource
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
-| actions.openModal[].name | yes | name of the modal action | string |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
@@ -743,7 +739,7 @@ Panel is a container to display information
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
-| actions.rest[].type | no | type of action to execute | `rest` |
+| actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
 | actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
@@ -751,7 +747,6 @@ Panel is a container to display information
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].name | yes | name of the navigation action | string |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no | defines the loading indicator behavior during navigation | `global` \| `inline` \| `none` |
@@ -766,7 +761,6 @@ Panel is a container to display information
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
-| actions.openModal[].name | yes | name of the modal action | string |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |

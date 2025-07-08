@@ -73,7 +73,7 @@ export interface Form {
           /**
            * type of action to execute
            */
-          type?: 'rest'
+          type: 'rest'
           /**
            * static payload sent with the request
            */

@@ -121,7 +121,7 @@
                         }
                       }
                     },
-                    "required": ["id", "resourceRefId"]
+                    "required": ["id", "type", "resourceRefId"]
                   }
                 },
                 "navigate": {
