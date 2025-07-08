@@ -6,7 +6,7 @@ import useApp from 'antd/es/app/useApp'
 import { useLocation } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
-import type { WidgetProps } from '../../types/Widget'
+import type { WidgetAction, WidgetProps } from '../../types/Widget'
 import { handleAction } from '../../utils/actionHandler'
 import { getColorCode } from '../../utils/palette'
 import { getEndpointUrl, getResourceRef } from '../../utils/utils'
@@ -22,7 +22,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
 
   const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, tags, title, tooltip } = widgetData
 
-  const action = Object.values(actions ?? {})
+  const action: WidgetAction | undefined = Object.values(actions ?? {})
     .flat()
     .find(({ id }) => id === clickActionId)
 
