@@ -75,7 +75,6 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
-| actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].headers | no |  | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
@@ -87,13 +86,11 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
-| actions.navigate[].loading | no | defines the loading indicator behavior during navigation | `global` \| `inline` \| `none` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
 | actions.openDrawer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openDrawer[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
 | actions.openModal | no | actions to open modal dialog components | array |
@@ -101,7 +98,6 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
 | actions.openModal[].title | no | title shown in the modal header | string |
 | color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
 | label | no | the label of the button | string |
@@ -448,7 +444,6 @@ name of the k8s Custom Resource
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
-| actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -459,13 +454,11 @@ name of the k8s Custom Resource
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
-| actions.navigate[].loading | no | defines the loading indicator behavior during navigation | `global` \| `inline` \| `none` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
 | actions.openDrawer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openDrawer[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
 | actions.openModal | no | actions to open modal dialog components | array |
@@ -473,7 +466,6 @@ name of the k8s Custom Resource
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
 | actions.openModal[].title | no | title shown in the modal header | string |
 | schema | no | the schema of the form as an object | object |
 | stringSchema | no | the schema of the form as a string | string |
@@ -738,7 +730,6 @@ Panel is a container to display information
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
-| actions.rest[].loading | no | defines the loading indicator behavior for the action | `global` \| `inline` \| `none` |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -749,13 +740,11 @@ Panel is a container to display information
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
-| actions.navigate[].loading | no | defines the loading indicator behavior during navigation | `global` \| `inline` \| `none` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
 | actions.openDrawer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openDrawer[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openDrawer[].loading | no | defines the loading indicator behavior for the drawer | `global` \| `inline` \| `none` |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
 | actions.openModal | no | actions to open modal dialog components | array |
@@ -763,7 +752,6 @@ Panel is a container to display information
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
-| actions.openModal[].loading | no | defines the loading indicator behavior for the modal | `global` \| `inline` \| `none` |
 | actions.openModal[].title | no | title shown in the modal header | string |
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
 | footer | no | footer section of the panel containing additional items | array |

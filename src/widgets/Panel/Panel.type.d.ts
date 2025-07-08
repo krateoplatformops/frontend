@@ -61,10 +61,6 @@ export interface Panel {
             timeout?: number
           }
           /**
-           * defines the loading indicator behavior for the action
-           */
-          loading?: 'global' | 'inline' | 'none'
-          /**
            * type of action to execute
            */
           type: 'rest'
@@ -108,10 +104,6 @@ export interface Panel {
            * whether user confirmation is required before navigating
            */
           requireConfirmation?: boolean
-          /**
-           * defines the loading indicator behavior during navigation
-           */
-          loading?: 'global' | 'inline' | 'none'
         }[]
         /**
          * actions to open side drawer components
@@ -133,10 +125,6 @@ export interface Panel {
            * whether user confirmation is required before opening
            */
           requireConfirmation?: boolean
-          /**
-           * defines the loading indicator behavior for the drawer
-           */
-          loading?: 'global' | 'inline' | 'none'
           /**
            * drawer size to be displayed
            */
@@ -166,10 +154,6 @@ export interface Panel {
            * whether user confirmation is required before opening
            */
           requireConfirmation?: boolean
-          /**
-           * defines the loading indicator behavior for the modal
-           */
-          loading?: 'global' | 'inline' | 'none'
           /**
            * title shown in the modal header
            */

@@ -87,11 +87,6 @@
                           }
                         }
                       },
-                      "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior for the action"
-                      },
                       "type": {
                         "type": "string",
                         "enum": ["rest"],
@@ -148,11 +143,6 @@
                       "requireConfirmation": {
                         "type": "boolean",
                         "description": "whether user confirmation is required before navigating"
-                      },
-                      "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior during navigation"
                       }
                     },
                     "required": ["id", "type", "resourceRefId"]
@@ -181,11 +171,6 @@
                       "requireConfirmation": {
                         "type": "boolean",
                         "description": "whether user confirmation is required before opening"
-                      },
-                      "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior for the drawer"
                       },
                       "size": {
                         "type": "string",
@@ -223,11 +208,6 @@
                       "requireConfirmation": {
                         "type": "boolean",
                         "description": "whether user confirmation is required before opening"
-                      },
-                      "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior for the modal"
                       },
                       "title": {
                         "type": "string",

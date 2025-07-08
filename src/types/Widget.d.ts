@@ -60,7 +60,6 @@ export type WidgetActions = {
       eventReason: string
       timeout?: number
     }
-    loading?: 'global' | 'inline' | 'none'
     payloadToOverride?: {
       name: string
       value: string
@@ -72,14 +71,12 @@ export type WidgetActions = {
     type: 'navigate'
     resourceRefId: string
     requireConfirmation?: boolean
-    loading?: 'global' | 'inline' | 'none'
   }[]
   openDrawer?: {
     id: string
     type: 'openDrawer'
     resourceRefId: string
     requireConfirmation?: boolean
-    loading?: 'global' | 'inline' | 'none'
     size?: 'default' | 'large'
     title?: string
   }[]
@@ -88,7 +85,6 @@ export type WidgetActions = {
     type: 'openModal'
     resourceRefId: string
     requireConfirmation?: boolean
-    loading?: 'global' | 'inline' | 'none'
     title?: string
   }[]
 }
