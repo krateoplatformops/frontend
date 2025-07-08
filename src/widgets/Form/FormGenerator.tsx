@@ -1,7 +1,7 @@
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
 import type { JSONSchema4 } from 'json-schema'
 import _ from 'lodash'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 
@@ -20,6 +20,7 @@ type FormGeneratorType = {
 const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields = schema.required as string[]
+  const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
   // Check on CompositionCreated event for redirect
   // useEffect(() => {
@@ -37,6 +38,29 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
 
   // 	return () => eventSource.close();
   // }, []);
+
+  const getOptionalCount = (node: JSONSchema4) => {
+    const currentProperties = node.properties
+    let totalCount = 0
+    let optionalCount = 0
+
+    if (currentProperties && typeof currentProperties === 'object') {
+      for (const key of Object.keys(currentProperties)) {
+        const prop = currentProperties[key]
+
+        if (prop.type === 'object') {
+          const counts = getOptionalCount(prop)
+          totalCount += counts.totalCount
+          optionalCount += counts.optionalCount
+        } else {
+          const required = (Array.isArray(node?.required) && node.required.indexOf(key) > -1) || requiredFields.indexOf(key) > -1
+          totalCount += 1
+          optionalCount = required ? optionalCount : optionalCount + 1
+        }
+      }
+    }
+    return { optionalCount, totalCount }
+  }
 
   const parseData = (node: JSONSchema4, name: string = '') => {
     const currentProperties = node.properties
@@ -151,6 +175,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
           <div className={styles.formField} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
@@ -183,6 +208,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
             <Space direction='vertical' style={{ width: '100%' }}>
               <Form.Item
                 extra={!descriptionTooltip && node.description ? node.description : undefined}
+                hidden={optionalHidden && !required}
                 key={name}
                 label={renderLabel(name, label)}
                 name={name.split('.')}
@@ -201,6 +227,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
           <div className={styles.formField} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
@@ -224,6 +251,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
           <div className={styles.formField} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
@@ -369,6 +397,18 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
         <Row className={styles.anchorRow}>
           <Col className={styles.formWrapper} span={showFormStructure ? 12 : 24}>
             <div className={styles.form} id='anchor-content'>
+              {
+                getOptionalCount(schema).optionalCount > 0 && getOptionalCount(schema).optionalCount < getOptionalCount(schema).totalCount && (
+                  <div className={styles.optionalFieldsSwitchWrapper}>
+                    <Space className={styles.optionalFieldsSwitch} direction='horizontal' size='small'>
+                      <Switch onChange={(value) => setOptionalHidden(value)} value={optionalHidden} />
+                      <Typography.Text>
+                        Hide optional fields
+                      </Typography.Text>
+                    </Space>
+                  </div>
+                )
+              }
               <Form
                 autoComplete='off'
                 form={form}
