@@ -85,6 +85,7 @@ export type RestApiResponse = {
   metadata?: {
     name?: string
     namespace?: string
+    uid?: string
     [key: string]: unknown
   }
   [key: string]: unknown
