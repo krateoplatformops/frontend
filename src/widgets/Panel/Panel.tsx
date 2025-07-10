@@ -44,23 +44,21 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
     return null
   }
 
-  const { path } = resourceRef
-
   const onClick = async () => {
-    if (action.type === 'navigate') {
-      const url = title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(path)}`
+    const { path } = resourceRef
 
-      if (url) {
-        await handleAction(action, url)
-      } else {
-        notification.warning({
-          description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
-          message: `Error while navigating`,
-          placement: 'bottomLeft',
-        })
-      }
+    const url = action.type === 'navigate'
+      ? title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(path)}`
+      : path
+
+    if (url) {
+      await handleAction(action, url)
     } else {
-      await handleAction(action, path)
+      notification.warning({
+        description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+        message: `Error while navigating`,
+        placement: 'bottomLeft',
+      })
     }
   }
 
