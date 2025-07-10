@@ -2,8 +2,7 @@ import { Button, Result, Space } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
-import _ from 'lodash'
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
@@ -16,38 +15,46 @@ import { useDrawerContext } from '../Drawer/DrawerContext'
 import styles from './Form.module.css'
 import type { Form as WidgetType } from './Form.type'
 import FormGenerator from './FormGenerator'
+import { convertStringToObject, interpolateRedirectUrl, updateNameNamespace } from './utils'
 
 export type FormWidgetData = WidgetType['spec']['widgetData']
 
-function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
-  const { actions, submitActionId } = widgetData
-  const drawerContext = useDrawerContext()
+interface FormExtraProps {
+  disabled?: boolean | undefined
+  form?: string | undefined
+}
+
+const FormExtra = ({ disabled = false, form }: FormExtraProps): React.ReactNode => {
+  return (
+    <Space>
+      <Button disabled={disabled} form={form} htmlType='reset' type='default'>
+        Reset
+      </Button>
+      <Button form={form} htmlType='submit' type='primary'>
+        Submit
+      </Button>
+    </Space>
+  )
+}
+
+const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
+  const { actions, fieldDescription, schema, stringSchema, submitActionId } = widgetData
+  const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
-  const [submitting, setSubmitting] = useState(false)
   const navigate = useNavigate()
 
   const { config } = useConfigContext()
   const { message, notification } = useApp()
 
-  const formId = useId() /* https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#form */
+  /* https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#form */
+  const formId = useId()
 
   useEffect(() => {
-    if (drawerContext.insideDrawer && !alreadySetDrawerData.current) {
-      drawerContext.setDrawerData({
-        extra: (
-          <Space>
-            <Button form={formId} htmlType='reset' type='default'>
-              Reset
-            </Button>
-            <Button form={formId} htmlType='submit' type='primary'>
-              Submit
-            </Button>
-          </Space>
-        ),
-      })
+    if (insideDrawer && !alreadySetDrawerData.current) {
+      setDrawerData({ extra: <FormExtra form={formId} /> })
       alreadySetDrawerData.current = true
     }
-  }, [drawerContext, drawerContext.insideDrawer, formId])
+  }, [formId, insideDrawer, setDrawerData])
 
   const action = Object.values(actions)
     .flat()
@@ -65,38 +72,37 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
     )
   }
 
-  if (action.type === 'rest' && action.onSuccessNavigateTo && action.onEventNavigateTo) {
-    console.warn('submit action has both onSuccessNavigateTo and onEventNavigateTo defined')
+  if (!schema && !stringSchema) {
+    return (
+      <div className={styles.message}>
+        <Result
+          status='error'
+          subTitle={`The widget definition does not include a schema or stringSchema for Form fields`}
+          title='Error while rendering widget'
+        />
+      </div>
+    )
   }
 
-  /* if the form is inside a Drawer, button will be already rendered in the Drawer  */
-  const shouldRenderButtonsInsideForm = !drawerContext.insideDrawer
+  const formSchema = (stringSchema ? JSON.parse(stringSchema) : schema) as JSONSchema4
 
-  if (!widgetData.schema && !widgetData.stringSchema) {
-    throw new Error('received no widgetData.schema or widgetData.stringSchema')
-  }
-
-  const schema = (widgetData.stringSchema ? JSON.parse(widgetData.stringSchema) : widgetData.schema) as JSONSchema4
+  // if the form is inside a Drawer, button will be already rendered in the Drawer
+  const shouldRenderButtonsInsideForm = !insideDrawer
 
   return (
-    <div style={{ height: '100%', maxHeight: '100%' }}>
-      {shouldRenderButtonsInsideForm ? (
-        <Space>
-          <Button form={formId} htmlType='reset' type='default'>
-            Reset
-          </Button>
-          <Button form={formId} htmlType='submit' type='primary'>
-            Submit
-          </Button>
-        </Space>
-      ) : null}
+    <div className={styles.form}>
+      {shouldRenderButtonsInsideForm ? <FormExtra form={formId} /> : null}
 
       <FormGenerator
-        descriptionTooltip={widgetData.fieldDescription === 'tooltip'}
+        descriptionTooltip={fieldDescription === 'tooltip'}
         formId={formId}
         onSubmit={async (values) => {
           if (action.type !== 'rest') {
             throw new Error('Submit action type is not "rest"')
+          }
+
+          if (action.onSuccessNavigateTo && action.onEventNavigateTo) {
+            console.warn('submit action has both onSuccessNavigateTo and onEventNavigateTo defined')
           }
 
           // convert all dayjs date to ISOstring
@@ -114,18 +120,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
           const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
 
           if (!resourceRef) {
-            drawerContext.setDrawerData({
-              extra: (
-                <Space>
-                  <Button disabled form={formId} htmlType='reset' type='default'>
-                    Reset
-                  </Button>
-                  <Button disabled form={formId} htmlType='submit' type='primary'>
-                    Submit
-                  </Button>
-                </Space>
-              ),
-            })
+            setDrawerData({ extra: <FormExtra form={formId} /> })
           } else {
             const url = config?.api.SNOWPLOW_API_BASE_URL + resourceRef.path
 
@@ -171,18 +166,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
             let resourceUid: string | null = null
             if (action.onEventNavigateTo) {
               /* FIXME: This is a bit dirty, should disable the already present buttons instead */
-              drawerContext.setDrawerData({
-                extra: (
-                  <Space>
-                    <Button disabled form={formId} htmlType='reset' type='default'>
-                      Reset
-                    </Button>
-                    <Button disabled form={formId} htmlType='submit' type='primary'>
-                      Submit
-                    </Button>
-                  </Space>
-                ),
-              })
+              setDrawerData({ extra: <FormExtra disabled form={formId} /> })
 
               const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
               const eventSource = new EventSource(eventsEndpoint, {
@@ -219,7 +203,6 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
               })
             }
 
-            setSubmitting(true)
             const headers = action.headers || []
 
             const res = await fetch(urlWithNewNameAndNamespace, {
@@ -245,7 +228,6 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
                 message: `${json.status} - ${json.reason}`,
                 placement: 'bottomLeft',
               })
-              setSubmitting(false)
               return
             }
 
@@ -275,57 +257,11 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
             }
           }
         }}
-        schema={schema}
+        schema={formSchema}
         showFormStructure={true}
       />
-      {/* <pre>{JSON.stringify(widgetData, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify(actions, null, 2)}</pre> */}
     </div>
   )
-}
-
-function convertStringToObject(dottedString: string, value: unknown) {
-  const keys = dottedString.split('.')
-  const result = {}
-  let current = result
-
-  keys.forEach((key, index) => {
-    if (index === keys.length - 1) {
-      current[key] = value
-    } else {
-      current[key] = {}
-      current = current[key]
-    }
-  })
-
-  return result
-}
-
-const updateNameNamespace = (path, name, namespace) => {
-  // add name and namespace on endpoint querystring from payload.metadata
-  const qsParameters = path
-    .split('?')[1]
-    .split('&')
-    .filter((el) => el.indexOf('name=') === -1 && el.indexOf('namespace=') === -1)
-    .join('&')
-  return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
-}
-
-function interpolateRedirectUrl(payload: object, route: string): string | null {
-  let allReplacementsSuccessful = true
-
-  const interpolatedRoute = route.replace(/\$\{([^}]+)\}/g, (_, key) => {
-    const value = key.split('.').reduce((acc: any, part) => acc?.[part], payload)
-
-    if (value === undefined) {
-      allReplacementsSuccessful = false
-      return ''
-    }
-
-    return String(value)
-  })
-
-  return allReplacementsSuccessful ? interpolatedRoute : null
 }
 
 export default Form
