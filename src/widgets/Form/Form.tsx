@@ -1,38 +1,44 @@
 import { Button, Result, Space } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
 import { useEffect, useId, useRef } from 'react'
-import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
-import { getAccessToken } from '../../utils/getAccessToken'
-import type { RestApiResponse } from '../../utils/types'
-import { getHeadersObject, getResourceRef } from '../../utils/utils'
-import { closeDrawer } from '../Drawer/Drawer'
+import { handleAction } from '../../utils/actionHandler'
+import type { Payload } from '../../utils/types'
+import { getResourceRef } from '../../utils/utils'
 import { useDrawerContext } from '../Drawer/DrawerContext'
 
 import styles from './Form.module.css'
 import type { Form as WidgetType } from './Form.type'
 import FormGenerator from './FormGenerator'
-import { convertDayjsToISOString, interpolateRedirectUrl, updateJson, updateNameNamespace } from './utils'
 
 export type FormWidgetData = WidgetType['spec']['widgetData']
 
-interface Payload {
-  metadata?: {
-    name?: string
-    namespace?: string
-    [key: string]: unknown
-  }
-  [key: string]: unknown
-}
+/**
+ * Returns a new object where all Dayjs instances in a flat input object
+ * are converted into ISO 8601 string format using `.toISOString()`.
+ *
+ * This function does not mutate the original object. It returns a shallow copy
+ * of the input where any Dayjs values are stringified.
+ *
+ * @param values - A flat object with values that may include Dayjs instances
+ * @returns A new object with Dayjs instances converted to ISO strings
+ */
+const convertDayjsToISOString = (values: object): object => {
+  const result: Record<string, unknown> = {}
 
-interface EventData {
-  involvedObject: {
-    uid: string
-  }
-  reason: string
+  Object.entries(values as Record<string, unknown>).forEach(([key, value]) => {
+    if (dayjs.isDayjs(value)) {
+      result[key] = value.toISOString()
+    } else {
+      result[key] = value
+    }
+  })
+
+  return result
 }
 
 interface FormExtraProps {
@@ -57,10 +63,9 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
   const { actions, fieldDescription, schema, stringSchema, submitActionId } = widgetData
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
-  const navigate = useNavigate()
 
   const { config } = useConfigContext()
-  const { message, notification } = useApp()
+  const { notification } = useApp()
 
   /* https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#form */
   const formId = useId()
@@ -118,158 +123,21 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       return
     }
 
-    const {
-      errorMessage,
-      headers = [],
-      onEventNavigateTo,
-      onSuccessNavigateTo,
-      payloadKey,
-      payloadToOverride,
-      successMessage,
-    } = action
-
-    if (onSuccessNavigateTo && onEventNavigateTo) {
-      notification.warning({
-        description: 'Submit action has defined both the "onSuccessNavigateTo" and "onEventNavigateTo" properties',
-        message: 'Warning submitting form',
-        placement: 'bottomLeft',
-      })
-    }
-
-    const values = convertDayjsToISOString(formValues)
-
     if (!resourceRef) {
       setDrawerData({ extra: <FormExtra form={formId} /> })
     } else {
       const { path, payload: resourcePayload, verb } = resourceRef
 
       const url = config?.api.SNOWPLOW_API_BASE_URL + path
+      const values = convertDayjsToISOString(formValues)
+      const payload: Payload = { ...resourcePayload, ...values }
 
-      let payload: Payload = { ...resourcePayload, ...values }
-
-      if (payloadToOverride && payloadToOverride.length > 0) {
-        payloadToOverride.forEach(({ name, value }) => {
-          payload = updateJson(payload, name, value)
-        })
-      }
-
-      /* Gets all the keys that are not in the resourceRef.payload, basically the form values */
-      if (payloadKey) {
-        const newPayloadKeyObject: Record<string, unknown> = {}
-
-        const valuesKeys = Object.keys(payload).filter(
-          (key) => !Object.prototype.hasOwnProperty.call(resourcePayload, key)
-        )
-
-        for (const key of valuesKeys) {
-          const value = (payload as Record<string, unknown>)[key]
-          newPayloadKeyObject[key] = typeof value === 'object' && value !== null && !Array.isArray(value)
-            ? { ...value }
-            : value
-        }
-
-        const cleanedPayload: Record<string, unknown> = {}
-
-        for (const key in payload) {
-          if (!valuesKeys.includes(key)) {
-            cleanedPayload[key] = payload[key]
-          }
-        }
-
-        cleanedPayload[payloadKey] = newPayloadKeyObject
-        payload = cleanedPayload
-      } else {
-        console.warn('payloadKey is undefined, skipping key reorganization.')
-      }
-
-      /* Will be known aftert the http request */
-      let resourceUid: string | null = null
-      if (onEventNavigateTo) {
+      if (action.onEventNavigateTo) {
         /* FIXME: This is a bit dirty, should disable the already present buttons instead */
         setDrawerData({ extra: <FormExtra disabled form={formId} /> })
-
-        const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
-        const eventSource = new EventSource(eventsEndpoint, {
-          withCredentials: false,
-        })
-
-        const timeoutId = setTimeout(() => {
-          eventSource.close()
-          notification.error({
-            message: `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
-            placement: 'bottomLeft',
-          })
-          message.destroy()
-        }, onEventNavigateTo.timeout! * 1000)
-
-        eventSource.addEventListener('krateo', (event) => {
-          const data = JSON.parse(event.data as string) as EventData
-          if (data?.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
-            eventSource.close()
-            clearTimeout(timeoutId)
-
-            const redirectUrl = interpolateRedirectUrl(payload, onEventNavigateTo.url)
-            if (!redirectUrl) {
-              notification.error({
-                description: 'Error while redirecting',
-                message: 'Impossible to redirect, the route contains an undefined value',
-                placement: 'bottomLeft',
-              })
-              return
-            }
-            message.destroy()
-            closeDrawer()
-            void navigate(redirectUrl)
-          }
-        })
       }
 
-      const urlWithNewNameAndNamespace = updateNameNamespace(url, payload?.metadata?.name, payload?.metadata?.namespace)
-
-      const res = await fetch(urlWithNewNameAndNamespace, {
-        body: JSON.stringify(payload),
-        headers: {
-          ...getHeadersObject(headers),
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-        method: verb,
-      })
-
-      if (onEventNavigateTo) {
-        message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
-      }
-
-      const json = (await res.json()) as RestApiResponse
-
-      if (!res.ok) {
-        message.destroy()
-        notification.error({
-          description: errorMessage || json.message,
-          message: `${json.status} - ${json.reason}`,
-          placement: 'bottomLeft',
-        })
-      }
-
-      if (json.metadata?.uid) {
-        resourceUid = json.metadata.uid
-      }
-
-      const actionName = verb === 'DELETE' ? 'deleted' : 'created'
-
-      /* If we are not waiting for an event, we can show a success message */
-      if (!onEventNavigateTo) {
-        closeDrawer()
-        notification.success({
-          description: successMessage || `Successfully ${actionName} ${json?.metadata?.name} in ${json?.metadata?.namespace}`,
-          message: json.message,
-          placement: 'bottomLeft',
-        })
-      }
-
-      if (onSuccessNavigateTo) {
-        closeDrawer()
-        void navigate(onSuccessNavigateTo)
-      }
+      await handleAction(action, url, verb, payload, resourcePayload)
     }
   }
 

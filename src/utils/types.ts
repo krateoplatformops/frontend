@@ -90,3 +90,12 @@ export type RestApiResponse = {
   }
   [key: string]: unknown
 }
+
+export interface Payload {
+  metadata?: {
+    name?: string
+    namespace?: string
+    [key: string]: unknown
+  }
+  [key: string]: unknown
+}
