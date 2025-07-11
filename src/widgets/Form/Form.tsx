@@ -93,8 +93,6 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     )
   }
 
-  const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
   if (!schema && !stringSchema) {
     return (
       <div className={styles.message}>
@@ -107,12 +105,15 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     )
   }
 
+  const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
+
   const formSchema = (stringSchema ? JSON.parse(stringSchema) : schema) as JSONSchema4
 
   // If the form is inside a Drawer, button will be already rendered in the Drawer
   const shouldRenderButtonsInsideForm = !insideDrawer
 
   const onSubmit = async (formValues: object) => {
+    // TODO: check if in the future Form should handle other action types
     if (action.type !== 'rest') {
       notification.error({
         description: 'Submit action type is not "rest"',
@@ -132,6 +133,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       const values = convertDayjsToISOString(formValues)
       const payload: Payload = { ...resourcePayload, ...values }
 
+      // TODO: handle disabled buttons
       if (action.onEventNavigateTo) {
         /* FIXME: This is a bit dirty, should disable the already present buttons instead */
         setDrawerData({ extra: <FormExtra disabled form={formId} /> })

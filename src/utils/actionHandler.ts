@@ -226,7 +226,7 @@ export const handleAction = async (
   const queryClient = useQueryClient()
   const { message, notification } = useApp()
   const { config } = useConfigContext()
-  const { id, requireConfirmation, type } = action
+  const { requireConfirmation, type } = action
 
   switch (type) {
     case 'navigate':
@@ -253,20 +253,14 @@ export const handleAction = async (
       const { errorMessage, headers = [], onEventNavigateTo, onSuccessNavigateTo, payload, payloadKey, payloadToOverride, successMessage } = action
 
       if (!requireConfirmation || window.confirm('Are you sure?')) {
-        if (verb === 'POST' && !payload) {
-          notification.warning({
-            description: `Payload not found for POST action ${id}`,
-            message: 'Warning submitting form',
-            placement: 'bottomLeft',
-          })
-        }
-
         if (onSuccessNavigateTo && onEventNavigateTo) {
-          notification.warning({
+          notification.error({
             description: 'Submit action has defined both the "onSuccessNavigateTo" and "onEventNavigateTo" properties',
             message: 'Warning submitting form',
             placement: 'bottomLeft',
           })
+
+          return
         }
 
         let updatedPayload = customPayload ?? {}

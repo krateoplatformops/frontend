@@ -1,9 +1,10 @@
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
+import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
 import type { JSONSchema4 } from 'json-schema'
-import _ from 'lodash'
+import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import type { ReactNode } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 
@@ -23,28 +24,7 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
 
 type Field = ReturnType<typeof renderField>;
 
-const parseData = ({ properties, required }: JSONSchema4, name: string = ''): Field[] => {
-  if (properties) {
-    return Object.keys(properties).flatMap((key) => {
-      const currentName = name ? `${name}.${key}` : key
-      const prop = properties[key]
-
-      if (prop.type === 'object') {
-        return parseData(prop, currentName)
-      }
-
-      const isRequired
-        = (Array.isArray(required) && required.indexOf(key) > -1)
-        || requiredFields.indexOf(key) > -1
-
-      const label = prop.title || key
-      return [renderField(label, currentName, prop, isRequired)]
-    })
-  }
-  return []
-}
-
-const setInitialValues = () => {
+const setInitialValues = useCallback(() => {
   const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
     if (properties) {
       Object.keys(properties).forEach((key) => {
@@ -79,7 +59,11 @@ const setInitialValues = () => {
   }
 
   parseData(schema)
-}
+}, [form, schema])
+
+useEffect(() => {
+  setInitialValues()
+}, [setInitialValues])
 
 const renderLabel = (path: string, label: string) => {
   const breadcrumb = path.split('.')
@@ -236,8 +220,29 @@ const renderField = (label: string, name: string, node: JSONSchema4, required: b
   }
 }
 
-const getAnchorList = () => {
-  const parseData = (node: JSONSchema4, name: string = '') => {
+const parseData = ({ properties, required }: JSONSchema4, name: string = ''): Field[] => {
+  if (properties) {
+    return Object.keys(properties).flatMap((key) => {
+      const currentName = name ? `${name}.${key}` : key
+      const prop = properties[key]
+
+      if (prop.type === 'object') {
+        return parseData(prop, currentName)
+      }
+
+      const isRequired
+        = (Array.isArray(required) && required.indexOf(key) > -1)
+        || requiredFields.indexOf(key) > -1
+
+      const label = prop.title || key
+      return [renderField(label, currentName, prop, isRequired)]
+    })
+  }
+  return []
+}
+
+const getAnchorList = (): AnchorLinkItemProps[] => {
+  const parseData = (node: JSONSchema4, name = ''): AnchorLinkItemProps[] => {
     const currentProperties = node.properties
     if (currentProperties) {
       return Object.keys(currentProperties).map((key) => {
@@ -245,9 +250,9 @@ const getAnchorList = () => {
         const label = key
 
         if (currentProperties[key].type === 'object') {
-          // create children
           return {
             children: parseData(currentProperties[key], currentName),
+            href: '#',
             key: currentName,
             title: (
               <span className={styles.anchorObjectLabel} key={key}>
@@ -256,7 +261,7 @@ const getAnchorList = () => {
             ),
           }
         }
-        // return obj
+
         return {
           href: `#${currentName}`,
           key: currentName,
@@ -267,74 +272,10 @@ const getAnchorList = () => {
     return []
   }
 
-  return [...parseData(schema)]
+  return parseData(schema)
 }
 
-const convertStringToObject = (dottedString: string, value: unknown) => {
-  const keys = dottedString.split('.')
-  const result = {}
-  let current = result
-
-  keys.forEach((key, index) => {
-    if (index === keys.length - 1) {
-      current[key] = value
-    } else {
-      current[key] = {}
-      current = current[key]
-    }
-  })
-
-  return result
-}
-
-// Example input: valuePath = "${ git.toRepo.name + \"-\" + git.toRepo.org }"
-// Example parts: ["git.toRepo.name", "\"-\"", "git.toRepo.org"]
-// Example transformation:
-// getObjectByPath(values, "git.toRepo.name") → "name"
-// getObjectByPath(values, "git.toRepo.org") → "org"
-// Result: value = "name-org"
-
-const updateJson = (values: any, keyPath: string, valuePath: string) => {
-  const getObjectByPath = (obj: any, path: string) => path.split('.').reduce((acc, part) => acc && acc[part], obj)
-
-  const substr = valuePath.replace('${', '').replace('}', '')
-  const parts = substr.split('+').map((el) => el.trim())
-
-  const value = parts
-    .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
-    .join('')
-
-  return _.merge({}, values, convertStringToObject(keyPath, value))
-}
-
-const updateNameNamespace = (path: string, name: string, namespace: string) => {
-  // add name and namespace on endpoint querystring from payload.metadata
-  const qsParameters = path
-    .split('?')[1]
-    .split('&')
-    .filter((el) => el.indexOf('name=') === -1 && el.indexOf('namespace=') === -1)
-    .join('&')
-  return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
-}
-
-const interpolateRoute = (payload: any, route: string): string | null => {
-  let allReplacementsSuccessful = true
-
-  const interpolatedRoute = route.replace(/\$\{([^}]+)\}/g, (_, key) => {
-    const value = key.split('.').reduce((acc: any, part) => acc?.[part], payload)
-
-    if (value === undefined) {
-      allReplacementsSuccessful = false
-      return ''
-    }
-
-    return String(value)
-  })
-
-  return allReplacementsSuccessful ? interpolatedRoute : null
-}
-
-const onFinishFailed = useCallback(({ errorFields }: any) => {
+const onFinishFailed = useCallback(({ errorFields }: ValidateErrorEntity) => {
   const errorField = errorFields[0].name.join('.')
   const errorFieldElement = document.querySelector(`#${CSS.escape(errorField)}`)
 
@@ -354,8 +295,8 @@ const onFinishFailed = useCallback(({ errorFields }: any) => {
   }
 }, [])
 
-const handleAnchorClick = (e: React.MouseEvent<HTMLElement>) => {
-  e.preventDefault()
+const handleAnchorClick = (event: React.MouseEvent<HTMLElement>) => {
+  event.preventDefault()
 }
 
 return (
@@ -370,15 +311,17 @@ return (
               id={formId}
               layout='vertical'
               name='formGenerator'
-              onFinish={(values: object) => onSubmit(values)}
-              onFinishFailed={onFinishFailed}
-              onReset={(e) => {
-                e.preventDefault()
+              onFinish={(values: object) => {
+                onSubmit(values).catch((error) => {
+                  console.error(`Error while executing the Form onFinish function: ${error}`)
+                })
+              }} onFinishFailed={onFinishFailed}
+              onReset={(event) => {
+                event.preventDefault()
                 setInitialValues()
               }}
             >
               {parseData(schema)}
-              {setInitialValues()}
             </Form>
           </div>
         </Col>
