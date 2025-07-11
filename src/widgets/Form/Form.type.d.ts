@@ -169,7 +169,7 @@ export interface Form {
       /**
        * the schema of the form as an object
        */
-      schema?: {}
+      schema?: object
       /**
        * the schema of the form as a string
        */
