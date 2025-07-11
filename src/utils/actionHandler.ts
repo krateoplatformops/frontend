@@ -328,7 +328,7 @@ export const handleAction = async (
           : path
 
         const res = await fetch(updatedUrl, {
-          body: JSON.stringify(payload),
+          body: JSON.stringify(updatedPayload || payload),
           headers: {
             ...getHeadersObject(headers),
             Authorization: `Bearer ${getAccessToken()}`,
