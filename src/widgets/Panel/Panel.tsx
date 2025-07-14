@@ -1,7 +1,7 @@
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Card as AntdCard, Avatar, Button, Result, Tag, Tooltip } from 'antd'
+import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import { useLocation } from 'react-router'
 
@@ -26,40 +26,44 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
     .flat()
     .find(({ id }) => id === clickActionId)
 
-  if (!action) {
-    return (
-      <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`The widget definition does not include an action with the ID ${clickActionId}`}
-          title='Error while rendering widget'
-        />
-      </div>
-    )
-  }
-
-  const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
-  if (!resourceRef) {
-    return null
-  }
-
   const onClick = async () => {
-    const { path } = resourceRef
-
-    const url = action.type === 'navigate'
-      ? title && `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(path)}`
-      : path
-
-    if (url) {
-      await handleAction(action, url)
-    } else {
-      notification.warning({
-        description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
-        message: `Error while navigating`,
+    if (!action) {
+      notification.error({
+        description: `The widget definition does not include an action (ID: ${clickActionId})`,
+        message: 'Error while executing the action',
         placement: 'bottomLeft',
       })
+
+      return
     }
+
+    const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
+
+    if (!resourceRef) {
+      notification.error({
+        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
+
+    const url = action.type === 'navigate' && title
+      ? `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(resourceRef.path)}`
+      : resourceRef.path || null
+
+    if (!url) {
+      notification.warning({
+        description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
+        message: 'Error while navigating',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
+
+    await handleAction(action, url)
   }
 
   const handleClick = () => {

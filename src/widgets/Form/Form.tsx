@@ -86,7 +86,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       <div className={styles.message}>
         <Result
           status='error'
-          subTitle={`The widget definition does not include an action with the ID ${submitActionId}`}
+          subTitle={`The widget definition does not include an action (ID: ${submitActionId})`}
           title='Error while rendering widget'
         />
       </div>

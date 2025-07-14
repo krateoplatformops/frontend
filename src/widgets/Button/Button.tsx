@@ -26,7 +26,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
       <div className={styles.message}>
         <Result
           status='error'
-          subTitle={`The widget definition does not include an action with the ID ${clickActionId}`}
+          subTitle={`The widget definition does not include an action (ID: ${clickActionId})`}
           title='Error while rendering widget'
         />
       </div>
