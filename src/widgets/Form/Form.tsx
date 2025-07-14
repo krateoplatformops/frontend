@@ -92,6 +92,7 @@ function Form({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) {
       ) : null}
 
       <FormGenerator
+        autocomplete={widgetData.autocomplete}
         descriptionTooltip={widgetData.fieldDescription === 'tooltip'}
         formId={formId}
         onSubmit={async (values) => {

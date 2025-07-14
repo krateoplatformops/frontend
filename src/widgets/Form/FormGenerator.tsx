@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 
+import AutoComplete from './fields/AutoComplete'
 import styles from './Form.module.css'
 
 type FormGeneratorType = {
@@ -15,9 +16,10 @@ type FormGeneratorType = {
   // onClose?: () => void,
   // disableButtons?: (value: boolean) => void
   onSubmit: (values: object) => Promise<void>
+  autocomplete?: { path: string; fetch: { url: string; verb: string } }[]
 }
 
-const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
+const FormGenerator = ({ autocomplete, descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields = schema.required as string[]
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
@@ -182,21 +184,36 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
             >
-              {node.enum ? (
-                node.enum.length > 4 ? (
-                  <Select allowClear options={node.enum.map((opt) => ({ label: opt, value: opt }))} />
-                ) : (
-                  <Radio.Group>
-                    {node.enum.map((el) => (
-                      <Radio key={`radio_${el}`} value={el}>
-                        {el}
-                      </Radio>
-                    ))}
-                  </Radio.Group>
-                )
-              ) : (
-                <Input />
-              )}
+              {(() => {
+                // Autocomplete
+                if (autocomplete) {
+                  const fetchOptions = autocomplete.find((el) => el.path === name)?.fetch
+                  if (fetchOptions) { return <>autocomplete <AutoComplete fetchOptions={fetchOptions} /></> }
+                }
+                // Enum
+                if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
+                  const enumArr = node.enum as (string | number)[]
+                  if (enumArr.length > 4) {
+                    return (
+                      <Select
+                        allowClear
+                        options={enumArr.map((opt) => ({ label: opt, value: opt }))}
+                      />
+                    )
+                  }
+                  return (
+                    <Radio.Group>
+                      {enumArr.map((el) => (
+                        <Radio key={`radio_${el}`} value={el}>
+                          {el}
+                        </Radio>
+                      ))}
+                    </Radio.Group>
+                  )
+                }
+                // Default
+                return <Input />
+              })()}
             </Form.Item>
           </div>
         )
@@ -263,6 +280,23 @@ const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, s
               ) : (
                 <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
               )}
+            </Form.Item>
+          </div>
+        )
+
+      case 'autocomplete':
+        return (
+          <div className={styles.formField} id={name}>
+            <Form.Item
+              extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
+              key={name}
+              label={renderLabel(name, label)}
+              name={name.split('.')}
+              rules={rules}
+              tooltip={descriptionTooltip && node.description ? node.description : undefined}
+            >
+              <AutoComplete fetchOptions={node.fetchOptions} />
             </Form.Item>
           </div>
         )

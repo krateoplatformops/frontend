@@ -265,6 +265,37 @@
               "type": "string",
               "enum": ["tooltip", "inline"],
               "default": "inline"
+            },
+            "autocomplete": {
+              "type": "array",
+              "description": "autocomplete configuration for the form fields",
+              "items": {
+                "type": "object",
+                "required": ["path", "fetch"],
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "the path of the field to apply autocomplete"
+                  },
+                  "fetch": {
+                    "type": "object",
+                    "required": ["url", "verb"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "the URL to fetch autocomplete options from"
+                      },
+                      "verb": {
+                        "type": "string",
+                        "enum": ["GET", "POST"],
+                        "description": "HTTP method to use for fetching options"
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           "additionalProperties": false

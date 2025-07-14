@@ -5,7 +5,38 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    schema: {}
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your fireworks app"
+          },
+          "image": {
+            "type": "string",
+            "title": "Container Image",
+            "description": "Full image path (e.g., ghcr.io/org/image:tag)"
+          },
+          "replicas": {
+            "type": "integer",
+            "title": "Number of Replicas",
+            "default": 1
+          },
+          "enableMetrics": {
+            "type": "boolean",
+            "title": "Enable Metrics",
+            "default": false
+          }
+        },
+        "required": ["name", "image"]
+      }
+    autocomplete:
+      - path: name
+        fetch:
+          url: https://loremipsum.io/api/1
+          verb: GET
     submitActionId: firework-submit-action-from-string-schema
     actions:
       rest:
