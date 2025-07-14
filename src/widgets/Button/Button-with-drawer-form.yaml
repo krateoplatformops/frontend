@@ -40,7 +40,6 @@ spec:
     actions:
       openModal:
         - id: open-modal-action
-          name: open-modal-action
           resourceRefId: firework-form
           type: openModal
           title: Form in Modal

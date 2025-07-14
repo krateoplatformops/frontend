@@ -9,25 +9,25 @@ spec:
       - name: linea blu
         color: blue
         coords:
-          - xAxis: 0
-            yAxis: 15
-          - xAxis: 1
-            yAxis: 52
-          - xAxis: 2
-            yAxis: 15
-          - xAxis: 3
-            yAxis: 52
+          - xAxis: "0"
+            yAxis: "15"
+          - xAxis: "1"
+            yAxis: "52"
+          - xAxis: "2"
+            yAxis: "15"
+          - xAxis: "3"
+            yAxis: "52"
       - name: linea rossa
         color: red
         coords:
-          - xAxis: 0
-            yAxis: 4
-          - xAxis: 1
-            yAxis: 8
-          - xAxis: 2
-            yAxis: 12
-          - xAxis: 3
-            yAxis: 2
+          - xAxis: "0"
+            yAxis: "4"
+          - xAxis: "1"
+            yAxis: "8"
+          - xAxis: "2"
+            yAxis: "12"
+          - xAxis: "3"
+            yAxis: "2"
     xAxisName: tempo
     yAxisName: costo
 ---
@@ -44,14 +44,14 @@ spec:
       - name: blue line
         color: blue
         coords:
-          - xAxis: 3
-            yAxis: 15
-          - xAxis: 10
-            yAxis: 52
-          - xAxis: 7
-            yAxis: 24
-          - xAxis: 9
-            yAxis: 4
+          - xAxis: "3"
+            yAxis: "15"
+          - xAxis: "10"
+            yAxis: "52"
+          - xAxis: "7"
+            yAxis: "24"
+          - xAxis: "9"
+            yAxis: "4"
     xAxisName: time
     yAxisName: cost
 
@@ -68,17 +68,17 @@ spec:
       - name: blue line
         color: blue
         coords:
-          - xAxis: 5
-            yAxis: 31
-          - xAxis: 3
-            yAxis: 49
-          - xAxis: 14
-            yAxis: 18
-          - xAxis: 22
-            yAxis: 9
-          - xAxis: 36
-            yAxis: 27
-          - xAxis: 66
-            yAxis: 36
+          - xAxis: "5"
+            yAxis: "31"
+          - xAxis: "3"
+            yAxis: "49"
+          - xAxis: "14"
+            yAxis: "18"
+          - xAxis: "22"
+            yAxis: "9"
+          - xAxis: "36"
+            yAxis: "27"
+          - xAxis: "66"
+            yAxis: "36"
     xAxisName: time
     yAxisName: cost

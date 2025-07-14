@@ -227,7 +227,6 @@ spec:
     actions:
       navigate:
         - id: composition-click-action
-          name: composition-click-action
           resourceRefId: my-tab-list
           type: navigate
   resourcesRefs:
