@@ -37,7 +37,15 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
   const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
 
   if (!resourceRef) {
-    return null
+    return (
+      <div className={styles.message}>
+        <Result
+          status='error'
+          subTitle={`The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`}
+          title='Error while rendering widget'
+        />
+      </div>
+    )
   }
 
   const onClick = async () => {
