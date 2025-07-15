@@ -4,7 +4,7 @@ import type { Rule } from 'antd/es/form'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import type { ReactNode } from 'react'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 
@@ -18,11 +18,35 @@ type FormGeneratorType = {
   onSubmit: (values: object) => Promise<void>
 }
 
+const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
+  const currentProperties = node.properties
+  let totalCount = 0
+  let optionalCount = 0
+
+  if (currentProperties && typeof currentProperties === 'object') {
+    for (const key of Object.keys(currentProperties)) {
+      const prop = currentProperties[key]
+
+      if (prop.type === 'object') {
+        const counts = getOptionalCount(prop, requiredFields)
+        totalCount += counts.totalCount
+        optionalCount += counts.optionalCount
+      } else {
+        const required = (Array.isArray(node?.required) && node.required.indexOf(key) > -1) || requiredFields.indexOf(key) > -1
+        totalCount += 1
+        optionalCount = required ? optionalCount : optionalCount + 1
+      }
+    }
+  }
+  return { optionalCount, totalCount }
+}
+
 const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields = schema.required as string[]
+  const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
-type Field = ReturnType<typeof renderField>;
+type Field = ReturnType<typeof renderField>
 
 const setInitialValues = useCallback(() => {
   const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
@@ -141,6 +165,7 @@ const renderField = (label: string, name: string, node: JSONSchema4, required: b
         <div className={styles.formField} id={name}>
           <Form.Item
             extra={!descriptionTooltip && node.description ? node.description : undefined}
+            hidden={optionalHidden && !required}
             key={name}
             label={renderLabel(name, label)}
             name={name.split('.')}
@@ -160,6 +185,7 @@ const renderField = (label: string, name: string, node: JSONSchema4, required: b
           <Space direction='vertical' style={{ width: '100%' }}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
@@ -178,6 +204,7 @@ const renderField = (label: string, name: string, node: JSONSchema4, required: b
         <div className={styles.formField} id={name}>
           <Form.Item
             extra={!descriptionTooltip && node.description ? node.description : undefined}
+            hidden={optionalHidden && !required}
             key={name}
             label={renderLabel(name, label)}
             name={name.split('.')}
@@ -202,6 +229,7 @@ const renderField = (label: string, name: string, node: JSONSchema4, required: b
         <div className={styles.formField} id={name}>
           <Form.Item
             extra={!descriptionTooltip && node.description ? node.description : undefined}
+            hidden={optionalHidden && !required}
             key={name}
             label={renderLabel(name, label)}
             name={name.split('.')}
@@ -305,6 +333,18 @@ return (
       <Row className={styles.anchorRow}>
         <Col className={styles.formWrapper} span={showFormStructure ? 12 : 24}>
           <div className={styles.form} id='anchor-content'>
+            {
+              getOptionalCount(schema, requiredFields).optionalCount > 0 && getOptionalCount(schema, requiredFields).optionalCount < getOptionalCount(schema, requiredFields).totalCount && (
+                <div className={styles.optionalFieldsSwitchWrapper}>
+                  <Space className={styles.optionalFieldsSwitch} direction='horizontal' size='small'>
+                    <Switch onChange={(value) => setOptionalHidden(value)} value={optionalHidden} />
+                    <Typography.Text>
+                      Hide optional fields
+                    </Typography.Text>
+                  </Space>
+                </div>
+              )
+            }
             <Form
               autoComplete='off'
               form={form}

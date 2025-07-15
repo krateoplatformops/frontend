@@ -31,6 +31,23 @@
       overflow: auto;
       padding: 0 40px 0 10px;
 
+      .optionalFieldsSwitchWrapper {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+        background-color: var(--panel-bg);
+        padding: 10px 0;
+        margin-bottom: 20px;
+
+        .optionalFieldsSwitch {
+          width: 100%;
+          background: var(--light-gray-color);
+          padding: 10px;
+          border-radius: 10px;
+        }
+      }
+
       .formField {
         .labelField {
           row-gap: 0;

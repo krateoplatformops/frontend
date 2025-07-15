@@ -1,7 +1,9 @@
 :root {
   --background-color: #f5f5f5;
+  --panel-bg: #fbfbfb;
   --border-color: #fff;
   --light-color: #fff;
+  --light-gray-color: #f0f0f0;
   --gray-color: #a0a0a0;
   --primary-color: #05629A;
   --menuitem-bg: rgb(17 178 226 / 40%);
