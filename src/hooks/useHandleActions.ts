@@ -5,12 +5,11 @@ import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { WidgetAction } from '../types/Widget'
+import { getAccessToken } from '../utils/getAccessToken'
+import type { Payload, RestApiResponse } from '../utils/types'
+import { getHeadersObject } from '../utils/utils'
 import { closeDrawer, openDrawer } from '../widgets/Drawer/Drawer'
 import { openModal } from '../widgets/Modal/Modal'
-
-import { getAccessToken } from './getAccessToken'
-import type { Payload, RestApiResponse } from './types'
-import { getHeadersObject } from './utils'
 
 interface EventData {
   involvedObject: {
@@ -31,7 +30,7 @@ interface EventData {
  * @param value - The value to assign at the final nested key
  * @returns A nested object with the specified value at the correct path
  */
-export const convertStringToObject = (dottedString: string, value: unknown): Record<string, unknown> => {
+const convertStringToObject = (dottedString: string, value: unknown): Record<string, unknown> => {
   const keys = dottedString.split('.')
   const result: Record<string, unknown> = {}
   let current: Record<string, unknown> = result
@@ -65,7 +64,7 @@ export const convertStringToObject = (dottedString: string, value: unknown): Rec
  * @param path - A dot-separated string path representing the property to access (e.g., "user.profile.id").
  * @returns The value found at the given path, or `undefined` if the path is invalid.
  */
-export const getObjectByPath = (obj: Record<string, unknown>, path: string): unknown => {
+const getObjectByPath = (obj: Record<string, unknown>, path: string): unknown => {
   return path.split('.').reduce<unknown>((acc, part) => {
     if (typeof acc === 'object' && acc !== null && part in acc) {
       return (acc as Record<string, unknown>)[part]
@@ -87,7 +86,7 @@ export const getObjectByPath = (obj: Record<string, unknown>, path: string): unk
  * @param route - The route string containing `${...}` placeholders to be replaced
  * @returns The interpolated route string or null if a placeholder could not be resolved
  */
-export const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string): string | null => {
+const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string): string | null => {
   let allReplacementsSuccessful = true
 
   const interpolatedRoute = route.replace(/\$\{([^}]+)\}/g, (_, key: string) => {
@@ -126,7 +125,7 @@ export const interpolateRedirectUrl = (payload: Record<string, unknown>, route: 
  * @param {string | undefined} payloadKey - The key under which to nest the extracted new values.
  * @returns {Record<string, unknown>} - The reorganized payload with extracted values nested under `payloadKey`.
  */
-export const reorganizePayloadByKey = (payload: Record<string, unknown>, resourcePayload: object, payloadKey: string | undefined): Record<string, unknown> => {
+const reorganizePayloadByKey = (payload: Record<string, unknown>, resourcePayload: object, payloadKey: string | undefined): Record<string, unknown> => {
   if (!payloadKey) {
     console.warn('payloadKey is undefined, skipping key reorganization.')
     return payload
@@ -169,7 +168,7 @@ export const reorganizePayloadByKey = (payload: Record<string, unknown>, resourc
  * @param valuePath - A template-style string (e.g., "${user.firstName + ' ' + user.lastName}") used to build the new value.
  * @returns A new object with the updated keyPath set to the interpolated value.
  */
-export const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath: string): Record<string, unknown> => {
+const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath: string): Record<string, unknown> => {
   const substr = valuePath.replace('${', '').replace('}', '')
   const parts = substr.split('+').map((el) => el.trim())
 
@@ -205,7 +204,7 @@ export const updateJson = (values: Record<string, unknown>, keyPath: string, val
  * @param namespace - The new `namespace` parameter to set
  * @returns The updated URL with the new query parameters
  */
-export const updateNameNamespace = (path: string, name?: string, namespace?: string) => {
+const updateNameNamespace = (path: string, name?: string, namespace?: string) => {
   const qsParameters = path
     .split('?')[1]
     .split('&')
@@ -215,161 +214,166 @@ export const updateNameNamespace = (path: string, name?: string, namespace?: str
   return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
 }
 
-export const handleAction = async (
-  action: WidgetAction,
-  path: string,
-  verb?: 'GET' | 'POST' | 'DELETE',
-  customPayload?: Record<string, unknown>,
-  resourcePayload?: object,
-) => {
+export const useHandleAction = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { message, notification } = useApp()
   const { config } = useConfigContext()
-  const { requireConfirmation, type } = action
 
-  switch (type) {
-    case 'navigate':
-      if (!requireConfirmation || window.confirm('Are you sure?')) {
-        await navigate(path)
+  const handleAction = async (
+    action: WidgetAction,
+    path: string,
+    verb?: 'GET' | 'POST' | 'DELETE',
+    customPayload?: Record<string, unknown>,
+    resourcePayload?: object,
+  ) => {
+    const { requireConfirmation, type } = action
+
+    switch (type) {
+      case 'navigate':
+        if (!requireConfirmation || window.confirm('Are you sure?')) {
+          await navigate(path)
+        }
+
+        break
+      case 'openDrawer': {
+        const { size, title } = action
+
+        openDrawer({ size, title, widgetEndpoint: path })
+
+        break
       }
+      case 'openModal': {
+        const { title } = action
 
-      break
-    case 'openDrawer': {
-      const { size, title } = action
+        openModal({ title, widgetEndpoint: path })
 
-      openDrawer({ size, title, widgetEndpoint: path })
+        break
+      }
+      case 'rest': {
+        const { errorMessage, headers = [], onEventNavigateTo, onSuccessNavigateTo, payload, payloadKey, payloadToOverride, successMessage } = action
 
-      break
-    }
-    case 'openModal': {
-      const { title } = action
-
-      openModal({ title, widgetEndpoint: path })
-
-      break
-    }
-    case 'rest': {
-      const { errorMessage, headers = [], onEventNavigateTo, onSuccessNavigateTo, payload, payloadKey, payloadToOverride, successMessage } = action
-
-      if (!requireConfirmation || window.confirm('Are you sure?')) {
-        if (onSuccessNavigateTo && onEventNavigateTo) {
-          notification.error({
-            description: 'Submit action has defined both the "onSuccessNavigateTo" and "onEventNavigateTo" properties',
-            message: 'Warning submitting form',
-            placement: 'bottomLeft',
-          })
-
-          return
-        }
-
-        let updatedPayload = customPayload ?? {}
-        if (payloadToOverride && payloadToOverride.length > 0) {
-          payloadToOverride.forEach(({ name, value }) => {
-            updatedPayload = updateJson(updatedPayload, name, value)
-          })
-        }
-
-        if (payloadKey && resourcePayload) {
-          updatedPayload = reorganizePayloadByKey(updatedPayload, resourcePayload, payloadKey)
-        }
-
-        let resourceUid: string | null = null
-        if (onEventNavigateTo) {
-          const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
-
-          const eventSource = new EventSource(eventsEndpoint, {
-            withCredentials: false,
-          })
-
-          const timeoutId = setTimeout(() => {
-            eventSource.close()
+        if (!requireConfirmation || window.confirm('Are you sure?')) {
+          if (onSuccessNavigateTo && onEventNavigateTo) {
             notification.error({
-              message: `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+              description: 'Submit action has defined both the "onSuccessNavigateTo" and "onEventNavigateTo" properties',
+              message: 'Warning submitting form',
               placement: 'bottomLeft',
             })
-            message.destroy()
-          }, onEventNavigateTo.timeout! * 1000)
 
-          eventSource.addEventListener('krateo', (event) => {
-            const data = JSON.parse(event.data as string) as EventData
-            if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
+            return
+          }
+
+          let updatedPayload = customPayload ?? {}
+          if (payloadToOverride && payloadToOverride.length > 0) {
+            payloadToOverride.forEach(({ name, value }) => {
+              updatedPayload = updateJson(updatedPayload, name, value)
+            })
+          }
+
+          if (payloadKey && resourcePayload) {
+            updatedPayload = reorganizePayloadByKey(updatedPayload, resourcePayload, payloadKey)
+          }
+
+          let resourceUid: string | null = null
+          if (onEventNavigateTo) {
+            const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
+
+            const eventSource = new EventSource(eventsEndpoint, {
+              withCredentials: false,
+            })
+
+            const timeoutId = setTimeout(() => {
               eventSource.close()
-              clearTimeout(timeoutId)
-
-              const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
-              if (!redirectUrl) {
-                notification.error({
-                  description: 'Error while redirecting',
-                  message: 'Impossible to redirect, the route contains an undefined value',
-                  placement: 'bottomLeft',
-                })
-                return
-              }
+              notification.error({
+                message: `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+                placement: 'bottomLeft',
+              })
               message.destroy()
-              closeDrawer()
-              void navigate(redirectUrl)
-            }
+            }, onEventNavigateTo.timeout! * 1000)
+
+            eventSource.addEventListener('krateo', (event) => {
+              const data = JSON.parse(event.data as string) as EventData
+              if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
+                eventSource.close()
+                clearTimeout(timeoutId)
+
+                const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                if (!redirectUrl) {
+                  notification.error({
+                    description: 'Error while redirecting',
+                    message: 'Impossible to redirect, the route contains an undefined value',
+                    placement: 'bottomLeft',
+                  })
+                  return
+                }
+                message.destroy()
+                closeDrawer()
+                void navigate(redirectUrl)
+              }
+            })
+          }
+
+          const updatedUrl = customPayload
+            ? updateNameNamespace(
+              path,
+              (updatedPayload as Payload)?.metadata?.name,
+              (updatedPayload as Payload)?.metadata?.namespace
+            )
+            : path
+
+          const res = await fetch(updatedUrl, {
+            body: JSON.stringify(updatedPayload || payload),
+            headers: {
+              ...getHeadersObject(headers),
+              Authorization: `Bearer ${getAccessToken()}`,
+            },
+            method: verb,
           })
+
+          if (onEventNavigateTo) {
+            message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
+          }
+
+          const json = (await res.json()) as RestApiResponse
+
+          if (!res.ok) {
+            notification.error({
+              description: errorMessage || json.message,
+              message: `${json.status} - ${json.reason}`,
+              placement: 'bottomLeft',
+            })
+            break
+          }
+
+          if (json.metadata?.uid) {
+            resourceUid = json.metadata.uid
+          }
+
+          if (!onEventNavigateTo) {
+            closeDrawer()
+
+            const actionName = verb === 'DELETE' ? 'deleted' : 'created'
+            notification.success({
+              description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
+              message: json.message,
+              placement: 'bottomLeft',
+            })
+          }
+
+          await queryClient.invalidateQueries()
+
+          if (onSuccessNavigateTo) {
+            closeDrawer()
+            await navigate(onSuccessNavigateTo)
+          }
         }
 
-        const updatedUrl = customPayload
-          ? updateNameNamespace(
-            path,
-            (updatedPayload as Payload)?.metadata?.name,
-            (updatedPayload as Payload)?.metadata?.namespace
-          )
-          : path
-
-        const res = await fetch(updatedUrl, {
-          body: JSON.stringify(updatedPayload || payload),
-          headers: {
-            ...getHeadersObject(headers),
-            Authorization: `Bearer ${getAccessToken()}`,
-          },
-          method: verb,
-        })
-
-        if (onEventNavigateTo) {
-          message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
-        }
-
-        const json = (await res.json()) as RestApiResponse
-
-        if (!res.ok) {
-          notification.error({
-            description: errorMessage || json.message,
-            message: `${json.status} - ${json.reason}`,
-            placement: 'bottomLeft',
-          })
-          break
-        }
-
-        if (json.metadata?.uid) {
-          resourceUid = json.metadata.uid
-        }
-
-        if (!onEventNavigateTo) {
-          closeDrawer()
-
-          const actionName = verb === 'DELETE' ? 'deleted' : 'created'
-          notification.success({
-            description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
-            message: json.message,
-            placement: 'bottomLeft',
-          })
-        }
-
-        await queryClient.invalidateQueries()
-
-        if (onSuccessNavigateTo) {
-          closeDrawer()
-          await navigate(onSuccessNavigateTo)
-        }
+        break
       }
-
-      break
+      default: break
     }
-    default: break
   }
+
+  return { handleAction }
 }

@@ -42,7 +42,12 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    actions: {}
+    clickActionId: composition-click-action
+    actions:
+      navigate:
+        - id: composition-click-action
+          resourceRefId: my-tab-list
+          type: navigate        
     title: Panel with Row
     items:
       - resourceRefId: first-row
@@ -52,6 +57,12 @@ spec:
       name: first-row
       namespace: krateo-system
       resource: rows
+      verb: GET
+    - id: my-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-tab-list
+      namespace: krateo-system
+      resource: tablists
       verb: GET
 ---
 kind: Panel

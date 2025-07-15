@@ -6,8 +6,8 @@ import useApp from 'antd/es/app/useApp'
 import { useLocation } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
+import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetAction, WidgetProps } from '../../types/Widget'
-import { handleAction } from '../../utils/actionHandler'
 import { getColorCode } from '../../utils/palette'
 import { getEndpointUrl, getResourceRef } from '../../utils/utils'
 
@@ -19,6 +19,7 @@ export type PanelWidgetData = WidgetType['spec']['widgetData']
 const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
   const location = useLocation()
   const { notification } = useApp()
+  const { handleAction } = useHandleAction()
 
   const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, tags, title, tooltip } = widgetData
 

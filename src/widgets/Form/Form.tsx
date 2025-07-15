@@ -5,8 +5,8 @@ import type { JSONSchema4 } from 'json-schema'
 import { useEffect, useId, useRef } from 'react'
 
 import { useConfigContext } from '../../context/ConfigContext'
+import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
-import { handleAction } from '../../utils/actionHandler'
 import type { Payload } from '../../utils/types'
 import { getResourceRef } from '../../utils/utils'
 import { useDrawerContext } from '../Drawer/DrawerContext'
@@ -66,6 +66,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
   const { config } = useConfigContext()
   const { notification } = useApp()
+  const { handleAction } = useHandleAction()
 
   /* https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#form */
   const formId = useId()

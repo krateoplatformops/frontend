@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntdButton, Result } from 'antd'
 
 import { useConfigContext } from '../../context/ConfigContext'
+import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
-import { handleAction } from '../../utils/actionHandler'
 import { getResourceRef } from '../../utils/utils'
 
 import styles from './Button.module.css'
@@ -16,6 +16,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
   const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const { config } = useConfigContext()
+  const { handleAction } = useHandleAction()
 
   const action = Object.values(actions)
     .flat()
