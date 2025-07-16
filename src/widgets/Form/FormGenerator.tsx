@@ -3,11 +3,11 @@ import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
-import type { ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 
+import AutoComplete from './fields/AutoComplete'
 import styles from './Form.module.css'
 
 type FormGeneratorType = {
@@ -16,6 +16,13 @@ type FormGeneratorType = {
   schema: JSONSchema4
   formId: string
   onSubmit: (values: object) => Promise<void>
+  autocomplete?: {
+    path: string
+    fetch: {
+      url: string
+      verb: string
+    }
+  }[]
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
@@ -41,7 +48,14 @@ const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
   return { optionalCount, totalCount }
 }
 
-const FormGenerator = ({ descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
+const FormGenerator = ({
+  autocomplete,
+  descriptionTooltip = false,
+  formId,
+  onSubmit,
+  schema,
+  showFormStructure = false,
+}: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields = schema.required as string[]
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
@@ -141,25 +155,37 @@ const renderField = (label: string, name: string, node: JSONSchema4, required: b
 
   switch (node.type) {
     case 'string': {
-      let inputComponent: ReactNode
+      const formItemContent = (() => {
+        if (autocomplete) {
+          const fetchOptions = autocomplete.find(({ path }) => path === name)?.fetch
+          if (fetchOptions) {
+            return <AutoComplete fetchOptions={fetchOptions} />
+          }
+        }
 
-      if (node.enum) {
-        if (node.enum.length > 4) {
-          inputComponent = <Select allowClear options={node.enum.map((opt) => ({ label: opt, value: opt }))} />
-        } else {
-          inputComponent = (
+        if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
+          const enumArr = node.enum as (string | number)[]
+          if (enumArr.length > 4) {
+            return (
+              <Select
+                allowClear
+                options={enumArr.map((opt) => ({ label: opt, value: opt }))}
+              />
+            )
+          }
+          return (
             <Radio.Group>
-              {node.enum.map((el, index) => (
-                <Radio key={`radio_${JSON.stringify(el)}_${index}`} value={el}>
-                  {typeof el === 'object' ? JSON.stringify(el) : el}
+              {enumArr.map((el) => (
+                <Radio key={`radio_${el}`} value={el}>
+                  {el}
                 </Radio>
               ))}
             </Radio.Group>
           )
         }
-      } else {
-        inputComponent = <Input />
-      }
+
+        return <Input />
+      })()
 
       return (
         <div className={styles.formField} id={name}>
@@ -172,7 +198,7 @@ const renderField = (label: string, name: string, node: JSONSchema4, required: b
             rules={rules}
             tooltip={descriptionTooltip && node.description ? node.description : undefined}
           >
-            {inputComponent}
+            {formItemContent}
           </Form.Item>
         </div>
       )

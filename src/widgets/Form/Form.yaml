@@ -97,6 +97,11 @@ spec:
         },
         "required": ["name", "image"]
       }
+    autocomplete:
+      - path: name
+        fetch:
+          url: https://loremipsum.io/api/1
+          verb: POST
     actions:
       rest:
         - id: firework-submit-action

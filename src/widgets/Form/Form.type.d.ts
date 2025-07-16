@@ -179,6 +179,10 @@ export interface Form {
        */
       submitActionId: string
       fieldDescription?: 'tooltip' | 'inline'
+      /**
+       * the string fields of the form to be used as autocomplete
+       */
+      autocomplete: { path: string; fetch: { url: string; verb: string } }[]
     }
     apiRef?: {
       name: string

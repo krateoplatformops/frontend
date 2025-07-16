@@ -60,7 +60,7 @@ const FormExtra = ({ disabled = false, form }: FormExtraProps): React.ReactNode 
 }
 
 const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
-  const { actions, fieldDescription, schema, stringSchema, submitActionId } = widgetData
+  const { actions, autocomplete, fieldDescription, schema, stringSchema, submitActionId } = widgetData
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
 
@@ -149,6 +149,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       {shouldRenderButtonsInsideForm ? <FormExtra form={formId} /> : null}
 
       <FormGenerator
+        autocomplete={autocomplete}
         descriptionTooltip={fieldDescription === 'tooltip'}
         formId={formId}
         onSubmit={values => onSubmit(values)}
