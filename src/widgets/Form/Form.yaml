@@ -69,6 +69,12 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    buttonConfig:
+      primary: 
+        label: Custom submit
+        icon: fa-rocket
+      secondary:
+        label: Go back
     submitActionId: firework-submit-action
     stringSchema: |
       {
