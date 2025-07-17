@@ -220,6 +220,43 @@
               },
               "additionalProperties": false
             },
+            "buttonConfig": {
+              "type": "object",
+              "description": "custom labels and icons for form buttons",
+              "properties": {
+                "primary": {
+                  "type": "object",
+                  "description": "primary button configuration",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "text label for primary button"
+                    },
+                    "icon": {
+                      "type": "string",
+                      "description": "icon name for primary button"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "secondary": {
+                  "type": "object",
+                  "description": "secondary button configuration",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "text label for secondary button"
+                    },
+                    "icon": {
+                      "type": "string",
+                      "description": "icon name for secondary button"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            },
             "schema": {
               "description": "the schema of the form as an object",
               "type": "object",
@@ -252,6 +289,7 @@
                   },
                   "fetch": {
                     "type": "object",
+                    "description": "remote data source configuration for autocomplete",
                     "required": ["url", "verb"],
                     "additionalProperties": false,
                     "properties": {

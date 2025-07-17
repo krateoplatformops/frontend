@@ -167,9 +167,40 @@ export interface Form {
         }[]
       }
       /**
+       * custom labels and icons for form buttons
+       */
+      buttonConfig?: {
+        /**
+         * primary button configuration
+         */
+        primary?: {
+          /**
+           * text label for primary button
+           */
+          label?: string
+          /**
+           * icon name for primary button
+           */
+          icon?: string
+        }
+        /**
+         * secondary button configuration
+         */
+        secondary?: {
+          /**
+           * text label for secondary button
+           */
+          label?: string
+          /**
+           * icon name for secondary button
+           */
+          icon?: string
+        }
+      }
+      /**
        * the schema of the form as an object
        */
-      schema?: object
+      schema?: {}
       /**
        * the schema of the form as a string
        */
@@ -180,9 +211,27 @@ export interface Form {
       submitActionId: string
       fieldDescription?: 'tooltip' | 'inline'
       /**
-       * the string fields of the form to be used as autocomplete
+       * autocomplete configuration for the form fields
        */
-      autocomplete: { path: string; fetch: { url: string; verb: string } }[]
+      autocomplete?: {
+        /**
+         * the path of the field to apply autocomplete
+         */
+        path: string
+        /**
+         * remote data source configuration for autocomplete
+         */
+        fetch: {
+          /**
+           * the URL to fetch autocomplete options from
+           */
+          url: string
+          /**
+           * HTTP method to use for fetching options
+           */
+          verb: 'GET' | 'POST'
+        }
+      }[]
     }
     apiRef?: {
       name: string

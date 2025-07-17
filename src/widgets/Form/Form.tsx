@@ -1,3 +1,5 @@
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Result, Space } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import dayjs from 'dayjs'
@@ -42,25 +44,37 @@ const convertDayjsToISOString = (values: object): object => {
 }
 
 interface FormExtraProps {
+  buttonConfig?: FormWidgetData['buttonConfig']
   disabled?: boolean | undefined
   form?: string | undefined
 }
 
-const FormExtra = ({ disabled = false, form }: FormExtraProps): React.ReactNode => {
+const FormExtra = ({ buttonConfig, disabled = false, form }: FormExtraProps): React.ReactNode => {
   return (
     <Space>
-      <Button disabled={disabled} form={form} htmlType='reset' type='default'>
-        Reset
+      <Button
+        disabled={disabled}
+        form={form}
+        htmlType='reset'
+        icon={buttonConfig?.secondary?.icon ? <FontAwesomeIcon icon={buttonConfig?.secondary?.icon as IconProp} /> : undefined}
+        type='default'
+      >
+        {buttonConfig?.secondary?.label || 'Reset'}
       </Button>
-      <Button form={form} htmlType='submit' type='primary'>
-        Submit
+      <Button
+        form={form}
+        htmlType='submit'
+        icon={buttonConfig?.primary?.icon ? <FontAwesomeIcon icon={buttonConfig?.primary?.icon as IconProp} /> : undefined}
+        type='primary'
+      >
+        {buttonConfig?.primary?.label || 'Submit'}
       </Button>
     </Space>
   )
 }
 
 const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
-  const { actions, autocomplete, fieldDescription, schema, stringSchema, submitActionId } = widgetData
+  const { actions, autocomplete, buttonConfig, fieldDescription, schema, stringSchema, submitActionId } = widgetData
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
 
@@ -73,10 +87,10 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
   useEffect(() => {
     if (insideDrawer && !alreadySetDrawerData.current) {
-      setDrawerData({ extra: <FormExtra form={formId} /> })
+      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} /> })
       alreadySetDrawerData.current = true
     }
-  }, [formId, insideDrawer, setDrawerData])
+  }, [buttonConfig, formId, insideDrawer, setDrawerData])
 
   const action = Object.values(actions)
     .flat()
@@ -126,7 +140,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     }
 
     if (!resourceRef) {
-      setDrawerData({ extra: <FormExtra form={formId} /> })
+      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} /> })
     } else {
       const { path, payload: resourcePayload, verb } = resourceRef
 
@@ -137,7 +151,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       // TODO: handle disabled buttons
       if (action.onEventNavigateTo) {
         /* FIXME: This is a bit dirty, should disable the already present buttons instead */
-        setDrawerData({ extra: <FormExtra disabled form={formId} /> })
+        setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} /> })
       }
 
       await handleAction(action, url, verb, payload, resourcePayload)
@@ -146,7 +160,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
   return (
     <div className={styles.form}>
-      {shouldRenderButtonsInsideForm ? <FormExtra form={formId} /> : null}
+      {shouldRenderButtonsInsideForm ? <FormExtra buttonConfig={buttonConfig} form={formId} /> : null}
 
       <FormGenerator
         autocomplete={autocomplete}

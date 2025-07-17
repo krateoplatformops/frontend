@@ -5,7 +5,7 @@ export interface RoutesLoader {
    */
   kind: string
   spec: {
-    widgetData: object
+    widgetData: {}
     apiRef?: {
       name: string
       namespace: string

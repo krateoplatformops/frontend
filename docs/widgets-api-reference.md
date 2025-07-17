@@ -467,10 +467,22 @@ name of the k8s Custom Resource
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].title | no | title shown in the modal header | string |
+| buttonConfig | no | custom labels and icons for form buttons | object |
+| buttonConfig.primary | no | primary button configuration | object |
+| buttonConfig.primary.label | no | text label for primary button | string |
+| buttonConfig.primary.icon | no | icon name for primary button | string |
+| buttonConfig.secondary | no | secondary button configuration | object |
+| buttonConfig.secondary.label | no | text label for secondary button | string |
+| buttonConfig.secondary.icon | no | icon name for secondary button | string |
 | schema | no | the schema of the form as an object | object |
 | stringSchema | no | the schema of the form as a string | string |
 | submitActionId | yes | the id of the action to be called when the form is submitted | string |
 | fieldDescription | no |  | `tooltip` \| `inline` |
+| autocomplete | no | autocomplete configuration for the form fields | array |
+| autocomplete[].path | yes | the path of the field to apply autocomplete | string |
+| autocomplete[].fetch | yes | remote data source configuration for autocomplete | object |
+| autocomplete[].fetch.url | yes | the URL to fetch autocomplete options from | string |
+| autocomplete[].fetch.verb | yes | HTTP method to use for fetching options | `GET` \| `POST` |
 
 <details>
 <summary>Example</summary>
@@ -511,6 +523,11 @@ spec:
         },
         "required": ["name", "image"]
       }
+    autocomplete:
+      - path: name
+        fetch:
+          url: https://loremipsum.io/api/1
+          method: GET
     actions:
       rest:
         - id: firework-submit-action
