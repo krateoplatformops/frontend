@@ -323,7 +323,9 @@ export const useHandleAction = () => {
             : path
 
           const res = await fetch(updatedUrl, {
-            body: JSON.stringify(updatedPayload || payload),
+            ...(verb?.toUpperCase() !== 'GET' ? {
+              body: JSON.stringify(updatedPayload || payload),
+            } : {}),
             headers: {
               ...getHeadersObject(headers),
               Authorization: `Bearer ${getAccessToken()}`,
