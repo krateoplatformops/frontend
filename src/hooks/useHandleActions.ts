@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
-import type { WidgetAction } from '../types/Widget'
+import type { ResourceRef, WidgetAction } from '../types/Widget'
 import { getAccessToken } from '../utils/getAccessToken'
 import type { Payload, RestApiResponse } from '../utils/types'
 import { getHeadersObject } from '../utils/utils'
@@ -225,7 +225,7 @@ export const useHandleAction = () => {
   const handleAction = async (
     action: WidgetAction,
     path: string,
-    verb?: 'GET' | 'POST' | 'DELETE',
+    verb?: ResourceRef['verb'],
     customPayload?: Record<string, unknown>,
     resourcePayload?: object,
   ) => {
@@ -330,7 +330,7 @@ export const useHandleAction = () => {
               : path
 
             const res = await fetch(updatedUrl, {
-              ...(verb?.toUpperCase() !== 'GET' ? {
+              ...(verb?.toUpperCase() === 'POST' ? {
                 body: JSON.stringify(updatedPayload || payload),
               } : {}),
               headers: {
