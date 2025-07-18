@@ -133,7 +133,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     if (action.type !== 'rest') {
       notification.error({
         description: 'Submit action type is not "rest"',
-        message: 'Error submitting form',
+        message: 'Error while executing the action',
         placement: 'bottomLeft',
       })
 
@@ -141,22 +141,30 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     }
 
     if (!resourceRef) {
+      notification.error({
+        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
       setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} /> })
-    } else {
-      const { path, payload: resourcePayload, verb } = resourceRef
 
-      const url = config?.api.SNOWPLOW_API_BASE_URL + path
-      const values = convertDayjsToISOString(formValues)
-      const payload: Payload = { ...resourcePayload, ...values }
-
-      // TODO: handle disabled buttons
-      if (action.onEventNavigateTo) {
-        /* FIXME: This is a bit dirty, should disable the already present buttons instead */
-        setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} /> })
-      }
-
-      await handleAction(action, url, verb, payload, resourcePayload)
+      return
     }
+
+    const { path, payload: resourcePayload, verb } = resourceRef
+
+    const url = config?.api.SNOWPLOW_API_BASE_URL + path
+    const values = convertDayjsToISOString(formValues)
+    const payload: Payload = { ...resourcePayload, ...values }
+
+    // TODO: handle disabled buttons
+    if (action.onEventNavigateTo) {
+      /* FIXME: This is a bit dirty, should disable the already present buttons instead */
+      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} /> })
+    }
+
+    await handleAction(action, url, verb, payload, resourcePayload)
   }
 
   if (isActionLoading) {

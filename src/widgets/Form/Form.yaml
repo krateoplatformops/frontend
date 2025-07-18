@@ -103,11 +103,11 @@ spec:
         },
         "required": ["name", "image"]
       }
-    autocomplete:
-      - path: name
-        fetch:
-          url: https://loremipsum.io/api/1
-          verb: POST
+    # autocomplete:
+    #   - path: name
+    #     fetch:
+    #       url: https://loremipsum.io/api/1
+    #       verb: POST
     actions:
       rest:
         - id: firework-submit-action
@@ -118,6 +118,8 @@ spec:
           payloadToOverride:
             - name: metadata.name
               value: ${ git.toRepo.name }
+          loading:
+            display: true
   resourcesRefs:
     - id: resource-ref-1
       apiVersion: composition.krateo.io/v2-0-0

@@ -81,11 +81,15 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
 | actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
 | actions.rest[].payloadToOverride[].value | yes | value to use for overriding the field | string |
+| actions.rest[].loading | no |  | object |
+| actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].loading | no |  | object |
+| actions.navigate[].loading.display | yes |  | boolean |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -93,12 +97,16 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openDrawer[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
+| actions.openDrawer[].loading | no |  | object |
+| actions.openDrawer[].loading.display | yes |  | boolean |
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].title | no | title shown in the modal header | string |
+| actions.openModal[].loading | no |  | object |
+| actions.openModal[].loading.display | yes |  | boolean |
 | color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
 | label | no | the label of the button | string |
 | icon | no | the icon of the button (font awesome icon name eg: `fa-inbox`) | string |
@@ -449,11 +457,15 @@ name of the k8s Custom Resource
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
 | actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
 | actions.rest[].payloadToOverride[].value | yes | value to use for overriding the field | string |
+| actions.rest[].loading | no |  | object |
+| actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].loading | no |  | object |
+| actions.navigate[].loading.display | yes |  | boolean |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -461,12 +473,16 @@ name of the k8s Custom Resource
 | actions.openDrawer[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
+| actions.openDrawer[].loading | no |  | object |
+| actions.openDrawer[].loading.display | yes |  | boolean |
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].title | no | title shown in the modal header | string |
+| actions.openModal[].loading | no |  | object |
+| actions.openModal[].loading.display | yes |  | boolean |
 | buttonConfig | no | custom labels and icons for form buttons | object |
 | buttonConfig.primary | no | primary button configuration | object |
 | buttonConfig.primary.label | no | text label for primary button | string |
@@ -752,11 +768,15 @@ Panel is a container to display information
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
 | actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
 | actions.rest[].payloadToOverride[].value | yes | value to use for overriding the field | string |
+| actions.rest[].loading | no |  | object |
+| actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].loading | no |  | object |
+| actions.navigate[].loading.display | yes |  | boolean |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -764,12 +784,16 @@ Panel is a container to display information
 | actions.openDrawer[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openDrawer[].size | no | drawer size to be displayed | `default` \| `large` |
 | actions.openDrawer[].title | no | title shown in the drawer header | string |
+| actions.openDrawer[].loading | no |  | object |
+| actions.openDrawer[].loading.display | yes |  | boolean |
 | actions.openModal | no | actions to open modal dialog components | array |
 | actions.openModal[].id | yes | unique identifier for the modal action | string |
 | actions.openModal[].type | yes | type of modal action | `openModal` |
 | actions.openModal[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.openModal[].requireConfirmation | no | whether user confirmation is required before opening | boolean |
 | actions.openModal[].title | no | title shown in the modal header | string |
+| actions.openModal[].loading | no |  | object |
+| actions.openModal[].loading.display | yes |  | boolean |
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
 | footer | no | footer section of the panel containing additional items | array |
 | footer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
