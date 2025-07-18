@@ -227,6 +227,7 @@ spec:
     clickActionId: composition-click-action
     footer:
       - resourceRefId: composition-test-button
+      - resourceRefId: button-post-nginx
     tags: 
       - krateo-system
     icon:
@@ -258,6 +259,12 @@ spec:
       name: my-tab-list
       namespace: krateo-system
       resource: tablists
+      verb: GET
+    - id: button-post-nginx
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-post-nginx
+      namespace: krateo-system
+      resource: buttons
       verb: GET
 ---
 kind: Panel

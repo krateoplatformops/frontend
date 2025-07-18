@@ -229,161 +229,169 @@ export const useHandleAction = () => {
     customPayload?: Record<string, unknown>,
     resourcePayload?: object,
   ) => {
-    const { loading, requireConfirmation, type } = action
+    try {
+      const { loading, requireConfirmation, type } = action
 
-    if (loading?.display) {
-      setIsActionLoading(true)
-    }
+      if (loading?.display) {
+        setIsActionLoading(true)
+      }
 
-    switch (type) {
-      case 'navigate':
-        if (!requireConfirmation || window.confirm('Are you sure?')) {
-          await navigate(path)
+      switch (type) {
+        case 'navigate':
+          if (!requireConfirmation || window.confirm('Are you sure?')) {
+            await navigate(path)
+          }
+
+          break
+        case 'openDrawer': {
+          const { size, title } = action
+
+          openDrawer({ size, title, widgetEndpoint: path })
+
+          break
         }
+        case 'openModal': {
+          const { title } = action
 
-        break
-      case 'openDrawer': {
-        const { size, title } = action
+          openModal({ title, widgetEndpoint: path })
 
-        openDrawer({ size, title, widgetEndpoint: path })
+          break
+        }
+        case 'rest': {
+          const { errorMessage, headers = [], onEventNavigateTo, onSuccessNavigateTo, payload, payloadKey, payloadToOverride, successMessage } = action
 
-        break
-      }
-      case 'openModal': {
-        const { title } = action
-
-        openModal({ title, widgetEndpoint: path })
-
-        break
-      }
-      case 'rest': {
-        const { errorMessage, headers = [], onEventNavigateTo, onSuccessNavigateTo, payload, payloadKey, payloadToOverride, successMessage } = action
-
-        if (!requireConfirmation || window.confirm('Are you sure?')) {
-          if (onSuccessNavigateTo && onEventNavigateTo) {
-            notification.error({
-              description: 'Submit action has defined both the "onSuccessNavigateTo" and "onEventNavigateTo" properties',
-              message: 'Warning submitting form',
-              placement: 'bottomLeft',
-            })
-
-            return
-          }
-
-          let updatedPayload = customPayload ?? {}
-          if (payloadToOverride && payloadToOverride.length > 0) {
-            payloadToOverride.forEach(({ name, value }) => {
-              updatedPayload = updateJson(updatedPayload, name, value)
-            })
-          }
-
-          if (payloadKey && resourcePayload) {
-            updatedPayload = reorganizePayloadByKey(updatedPayload, resourcePayload, payloadKey)
-          }
-
-          let resourceUid: string | null = null
-          if (onEventNavigateTo) {
-            const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
-
-            const eventSource = new EventSource(eventsEndpoint, {
-              withCredentials: false,
-            })
-
-            const timeoutId = setTimeout(() => {
-              eventSource.close()
+          if (!requireConfirmation || window.confirm('Are you sure?')) {
+            if (onSuccessNavigateTo && onEventNavigateTo) {
               notification.error({
-                message: `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+                description: 'Action has defined both the "onSuccessNavigateTo" and "onEventNavigateTo" properties',
+                message: 'Warning while executing the action',
                 placement: 'bottomLeft',
               })
-              message.destroy()
-            }, onEventNavigateTo.timeout! * 1000)
 
-            eventSource.addEventListener('krateo', (event) => {
-              const data = JSON.parse(event.data as string) as EventData
-              if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
+              return
+            }
+
+            let updatedPayload = customPayload ?? {}
+            if (payloadToOverride && payloadToOverride.length > 0) {
+              payloadToOverride.forEach(({ name, value }) => {
+                updatedPayload = updateJson(updatedPayload, name, value)
+              })
+            }
+
+            if (payloadKey && resourcePayload) {
+              updatedPayload = reorganizePayloadByKey(updatedPayload, resourcePayload, payloadKey)
+            }
+
+            let resourceUid: string | null = null
+            if (onEventNavigateTo) {
+              const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
+
+              const eventSource = new EventSource(eventsEndpoint, {
+                withCredentials: false,
+              })
+
+              const timeoutId = setTimeout(() => {
                 eventSource.close()
-                clearTimeout(timeoutId)
-
-                const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
-                if (!redirectUrl) {
-                  notification.error({
-                    description: 'Error while redirecting',
-                    message: 'Impossible to redirect, the route contains an undefined value',
-                    placement: 'bottomLeft',
-                  })
-                  return
-                }
+                notification.error({
+                  message: `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+                  placement: 'bottomLeft',
+                })
                 message.destroy()
-                closeDrawer()
-                void navigate(redirectUrl)
-              }
+              }, onEventNavigateTo.timeout! * 1000)
+
+              eventSource.addEventListener('krateo', (event) => {
+                const data = JSON.parse(event.data as string) as EventData
+                if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
+                  eventSource.close()
+                  clearTimeout(timeoutId)
+
+                  const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                  if (!redirectUrl) {
+                    notification.error({
+                      description: 'Error while redirecting',
+                      message: 'Impossible to redirect, the route contains an undefined value',
+                      placement: 'bottomLeft',
+                    })
+                    return
+                  }
+                  message.destroy()
+                  closeDrawer()
+                  void navigate(redirectUrl)
+                }
+              })
+            }
+
+            const updatedUrl = customPayload
+              ? updateNameNamespace(
+                path,
+                (updatedPayload as Payload)?.metadata?.name,
+                (updatedPayload as Payload)?.metadata?.namespace
+              )
+              : path
+
+            const res = await fetch(updatedUrl, {
+              ...(verb?.toUpperCase() !== 'GET' ? {
+                body: JSON.stringify(updatedPayload || payload),
+              } : {}),
+              headers: {
+                ...getHeadersObject(headers),
+                Authorization: `Bearer ${getAccessToken()}`,
+              },
+              method: verb,
             })
+
+            if (onEventNavigateTo) {
+              message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
+            }
+
+            const json = (await res.json()) as RestApiResponse
+
+            if (!res.ok) {
+              notification.error({
+                description: errorMessage || json.message,
+                message: `${json.status} - ${json.reason}`,
+                placement: 'bottomLeft',
+              })
+              break
+            }
+
+            if (json.metadata?.uid) {
+              resourceUid = json.metadata.uid
+            }
+
+            if (!onEventNavigateTo) {
+              closeDrawer()
+
+              const actionName = verb === 'DELETE' ? 'deleted' : 'created'
+              notification.success({
+                description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
+                message: json.message,
+                placement: 'bottomLeft',
+              })
+            }
+
+            await queryClient.invalidateQueries()
+
+            if (onSuccessNavigateTo) {
+              closeDrawer()
+              await navigate(onSuccessNavigateTo)
+            }
           }
 
-          const updatedUrl = customPayload
-            ? updateNameNamespace(
-              path,
-              (updatedPayload as Payload)?.metadata?.name,
-              (updatedPayload as Payload)?.metadata?.namespace
-            )
-            : path
-
-          const res = await fetch(updatedUrl, {
-            ...(verb?.toUpperCase() !== 'GET' ? {
-              body: JSON.stringify(updatedPayload || payload),
-            } : {}),
-            headers: {
-              ...getHeadersObject(headers),
-              Authorization: `Bearer ${getAccessToken()}`,
-            },
-            method: verb,
-          })
-
-          if (onEventNavigateTo) {
-            message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
-          }
-
-          const json = (await res.json()) as RestApiResponse
-
-          if (!res.ok) {
-            notification.error({
-              description: errorMessage || json.message,
-              message: `${json.status} - ${json.reason}`,
-              placement: 'bottomLeft',
-            })
-            break
-          }
-
-          if (json.metadata?.uid) {
-            resourceUid = json.metadata.uid
-          }
-
-          if (!onEventNavigateTo) {
-            closeDrawer()
-
-            const actionName = verb === 'DELETE' ? 'deleted' : 'created'
-            notification.success({
-              description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
-              message: json.message,
-              placement: 'bottomLeft',
-            })
-          }
-
-          await queryClient.invalidateQueries()
-
-          if (onSuccessNavigateTo) {
-            closeDrawer()
-            await navigate(onSuccessNavigateTo)
-          }
+          break
         }
-
-        break
+        default: break
       }
-      default: break
-    }
 
-    if (loading?.display) {
-      setIsActionLoading(false)
+      if (loading?.display) {
+        setIsActionLoading(false)
+      }
+    } catch (error) {
+      notification.error({
+        description: `Unhandled error: ${JSON.stringify(error)}`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
     }
   }
 
