@@ -19,7 +19,7 @@ export type PanelWidgetData = WidgetType['spec']['widgetData']
 const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
   const location = useLocation()
   const { notification } = useApp()
-  const { handleAction } = useHandleAction()
+  const { handleAction, isActionLoading } = useHandleAction()
 
   const { actions, clickActionId, footer, headerLeft, headerRight, icon, items, tags, title, tooltip } = widgetData
 
@@ -115,6 +115,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
         )
       }
       key={uid}
+      loading={isActionLoading}
       onClick={handleClick}
       title={
         (title || icon) && (

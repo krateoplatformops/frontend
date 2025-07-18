@@ -65,12 +65,18 @@ export type WidgetActions = {
       value: string
     }[]
     headers?: string[]
+    loading?: {
+      display: boolean
+    }
   }[]
   navigate?: {
     id: string
     type: 'navigate'
     resourceRefId: string
     requireConfirmation?: boolean
+    loading?: {
+      display: boolean
+    }
   }[]
   openDrawer?: {
     id: string
@@ -79,6 +85,9 @@ export type WidgetActions = {
     requireConfirmation?: boolean
     size?: 'default' | 'large'
     title?: string
+    loading?: {
+      display: boolean
+    }
   }[]
   openModal?: {
     id: string
@@ -86,6 +95,9 @@ export type WidgetActions = {
     resourceRefId: string
     requireConfirmation?: boolean
     title?: string
+    loading?: {
+      display: boolean
+    }
   }[]
 }
 

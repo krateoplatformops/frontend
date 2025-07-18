@@ -89,6 +89,9 @@ export interface Form {
              */
             value: string
           }[]
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * client-side navigation actions
@@ -110,6 +113,9 @@ export interface Form {
            * whether user confirmation is required before navigating
            */
           requireConfirmation?: boolean
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * actions to open side drawer components
@@ -139,6 +145,9 @@ export interface Form {
            * title shown in the drawer header
            */
           title?: string
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * actions to open modal dialog components
@@ -164,6 +173,9 @@ export interface Form {
            * title shown in the modal header
            */
           title?: string
+          loading?: {
+            display: boolean
+          }
         }[]
       }
       /**

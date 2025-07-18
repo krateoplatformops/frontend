@@ -1,6 +1,7 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, Result, Space } from 'antd'
+import { Button, Result, Space, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
@@ -80,7 +81,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
   const { config } = useConfigContext()
   const { notification } = useApp()
-  const { handleAction } = useHandleAction()
+  const { handleAction, isActionLoading } = useHandleAction()
 
   /* https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#form */
   const formId = useId()
@@ -156,6 +157,14 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
       await handleAction(action, url, verb, payload, resourcePayload)
     }
+  }
+
+  if (isActionLoading) {
+    return (
+      <div className={styles.loading}>
+        <Spin indicator={<LoadingOutlined />} spinning />
+      </div>
+    )
   }
 
   return (

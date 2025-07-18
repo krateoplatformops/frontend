@@ -16,7 +16,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
   const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const { config } = useConfigContext()
-  const { handleAction } = useHandleAction()
+  const { handleAction, isActionLoading } = useHandleAction()
 
   const action = Object.values(actions)
     .flat()
@@ -69,6 +69,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
         color={color || 'default'}
         icon={icon ? <FontAwesomeIcon icon={icon as IconProp} /> : undefined}
         key={uid}
+        loading={isActionLoading}
         onClick={(event) => handleClick(event)}
         shape={shape || 'default'}
         size={size || 'middle'}

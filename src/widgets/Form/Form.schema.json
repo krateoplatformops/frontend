@@ -115,6 +115,16 @@
                             }
                           }
                         }
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
                     "required": ["id", "type", "resourceRefId"]
@@ -143,6 +153,16 @@
                       "requireConfirmation": {
                         "type": "boolean",
                         "description": "whether user confirmation is required before navigating"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
                     "required": ["id", "type", "resourceRefId"]
@@ -180,6 +200,16 @@
                       "title": {
                         "type": "string",
                         "description": "title shown in the drawer header"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
                     "required": ["id", "type", "resourceRefId"]
@@ -212,6 +242,16 @@
                       "title": {
                         "type": "string",
                         "description": "title shown in the modal header"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
                     "required": ["id", "type", "resourceRefId"]

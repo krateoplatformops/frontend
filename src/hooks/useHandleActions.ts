@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import useApp from 'antd/es/app/useApp'
 import { merge } from 'lodash'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
@@ -219,6 +220,7 @@ export const useHandleAction = () => {
   const queryClient = useQueryClient()
   const { message, notification } = useApp()
   const { config } = useConfigContext()
+  const [isActionLoading, setIsActionLoading] = useState<boolean>(false)
 
   const handleAction = async (
     action: WidgetAction,
@@ -227,7 +229,11 @@ export const useHandleAction = () => {
     customPayload?: Record<string, unknown>,
     resourcePayload?: object,
   ) => {
-    const { requireConfirmation, type } = action
+    const { loading, requireConfirmation, type } = action
+
+    if (loading?.display) {
+      setIsActionLoading(true)
+    }
 
     switch (type) {
       case 'navigate':
@@ -375,7 +381,11 @@ export const useHandleAction = () => {
       }
       default: break
     }
+
+    if (loading?.display) {
+      setIsActionLoading(false)
+    }
   }
 
-  return { handleAction }
+  return { handleAction, isActionLoading }
 }
