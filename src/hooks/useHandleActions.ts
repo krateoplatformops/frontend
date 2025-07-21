@@ -229,16 +229,17 @@ export const useHandleAction = () => {
     customPayload?: Record<string, unknown>,
     resourcePayload?: object,
   ) => {
-    try {
-      const { loading, requireConfirmation, type } = action
+    if (action.loading?.display) {
+      setIsActionLoading(true)
+    }
 
-      if (loading?.display) {
-        setIsActionLoading(true)
-      }
+    try {
+      const { requireConfirmation, type } = action
 
       switch (type) {
         case 'navigate':
           if (!requireConfirmation || window.confirm('Are you sure?')) {
+            setIsActionLoading(false)
             await navigate(path)
           }
 
@@ -246,6 +247,7 @@ export const useHandleAction = () => {
         case 'openDrawer': {
           const { size, title } = action
 
+          setIsActionLoading(false)
           openDrawer({ size, title, widgetEndpoint: path })
 
           break
@@ -253,6 +255,7 @@ export const useHandleAction = () => {
         case 'openModal': {
           const { title } = action
 
+          setIsActionLoading(false)
           openModal({ title, widgetEndpoint: path })
 
           break
@@ -267,6 +270,8 @@ export const useHandleAction = () => {
                 message: 'Warning while executing the action',
                 placement: 'bottomLeft',
               })
+
+              setIsActionLoading(false)
 
               return
             }
@@ -291,6 +296,7 @@ export const useHandleAction = () => {
               })
 
               const timeoutId = setTimeout(() => {
+                setIsActionLoading(false)
                 eventSource.close()
                 notification.error({
                   message: `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
@@ -315,6 +321,7 @@ export const useHandleAction = () => {
                     return
                   }
                   message.destroy()
+                  setIsActionLoading(false)
                   closeDrawer()
                   void navigate(redirectUrl)
                 }
@@ -345,6 +352,8 @@ export const useHandleAction = () => {
             }
 
             const json = (await res.json()) as RestApiResponse
+
+            setIsActionLoading(false)
 
             if (!res.ok) {
               notification.error({
@@ -382,16 +391,14 @@ export const useHandleAction = () => {
         }
         default: break
       }
-
-      if (loading?.display) {
-        setIsActionLoading(false)
-      }
     } catch (error) {
       notification.error({
         description: `Unhandled error: ${JSON.stringify(error)}`,
         message: 'Error while executing the action',
         placement: 'bottomLeft',
       })
+    } finally {
+      setIsActionLoading(false)
     }
   }
 

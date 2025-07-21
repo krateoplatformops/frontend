@@ -227,7 +227,7 @@ spec:
     clickActionId: composition-click-action
     footer:
       - resourceRefId: composition-test-button
-      - resourceRefId: button-post-nginx
+      - resourceRefId: button-test-action-get
     tags: 
       - krateo-system
     icon:
@@ -241,6 +241,8 @@ spec:
         - id: composition-click-action
           resourceRefId: my-tab-list
           type: navigate
+          loading:
+            display: true
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -260,9 +262,9 @@ spec:
       namespace: krateo-system
       resource: tablists
       verb: GET
-    - id: button-post-nginx
+    - id: button-test-action-get
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-post-nginx
+      name: button-test-action-get
       namespace: krateo-system
       resource: buttons
       verb: GET
