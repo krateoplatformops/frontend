@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { Result, Skeleton } from 'antd'
-import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
@@ -162,7 +161,6 @@ const WidgetRenderer = ({
   widgetEndpoint,
   wrapper,
 }: WidgetRendererProps) => {
-  const navigate = useNavigate()
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
 
@@ -251,7 +249,7 @@ const WidgetRenderer = ({
     catchError({
       status: widget.code,
     }, 'notification')
-    void navigate('/login')
+    window.location.replace('/login')
   }
 
   if (wrapper) {

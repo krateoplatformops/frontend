@@ -1,6 +1,6 @@
 import { useIsFetching } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { useLocation, useNavigate, useSearchParams } from 'react-router'
+import { useLocation, useSearchParams } from 'react-router'
 
 import { useRoutesContext } from '../../context/RoutesContext'
 import Page404 from '../../pages/Page404'
@@ -14,7 +14,6 @@ import styles from './WidgetPage.module.css'
 
 export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: string }) => {
   const location = useLocation()
-  const navigate = useNavigate()
   const { menuRoutes } = useRoutesContext()
   const [searchParams] = useSearchParams()
   const queryParamWidgetEndpoint = searchParams.get('widgetEndpoint')
@@ -25,9 +24,9 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
     const userData = localStorage.getItem('K_user')
 
     if (!userData) {
-      void navigate('/login')
+      window.location.replace('/login')
     }
-  }, [navigate])
+  }, [])
 
   const isFetchingRoutes = useIsFetching({
     predicate: (query) => {

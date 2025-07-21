@@ -1,6 +1,5 @@
 import { App, Result } from 'antd'
 import { useCallback } from 'react'
-import { useNavigate } from 'react-router'
 
 export interface CatchError {
   name?: string
@@ -14,7 +13,6 @@ export interface CatchError {
 
 const useCatchError = () => {
   const { notification } = App.useApp()
-  const navigate = useNavigate()
 
   const catchError = useCallback((error?: CatchError, type: 'result' | 'notification' = 'notification') => {
     let message: string = error?.message || "Ops! Something didn't work"
@@ -22,7 +20,7 @@ const useCatchError = () => {
 
     if ((error?.status === 401 || error?.code === 401)) {
       description = error?.data?.message || 'You are not authorized to access this page.'
-      void navigate('/login')
+      window.location.replace('/login')
     } else if (error?.status === 500 || error?.code === 500) {
       message = 'Internal Server Error'
       description = error?.data?.message || 'The server encountered an unexpected condition.'
@@ -45,7 +43,7 @@ const useCatchError = () => {
           message,
         })
     }
-  }, [navigate, notification])
+  }, [notification])
 
   return { catchError }
 }
