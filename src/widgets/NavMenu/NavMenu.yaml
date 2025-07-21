@@ -47,6 +47,7 @@ spec:
       - resourceRefId: button-delete-fireworks-app
       - resourceRefId: panel-paragraph
       - resourceRefId: panel-yaml-viewer
+      - resourceRefId: panel-markdown
       - resourceRefId: panel-event-list
       - resourceRefId: panel-tab-list
       - resourceRefId: panel-line-chart
@@ -67,6 +68,12 @@ spec:
     - id: panel-yaml-viewer
       apiVersion: widgets.templates.krateo.io/v1beta1
       name: panel-yaml-viewer
+      namespace: krateo-system
+      resource: panels
+      verb: GET
+    - id: panel-markdown
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: panel-markdown
       namespace: krateo-system
       resource: panels
       verb: GET
