@@ -48,9 +48,10 @@ interface FormExtraProps {
   buttonConfig?: FormWidgetData['buttonConfig']
   disabled?: boolean | undefined
   form?: string | undefined
+  loading?: boolean
 }
 
-const FormExtra = ({ buttonConfig, disabled = false, form }: FormExtraProps): React.ReactNode => {
+const FormExtra = ({ buttonConfig, disabled = false, form, loading }: FormExtraProps): React.ReactNode => {
   return (
     <Space>
       <Button
@@ -66,6 +67,7 @@ const FormExtra = ({ buttonConfig, disabled = false, form }: FormExtraProps): Re
         form={form}
         htmlType='submit'
         icon={buttonConfig?.primary?.icon ? <FontAwesomeIcon icon={buttonConfig?.primary?.icon as IconProp} /> : undefined}
+        loading={loading}
         type='primary'
       >
         {buttonConfig?.primary?.label || 'Submit'}
@@ -88,10 +90,10 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
   useEffect(() => {
     if (insideDrawer && !alreadySetDrawerData.current) {
-      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} /> })
+      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} loading={isActionLoading} /> })
       alreadySetDrawerData.current = true
     }
-  }, [buttonConfig, formId, insideDrawer, setDrawerData])
+  }, [buttonConfig, formId, insideDrawer, isActionLoading, setDrawerData])
 
   const action = Object.values(actions)
     .flat()
@@ -147,7 +149,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
         placement: 'bottomLeft',
       })
 
-      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} /> })
+      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} loading={isActionLoading} /> })
 
       return
     }
@@ -161,7 +163,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     // TODO: handle disabled buttons
     if (action.onEventNavigateTo) {
       /* FIXME: This is a bit dirty, should disable the already present buttons instead */
-      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} /> })
+      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} loading={isActionLoading} /> })
     }
 
     await handleAction(action, url, verb, payload, resourcePayload)
@@ -177,7 +179,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
   return (
     <div className={styles.form}>
-      {shouldRenderButtonsInsideForm ? <FormExtra buttonConfig={buttonConfig} form={formId} /> : null}
+      {shouldRenderButtonsInsideForm ? <FormExtra buttonConfig={buttonConfig} form={formId} loading={isActionLoading} /> : null}
 
       <FormGenerator
         autocomplete={autocomplete}
