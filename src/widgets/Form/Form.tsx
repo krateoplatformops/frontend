@@ -99,18 +99,6 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     .flat()
     .find(({ id }) => id === submitActionId)
 
-  if (!action) {
-    return (
-      <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`The widget definition does not include an action (ID: ${submitActionId})`}
-          title='Error while rendering widget'
-        />
-      </div>
-    )
-  }
-
   if (!schema && !stringSchema) {
     return (
       <div className={styles.message}>
@@ -123,14 +111,22 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
     )
   }
 
-  const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
   const formSchema = (stringSchema ? JSON.parse(stringSchema) : schema) as JSONSchema4
 
   // If the form is inside a Drawer, button will be already rendered in the Drawer
   const shouldRenderButtonsInsideForm = !insideDrawer
 
   const onSubmit = async (formValues: object) => {
+    if (!action) {
+      notification.error({
+        description: `The widget definition does not include an action (ID: ${submitActionId})`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
+
     // TODO: check if in the future Form should handle other action types
     if (action.type !== 'rest') {
       notification.error({
@@ -141,6 +137,8 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
 
       return
     }
+
+    const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
 
     if (!resourceRef) {
       notification.error({

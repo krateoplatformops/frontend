@@ -1,13 +1,13 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button as AntdButton, Result } from 'antd'
+import { Button as AntdButton } from 'antd'
+import useApp from 'antd/es/app/useApp'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
 import { getResourceRef } from '../../utils/utils'
 
-import styles from './Button.module.css'
 import type { Button as WidgetType } from './Button.type'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
@@ -15,6 +15,7 @@ export type ButtonWidgetData = WidgetType['spec']['widgetData']
 const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
   const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
 
+  const { notification } = useApp()
   const { config } = useConfigContext()
   const { handleAction, isActionLoading } = useHandleAction()
 
@@ -22,36 +23,33 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
     .flat()
     .find(({ id }) => id === clickActionId)
 
-  if (!action) {
-    return (
-      <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`The widget definition does not include an action (ID: ${clickActionId})`}
-          title='Error while rendering widget'
-        />
-      </div>
-    )
-  }
-
-  const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
-  if (!resourceRef) {
-    return (
-      <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`}
-          title='Error while rendering widget'
-        />
-      </div>
-    )
-  }
-
   const onClick = async () => {
+    if (!action) {
+      notification.error({
+        description: `The widget definition does not include an action (ID: ${clickActionId})`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
+
+    const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
+
+    if (!resourceRef) {
+      notification.error({
+        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
+
     const { path } = resourceRef
 
     const url = action.type === 'rest' ? config?.api.SNOWPLOW_API_BASE_URL + path : path
+
     await handleAction(action, url)
   }
 

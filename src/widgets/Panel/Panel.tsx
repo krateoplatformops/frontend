@@ -29,11 +29,13 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
 
   const onClick = async () => {
     if (!action) {
-      notification.error({
-        description: `The widget definition does not include an action (ID: ${clickActionId})`,
-        message: 'Error while executing the action',
-        placement: 'bottomLeft',
-      })
+      if (clickActionId) {
+        notification.error({
+          description: `The widget definition does not include an action (ID: ${clickActionId})`,
+          message: 'Error while executing the action',
+          placement: 'bottomLeft',
+        })
+      }
 
       return
     }
