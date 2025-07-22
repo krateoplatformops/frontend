@@ -303,30 +303,33 @@ const FormGenerator = ({
     const parseData = (node: JSONSchema4, name = ''): AnchorLinkItemProps[] => {
       const currentProperties = node.properties
       if (currentProperties) {
-        return Object.keys(currentProperties).map((key) => {
-          const currentName = name ? `${name}.${key}` : key
-          const label = key
+        return Object.keys(currentProperties)
+          .filter(key => requiredFields.includes(key) || !(optionalHidden && optionalCount > 0 && optionalCount < totalCount))
+          .map((key) => {
+            const currentName = name ? `${name}.${key}` : key
+            const label = key
 
-          if (currentProperties[key].type === 'object') {
-            return {
-              children: parseData(currentProperties[key], currentName),
-              href: '#',
-              key: currentName,
-              title: (
-                <span className={styles.anchorObjectLabel} key={key}>
-                  {label}
-                </span>
-              ),
+            if (currentProperties[key].type === 'object') {
+              return {
+                children: parseData(currentProperties[key], currentName),
+                href: '#',
+                key: currentName,
+                title: (
+                  <span className={styles.anchorObjectLabel} key={key}>
+                    {label}
+                  </span>
+                ),
+              }
             }
-          }
 
-          return {
-            href: `#${currentName}`,
-            key: currentName,
-            title: label,
-          }
-        })
+            return {
+              href: `#${currentName}`,
+              key: currentName,
+              title: label,
+            }
+          })
       }
+
       return []
     }
 
