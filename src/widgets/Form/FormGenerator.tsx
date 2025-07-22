@@ -147,10 +147,6 @@ const FormGenerator = ({
       return null
     }
 
-    if (!required && optionalHidden) {
-      return null
-    }
-
     const rules: Rule[] = []
 
     if (required) {
@@ -196,9 +192,10 @@ const FormGenerator = ({
         })()
 
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
@@ -214,10 +211,11 @@ const FormGenerator = ({
       case 'boolean':
         form.setFieldValue(name.split('.'), false)
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Space direction='vertical' style={{ width: '100%' }}>
               <Form.Item
                 extra={!descriptionTooltip && node.description ? node.description : undefined}
+                hidden={optionalHidden && !required}
                 key={name}
                 label={renderLabel(name, label)}
                 name={name.split('.')}
@@ -233,9 +231,10 @@ const FormGenerator = ({
 
       case 'array':
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
@@ -257,9 +256,10 @@ const FormGenerator = ({
         const max = node.maximum
 
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
+              hidden={optionalHidden && !required}
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}

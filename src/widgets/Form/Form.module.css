@@ -64,6 +64,10 @@
         .breadcrumbDots {
           text-wrap: nowrap;
         }
+
+        &.hidden {
+          height: 0
+        }
       }
     }
 
