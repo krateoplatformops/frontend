@@ -99,6 +99,18 @@ spec:
             "type": "boolean",
             "title": "Enable Metrics",
             "default": false
+          },
+          "test": {
+            "type": "object",
+            "properties": {
+              "property1": {
+                "type": "string"
+              },
+              "property2": {
+                "type": "string"
+              }
+            },
+            "required": ["property2"]
           }
         },
         "required": ["name", "image"]
