@@ -296,6 +296,51 @@
                   }
                 }
               }
+            },
+            "dependencies": {
+              "type": "array",
+              "description": "list of dependencies for the form fields",
+              "items": {
+                "type": "object",
+                "required": ["path", "fetch", "dependsField"],
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "the path of the field"
+                  },
+                  "dependsField": {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "description": "the field that this field depends on"
+                      },
+                      "when": {
+                        "type": "string",
+                        "enum": ["non-empty", "changed", "matchRegex"],
+                        "description": "condition for the dependency to be applied"
+                      }
+                    }
+                  },
+                  "fetch": {
+                    "type": "object",
+                    "required": ["url", "verb"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "the URL to fetch options"
+                      },
+                      "verb": {
+                        "type": "string",
+                        "enum": ["GET", "POST"],
+                        "description": "HTTP method to use for fetching options"
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           "additionalProperties": false

@@ -24,6 +24,24 @@ spec:
             "title": "Number of Replicas",
             "default": 1
           },
+          "select1": {
+            "type": "string",
+            "title": "regione",
+            "description": "The list of regions",
+            "enum": [
+              "Piemonte",
+              "Lombardia",
+              "Veneto",
+              "Emilia-Romagna",
+              "Toscana",
+              "Liguria"
+            ]
+          },
+          "select2": {
+            "type": "string",
+            "title": "province",
+            "description": "The list of provinces",
+          },
           "enableMetrics": {
             "type": "boolean",
             "title": "Enable Metrics",
@@ -36,6 +54,14 @@ spec:
       - path: name
         fetch:
           url: https://loremipsum.io/api/1
+          verb: GET
+    dependencies:
+      - path: select2
+        dependsField: 
+          field: select1
+          when: changed
+        fetch:
+          url: https://loremipsum.io/api/provinces/
           verb: GET
     submitActionId: firework-submit-action-from-string-schema
     actions:

@@ -207,6 +207,7 @@ export interface Form {
        * the string fields of the form to be used as autocomplete
        */
       autocomplete: { path: string; fetch: { url: string; verb: string } }[]
+      dependencies: { path: string; dependsField: {field: string; when: 'non-empty' | 'changed' | 'matchRegex'}; fetch: { url: string; verb: string } }[]
     }
     apiRef?: {
       name: string

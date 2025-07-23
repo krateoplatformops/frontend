@@ -74,10 +74,25 @@ spec:
       {
         "type": "object",
         "properties": {
+          "loremipsum2": {
+            "type": "string",
+            "title": "Lorem ipsum2",
+            "description": "bla bla bla"
+          },
+          "loremipsum3": {
+            "type": "string",
+            "title": "Lorem ipsum3",
+            "description": "bla bla bla"
+          },
           "name": {
             "type": "string",
             "title": "Application Name",
             "description": "The name of your fireworks app"
+          },
+          "loremipsum": {
+            "type": "string",
+            "title": "Lorem ipsum",
+            "description": "bla bla bla"
           },
           "image": {
             "type": "string",
@@ -89,19 +104,46 @@ spec:
             "title": "Number of Replicas",
             "default": 1
           },
+          "select1": {
+            "type": "string",
+            "title": "regione",
+            "description": "The list of regions",
+            "enum": [
+              "Piemonte",
+              "Lombardia",
+              "Veneto",
+              "Emilia-Romagna",
+              "Toscana",
+              "Liguria"
+            ]
+          },
+          "select2": {
+            "type": "string",
+            "title": "province",
+            "description": "The list of provinces",
+            "enum": []
+          },
           "enableMetrics": {
             "type": "boolean",
             "title": "Enable Metrics",
             "default": false
           }
         },
-        "required": ["name", "image"]
+        "required": ["name", "image", "enableMetrics"]
       }
     autocomplete:
       - path: name
         fetch:
           url: https://loremipsum.io/api/1
-          verb: POST
+          verb: GET
+    dependencies:
+      - path: select2
+        dependsField: 
+          field: select1
+          when: changed
+        fetch:
+          url: https://loremipsum.io/api/provinces/
+          verb: GET
     actions:
       rest:
         - id: firework-submit-action

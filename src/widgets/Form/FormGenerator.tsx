@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 
+import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
 import styles from './Form.module.css'
 
@@ -17,9 +18,10 @@ type FormGeneratorType = {
   // disableButtons?: (value: boolean) => void
   onSubmit: (values: object) => Promise<void>
   autocomplete?: { path: string; fetch: { url: string; verb: string } }[]
+  dependencies?: { path: string; dependsField: { field: string; when: 'non-empty' | 'changed' | 'matchRegex'}; fetch: { url: string; verb: string } }[]
 }
 
-const FormGenerator = ({ autocomplete, descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
+const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields = schema.required as string[]
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
@@ -188,11 +190,29 @@ const FormGenerator = ({ autocomplete, descriptionTooltip = false, formId, onSub
                 // Autocomplete
                 if (autocomplete) {
                   const fetchOptions = autocomplete.find((el) => el.path === name)?.fetch
-                  if (fetchOptions) { return <>autocomplete <AutoComplete fetchOptions={fetchOptions} /></> }
+                  if (fetchOptions) { return <AutoComplete fetchOptions={fetchOptions} /> }
                 }
                 // Enum
                 if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
                   const enumArr = node.enum as (string | number)[]
+
+                  // AsyncSelect
+                  if (dependencies) {
+                    console.log('dependencies', dependencies, name)
+                    const fetchOptions = dependencies.find((el) => el.path === name)?.fetch
+                    const dependsField = dependencies.find((el) => el.path === name)?.dependsField
+                    if (fetchOptions && dependsField) {
+                      return (
+                        <AsyncSelect
+                          dependsField={dependsField}
+                          fetchOptions={fetchOptions}
+                          form={form}
+                          name={name.split('.')}
+                        />
+                      )
+                    }
+                  }
+
                   if (enumArr.length > 4) {
                     return (
                       <Select
@@ -211,6 +231,7 @@ const FormGenerator = ({ autocomplete, descriptionTooltip = false, formId, onSub
                     </Radio.Group>
                   )
                 }
+
                 // Default
                 return <Input />
               })()}
