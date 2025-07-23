@@ -67,13 +67,9 @@ export interface Form {
             timeout?: number
           }
           /**
-           * defines the loading indicator behavior for the action
-           */
-          loading?: 'global' | 'inline' | 'none'
-          /**
            * type of action to execute
            */
-          type?: 'rest'
+          type: 'rest'
           /**
            * static payload sent with the request
            */
@@ -93,6 +89,9 @@ export interface Form {
              */
             value: string
           }[]
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * client-side navigation actions
@@ -107,10 +106,6 @@ export interface Form {
            */
           type: 'navigate'
           /**
-           * name of the navigation action
-           */
-          name: string
-          /**
            * the identifier of the k8s custom resource that should be represented
            */
           resourceRefId: string
@@ -118,10 +113,9 @@ export interface Form {
            * whether user confirmation is required before navigating
            */
           requireConfirmation?: boolean
-          /**
-           * defines the loading indicator behavior during navigation
-           */
-          loading?: 'global' | 'inline' | 'none'
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * actions to open side drawer components
@@ -144,10 +138,6 @@ export interface Form {
            */
           requireConfirmation?: boolean
           /**
-           * defines the loading indicator behavior for the drawer
-           */
-          loading?: 'global' | 'inline' | 'none'
-          /**
            * drawer size to be displayed
            */
           size?: 'default' | 'large'
@@ -155,6 +145,9 @@ export interface Form {
            * title shown in the drawer header
            */
           title?: string
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * actions to open modal dialog components
@@ -169,10 +162,6 @@ export interface Form {
            */
           type: 'openModal'
           /**
-           * name of the modal action
-           */
-          name: string
-          /**
            * the identifier of the k8s custom resource that should be represented
            */
           resourceRefId: string
@@ -181,14 +170,44 @@ export interface Form {
            */
           requireConfirmation?: boolean
           /**
-           * defines the loading indicator behavior for the modal
-           */
-          loading?: 'global' | 'inline' | 'none'
-          /**
            * title shown in the modal header
            */
           title?: string
+          loading?: {
+            display: boolean
+          }
         }[]
+      }
+      /**
+       * custom labels and icons for form buttons
+       */
+      buttonConfig?: {
+        /**
+         * primary button configuration
+         */
+        primary?: {
+          /**
+           * text label for primary button
+           */
+          label?: string
+          /**
+           * icon name for primary button
+           */
+          icon?: string
+        }
+        /**
+         * secondary button configuration
+         */
+        secondary?: {
+          /**
+           * text label for secondary button
+           */
+          label?: string
+          /**
+           * icon name for secondary button
+           */
+          icon?: string
+        }
       }
       /**
        * the schema of the form as an object
@@ -204,10 +223,47 @@ export interface Form {
       submitActionId: string
       fieldDescription?: 'tooltip' | 'inline'
       /**
-       * the string fields of the form to be used as autocomplete
+       * autocomplete configuration for the form fields
        */
-      autocomplete: { path: string; fetch: { url: string; verb: string } }[]
-      dependencies: { path: string; dependsField: {field: string; when: 'non-empty' | 'changed' | 'matchRegex'}; fetch: { url: string; verb: string } }[]
+      autocomplete?: {
+        /**
+         * the path of the field to apply autocomplete
+         */
+        path: string
+        /**
+         * remote data source configuration for autocomplete
+         */
+        fetch: {
+          /**
+           * the URL to fetch autocomplete options from
+           */
+          url: string
+          /**
+           * HTTP method to use for fetching options
+           */
+          verb: 'GET' | 'POST'
+        }
+      }[]
+      dependencies: {
+        /**
+         * the path of the target field
+         */
+        path: string
+        /**
+         * conditions under which the field is enabled or required
+         */
+        dependsField: {
+          /**
+           * the field to check for conditions
+           */
+          field: string
+          when: 'non-empty' | 'changed' | 'matchRegex'
+        }
+        /**
+         * remote data source for the target field
+         */
+        fetch: { url: string; verb: string }
+      }[]
     }
     apiRef?: {
       name: string

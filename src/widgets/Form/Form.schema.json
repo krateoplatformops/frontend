@@ -87,11 +87,6 @@
                           }
                         }
                       },
-                      "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior for the action"
-                      },
                       "type": {
                         "type": "string",
                         "enum": ["rest"],
@@ -120,9 +115,19 @@
                             }
                           }
                         }
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
-                    "required": ["id", "resourceRefId"]
+                    "required": ["id", "type", "resourceRefId"]
                   }
                 },
                 "navigate": {
@@ -141,10 +146,6 @@
                         "enum": ["navigate"],
                         "description": "type of navigation action"
                       },
-                      "name": {
-                        "type": "string",
-                        "description": "name of the navigation action"
-                      },
                       "resourceRefId": {
                         "type": "string",
                         "description": "the identifier of the k8s custom resource that should be represented"
@@ -154,12 +155,17 @@
                         "description": "whether user confirmation is required before navigating"
                       },
                       "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior during navigation"
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
-                    "required": ["id", "type", "name", "resourceRefId"]
+                    "required": ["id", "type", "resourceRefId"]
                   }
                 },
                 "openDrawer": {
@@ -186,11 +192,6 @@
                         "type": "boolean",
                         "description": "whether user confirmation is required before opening"
                       },
-                      "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior for the drawer"
-                      },
                       "size": {
                         "type": "string",
                         "enum": ["default", "large"],
@@ -199,6 +200,16 @@
                       "title": {
                         "type": "string",
                         "description": "title shown in the drawer header"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
                     "required": ["id", "type", "resourceRefId"]
@@ -220,10 +231,6 @@
                         "enum": ["openModal"],
                         "description": "type of modal action"
                       },
-                      "name": {
-                        "type": "string",
-                        "description": "name of the modal action"
-                      },
                       "resourceRefId": {
                         "type": "string",
                         "description": "the identifier of the k8s custom resource that should be represented"
@@ -232,18 +239,60 @@
                         "type": "boolean",
                         "description": "whether user confirmation is required before opening"
                       },
-                      "loading": {
-                        "type": "string",
-                        "enum": ["global", "inline", "none"],
-                        "description": "defines the loading indicator behavior for the modal"
-                      },
                       "title": {
                         "type": "string",
                         "description": "title shown in the modal header"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
                       }
                     },
-                    "required": ["id", "type", "name", "resourceRefId"]
+                    "required": ["id", "type", "resourceRefId"]
                   }
+                }
+              },
+              "additionalProperties": false
+            },
+            "buttonConfig": {
+              "type": "object",
+              "description": "custom labels and icons for form buttons",
+              "properties": {
+                "primary": {
+                  "type": "object",
+                  "description": "primary button configuration",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "text label for primary button"
+                    },
+                    "icon": {
+                      "type": "string",
+                      "description": "icon name for primary button"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "secondary": {
+                  "type": "object",
+                  "description": "secondary button configuration",
+                  "properties": {
+                    "label": {
+                      "type": "string",
+                      "description": "text label for secondary button"
+                    },
+                    "icon": {
+                      "type": "string",
+                      "description": "icon name for secondary button"
+                    }
+                  },
+                  "additionalProperties": false
                 }
               },
               "additionalProperties": false
@@ -280,6 +329,7 @@
                   },
                   "fetch": {
                     "type": "object",
+                    "description": "remote data source configuration for autocomplete",
                     "required": ["url", "verb"],
                     "additionalProperties": false,
                     "properties": {

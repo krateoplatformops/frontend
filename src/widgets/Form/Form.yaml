@@ -69,6 +69,12 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    buttonConfig:
+      primary: 
+        label: Custom submit
+        icon: fa-rocket
+      secondary:
+        label: Go back
     submitActionId: firework-submit-action
     stringSchema: |
       {
@@ -127,6 +133,18 @@ spec:
             "type": "boolean",
             "title": "Enable Metrics",
             "default": false
+          },
+          "test": {
+            "type": "object",
+            "properties": {
+              "property1": {
+                "type": "string"
+              },
+              "property2": {
+                "type": "string"
+              }
+            },
+            "required": ["property2"]
           }
         },
         "required": ["name", "image", "enableMetrics"]
@@ -154,6 +172,8 @@ spec:
           payloadToOverride:
             - name: metadata.name
               value: ${ git.toRepo.name }
+          loading:
+            display: true
   resourcesRefs:
     - id: resource-ref-1
       apiVersion: composition.krateo.io/v2-0-0

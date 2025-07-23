@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { Result, Skeleton } from 'antd'
-import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
@@ -23,6 +22,8 @@ import FlowChart from '../../widgets/FlowChart/FlowChart'
 import Form, { type FormWidgetData } from '../../widgets/Form/Form'
 import LineChart from '../../widgets/LineChart'
 import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
+import Markdown from '../../widgets/Markdown'
+import type { MarkdownWidgetData } from '../../widgets/Markdown/Markdown'
 import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
 import { NavMenu } from '../../widgets/NavMenu/NavMenu'
 import { Page, type PageWidgetData } from '../../widgets/Page/Page'
@@ -107,40 +108,42 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <Button resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
     case 'Column':
       return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
-    case 'EventList':
-      return <EventList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
-    case 'FlowChart':
-      return <FlowChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
-    case 'LineChart':
-      return <LineChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
-    case 'NavMenu':
-      return <NavMenu resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as NavMenuWidgetData} />
-    case 'Panel':
-      return <Panel resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PanelWidgetData} />
-    case 'Paragraph':
-      return <Paragraph resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ParagraphWidgetData} />
-    case 'PieChart':
-      return <PieChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
-    case 'Row':
-      return <Row resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
-    case 'Page':
-      return <Page resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PageWidgetData} />
-    case 'Table':
-      return <Table resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
     case 'DataGrid':
       return <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
+    case 'EventList':
+      return <EventList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'Filters':
       return <Filters resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FiltersWidgetData} />
+    case 'FlowChart':
+      return <FlowChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
+    case 'Form':
+      return <Form resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
+    case 'LineChart':
+      return <LineChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
+    case 'Markdown':
+      return <Markdown resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as MarkdownWidgetData} />
+    case 'NavMenu':
+      return <NavMenu resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as NavMenuWidgetData} />
+    case 'Page':
+      return <Page resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PageWidgetData} />
+    case 'Panel':
+      return <Panel resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PanelWidgetData} />
+    case 'PieChart':
+      return <PieChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
+    case 'Paragraph':
+      return <Paragraph resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ParagraphWidgetData} />
+    case 'Route':
+      return <Route resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
+    case 'RoutesLoader':
+      return <RoutesLoader resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RoutesLoaderWidgetData} />
+    case 'Row':
+      return <Row resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
+    case 'Table':
+      return <Table resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
     case 'TabList':
       return <TabList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
       return <YamlViewer resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
-    case 'Form':
-      return <Form resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
-    case 'RoutesLoader':
-      return <RoutesLoader resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RoutesLoaderWidgetData} />
-    case 'Route':
-      return <Route resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }
@@ -162,7 +165,6 @@ const WidgetRenderer = ({
   widgetEndpoint,
   wrapper,
 }: WidgetRendererProps) => {
-  const navigate = useNavigate()
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
 
@@ -251,7 +253,7 @@ const WidgetRenderer = ({
     catchError({
       status: widget.code,
     }, 'notification')
-    void navigate('/login')
+    window.location.replace('/login')
   }
 
   if (wrapper) {

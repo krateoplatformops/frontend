@@ -42,7 +42,12 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    actions: {}
+    clickActionId: composition-click-action
+    actions:
+      navigate:
+        - id: composition-click-action
+          resourceRefId: my-tab-list
+          type: navigate        
     title: Panel with Row
     items:
       - resourceRefId: first-row
@@ -52,6 +57,12 @@ spec:
       name: first-row
       namespace: krateo-system
       resource: rows
+      verb: GET
+    - id: my-tab-list
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-tab-list
+      namespace: krateo-system
+      resource: tablists
       verb: GET
 ---
 kind: Panel
@@ -128,6 +139,25 @@ spec:
       name: my-yaml-viewer
       namespace: krateo-system
       resource: yamlviewers
+      verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-markdown
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: Markdown
+    items:
+      - resourceRefId: my-markdown
+  resourcesRefs:
+    - id: my-markdown
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: my-markdown
+      namespace: krateo-system
+      resource: markdowns
       verb: GET
 ---
 kind: Panel
@@ -216,6 +246,7 @@ spec:
     clickActionId: composition-click-action
     footer:
       - resourceRefId: composition-test-button
+      - resourceRefId: button-test-action-get
     tags: 
       - krateo-system
     icon:
@@ -227,9 +258,10 @@ spec:
     actions:
       navigate:
         - id: composition-click-action
-          name: composition-click-action
           resourceRefId: my-tab-list
           type: navigate
+          loading:
+            display: true
   resourcesRefs:
     - id: composition-test-paragraph
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -248,6 +280,12 @@ spec:
       name: my-tab-list
       namespace: krateo-system
       resource: tablists
+      verb: GET
+    - id: button-test-action-get
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: button-test-action-get
+      namespace: krateo-system
+      resource: buttons
       verb: GET
 ---
 kind: Panel

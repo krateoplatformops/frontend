@@ -23,3 +23,20 @@ spec:
       namespace: krateo-system
       resource: piecharts
       verb: GET
+---
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-row
+  namespace: krateo-system
+spec:
+  widgetData:
+    items:
+      - resourceRefId: composition-test-panel
+  resourcesRefs:
+    - id: composition-test-panel
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-panel
+      namespace: krateo-system
+      resource: panels
+      verb: GET

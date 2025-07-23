@@ -63,13 +63,9 @@ export interface Button {
             timeout?: number
           }
           /**
-           * defines the loading indicator behavior for the action
-           */
-          loading?: 'global' | 'inline' | 'none'
-          /**
            * type of action to execute
            */
-          type?: 'rest'
+          type: 'rest'
           headers?: string[]
           /**
            * static payload sent with the request
@@ -90,6 +86,9 @@ export interface Button {
              */
             value: string
           }[]
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * client-side navigation actions
@@ -104,10 +103,6 @@ export interface Button {
            */
           type: 'navigate'
           /**
-           * name of the navigation action
-           */
-          name: string
-          /**
            * the identifier of the k8s custom resource that should be represented
            */
           resourceRefId: string
@@ -115,10 +110,9 @@ export interface Button {
            * whether user confirmation is required before navigating
            */
           requireConfirmation?: boolean
-          /**
-           * defines the loading indicator behavior during navigation
-           */
-          loading?: 'global' | 'inline' | 'none'
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * actions to open side drawer components
@@ -141,10 +135,6 @@ export interface Button {
            */
           requireConfirmation?: boolean
           /**
-           * defines the loading indicator behavior for the drawer
-           */
-          loading?: 'global' | 'inline' | 'none'
-          /**
            * drawer size to be displayed
            */
           size?: 'default' | 'large'
@@ -152,6 +142,9 @@ export interface Button {
            * title shown in the drawer header
            */
           title?: string
+          loading?: {
+            display: boolean
+          }
         }[]
         /**
          * actions to open modal dialog components
@@ -166,10 +159,6 @@ export interface Button {
            */
           type: 'openModal'
           /**
-           * name of the modal action
-           */
-          name: string
-          /**
            * the identifier of the k8s custom resource that should be represented
            */
           resourceRefId: string
@@ -178,13 +167,12 @@ export interface Button {
            */
           requireConfirmation?: boolean
           /**
-           * defines the loading indicator behavior for the modal
-           */
-          loading?: 'global' | 'inline' | 'none'
-          /**
            * title shown in the modal header
            */
           title?: string
+          loading?: {
+            display: boolean
+          }
         }[]
       }
       /**

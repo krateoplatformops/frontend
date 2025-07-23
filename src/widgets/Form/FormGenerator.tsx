@@ -1,7 +1,9 @@
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
+import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
+import type { Rule } from 'antd/es/form'
 import type { JSONSchema4 } from 'json-schema'
-import _ from 'lodash'
-import { useCallback, useState } from 'react'
+import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
+import { useCallback, useEffect, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 
@@ -14,114 +16,97 @@ type FormGeneratorType = {
   showFormStructure?: boolean
   schema: JSONSchema4
   formId: string
-  // onClose?: () => void,
-  // disableButtons?: (value: boolean) => void
   onSubmit: (values: object) => Promise<void>
-  autocomplete?: { path: string; fetch: { url: string; verb: string } }[]
   dependencies?: { path: string; dependsField: { field: string; when: 'non-empty' | 'changed' | 'matchRegex'}; fetch: { url: string; verb: string } }[]
+  autocomplete?: {
+    path: string
+    fetch: {
+      url: string
+      verb: string
+    }
+  }[]
 }
 
-const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false, formId, onSubmit, schema, showFormStructure = false }: FormGeneratorType) => {
+const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
+  const currentProperties = node.properties
+  let totalCount = 0
+  let optionalCount = 0
+
+  if (currentProperties && typeof currentProperties === 'object') {
+    for (const key of Object.keys(currentProperties)) {
+      const prop = currentProperties[key]
+
+      if (prop.type === 'object') {
+        const counts = getOptionalCount(prop, requiredFields)
+        totalCount += counts.totalCount
+        optionalCount += counts.optionalCount
+      } else {
+        const required = (Array.isArray(node?.required) && node.required.indexOf(key) > -1) || requiredFields.indexOf(key) > -1
+        totalCount += 1
+        optionalCount = required ? optionalCount : optionalCount + 1
+      }
+    }
+  }
+  return { optionalCount, totalCount }
+}
+
+const FormGenerator = ({
+  autocomplete,
+  dependencies,
+  descriptionTooltip = false,
+  formId,
+  onSubmit,
+  schema,
+  showFormStructure = false,
+}: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields = schema.required as string[]
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
-  // Check on CompositionCreated event for redirect
-  // useEffect(() => {
-  // 	const eventsEndpoint = `${getBaseUrl("EVENTS_PUSH")}/notifications`;
-  // 	const eventSource = new EventSource(eventsEndpoint, {
-  // 			withCredentials: false,
-  // 	});
+  const { optionalCount, totalCount } = getOptionalCount(schema, requiredFields)
 
-  // 	eventSource.addEventListener('krateo', (event) => {
-  // 		const data = JSON.parse(event.data);
-  // 		if (data?.reason === 'CompositionCreated') {
-  // 			setEventReceived(true)
-  // 		}
-  // 	});
+  type Field = ReturnType<typeof renderField>
 
-  // 	return () => eventSource.close();
-  // }, []);
-
-  const getOptionalCount = (node: JSONSchema4) => {
-    const currentProperties = node.properties
-    let totalCount = 0
-    let optionalCount = 0
-
-    if (currentProperties && typeof currentProperties === 'object') {
-      for (const key of Object.keys(currentProperties)) {
-        const prop = currentProperties[key]
-
-        if (prop.type === 'object') {
-          const counts = getOptionalCount(prop)
-          totalCount += counts.totalCount
-          optionalCount += counts.optionalCount
-        } else {
-          const required = (Array.isArray(node?.required) && node.required.indexOf(key) > -1) || requiredFields.indexOf(key) > -1
-          totalCount += 1
-          optionalCount = required ? optionalCount : optionalCount + 1
-        }
-      }
-    }
-    return { optionalCount, totalCount }
-  }
-
-  const parseData = (node: JSONSchema4, name: string = '') => {
-    const currentProperties = node.properties
-    if (currentProperties) {
-      return Object.keys(currentProperties).map((key) => {
-        const currentName = name ? `${name}.${key}` : key
-        if (currentProperties[key].type === 'object') {
-          return parseData(currentProperties[key], currentName)
-        }
-        const required = (Array.isArray(node?.required) && node.required.indexOf(key) > -1) || requiredFields.indexOf(key) > -1
-        const label = currentProperties[key].title || key
-        return renderField(label, currentName, currentProperties[key], required)
-      })
-    }
-    return []
-  }
-
-  const setInitialValues = () => {
-    const parseData = (node: JSONSchema4, name: string = '') => {
-      const currentProperties = node.properties
-      if (currentProperties) {
-        return Object.keys(currentProperties).map((key) => {
+  const setInitialValues = useCallback(() => {
+    const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
+      if (properties) {
+        Object.keys(properties).forEach((key) => {
           const currentName = name ? `${name}.${key}` : key
-          if (currentProperties[key].type === 'object') {
-            return parseData(currentProperties[key], currentName)
-          }
-          // set default value
-          if (currentProperties[key].default) {
-            let defaultValue = currentProperties[key].default
+          const property = properties[key]
 
-            /* handle boolean written as string  */
-            if (currentProperties[key].type === 'boolean') {
-              if (typeof defaultValue !== 'boolean') {
-                console.error(
-                  `boolean field ${currentName} has a default value that is not a boolean: defaulting to false. received value=${defaultValue} type=${typeof defaultValue}`
-                )
-                defaultValue = false
-              }
+          if (property.type === 'object') {
+            parseData(property, currentName)
+            return
+          }
+
+          if (property.default !== undefined) {
+            let defaultValue = property.default
+
+            if (property.type === 'boolean' && typeof defaultValue !== 'boolean') {
+              console.error(
+                `boolean field ${currentName} has a default value that is not a boolean: defaulting to false. received value=${JSON.stringify(defaultValue)} type=${typeof JSON.stringify(defaultValue)}`
+              )
+              defaultValue = false
             }
 
-            if (currentProperties[key].type === 'integer' || currentProperties[key].type === 'number') {
-              if (typeof defaultValue !== 'number') {
-                console.error(
-                  `array field ${currentName} has a default value that is not a number. received value=${defaultValue} type=${typeof defaultValue}`
-                )
-              }
+            if ((property.type === 'integer' || property.type === 'number') && typeof defaultValue !== 'number') {
+              console.error(
+                `number field ${currentName} has a default value that is not a number. received value=${JSON.stringify(defaultValue)} type=${typeof defaultValue}`
+              )
             }
 
             form.setFieldValue(currentName.split('.'), defaultValue)
           }
         })
       }
-      return []
     }
 
     parseData(schema)
-  }
+  }, [form, schema])
+
+  useEffect(() => {
+    setInitialValues()
+  }, [setInitialValues])
 
   const renderLabel = (path: string, label: string) => {
     const breadcrumb = path.split('.')
@@ -159,24 +144,75 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
     )
   }
 
-  const renderField = (label: string, name: string, node: any, required: boolean) => {
-    const rules: any[] = []
-    if (required) {
-      rules.push({ message: 'Insert a value', required: true })
-    }
-    if (node.pattern) {
-      rules.push({ message: 'Insert right value', pattern: node.pattern })
-    }
-
+  const renderField = (label: string, name: string, node: JSONSchema4, required: boolean) => {
     if (Array.isArray(node.type)) {
-      console.error(`type as array is not supported: ${node.type} for field ${name}`)
+      console.error(`type as array is not supported: ${node.type.join(',')} for field ${name}`)
       return null
     }
 
+    const rules: Rule[] = []
+
+    if (required) {
+      rules.push({ message: 'Insert a value', required: true })
+    }
+
+    if (node.pattern) {
+      rules.push({ message: 'Insert right value', pattern: new RegExp(node.pattern) })
+    }
+
     switch (node.type) {
-      case 'string':
+      case 'string': {
+        const formItemContent = (() => {
+          // Autocomplete
+          if (autocomplete) {
+            const fetchOptions = autocomplete.find((el) => el.path === name)?.fetch
+            if (fetchOptions) { return <AutoComplete fetchOptions={fetchOptions} /> }
+          }
+          // Enum
+          if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
+            const enumArr = node.enum as (string | number)[]
+
+            // AsyncSelect
+            if (dependencies) {
+              const fetchOptions = dependencies.find((el) => el.path === name)?.fetch
+              const dependsField = dependencies.find((el) => el.path === name)?.dependsField
+              if (fetchOptions && dependsField) {
+                return (
+                  <AsyncSelect
+                    dependsField={dependsField}
+                    fetchOptions={fetchOptions}
+                    form={form}
+                    name={name.split('.')}
+                  />
+                )
+              }
+            }
+
+            if (enumArr.length > 4) {
+              return (
+                <Select
+                  allowClear
+                  options={enumArr.map((opt) => ({ label: opt, value: opt }))}
+                />
+              )
+            }
+            return (
+              <Radio.Group>
+                {enumArr.map((el) => (
+                  <Radio key={`radio_${el}`} value={el}>
+                    {el}
+                  </Radio>
+                ))}
+              </Radio.Group>
+            )
+          }
+
+          // Default
+          return <Input />
+        })()
+
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
               hidden={optionalHidden && !required}
@@ -186,63 +222,16 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
             >
-              {(() => {
-                // Autocomplete
-                if (autocomplete) {
-                  const fetchOptions = autocomplete.find((el) => el.path === name)?.fetch
-                  if (fetchOptions) { return <AutoComplete fetchOptions={fetchOptions} /> }
-                }
-                // Enum
-                if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
-                  const enumArr = node.enum as (string | number)[]
-
-                  // AsyncSelect
-                  if (dependencies) {
-                    console.log('dependencies', dependencies, name)
-                    const fetchOptions = dependencies.find((el) => el.path === name)?.fetch
-                    const dependsField = dependencies.find((el) => el.path === name)?.dependsField
-                    if (fetchOptions && dependsField) {
-                      return (
-                        <AsyncSelect
-                          dependsField={dependsField}
-                          fetchOptions={fetchOptions}
-                          form={form}
-                          name={name.split('.')}
-                        />
-                      )
-                    }
-                  }
-
-                  if (enumArr.length > 4) {
-                    return (
-                      <Select
-                        allowClear
-                        options={enumArr.map((opt) => ({ label: opt, value: opt }))}
-                      />
-                    )
-                  }
-                  return (
-                    <Radio.Group>
-                      {enumArr.map((el) => (
-                        <Radio key={`radio_${el}`} value={el}>
-                          {el}
-                        </Radio>
-                      ))}
-                    </Radio.Group>
-                  )
-                }
-
-                // Default
-                return <Input />
-              })()}
+              {formItemContent}
             </Form.Item>
           </div>
         )
+      }
 
       case 'boolean':
         form.setFieldValue(name.split('.'), false)
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Space direction='vertical' style={{ width: '100%' }}>
               <Form.Item
                 extra={!descriptionTooltip && node.description ? node.description : undefined}
@@ -262,7 +251,7 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
 
       case 'array':
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
               hidden={optionalHidden && !required}
@@ -281,12 +270,13 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
           </div>
         )
 
-      case 'integer':
+      case 'integer': {
         form.setFieldValue(name.split('.'), node.minimum || 0)
         const min = node.minimum
         const max = node.maximum
+
         return (
-          <div className={styles.formField} id={name}>
+          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
               extra={!descriptionTooltip && node.description ? node.description : undefined}
               hidden={optionalHidden && !required}
@@ -304,125 +294,69 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
             </Form.Item>
           </div>
         )
-
-      case 'autocomplete':
-        return (
-          <div className={styles.formField} id={name}>
-            <Form.Item
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
-              hidden={optionalHidden && !required}
-              key={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              rules={rules}
-              tooltip={descriptionTooltip && node.description ? node.description : undefined}
-            >
-              <AutoComplete fetchOptions={node.fetchOptions} />
-            </Form.Item>
-          </div>
-        )
+      }
     }
   }
 
-  const getAnchorList = () => {
-    const parseData = (node: JSONSchema4, name: string = '') => {
+  const parseData = ({ properties, required }: JSONSchema4, name: string = ''): Field[] => {
+    if (properties) {
+      return Object.keys(properties).flatMap((key) => {
+        const currentName = name ? `${name}.${key}` : key
+        const prop = properties[key]
+
+        if (prop.type === 'object') {
+          return parseData(prop, currentName)
+        }
+
+        const isRequired
+          = (Array.isArray(required) && required.indexOf(key) > -1)
+          || requiredFields.indexOf(key) > -1
+
+        const label = prop.title || key
+        return [renderField(label, currentName, prop, isRequired)]
+      })
+    }
+    return []
+  }
+
+  const getAnchorList = (): AnchorLinkItemProps[] => {
+    const parseData = (node: JSONSchema4, name = ''): AnchorLinkItemProps[] => {
       const currentProperties = node.properties
       if (currentProperties) {
-        return Object.keys(currentProperties).map((key) => {
-          const currentName = name ? `${name}.${key}` : key
-          const label = key
+        return Object.keys(currentProperties)
+          .filter(key => requiredFields.includes(key) || !(optionalHidden && optionalCount > 0 && optionalCount < totalCount))
+          .map((key) => {
+            const currentName = name ? `${name}.${key}` : key
+            const label = key
 
-          if (currentProperties[key].type === 'object') {
-            // create children
-            return {
-              children: parseData(currentProperties[key], currentName),
-              key: currentName,
-              title: (
-                <span className={styles.anchorObjectLabel} key={key}>
-                  {label}
-                </span>
-              ),
+            if (currentProperties[key].type === 'object') {
+              return {
+                children: parseData(currentProperties[key], currentName),
+                href: '#',
+                key: currentName,
+                title: (
+                  <span className={styles.anchorObjectLabel} key={key}>
+                    {label}
+                  </span>
+                ),
+              }
             }
-          }
-          // return obj
-          return {
-            href: `#${currentName}`,
-            key: currentName,
-            title: label,
-          }
-        })
+
+            return {
+              href: `#${currentName}`,
+              key: currentName,
+              title: label,
+            }
+          })
       }
+
       return []
     }
 
-    return [...parseData(schema)]
+    return parseData(schema)
   }
 
-  const convertStringToObject = (dottedString: string, value: unknown) => {
-    const keys = dottedString.split('.')
-    const result = {}
-    let current = result
-
-    keys.forEach((key, index) => {
-      if (index === keys.length - 1) {
-        current[key] = value
-      } else {
-        current[key] = {}
-        current = current[key]
-      }
-    })
-
-    return result
-  }
-
-  // Example input: valuePath = "${ git.toRepo.name + \"-\" + git.toRepo.org }"
-  // Example parts: ["git.toRepo.name", "\"-\"", "git.toRepo.org"]
-  // Example transformation:
-  // getObjectByPath(values, "git.toRepo.name") → "name"
-  // getObjectByPath(values, "git.toRepo.org") → "org"
-  // Result: value = "name-org"
-
-  const updateJson = (values: any, keyPath: string, valuePath: string) => {
-    const getObjectByPath = (obj: any, path: string) => path.split('.').reduce((acc, part) => acc && acc[part], obj)
-
-    const substr = valuePath.replace('${', '').replace('}', '')
-    const parts = substr.split('+').map((el) => el.trim())
-
-    const value = parts
-      .map((el) => (el.startsWith('"') || el.startsWith("'") ? el.replace(/"/g, '') : getObjectByPath(values, el) || ''))
-      .join('')
-
-    return _.merge({}, values, convertStringToObject(keyPath, value))
-  }
-
-  const updateNameNamespace = (path: string, name: string, namespace: string) => {
-    // add name and namespace on endpoint querystring from payload.metadata
-    const qsParameters = path
-      .split('?')[1]
-      .split('&')
-      .filter((el) => el.indexOf('name=') === -1 && el.indexOf('namespace=') === -1)
-      .join('&')
-    return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
-  }
-
-  const interpolateRoute = (payload: any, route: string): string | null => {
-    let allReplacementsSuccessful = true
-
-    const interpolatedRoute = route.replace(/\$\{([^}]+)\}/g, (_, key) => {
-      const value = key.split('.').reduce((acc: any, part) => acc?.[part], payload)
-
-      if (value === undefined) {
-        allReplacementsSuccessful = false
-        return ''
-      }
-
-      return String(value)
-    })
-
-    return allReplacementsSuccessful ? interpolatedRoute : null
-  }
-
-  const onFinishFailed = useCallback(({ errorFields }: any) => {
+  const onFinishFailed = useCallback(({ errorFields }: ValidateErrorEntity) => {
     const errorField = errorFields[0].name.join('.')
     const errorFieldElement = document.querySelector(`#${CSS.escape(errorField)}`)
 
@@ -442,8 +376,8 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
     }
   }, [])
 
-  const handleAnchorClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault()
+  const handleAnchorClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault()
   }
 
   return (
@@ -453,7 +387,7 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
           <Col className={styles.formWrapper} span={showFormStructure ? 12 : 24}>
             <div className={styles.form} id='anchor-content'>
               {
-                getOptionalCount(schema).optionalCount > 0 && getOptionalCount(schema).optionalCount < getOptionalCount(schema).totalCount && (
+                optionalCount > 0 && optionalCount < totalCount && (
                   <div className={styles.optionalFieldsSwitchWrapper}>
                     <Space className={styles.optionalFieldsSwitch} direction='horizontal' size='small'>
                       <Switch onChange={(value) => setOptionalHidden(value)} value={optionalHidden} />
@@ -470,15 +404,17 @@ const FormGenerator = ({ autocomplete, dependencies, descriptionTooltip = false,
                 id={formId}
                 layout='vertical'
                 name='formGenerator'
-                onFinish={(values: object) => onSubmit(values)}
-                onFinishFailed={onFinishFailed}
-                onReset={(e) => {
-                  e.preventDefault()
+                onFinish={(values: object) => {
+                  onSubmit(values).catch((error) => {
+                    console.error(`Error while executing the Form onFinish function: ${error}`)
+                  })
+                }} onFinishFailed={onFinishFailed}
+                onReset={(event) => {
+                  event.preventDefault()
                   setInitialValues()
                 }}
               >
                 {parseData(schema)}
-                {setInitialValues()}
               </Form>
             </div>
           </Col>

@@ -26,7 +26,7 @@ const UserMenu = () => {
 
   const onLogout = () => {
     localStorage.removeItem('K_user')
-    window.location.href = '/login'
+    window.location.replace('/login')
   }
 
   const items: MenuProps['items'] = [

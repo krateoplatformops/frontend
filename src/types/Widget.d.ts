@@ -48,9 +48,8 @@ export type WidgetActions = {
   rest?: {
     type: 'rest'
     id: string
-    name: string
-    payload: object
-    verb: 'GET' | 'POST' | 'DELETE'
+    payload?: Record<string, unknown>
+    payloadKey?: string
     resourceRefId: string
     requireConfirmation?: boolean
     successMessage?: string
@@ -59,41 +58,59 @@ export type WidgetActions = {
     onEventNavigateTo?: {
       url: string
       eventReason: string
+      timeout?: number
     }
-    loading?: 'global' | 'inline' | 'none'
     payloadToOverride?: {
       name: string
       value: string
     }[]
+    headers?: string[]
+    loading?: {
+      display: boolean
+    }
   }[]
   navigate?: {
     id: string
     type: 'navigate'
-    name: string
     resourceRefId: string
     requireConfirmation?: boolean
-    loading?: 'global' | 'inline' | 'none'
+    loading?: {
+      display: boolean
+    }
   }[]
   openDrawer?: {
     id: string
     type: 'openDrawer'
-    name: string
     resourceRefId: string
     requireConfirmation?: boolean
-    loading?: 'global' | 'inline' | 'none'
     size?: 'default' | 'large'
     title?: string
+    loading?: {
+      display: boolean
+    }
   }[]
   openModal?: {
     id: string
     type: 'openModal'
-    name: string
     resourceRefId: string
     requireConfirmation?: boolean
-    loading?: 'global' | 'inline' | 'none'
     title?: string
+    loading?: {
+      display: boolean
+    }
   }[]
 }
+
+type RestAction = NonNullable<WidgetActions['rest']>[number]
+type NavigateAction = NonNullable<WidgetActions['navigate']>[number]
+type OpenDrawerAction = NonNullable<WidgetActions['openDrawer']>[number]
+type OpenModalAction = NonNullable<WidgetActions['openModal']>[number]
+
+export type WidgetAction =
+  | RestAction
+  | NavigateAction
+  | OpenDrawerAction
+  | OpenModalAction
 
 export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs
