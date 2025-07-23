@@ -17,19 +17,9 @@ type AsyncSelectProps = {
 const AsyncSelect = ({ dependsField, fetchOptions, form, name }: AsyncSelectProps) => {
   const dependField = Form.useWatch<string | undefined>(dependsField.field, form)
 
-  const mockFetch = () => {
-    // Simulating a fetch call, replace with actual fetch logic
-    return new Promise<string[]>(resolve => {
-      setTimeout(() => {
-        resolve(['Option 1', 'Option 2', 'Option 3'])
-      }, 1000)
-    })
-  }
-
   const { data: options } = useQuery<string[]>({
     enabled: dependField !== undefined,
-    // queryFn: () => fetch(fetchOptions.url).then(res => res.json()),
-    queryFn: () => mockFetch(),
+    queryFn: () => fetch(fetchOptions.url).then(res => res.json()),
     queryKey: ['dependField', dependField, name, fetchOptions.url],
   })
 

@@ -322,38 +322,74 @@ const FormGenerator = ({
   const getAnchorList = (): AnchorLinkItemProps[] => {
     const parseData = (node: JSONSchema4, name = ''): AnchorLinkItemProps[] => {
       const currentProperties = node.properties
-      if (currentProperties) {
-        return Object.keys(currentProperties)
-          .filter(key => requiredFields.includes(key) || !(optionalHidden && optionalCount > 0 && optionalCount < totalCount))
-          .map((key) => {
-            const currentName = name ? `${name}.${key}` : key
-            const label = key
+      const requiredFields = node.required ?? []
 
-            if (currentProperties[key].type === 'object') {
-              return {
-                children: parseData(currentProperties[key], currentName),
-                href: '#',
-                key: currentName,
-                title: (
-                  <span className={styles.anchorObjectLabel} key={key}>
-                    {label}
-                  </span>
-                ),
-              }
-            }
+      if (!currentProperties) { return [] }
 
-            return {
-              href: `#${currentName}`,
-              key: currentName,
-              title: label,
-            }
-          })
-      }
+      return Object.keys(currentProperties).flatMap((key) => {
+        const schemaItem = currentProperties[key]
+        const currentName = name ? `${name}.${key}` : key
+        const isRequired = Array.isArray(requiredFields) && requiredFields.includes(key)
 
-      return []
+        const children = schemaItem.type === 'object'
+          ? parseData(schemaItem, currentName)
+          : []
+
+        const shouldShow = isRequired || children.length > 0 || !optionalHidden
+        if (!shouldShow) { return [] }
+
+        const nodeItem: AnchorLinkItemProps = {
+          href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
+          key: currentName,
+          title:
+            schemaItem.type === 'object' ? (
+              <span className={styles.anchorObjectLabel}>{key}</span>
+            ) : (
+              key
+            ),
+          ...(children.length > 0 ? { children } : {}),
+        }
+
+        return [nodeItem]
+      })
     }
 
     return parseData(schema)
+
+    // const parseData = (node: JSONSchema4, name = ''): AnchorLinkItemProps[] => {
+    //   const currentProperties = node.properties
+    //   if (currentProperties) {
+    //     return Object.keys(currentProperties)
+    //       .filter(key => requiredFields.includes(key) || !(optionalHidden && optionalCount > 0 && optionalCount < totalCount))
+    //       .map((key) => {
+    //         const currentName = name ? `${name}.${key}` : key
+    //         const label = key
+
+    //         if (currentProperties[key].type === 'object') {
+    //           return {
+    //             children: parseData(currentProperties[key], currentName),
+    //             href: '#',
+    //             key: currentName,
+    //             title: (
+    //               <span className={styles.anchorObjectLabel} key={key}>
+    //                 {label}
+    //               </span>
+    //             ),
+    //           }
+    //         }
+
+    //         return {
+    //           href: `#${currentName}`,
+    //           key: currentName,
+    //           title: label,
+    //         }
+    //       })
+    //   }
+
+    //   return []
+    // }
+
+    // return parseData(schema)
   }
 
   const onFinishFailed = useCallback(({ errorFields }: ValidateErrorEntity) => {
