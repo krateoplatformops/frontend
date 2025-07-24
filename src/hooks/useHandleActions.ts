@@ -305,6 +305,8 @@ export const useHandleAction = () => {
                 message.destroy()
               }, onEventNavigateTo.timeout! * 1000)
 
+              message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
+
               eventSource.addEventListener('krateo', (event) => {
                 const data = JSON.parse(event.data as string) as EventData
                 if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
@@ -314,12 +316,13 @@ export const useHandleAction = () => {
                   const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
                   if (!redirectUrl) {
                     notification.error({
-                      description: 'Error while redirecting',
+                      description: errorMessage || 'Error while redirecting',
                       message: 'Impossible to redirect, the route contains an undefined value',
                       placement: 'bottomLeft',
                     })
                     return
                   }
+
                   message.destroy()
                   setIsActionLoading(false)
                   closeDrawer()
@@ -346,10 +349,6 @@ export const useHandleAction = () => {
               },
               method: verb,
             })
-
-            if (onEventNavigateTo) {
-              message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
-            }
 
             const json = (await res.json()) as RestApiResponse
 
