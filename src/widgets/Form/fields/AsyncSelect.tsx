@@ -26,9 +26,26 @@ const AsyncSelect = ({ dependsField, fetchOptions, form, name }: AsyncSelectProp
     }
   }, [dependField, form, name])
 
+  const fetchDependField = () => {
+    if (fetchOptions.verb.toUpperCase() === 'GET') {
+      return fetch(`${fetchOptions.url}?q=${dependField}`)
+        .then(res => res.json())
+    }
+    if (fetchOptions.verb.toUpperCase() === 'POST') {
+      return fetch(fetchOptions.url, {
+        body: dependField,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      }).then(res => res.json())
+    }
+    return Promise.resolve([])
+  }
+
   const { data: options } = useQuery<string[]>({
     enabled: dependField !== undefined,
-    queryFn: () => fetch(fetchOptions.url).then(res => res.json()),
+    queryFn: () => fetchDependField(),
     queryKey: ['dependField', dependField, name, fetchOptions.url],
   })
 
