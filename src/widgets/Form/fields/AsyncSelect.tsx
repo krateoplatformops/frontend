@@ -20,7 +20,10 @@ const AsyncSelect = ({ dependsField, fetchOptions, form, name }: AsyncSelectProp
 
   useEffect(() => {
     // if the dependent field change his value, reset the form field
-    form.setFieldValue(name, undefined)
+    if (form.getFieldValue(name[0]) !== undefined) {
+      form.setFieldValue(name[0], undefined)
+      form.resetFields(name)
+    }
   }, [dependField, form, name])
 
   const { data: options } = useQuery<string[]>({
@@ -33,7 +36,7 @@ const AsyncSelect = ({ dependsField, fetchOptions, form, name }: AsyncSelectProp
     dependField === undefined ? (
       <Select disabled options={[]} />
     ) : (
-      <Select options={options?.map(item => ({ label: item, value: item }))} />
+      <Select allowClear onChange={(val) => form.setFieldValue(name[0], val)} options={options?.map(item => ({ label: item, value: item }))} />
     )
   )
 }

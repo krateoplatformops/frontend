@@ -125,8 +125,14 @@ spec:
           },
           "select2": {
             "type": "string",
-            "title": "province",
+            "title": "provincia",
             "description": "The list of provinces",
+            "enum": []
+          },
+          "select3": {
+            "type": "string",
+            "title": "comune",
+            "description": "The list of cities",
             "enum": []
           },
           "enableMetrics": {
@@ -158,6 +164,13 @@ spec:
       - path: select2
         dependsField: 
           field: select1
+          when: changed
+        fetch:
+          url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c
+          verb: GET
+      - path: select3
+        dependsField: 
+          field: select2
           when: changed
         fetch:
           url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c
