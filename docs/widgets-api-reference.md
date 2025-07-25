@@ -499,6 +499,12 @@ name of the k8s Custom Resource
 | autocomplete[].fetch | yes | remote data source configuration for autocomplete | object |
 | autocomplete[].fetch.url | yes | the URL to fetch autocomplete options from | string |
 | autocomplete[].fetch.verb | yes | HTTP method to use for fetching options | `GET` \| `POST` |
+| dependencies | no | list of dependencies for the form fields | array |
+| dependencies[].path | yes | the path of the field | string |
+| dependencies[].dependsField | yes |  | object |
+| dependencies[].dependsField.field | no | the field that this field depends on | string |
+| dependencies[].fetch | yes |  | object |
+| dependencies[].fetch.url | yes | the URL to fetch options | string |
 
 <details>
 <summary>Example</summary>

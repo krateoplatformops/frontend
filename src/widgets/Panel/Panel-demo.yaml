@@ -163,10 +163,8 @@ spec:
       - path: select2
         dependsField: 
           field: select1
-          when: changed
         fetch:
           url: https://mocki.io/v1/8c6edbbd-3a40-4a69-92c8-943957f24e7b
-          verb: GET
     actions:
       rest:
         - id: firework-submit-action
