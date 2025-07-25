@@ -2,37 +2,33 @@ import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select } from 'antd'
 import { useEffect } from 'react'
 
+import type { FormWidgetData } from '../Form'
+
 type AsyncSelectProps = {
-  fetchOptions: {
-    url: string
-    verb: string
-  }
-  name: string[]
-  dependsField: {
-    field: string
-    when: 'non-empty' | 'changed' | 'matchRegex'
-  }
+  dependency: NonNullable<FormWidgetData['dependencies']>[number]
   form: FormInstance
+  name: string
 }
 
-const AsyncSelect = ({ dependsField, fetchOptions, form, name }: AsyncSelectProps) => {
-  const dependField = Form.useWatch<string | undefined>(dependsField.field, form)
+const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
+  const { dependsField: { field }, fetch: { url, verb } } = dependency
+
+  const dependField = Form.useWatch<string | undefined>(field, form)
 
   useEffect(() => {
-    // if the dependent field change his value, reset the form field
-    if (form.getFieldValue(name[0]) !== undefined) {
-      form.setFieldValue(name[0], undefined)
-      form.resetFields(name)
+    const currentValue = form.getFieldValue(name) as string
+    if (currentValue !== undefined) {
+      form.setFieldsValue({ [name]: undefined })
     }
   }, [dependField, form, name])
 
-  const fetchDependField = () => {
-    if (fetchOptions.verb.toUpperCase() === 'GET') {
-      return fetch(`${fetchOptions.url}?q=${dependField}`)
+  const fetchDependField = (): Promise<string[]> => {
+    if (verb.toUpperCase() === 'GET') {
+      return fetch(`${url}?q=${dependField}`)
         .then(res => res.json())
     }
-    if (fetchOptions.verb.toUpperCase() === 'POST') {
-      return fetch(fetchOptions.url, {
+    if (verb.toUpperCase() === 'POST') {
+      return fetch(url, {
         body: dependField,
         headers: {
           'Content-Type': 'application/json',
@@ -45,15 +41,20 @@ const AsyncSelect = ({ dependsField, fetchOptions, form, name }: AsyncSelectProp
 
   const { data: options } = useQuery<string[]>({
     enabled: dependField !== undefined,
-    queryFn: () => fetchDependField(),
-    queryKey: ['dependField', dependField, name, fetchOptions.url],
+    queryFn: async (): Promise<string[]> => fetchDependField(),
+    queryKey: ['dependField', dependField, name, url],
   })
 
   return (
     dependField === undefined ? (
       <Select disabled options={[]} />
     ) : (
-      <Select allowClear onChange={(val) => form.setFieldValue(name[0], val)} options={options?.map(item => ({ label: item, value: item }))} />
+      <Select
+        allowClear
+        onChange={value => form.setFieldsValue({ [name]: value })}
+        options={options?.map(item => ({ label: item, value: item }))}
+        value={form.getFieldValue(name) as string | undefined}
+      />
     )
   )
 }

@@ -1,104 +1,109 @@
+---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: firework-form-panel
+  name: test-panel
   namespace: krateo-system
 spec:
   widgetData:
-    actions: {}
-    title: Firework App Form
+    clickActionId: composition-click-action
+    footer:
+      - resourceRefId: composition-test-button
+    tags: 
+      - krateo-system
+      - composition-test
+    icon:
+      name: fa-solid fa-cubes
+      color: blue
     items:
-      - resourceRefId: firework-form
+      - resourceRefId: test-markdown
+    title: composition-test
+    actions:
+      openDrawer:
+        - id: composition-click-action
+          resourceRefId: test-form
+          type: openDrawer
+          title: Composition form
+          size: large
+          loading:
+            display: true
   resourcesRefs:
-    - id: firework-form
+    - id: test-markdown
       apiVersion: widgets.templates.krateo.io/v1beta1
-      name: firework-form
+      name: test-markdown
+      namespace: krateo-system
+      resource: markdowns
+      verb: GET
+    - id: composition-test-button
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: composition-test-button
+      namespace: krateo-system
+      resource: buttons
+      verb: GET
+    - id: test-form
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: test-form
       namespace: krateo-system
       resource: forms
+      verb: GET
+---
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: test-markdown
+  namespace: krateo-system
+spec:
+  widgetData:
+    markdown: "This panel displays all data related to **composition-test**"
+---
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: composition-test-button
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: 
+      rest:
+      - id: cleanup
+        errorMessage: Error!
+        successMessage: Success!
+        resourceRefId: cleanup
+        type: rest
+        onSuccessNavigateTo: /templates
+    icon: fa-trash
+    type: default
+    shape: circle
+    clickActionId: cleanup
+  resourcesRefs:
+    - id: cleanup
+      apiVersion: templates.krateo.io/v1
+      resource: restactions
+      name: fireworksapp-template-restaction-cleanup
+      namespace: krateo-system
       verb: GET
 ---
 kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: firework-form
-  namespace: krateo-system
-spec:
-  widgetData:
-    schema: {}
-    submitActionId: firework-submit-action
-    actions:
-      rest:
-        - id: firework-submit-action
-          resourceRefId: resource-ref-1
-          type: rest
-          onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
-          payloadToOverride:
-          - name: metadata.name
-            value: ${ git.toRepo.name }
-  widgetDataTemplate:
-    - forPath: schema
-      expression: ${ .getSchema | .spec.versions[] | select(.name == "v2-0-0") | .schema.openAPIV3Schema.properties.spec }
-  resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
-      name: new-app
-      namespace: fireworksapp-system
-      resource: fireworksapps
-      verb: POST
-  apiRef:
-    name: firework-schema
-    namespace: krateo-system
----
-apiVersion: templates.krateo.io/v1
-kind: RESTAction
-metadata:
-  name: firework-schema
-  namespace: krateo-system
-spec:
-  api:
-  - name: getSchema
-    verb: GET
-    path: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/fireworksapps.composition.krateo.io"
-    headers:
-    - 'Accept: application/json'
----
-kind: Form
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: test-firework-form
+  name: test-form
   namespace: krateo-system
 spec:
   widgetData:
     buttonConfig:
       primary: 
-        label: Custom submit
-        icon: fa-rocket
+        label: Submit
       secondary:
-        label: Go back
+        label: Reset
     submitActionId: firework-submit-action
     stringSchema: |
       {
         "type": "object",
         "properties": {
-          "loremipsum2": {
-            "type": "string",
-            "title": "Lorem ipsum2",
-            "description": "bla bla bla"
-          },
-          "loremipsum3": {
-            "type": "string",
-            "title": "Lorem ipsum3",
-            "description": "bla bla bla"
-          },
           "name": {
             "type": "string",
             "title": "Application Name",
             "description": "The name of your fireworks app"
-          },
-          "loremipsum": {
-            "type": "string",
-            "title": "Lorem ipsum",
-            "description": "bla bla bla"
           },
           "image": {
             "type": "string",
@@ -125,13 +130,13 @@ spec:
           },
           "select2": {
             "type": "string",
-            "title": "provincia",
+            "title": "province",
             "description": "The list of provinces",
             "enum": []
           },
           "select3": {
             "type": "string",
-            "title": "comune",
+            "title": "città",
             "description": "The list of cities",
             "enum": []
           },
@@ -140,7 +145,7 @@ spec:
             "title": "Enable Metrics",
             "default": false
           },
-          "test": {
+          "nested-field": {
             "type": "object",
             "properties": {
               "property1": {
@@ -158,19 +163,19 @@ spec:
     autocomplete:
       - path: name
         fetch:
-          url: https://loremipsum.io/api/1
+          url: https://mocki.io/v1/a9209c26-f49d-4df7-8c4e-4ec11eae35ee
           verb: GET
     dependencies:
       - path: select2
         dependsField: 
           field: select1
         fetch:
-          url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c
+          url: https://mocki.io/v1/8c6edbbd-3a40-4a69-92c8-943957f24e7b
       - path: select3
         dependsField: 
           field: select2
         fetch:
-          url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c
+          url: https://mocki.io/v1/b23f6de1-90f5-4fb5-8224-348f349a2e12
     actions:
       rest:
         - id: firework-submit-action

@@ -361,15 +361,11 @@
                   },
                   "dependsField": {
                     "type": "object",
+                    "additionalProperties": false,
                     "properties": {
                       "field": {
                         "type": "string",
                         "description": "the field that this field depends on"
-                      },
-                      "when": {
-                        "type": "string",
-                        "enum": ["non-empty", "changed", "matchRegex"],
-                        "description": "condition for the dependency to be applied"
                       }
                     }
                   },

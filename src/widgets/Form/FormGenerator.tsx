@@ -9,6 +9,7 @@ import ListEditor from '../../components/ListEditor'
 
 import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
+import type { FormWidgetData } from './Form'
 import styles from './Form.module.css'
 
 type FormGeneratorType = {
@@ -17,14 +18,8 @@ type FormGeneratorType = {
   schema: JSONSchema4
   formId: string
   onSubmit: (values: object) => Promise<void>
-  dependencies?: { path: string; dependsField: { field: string; when: 'non-empty' | 'changed' | 'matchRegex'}; fetch: { url: string; verb: string } }[]
-  autocomplete?: {
-    path: string
-    fetch: {
-      url: string
-      verb: string
-    }
-  }[]
+  dependencies?: FormWidgetData['dependencies']
+  autocomplete?: FormWidgetData['autocomplete']
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
@@ -174,15 +169,14 @@ const FormGenerator = ({
 
             // AsyncSelect
             if (dependencies) {
-              const fetchOptions = dependencies.find((el) => el.path === name)?.fetch
-              const dependsField = dependencies.find((el) => el.path === name)?.dependsField
-              if (fetchOptions && dependsField) {
+              const dependency = dependencies.find(({ path }) => path === name)
+
+              if (dependency) {
                 return (
                   <AsyncSelect
-                    dependsField={dependsField}
-                    fetchOptions={fetchOptions}
+                    dependency={dependency}
                     form={form}
-                    name={name.split('.')}
+                    name={name}
                   />
                 )
               }
