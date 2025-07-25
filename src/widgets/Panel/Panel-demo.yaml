@@ -134,6 +134,12 @@ spec:
             "description": "The list of provinces",
             "enum": []
           },
+          "select3": {
+            "type": "string",
+            "title": "città",
+            "description": "The list of cities",
+            "enum": []
+          },
           "enableMetrics": {
             "type": "boolean",
             "title": "Enable Metrics",
@@ -165,6 +171,11 @@ spec:
           field: select1
         fetch:
           url: https://mocki.io/v1/8c6edbbd-3a40-4a69-92c8-943957f24e7b
+      - path: select3
+        dependsField: 
+          field: select2
+        fetch:
+          url: https://mocki.io/v1/b23f6de1-90f5-4fb5-8224-348f349a2e12
     actions:
       rest:
         - id: firework-submit-action
