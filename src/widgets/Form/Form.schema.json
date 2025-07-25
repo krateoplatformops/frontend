@@ -341,6 +341,10 @@
                         "type": "string",
                         "enum": ["GET", "POST"],
                         "description": "HTTP method to use for fetching options"
+                      },
+                      "queryParam": {
+                        "type": "string",
+                        "description": "The query parameter to be appended to the base URL to call the API"
                       }
                     }
                   }

@@ -5,46 +5,48 @@ import debounce from 'lodash/debounce'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import useCatchError from '../../../hooks/useCatchError'
+import type { FormWidgetData } from '../Form'
 
 interface AutoCompleteProps {
-  fetchOptions: {
-    url: string
-    verb: string
-  }
+  fetchOptions: NonNullable<FormWidgetData['autocomplete']>[number]
 }
 
 const AutoComplete = ({ fetchOptions }: AutoCompleteProps) => {
+  const { fetch: { queryParam = 'q', url, verb } } = fetchOptions
+
   const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
   const { catchError } = useCatchError()
   const { notification } = useApp()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getOptions = useCallback(async (text: string) => {
-    if (!fetchOptions) {
-      return
-    }
-
-    const { url, verb } = fetchOptions
-
     try {
       let response: Response | undefined
-      let data: unknown
 
-      if (verb.toUpperCase() === 'GET') {
-        response = await fetch(`${url}?q=${text}`)
-        data = await response.json()
-      }
-
-      if (verb.toUpperCase() === 'POST') {
+      if (verb === 'GET') {
+        const searchParams = new URLSearchParams({ [queryParam]: text })
+        response = await fetch(`${url}?${searchParams.toString()}`)
+      } else if (verb === 'POST') {
         response = await fetch(url, {
-          body: text,
+          body: JSON.stringify({ [queryParam]: text }),
           headers: {
             'Content-Type': 'application/json',
           },
           method: 'POST',
         })
-        data = await response.json()
       }
+
+      if (!response) {
+        notification.error({
+          description: 'No response received',
+          message: 'Error while retrieving options',
+          placement: 'bottomLeft',
+        })
+
+        return []
+      }
+
+      const data = await response.json() as string[]
 
       if (Array.isArray(data)) {
         setOptions(data.map((item: string) => ({ value: item })))
@@ -66,7 +68,7 @@ const AutoComplete = ({ fetchOptions }: AutoCompleteProps) => {
     } finally {
       setIsLoading(false)
     }
-  }, [catchError, fetchOptions, notification])
+  }, [catchError, notification, queryParam, url, verb])
 
   const debouncedGetOptions = useMemo(() => debounce((text: string) => getOptions(text), 1000), [getOptions])
 
