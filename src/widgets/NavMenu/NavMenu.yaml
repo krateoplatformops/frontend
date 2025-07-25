@@ -115,6 +115,7 @@ spec:
       - resourceRefId: button-with-drawer-filters-2
       - resourceRefId: panel-grid
       - resourceRefId: composition-test-row
+      - resourceRefId: test-panel
   resourcesRefs:
     - id: button-with-drawer-form
       apiVersion: widgets.templates.krateo.io/v1beta1
@@ -145,6 +146,12 @@ spec:
       name: composition-test-row
       namespace: krateo-system
       resource: rows
+      verb: GET
+    - id: test-panel
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: test-panel
+      namespace: krateo-system
+      resource: panels
       verb: GET
 ---
 # ---

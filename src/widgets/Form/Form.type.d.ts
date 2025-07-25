@@ -244,25 +244,26 @@ export interface Form {
           verb: 'GET' | 'POST'
         }
       }[]
-      dependencies: {
+      /**
+       * list of dependencies for the form fields
+       */
+      dependencies?: {
         /**
-         * the path of the target field
+         * the path of the field
          */
         path: string
-        /**
-         * conditions under which the field is enabled or required
-         */
         dependsField: {
           /**
-           * the field to check for conditions
+           * the field that this field depends on
            */
-          field: string
-          when: 'non-empty' | 'changed' | 'matchRegex'
+          field?: string
         }
-        /**
-         * remote data source for the target field
-         */
-        fetch: { url: string; verb: string }
+        fetch: {
+          /**
+           * the URL to fetch options
+           */
+          url: string
+        }
       }[]
     }
     apiRef?: {

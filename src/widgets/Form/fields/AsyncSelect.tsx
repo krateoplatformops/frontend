@@ -1,26 +1,23 @@
 import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select } from 'antd'
 
+import type { FormWidgetData } from '../Form'
+
 type AsyncSelectProps = {
-  fetchOptions: {
-    url: string
-    verb: string
-  }
-  name: string[]
-  dependsField: {
-    field: string
-    when: 'non-empty' | 'changed' | 'matchRegex'
-  }
+  dependency: NonNullable<FormWidgetData['dependencies']>[number]
   form: FormInstance
+  name: string
 }
 
-const AsyncSelect = ({ dependsField, fetchOptions, form, name }: AsyncSelectProps) => {
-  const dependField = Form.useWatch<string | undefined>(dependsField.field, form)
+const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
+  const { dependsField: { field }, fetch: { url } } = dependency
+
+  const dependField = Form.useWatch<string | undefined>(field, form)
 
   const { data: options } = useQuery<string[]>({
     enabled: dependField !== undefined,
-    queryFn: () => fetch(fetchOptions.url).then(res => res.json()),
-    queryKey: ['dependField', dependField, name, fetchOptions.url],
+    queryFn: () => fetch(url).then(res => res.json()),
+    queryKey: ['dependField', dependField, name, url],
   })
 
   return (
