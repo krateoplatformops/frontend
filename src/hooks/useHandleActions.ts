@@ -288,6 +288,7 @@ export const useHandleAction = () => {
             }
 
             let resourceUid: string | null = null
+            let eventReceived = false
             if (onEventNavigateTo) {
               const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
 
@@ -296,31 +297,49 @@ export const useHandleAction = () => {
               })
 
               const timeoutId = setTimeout(() => {
-                setIsActionLoading(false)
-                eventSource.close()
-                notification.error({
-                  message: `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
-                  placement: 'bottomLeft',
-                })
+                if (!eventReceived) {
+                  setIsActionLoading(false)
+                  eventSource.close()
+                  notification.error({
+                    description: errorMessage || `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+                    message: 'Error while executing the action',
+                    placement: 'bottomLeft',
+                  })
+                }
                 message.destroy()
               }, onEventNavigateTo.timeout! * 1000)
 
+              message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
+
               eventSource.addEventListener('krateo', (event) => {
+                if (!resourceUid) { return }
+
                 const data = JSON.parse(event.data as string) as EventData
                 if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
+                  eventReceived = true
+
                   eventSource.close()
                   clearTimeout(timeoutId)
 
                   const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
                   if (!redirectUrl) {
                     notification.error({
-                      description: 'Error while redirecting',
-                      message: 'Impossible to redirect, the route contains an undefined value',
+                      description: 'Impossible to redirect, the route contains an undefined value',
+                      message: 'Error while redirecting',
                       placement: 'bottomLeft',
                     })
+
                     return
                   }
+
                   message.destroy()
+
+                  notification.success({
+                    description: successMessage || 'The action has been executed successfully',
+                    message: `Successfully executed action`,
+                    placement: 'bottomLeft',
+                  })
+
                   setIsActionLoading(false)
                   closeDrawer()
                   void navigate(redirectUrl)
@@ -346,10 +365,6 @@ export const useHandleAction = () => {
               },
               method: verb,
             })
-
-            if (onEventNavigateTo) {
-              message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
-            }
 
             const json = (await res.json()) as RestApiResponse
 
