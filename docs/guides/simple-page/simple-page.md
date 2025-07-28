@@ -121,3 +121,5 @@ After a refresh of the page you'll be able to see the changes reflected in the U
 ## Next steps
 
 A `Button` that does nothing is not very useful, in the next guide we will see how to update the `Button` to trigger an action on click.
+
+Next: [Action button](/docs/guides/action-button/action-button.md)
