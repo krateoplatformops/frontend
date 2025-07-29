@@ -165,12 +165,14 @@ spec:
         dependsField: 
           field: select1
         fetch:
-          url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c
+          url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c/${select1}
+          verb: GET
       - path: select3
         dependsField: 
           field: select2
         fetch:
           url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c
+          verb: GET
     actions:
       rest:
         - id: firework-submit-action

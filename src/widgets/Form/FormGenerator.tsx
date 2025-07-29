@@ -160,9 +160,13 @@ const FormGenerator = ({
         const formItemContent = (() => {
           // Autocomplete
           if (autocomplete) {
-            const fetchOptions = autocomplete.find((el) => el.path === name)?.fetch
-            if (fetchOptions) { return <AutoComplete fetchOptions={fetchOptions} /> }
+            const fetchOptions = autocomplete.find(({ path }) => path === name)
+
+            if (fetchOptions) {
+              return <AutoComplete fetchOptions={fetchOptions} />
+            }
           }
+
           // Enum
           if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
             const enumArr = node.enum as (string | number)[]

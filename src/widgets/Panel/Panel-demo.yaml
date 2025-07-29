@@ -171,11 +171,14 @@ spec:
           field: select1
         fetch:
           url: https://mocki.io/v1/8c6edbbd-3a40-4a69-92c8-943957f24e7b
+          verb: GET
+          queryParam: region
       - path: select3
         dependsField: 
           field: select2
         fetch:
           url: https://mocki.io/v1/b23f6de1-90f5-4fb5-8224-348f349a2e12
+          verb: GET
     actions:
       rest:
         - id: firework-submit-action

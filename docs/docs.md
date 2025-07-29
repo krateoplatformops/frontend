@@ -7,7 +7,7 @@ In Krateo Composable Portal everything is based on the concept of widgets and th
 ## Anatomy of a widget
 
 A widget source of truth is a JSON schema that is used to generate a CRD, this allow each widget to have it's own Kind and schema validation at the moment of apply
-example: [src/widgets/Button/Button.schema.json](../src/widgets/Button/Button.schema.jsonsrc/widgets/Button/Button.schema.json)
+example: [src/widgets/Button/Button.schema.json](/src/widgets/Button/Button.schema.json)
 
 ## widgetData
 

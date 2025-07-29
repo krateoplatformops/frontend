@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select } from 'antd'
+import useApp from 'antd/es/app/useApp'
 import { useEffect } from 'react'
 
 import type { FormWidgetData } from '../Form'
@@ -11,7 +12,9 @@ type AsyncSelectProps = {
 }
 
 const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
-  const { dependsField: { field }, fetch: { url, verb } } = dependency
+  const { dependsField: { field }, fetch: { queryParam = 'q', url, verb } } = dependency
+
+  const { notification } = useApp()
 
   const dependField = Form.useWatch<string | undefined>(field, form)
 
@@ -22,21 +25,36 @@ const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
     }
   }, [dependField, form, name])
 
-  const fetchDependField = (): Promise<string[]> => {
-    if (verb.toUpperCase() === 'GET') {
-      return fetch(`${url}?q=${dependField}`)
-        .then(res => res.json())
+  const fetchDependField = async (): Promise<string[]> => {
+    try {
+      let response: Response
+
+      if (verb === 'GET') {
+        const searchParams = new URLSearchParams({ [queryParam]: dependField ?? '' })
+        response = await fetch(`${url}?${searchParams.toString()}`)
+      } else if (verb === 'POST') {
+        response = await fetch(url, {
+          body: JSON.stringify({ [queryParam]: dependField ?? '' }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        })
+      } else {
+        return []
+      }
+
+      const data = await response.json() as string[]
+      return data
+    } catch (error) {
+      notification.error({
+        description: 'There has been an unhandled error while retrieving field options',
+        message: 'Error while retrieving options',
+        placement: 'bottomLeft',
+      })
+      console.error('fetchDependField error:', error)
+      return []
     }
-    if (verb.toUpperCase() === 'POST') {
-      return fetch(url, {
-        body: dependField,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-      }).then(res => res.json())
-    }
-    return Promise.resolve([])
   }
 
   const { data: options } = useQuery<string[]>({
@@ -45,17 +63,17 @@ const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
     queryKey: ['dependField', dependField, name, url],
   })
 
+  if (dependField === undefined) {
+    return <Select disabled options={[]} />
+  }
+
   return (
-    dependField === undefined ? (
-      <Select disabled options={[]} />
-    ) : (
-      <Select
-        allowClear
-        onChange={value => form.setFieldsValue({ [name]: value })}
-        options={options?.map(item => ({ label: item, value: item }))}
-        value={form.getFieldValue(name) as string | undefined}
-      />
-    )
+    <Select
+      allowClear
+      onChange={value => form.setFieldsValue({ [name]: value })}
+      options={options?.map(item => ({ label: item, value: item }))}
+      value={form.getFieldValue(name) as string | undefined}
+    />
   )
 }
 
