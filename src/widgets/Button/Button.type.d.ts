@@ -221,13 +221,15 @@ export interface Button {
       clickActionId: string
     }
     resourcesRefs?: {
-      id: string
-      apiVersion: string
-      name: string
-      namespace: string
-      resource: string
-      verb: 'GET' | 'POST' | 'DELETE'
-    }[]
+      items: {
+        id: string
+        apiVersion: string
+        name: string
+        namespace: string
+        resource: string
+        verb: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
+      }[]
+    }
     apiRef?: {
       name: string
       namespace: string

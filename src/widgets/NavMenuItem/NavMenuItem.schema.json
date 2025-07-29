@@ -71,34 +71,46 @@
           }
         },
         "resourcesRefs": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "apiVersion": {
-                "type": "string",
-                "enum": ["widgets.templates.krateo.io/v1beta1"]
-              },
-              "name": {
-                "type": "string"
-              },
-              "namespace": {
-                "type": "string"
-              },
-              "resource": {
-                "type": "string",
-                "enum": ["pages"]
-              },
-              "verb": {
-                "type": "string",
-                "enum": ["GET"]
+          "type": "object",
+          "required": ["items"],
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "apiVersion",
+                  "name",
+                  "namespace",
+                  "resource",
+                  "verb"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "apiVersion": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "resource": {
+                    "type": "string"
+                  },
+                  "verb": {
+                    "type": "string",
+                    "enum": ["DELETE", "GET", "PATCH", "POST", "PUT"]
+                  }
+                }
               }
-            },
-            "additionalProperties": false
+            }
           }
         }
       },

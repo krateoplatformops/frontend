@@ -73,37 +73,44 @@
           "additionalProperties": false
         },
         "resourcesRefs": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "id",
-              "apiVersion",
-              "name",
-              "namespace",
-              "resource",
-              "verb"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "apiVersion": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "namespace": {
-                "type": "string"
-              },
-              "resource": {
-                "type": "string"
-              },
-              "verb": {
-                "type": "string",
-                "enum": ["GET", "POST", "DELETE"]
+          "type": "object",
+          "required": ["items"],
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "apiVersion",
+                  "name",
+                  "namespace",
+                  "resource",
+                  "verb"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "apiVersion": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "resource": {
+                    "type": "string"
+                  },
+                  "verb": {
+                    "type": "string",
+                    "enum": ["DELETE", "GET", "PATCH", "POST", "PUT"]
+                  }
+                }
               }
             }
           }
