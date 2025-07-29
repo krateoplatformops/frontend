@@ -5,7 +5,9 @@ export interface ResourceRef {
   payload: object
 }
 
-export type ResourcesRefs = ResourceRef[]
+export type ResourcesRefs = {
+  items: ResourceRef[]
+}
 
 export interface Widget<WidgetDataType = unknown> {
   apiVersion: string

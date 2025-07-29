@@ -39,7 +39,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
   const { config } = useConfigContext()
 
   /* HACK: waiting for the widgetData to return items from the backend via a restaction that sets items from resourcesRefsTemplate */
-  const items = resourcesRefs
+  const { items } = resourcesRefs
 
   const { loadedAllMenuItems, navMenuItems } = useQueries({
     combine: (results) => {
