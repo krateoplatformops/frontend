@@ -4,6 +4,7 @@ import { useParams, type RouteObject } from 'react-router'
 import WidgetPage from '../components/WidgetPage'
 import Auth from '../pages/Auth/Auth'
 import Login from '../pages/Login'
+import Profile from '../pages/Profile'
 import type { ResourceRef } from '../types/Widget'
 
 export interface AppRoute {
@@ -26,6 +27,7 @@ const RoutesContext = createContext<RoutesContextType | undefined>(undefined)
 const defaultRoutes: RouteObject[] = [
   { element: <Login />, path: '/login' },
   { element: <Auth />, path: '/auth' },
+  { element: <Profile />, path: '/profile' },
   { element: <WidgetPage />, path: '*' },
 ]
 
