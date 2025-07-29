@@ -16,7 +16,8 @@
       "properties": {
         "widgetData": {
           "type": "object",
-          "additionalProperties": false
+          "additionalProperties": false,
+          "tsType": "object"
         },
         "apiRef": {
           "type": "object",
@@ -50,7 +51,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
+            "required": [
+              "id",
+              "apiVersion",
+              "name",
+              "namespace",
+              "resource",
+              "verb"
+            ],
             "additionalProperties": false,
             "properties": {
               "id": {
