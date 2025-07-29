@@ -11,30 +11,31 @@ spec:
       - resourceRefId: panel-backend-endpoint-id
       - resourceRefId: button-with-drawer-backend-endpoint-id
   resourcesRefs:
-    - id: panel-with-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-with-row
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-with-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-with-column
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-backend-endpoint-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-panel
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: button-with-drawer-backend-endpoint-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-with-drawer
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
+    items:
+      - id: panel-with-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-with-row
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-with-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-with-column
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-backend-endpoint-id
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: button-with-drawer-backend-endpoint-id
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-with-drawer
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
 ---
 kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -53,54 +54,55 @@ spec:
       - resourceRefId: panel-line-chart
       - resourceRefId: panel-bar-chart
   resourcesRefs:
-    - id: button-delete-fireworks-app
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-delete-fireworks-app
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: panel-paragraph
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-paragraph
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-yaml-viewer
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-yaml-viewer
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-markdown
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-markdown
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-event-list
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-event-list
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-tab-list
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-tab-list
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-line-chart
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-line-chart
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-bar-chart
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-bar-chart
-      namespace: krateo-system
-      resource: panels
-      verb: GET
+    items:
+      - id: button-delete-fireworks-app
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-delete-fireworks-app
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: panel-paragraph
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-paragraph
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-yaml-viewer
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-yaml-viewer
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-markdown
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-markdown
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-event-list
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-event-list
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-tab-list
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-tab-list
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-line-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-line-chart
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-bar-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-bar-chart
+        namespace: krateo-system
+        resource: panels
+        verb: GET
 ---
 kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -117,42 +119,43 @@ spec:
       - resourceRefId: composition-test-row
       - resourceRefId: test-panel
   resourcesRefs:
-    - id: button-with-drawer-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-with-drawer-form
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: button-with-modal-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-with-modal-form
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: button-with-drawer-filters-2
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-with-drawer-filters-2
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: panel-grid
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-grid
-      namespace: krateo-system
-      resource: datagrids
-      verb: GET
-    - id: composition-test-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-row
-      namespace: krateo-system
-      resource: rows
-      verb: GET
-    - id: test-panel
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: test-panel
-      namespace: krateo-system
-      resource: panels
-      verb: GET
+    items:
+      - id: button-with-drawer-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-with-drawer-form
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: button-with-modal-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-with-modal-form
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: button-with-drawer-filters-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-with-drawer-filters-2
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: panel-grid
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-grid
+        namespace: krateo-system
+        resource: datagrids
+        verb: GET
+      - id: composition-test-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-row
+        namespace: krateo-system
+        resource: rows
+        verb: GET
+      - id: test-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
 ---
 # ---
 # kind: Page
@@ -165,12 +168,13 @@ spec:
 #     items:
 #       - resourceRefId: button-post-nginx
 #   resourcesRefs:
-#     - id: button-post-nginx
-#       apiVersion: widgets.templates.krateo.io/v1beta1
-#       name: button-post-nginx
-#       namespace: krateo-system
-#       resource: buttons
-#       verb: GET
+#     items:
+#       - id: button-post-nginx
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: button-post-nginx
+#         namespace: krateo-system
+#         resource: buttons
+#         verb: GET
 # ---
 kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -186,12 +190,13 @@ spec:
     order: 10
   
   resourcesRefs:
-    - id: dashboard-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: dashboard-page
-      namespace: krateo-system
-      resource: pages
-      verb: GET
+    items:
+      - id: dashboard-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: dashboard-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
 ---
 kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -207,12 +212,13 @@ spec:
     order: 20
 
   resourcesRefs:
-    - id: templates-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-page
-      namespace: krateo-system
-      resource: pages
-      verb: GET
+    items:
+      - id: templates-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: templates-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
 ---
 kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -228,12 +234,13 @@ spec:
     order: 50
 
   resourcesRefs:
-    - id: form-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: form-page
-      namespace: krateo-system
-      resource: pages
-      verb: GET
+    items:
+      - id: form-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: form-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
 ---
 kind: NavMenu
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -243,7 +250,8 @@ metadata:
 spec:
   widgetData:
     items: [] # TODO: compile this from restaction at the moment we are reading from resourcesRefs instead of items in the frontend
-  resourcesRefs: []
+  resourcesRefs:
+    items: []
 
   resourcesRefsTemplate:
     - iterator: ${ .navmenuitems }
@@ -291,12 +299,13 @@ spec:
     order: 30
 
   resourcesRefs:
-    - id: grid-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: grid-page
-      namespace: krateo-system
-      resource: pages
-      verb: GET
+    items:
+      - id: grid-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: grid-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
 ---
 kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -308,12 +317,13 @@ spec:
     items:
       - resourceRefId: button-with-drawer-filters
   resourcesRefs:
-    - id: button-with-drawer-filters
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-with-drawer-filters
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
+    items:
+      - id: button-with-drawer-filters
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-with-drawer-filters
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
 ---
 kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -328,12 +338,13 @@ spec:
     path: /tablefilter
     order: 30
   resourcesRefs:
-    - id: table-filter-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-filter-page
-      namespace: krateo-system
-      resource: pages
-      verb: GET
+    items:
+      - id: table-filter-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-filter-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
 ---
 kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -348,27 +359,28 @@ spec:
       - resourceRefId: line-chart-with-dates
       - resourceRefId: line-chart-with-dates-2
   resourcesRefs:
-    - id: table-filters
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-filters
-      namespace: krateo-system
-      resource: filters
-      verb: GET
-    # - id: panel-with-column
-    #   apiVersion: widgets.templates.krateo.io/v1beta1
-    #   name: panel-with-column
-    #   namespace: krateo-system
-    #   resource: panels
-    #   verb: GET
-    - id: line-chart-with-dates
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: line-chart-with-dates
-      namespace: krateo-system
-      resource: linecharts
-      verb: GET
-    - id: line-chart-with-dates-2
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: line-chart-with-dates-2
-      namespace: krateo-system
-      resource: linecharts
-      verb: GET
+    items:
+      - id: table-filters
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-filters
+        namespace: krateo-system
+        resource: filters
+        verb: GET
+      # - id: panel-with-column
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: panel-with-column
+      #   namespace: krateo-system
+      #   resource: panels
+      #   verb: GET
+      - id: line-chart-with-dates
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: line-chart-with-dates
+        namespace: krateo-system
+        resource: linecharts
+        verb: GET
+      - id: line-chart-with-dates-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: line-chart-with-dates-2
+        namespace: krateo-system
+        resource: linecharts
+        verb: GET

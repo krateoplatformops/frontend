@@ -16,24 +16,25 @@ spec:
       - resourceRefId: button-1
       - resourceRefId: button-1
   resourcesRefs:
-    - id: my-table
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-table
-      namespace: krateo-system
-      resource: tables
-      verb: GET
-    - id: my-pie-chart
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-pie-chart
-      namespace: krateo-system
-      resource: piecharts
-      verb: GET
-    - id: button-1
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-1
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
+    items:
+      - id: my-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+      - id: my-pie-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-pie-chart
+        namespace: krateo-system
+        resource: piecharts
+        verb: GET
+      - id: button-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-1
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -52,18 +53,19 @@ spec:
     items:
       - resourceRefId: first-row
   resourcesRefs:
-    - id: first-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: first-row
-      namespace: krateo-system
-      resource: rows
-      verb: GET
-    - id: my-tab-list
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-tab-list
-      namespace: krateo-system
-      resource: tablists
-      verb: GET
+    items:
+      - id: first-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: first-row
+        namespace: krateo-system
+        resource: rows
+        verb: GET
+      - id: my-tab-list
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-tab-list
+        namespace: krateo-system
+        resource: tablists
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -84,24 +86,25 @@ spec:
       - tag1
       - tag2
   resourcesRefs:
-    - id: first-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: first-column
-      namespace: krateo-system
-      resource: columns
-      verb: GET
-    - id: button-with-drawer-filters
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-with-drawer-filters
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: button-1
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-1
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
+    items:
+      - id: first-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: first-column
+        namespace: krateo-system
+        resource: columns
+        verb: GET
+      - id: button-with-drawer-filters
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-with-drawer-filters
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: button-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-1
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -115,12 +118,13 @@ spec:
     items:
       - resourceRefId: my-paragraph
   resourcesRefs:
-    - id: my-paragraph
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-paragraph
-      namespace: krateo-system
-      resource: paragraphs
-      verb: GET
+    items:
+      - id: my-paragraph
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-paragraph
+        namespace: krateo-system
+        resource: paragraphs
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -134,12 +138,13 @@ spec:
     items:
       - resourceRefId: my-yaml-viewer
   resourcesRefs:
-    - id: my-yaml-viewer
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-yaml-viewer
-      namespace: krateo-system
-      resource: yamlviewers
-      verb: GET
+    items:
+      - id: my-yaml-viewer
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-yaml-viewer
+        namespace: krateo-system
+        resource: yamlviewers
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -153,12 +158,13 @@ spec:
     items:
       - resourceRefId: my-markdown
   resourcesRefs:
-    - id: my-markdown
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-markdown
-      namespace: krateo-system
-      resource: markdowns
-      verb: GET
+    items:
+      - id: my-markdown
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-markdown
+        namespace: krateo-system
+        resource: markdowns
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -172,12 +178,13 @@ spec:
     items:
       - resourceRefId: my-event-list
   resourcesRefs:
-    - id: my-event-list
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-event-list
-      namespace: krateo-system
-      resource: eventlists
-      verb: GET
+    items:
+      - id: my-event-list
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-event-list
+        namespace: krateo-system
+        resource: eventlists
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -191,12 +198,13 @@ spec:
     items:
       - resourceRefId: my-tab-list
   resourcesRefs:
-    - id: my-tab-list
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-tab-list
-      namespace: krateo-system
-      resource: tablists
-      verb: GET
+    items:
+      - id: my-tab-list
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-tab-list
+        namespace: krateo-system
+        resource: tablists
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -210,12 +218,13 @@ spec:
     items:
       - resourceRefId: my-line-chart
   resourcesRefs:
-    - id: my-line-chart
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-line-chart
-      namespace: krateo-system
-      resource: linecharts
-      verb: GET
+    items:
+      - id: my-line-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-line-chart
+        namespace: krateo-system
+        resource: linecharts
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -229,12 +238,13 @@ spec:
     items:
       - resourceRefId: my-bar-chart
   resourcesRefs:
-    - id: my-bar-chart
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-bar-chart
-      namespace: krateo-system
-      resource: barcharts
-      verb: GET
+    items:
+      - id: my-bar-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-bar-chart
+        namespace: krateo-system
+        resource: barcharts
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -263,30 +273,31 @@ spec:
           loading:
             display: true
   resourcesRefs:
-    - id: composition-test-paragraph
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-paragraph
-      namespace: krateo-system
-      resource: paragraphs
-      verb: GET
-    - id: composition-test-button
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-button
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: my-tab-list
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-tab-list
-      namespace: krateo-system
-      resource: tablists
-      verb: GET
-    - id: button-test-action-get
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-test-action-get
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
+    items:
+      - id: composition-test-paragraph
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-paragraph
+        namespace: krateo-system
+        resource: paragraphs
+        verb: GET
+      - id: composition-test-button
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-button
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: my-tab-list
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-tab-list
+        namespace: krateo-system
+        resource: tablists
+        verb: GET
+      - id: button-test-action-get
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-test-action-get
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -300,11 +311,12 @@ spec:
     items:
       - resourceRefId: my-filters
   resourcesRefs:
-    - id: my-filters
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-filters
-      namespace: krateo-system
-      resource: filters
+    items:
+      - id: my-filters
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-filters
+        namespace: krateo-system
+        resource: filters
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -318,11 +330,12 @@ spec:
     items:
       - resourceRefId: table-of-pods
   resourcesRefs:
-    - id: table-of-pods
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-of-pods
-      namespace: krateo-system
-      resource: filters
+    items:
+      - id: table-of-pods
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-of-pods
+        namespace: krateo-system
+        resource: filters
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -354,24 +367,25 @@ spec:
           size: large
           title: Fireworksapp
   resourcesRefs:
-    - id: my-paragraph
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-paragraph
-      namespace: krateo-system
-      resource: paragraphs
-      verb: GET
-    - id: composition-test-button
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-button
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: test-firework-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: test-firework-form
-      namespace: krateo-system
-      resource: forms
-      verb: GET
+    items:
+      - id: my-paragraph
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-paragraph
+        namespace: krateo-system
+        resource: paragraphs
+        verb: GET
+      - id: composition-test-button
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-button
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: test-firework-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-firework-form
+        namespace: krateo-system
+        resource: forms
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -403,21 +417,22 @@ spec:
           size: large
           title: Fireworksapp
   resourcesRefs:
-    - id: my-paragraph
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-paragraph
-      namespace: krateo-system
-      resource: paragraphs
-      verb: GET
-    - id: composition-test-button
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-button
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: test-firework-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: test-firework-form
-      namespace: krateo-system
-      resource: forms
-      verb: GET
+    items:
+      - id: my-paragraph
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-paragraph
+        namespace: krateo-system
+        resource: paragraphs
+        verb: GET
+      - id: composition-test-button
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-button
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: test-firework-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-firework-form
+        namespace: krateo-system
+        resource: forms
+        verb: GET

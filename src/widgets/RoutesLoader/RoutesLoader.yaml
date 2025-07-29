@@ -5,7 +5,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData: {}
-  resourcesRefs: []
+  resourcesRefs:
+    items: []
 
   resourcesRefsTemplate:
     - iterator: ${ .routes }

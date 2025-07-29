@@ -8,10 +8,11 @@ spec:
     path: /compositions/{namespace}/{name}
     resourceRefId: composition-detail-tablist
   resourcesRefs:
-    - id: composition-detail-tablist
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: "{name}-composition-tablist"
-      namespace: "{namespace}"
-      resource: tablists
-      verb: GET
-  
+    items:
+      - id: composition-detail-tablist
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: "{name}-composition-tablist"
+        namespace: "{namespace}"
+        resource: tablists
+        verb: GET
+    

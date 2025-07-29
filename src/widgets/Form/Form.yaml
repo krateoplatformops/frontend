@@ -10,12 +10,13 @@ spec:
     items:
       - resourceRefId: firework-form
   resourcesRefs:
-    - id: firework-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: firework-form
-      namespace: krateo-system
-      resource: forms
-      verb: GET
+    items:
+      - id: firework-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: firework-form
+        namespace: krateo-system
+        resource: forms
+        verb: GET
 ---
 kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -39,12 +40,13 @@ spec:
     - forPath: schema
       expression: ${ .getSchema | .spec.versions[] | select(.name == "v2-0-0") | .schema.openAPIV3Schema.properties.spec }
   resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
-      name: new-app
-      namespace: fireworksapp-system
-      resource: fireworksapps
-      verb: POST
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v2-0-0
+        name: new-app
+        namespace: fireworksapp-system
+        resource: fireworksapps
+        verb: POST
   apiRef:
     name: firework-schema
     namespace: krateo-system
@@ -186,9 +188,10 @@ spec:
           loading:
             display: true
   resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
-      name: new-app
-      namespace: fireworksapp-system
-      resource: fireworksapps
-      verb: POST
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v2-0-0
+        name: new-app
+        namespace: fireworksapp-system
+        resource: fireworksapps
+        verb: POST

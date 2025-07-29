@@ -49,9 +49,10 @@ spec:
             - name: metadata.name
               value: ${ git.toRepo.name }
   resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
-      name: new-app
-      namespace: test-namespace
-      resource: fireworksapps
-      verb: POST
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v2-0-0
+        name: new-app
+        namespace: test-namespace
+        resource: fireworksapps
+        verb: POST

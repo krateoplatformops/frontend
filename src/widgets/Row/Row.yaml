@@ -11,18 +11,19 @@ spec:
       - resourceRefId: pie-chart-inside-column
         size: 6
   resourcesRefs:
-    - id: table-of-pods
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-of-pods
-      namespace: krateo-system
-      resource: tables
-      verb: GET
-    - id: pie-chart-inside-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: pie-chart-inside-column
-      namespace: krateo-system
-      resource: piecharts
-      verb: GET
+    items:
+      - id: table-of-pods
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-of-pods
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+      - id: pie-chart-inside-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: pie-chart-inside-column
+        namespace: krateo-system
+        resource: piecharts
+        verb: GET
 ---
 kind: Row
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -34,9 +35,10 @@ spec:
     items:
       - resourceRefId: composition-test-panel
   resourcesRefs:
-    - id: composition-test-panel
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-panel
-      namespace: krateo-system
-      resource: panels
-      verb: GET
+    items:
+      - id: composition-test-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET

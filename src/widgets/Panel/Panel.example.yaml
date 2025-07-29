@@ -15,27 +15,28 @@ spec:
         - resourceRefId: button-1
         - resourceRefId: button-2
   resourcesRefs:
-    - id: my-table
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-table
-      namespace: test-namespace
-      resource: tables
-      verb: GET
-    - id: my-pie-chart
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-pie-chart
-      namespace: test-namespace
-      resource: piecharts
-      verb: GET
-    - id: button-1
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-1
-      namespace: test-namespace
-      resource: buttons
-      verb: GET
-    - id: button-2
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-2
-      namespace: test-namespace
-      resource: buttons
-      verb: GET
+    items:
+      - id: my-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-table
+        namespace: test-namespace
+        resource: tables
+        verb: GET
+      - id: my-pie-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-pie-chart
+        namespace: test-namespace
+        resource: piecharts
+        verb: GET
+      - id: button-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-1
+        namespace: test-namespace
+        resource: buttons
+        verb: GET
+      - id: button-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-2
+        namespace: test-namespace
+        resource: buttons
+        verb: GET

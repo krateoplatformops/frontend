@@ -88,12 +88,13 @@ spec:
       expression: ${ .getSchemaNotOrdered.data["values.schema.json"] }
   
   resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
-      name: new-app
-      namespace: krateo-system
-      resource: fireworksapps
-      verb: POST
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v2-0-0
+        name: new-app
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
       
   apiRef:
     name: fireworksapp-schema-notordered

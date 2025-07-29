@@ -6,7 +6,8 @@ metadata:
 spec:
   widgetData:
     items: [] # TODO: compile this from restaction at the moment we are reading from resourcesRefs instead of items in the frontend
-  resourcesRefs: []
+  resourcesRefs:
+    items: []
 
   resourcesRefsTemplate:
     - iterator: ${ .navmenuitems }
