@@ -1,3 +1,4 @@
+
 kind: RoutesLoader
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -7,7 +8,6 @@ spec:
   widgetData: {}
   resourcesRefs:
     items: []
-
   resourcesRefsTemplate:
     - iterator: ${ .routes }
       template:
@@ -17,7 +17,6 @@ spec:
         resource: routes
         namespace: ${ .metadata.namespace }
         verb: GET
-
   apiRef:
     name: all-routes
     namespace: krateo-system
@@ -31,11 +30,22 @@ spec:
   api:
   - name: namespaces
     path: "/api/v1/namespaces"
-    filter: "[.items[] | .metadata.name]"
+    filter: "[.namespaces.items[] | .metadata.name]"
   - name: routes
     continueOnError: true
     dependsOn: 
       name: namespaces
-      iterator: .[]
+      iterator: .namespaces
     path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/routes" }
-  filter: "{routes: [.routes[] | select(.items != null) | .items[]]}"
+  filter: >
+    {
+      routes: (
+        if (.routes | type) == "array" then
+          [.routes[]?.items[]?]
+        elif (.routes | type) == "object" then
+          [.routes.items[]?]
+        else
+          []
+        end
+      )
+    }

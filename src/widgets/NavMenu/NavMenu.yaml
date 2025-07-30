@@ -242,6 +242,57 @@ spec:
         resource: pages
         verb: GET
 ---
+# kind: NavMenu
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: sidebar-nav-menu
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     items: [] # TODO: compile this from restaction at the moment we are reading from resourcesRefs instead of items in the frontend
+#   resourcesRefs:
+#     items: []
+
+#   resourcesRefsTemplate:
+#     - iterator: ${ .navmenuitems }
+#       template:
+#         id: ${ .metadata.namespace + "_" + .metadata.name }
+#         name: ${ .metadata.name }
+#         apiVersion: ${ .apiVersion }
+#         resource: navmenuitems
+#         namespace: ${ .metadata.namespace }
+#         verb: GET
+
+#   apiRef:
+#     name: navmenuitems
+#     namespace: krateo-system
+---
+# apiVersion: templates.krateo.io/v1
+# kind: RESTAction
+# metadata:
+#   name: navmenuitems
+#   # namespace: {{ .Release.Namespace }}
+#   namespace: krateo-system
+# spec:
+#   api:
+#   - name: namespaces
+#     path: "/api/v1/namespaces"
+#     filter: "[.items[] | .metadata.name]"
+#   - name: navmenuitems
+#     dependsOn: 
+#       name: namespaces
+#       iterator: .[]
+#     path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/navmenuitems" }
+#   filter: >
+#     {
+#       navmenuitems: (
+#         [ .items[] ]
+#         | sort_by(.spec.widgetData.order)
+#       )
+#     }
+---
+
+
 kind: NavMenu
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -249,10 +300,9 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    items: [] # TODO: compile this from restaction at the moment we are reading from resourcesRefs instead of items in the frontend
-  resourcesRefs:
     items: []
-
+  resourcesRefs:  
+    items: []
   resourcesRefsTemplate:
     - iterator: ${ .navmenuitems }
       template:
@@ -262,28 +312,38 @@ spec:
         resource: navmenuitems
         namespace: ${ .metadata.namespace }
         verb: GET
-
   apiRef:
-    name: navmenuitems
+    name: sidebar-nav-menu-items
     namespace: krateo-system
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  name: navmenuitems
-  # namespace: {{ .Release.Namespace }}
+  name: sidebar-nav-menu-items
   namespace: krateo-system
 spec:
   api:
   - name: namespaces
     path: "/api/v1/namespaces"
-    filter: "[.items[] | .metadata.name]"
+    filter: "[.namespaces.items[] | .metadata.name]"
   - name: navmenuitems
+    continueOnError: true
     dependsOn: 
       name: namespaces
-      iterator: .[]
+      iterator: .namespaces
     path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/navmenuitems" }
-  filter: "{navmenuitems: [.navmenuitems[] | select(.items != null) | .items[]] | sort_by(.spec.widgetData.order)}"
+  filter: >
+    {
+      navmenuitems: (
+        if (.navmenuitems | type) == "array" then
+          [.navmenuitems[]?.items[]?]
+        elif (.navmenuitems | type) == "object" then
+          [.navmenuitems.items[]?]
+        else
+          []
+        end | sort_by(.spec.widgetData.order)
+      )
+    }
 ---
 kind: NavMenuItem
 apiVersion: widgets.templates.krateo.io/v1beta1

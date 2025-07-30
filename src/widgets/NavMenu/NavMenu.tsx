@@ -39,7 +39,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
   const { config } = useConfigContext()
 
   /* HACK: waiting for the widgetData to return items from the backend via a restaction that sets items from resourcesRefsTemplate */
-  const { items } = resourcesRefs
+  const { items = [] } = resourcesRefs || {}
 
   const { loadedAllMenuItems, navMenuItems } = useQueries({
     combine: (results) => {
@@ -50,7 +50,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
         navMenuItems: results.map(({ data }) => data),
       }
     },
-    queries: items.map(({ id, path }) => {
+    queries: (items ?? []).map(({ id, path }) => {
       const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${path}`
       return {
         queryFn: async (): Promise<NavMenuItemResponse> => {
@@ -134,7 +134,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
     <>
       <Menu
         className={styles.menu}
-        defaultSelectedKeys={loadedAllMenuItems ? [menuItems[0].key as string] : []}
+        defaultSelectedKeys={loadedAllMenuItems && menuItems.length > 0 ? [menuItems[0].key as string] : []}
         items={menuItems}
         key={uid}
         mode='inline'
