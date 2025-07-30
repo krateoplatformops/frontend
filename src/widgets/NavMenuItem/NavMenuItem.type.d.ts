@@ -36,7 +36,7 @@ export interface NavMenuItem {
       expression?: string
     }[]
     resourcesRefs?: {
-      items: {
+      items?: {
         id: string
         apiVersion: string
         name: string

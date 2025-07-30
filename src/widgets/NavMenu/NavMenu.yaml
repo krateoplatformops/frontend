@@ -301,8 +301,7 @@ metadata:
 spec:
   widgetData:
     items: []
-  resourcesRefs:  
-    items: []
+  resourcesRefs: {}
   resourcesRefsTemplate:
     - iterator: ${ .navmenuitems }
       template:

@@ -25,7 +25,7 @@ export interface NavMenu {
       expression?: string
     }[]
     resourcesRefs?: {
-      items: {
+      items?: {
         id: string
         apiVersion: string
         name: string

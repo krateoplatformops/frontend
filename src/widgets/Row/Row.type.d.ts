@@ -24,7 +24,7 @@ export interface Row {
       }[]
     }
     resourcesRefs: {
-      items: {
+      items?: {
         id: string
         apiVersion: string
         name: string

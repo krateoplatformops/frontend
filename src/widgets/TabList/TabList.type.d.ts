@@ -27,7 +27,7 @@ export interface TabList {
       }[]
     }
     resourcesRefs: {
-      items: {
+      items?: {
         id: string
         apiVersion: string
         name: string

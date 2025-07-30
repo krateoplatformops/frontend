@@ -229,7 +229,7 @@ export interface Panel {
       tooltip?: string
     }
     resourcesRefs: {
-      items: {
+      items?: {
         id: string
         apiVersion: string
         name: string

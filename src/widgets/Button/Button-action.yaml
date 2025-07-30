@@ -18,11 +18,4 @@ spec:
             display: true
           successMessage: "Pod letto correttamente"
           errorMessage: "Errore nella lettura del pod"
-  resourcesRefs:
-    items:
-      - id: get-pod-default
-        apiVersion: v1
-        resource: pods
-        verb: GET
-        name: cratedb-0
-        namespace: krateo-system
+  resourcesRefs: {}

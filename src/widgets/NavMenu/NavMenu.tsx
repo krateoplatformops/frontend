@@ -10,7 +10,7 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import { useConfigContext } from '../../context/ConfigContext'
 import type { AppRoute } from '../../context/RoutesContext'
 import { useRoutesContext } from '../../context/RoutesContext'
-import type { WidgetProps } from '../../types/Widget'
+import type { ResourceRef, WidgetProps } from '../../types/Widget'
 import { getAccessToken } from '../../utils/getAccessToken'
 import type { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
 
@@ -19,16 +19,12 @@ import type { NavMenu as WidgetType } from './NavMenu.type'
 
 export type NavMenuWidgetData = WidgetType['spec']['widgetData']
 
-interface ResolvedResourceRef {
-  id: string
-  path: string
-  verb: 'GET' | 'POST' | 'DELETE'
-}
-
 type NavMenuItemResponse = Omit<NavMenuItem, 'status'> & {
   status: {
     widgetData: NavMenuItem['spec']['widgetData']
-    resourcesRefs?: ResolvedResourceRef[]
+    resourcesRefs?: {
+      items: Omit<ResourceRef, 'payload'>[]
+    }
   }
 }
 
@@ -79,7 +75,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
               widgetData: { path, resourceRefId },
             },
           }) => {
-            const routeResourceRef = resourcesRefs?.find(({ id }) => id === resourceRefId)
+            const routeResourceRef = resourcesRefs?.items.find(({ id }) => id === resourceRefId)
             if (!routeResourceRef) {
               return null
             }

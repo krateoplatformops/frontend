@@ -110,7 +110,6 @@
         },
         "resourcesRefs": {
           "type": "object",
-          "required": ["items"],
           "additionalProperties": false,
           "properties": {
             "items": {

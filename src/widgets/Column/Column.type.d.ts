@@ -24,7 +24,7 @@ export interface Column {
       size?: number
     }
     resourcesRefs: {
-      items: {
+      items?: {
         id: string
         apiVersion: string
         name: string
