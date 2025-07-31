@@ -16,9 +16,10 @@ spec:
         type: rest
         onSuccessNavigateTo: /templates
   resourcesRefs:
-    - id: cleanup
-      apiVersion: templates.krateo.io/v1
-      resource: restactions
-      name: fireworksapp-template-restaction-cleanup
-      namespace: fireworksapp-system
-      verb: GET
+    items:
+      - id: cleanup
+        apiVersion: templates.krateo.io/v1
+        resource: restactions
+        name: fireworksapp-template-restaction-cleanup
+        namespace: fireworksapp-system
+        verb: GET

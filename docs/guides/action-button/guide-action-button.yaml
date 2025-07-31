@@ -17,12 +17,13 @@ spec:
           size: large
 
   resourcesRefs:
-    - id: paragraph-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: simple-guide-paragraph
-      namespace: simple-guide
-      resource: paragraphs
-      verb: GET
+    items:
+      - id: paragraph-id
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: simple-guide-paragraph
+        namespace: simple-guide
+        resource: paragraphs
+        verb: GET
 ---
 kind: Paragraph
 apiVersion: widgets.templates.krateo.io/v1beta1

@@ -16,9 +16,10 @@ spec:
           type: rest
           requireConfirmation: true
   resourcesRefs:
-    - id: delete
-      apiVersion: composition.krateo.io/v1-1-15
-      resource: testapps
-      name: hello-test-2
-      namespace: test-namespace
-      verb: DELETE
+    items:
+      - id: delete
+        apiVersion: composition.krateo.io/v1-1-15
+        resource: testapps
+        name: hello-test-2
+        namespace: test-namespace
+        verb: DELETE

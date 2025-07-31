@@ -12,24 +12,25 @@ spec:
       - resourceRefId: panel-with-column
       - resourceRefId: panel-paragraph
   resourcesRefs:
-    - id: my-panel
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-panel
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-with-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-with-column
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: panel-paragraph
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: panel-paragraph
-      namespace: krateo-system
-      resource: panels
-      verb: GET
+    items:
+      - id: my-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-with-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-with-column
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-paragraph
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-paragraph
+        namespace: krateo-system
+        resource: panels
+        verb: GET
 ---
 kind: DataGrid
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -47,15 +48,16 @@ spec:
       - resourceRefId: fireworksapp-template-panel-schema-notordered
       - resourceRefId: fireworksapp-template-panel-schema-notordered-2
   resourcesRefs:
-    - id: fireworksapp-template-panel-schema-notordered
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: fireworksapp-template-panel-schema-notordered
-      namespace: krateo-system
-      resource: panels
-      verb: GET
-    - id: fireworksapp-template-panel-schema-notordered-2
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: fireworksapp-template-panel-schema-notordered-2
-      namespace: krateo-system
-      resource: panels
-      verb: GET
+    items:
+      - id: fireworksapp-template-panel-schema-notordered
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: fireworksapp-template-panel-schema-notordered
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: fireworksapp-template-panel-schema-notordered-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: fireworksapp-template-panel-schema-notordered-2
+        namespace: krateo-system
+        resource: panels
+        verb: GET

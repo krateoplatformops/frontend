@@ -1,7 +1,7 @@
 export interface ResourceRef {
   id: string
   path: string
-  verb: 'GET' | 'POST' | 'DELETE'
+  verb: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
   payload: object
 }
 
@@ -27,15 +27,7 @@ export interface Widget<WidgetDataType = unknown> {
   spec: {
     actions: WidgetActions
     widgetData: WidgetDataType
-    widgetRefs?: {
-      [key: string]: {
-        id: string
-        apiVersion: string
-        resource: string
-        name: string
-        namespace: string
-      }
-    }
+    resourcesRefs: ResourcesRefs
   }
   status:
     | {

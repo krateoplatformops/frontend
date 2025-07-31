@@ -71,35 +71,59 @@
           }
         },
         "resourcesRefs": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["id", "apiVersion", "name", "namespace", "resource", "verb"],
-            "properties": {
-              "id": {
-                "type": "string"
+          "type": "object",
+          "properties": {
+            "_slice_": {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "perPage": {
+                  "type": "integer"
+                },
+                "continue": {
+                  "type": "boolean"
+                }
               },
-              "apiVersion": {
-                "type": "string",
-                "enum": ["widgets.templates.krateo.io/v1beta1"]
-              },
-              "name": {
-                "type": "string"
-              },
-              "namespace": {
-                "type": "string"
-              },
-              "resource": {
-                "type": "string",
-                "enum": ["pages"]
-              },
-              "verb": {
-                "type": "string",
-                "enum": ["GET"]
-              }
+              "required": ["page", "perPage"]
             },
-            "additionalProperties": false
-          }
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "resource": {
+                    "type": "string"
+                  },
+                  "apiVersion": {
+                    "type": "string"
+                  },
+                  "verb": {
+                    "type": "string",
+                    "enum": ["POST", "PUT", "PATCH", "DELETE", "GET"]
+                  },
+                  "payload": {
+                    "type": "object"
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          },
+          "required": ["items"]
         }
       },
       "required": ["widgetData"],

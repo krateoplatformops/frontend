@@ -9,15 +9,16 @@ spec:
       - resourceRefId: table-of-pods
       - resourceRefId: pie-chart-inside-column
   resourcesRefs:
-    - id: table-of-pods
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-of-pods
-      namespace: test-namespace
-      resource: tables
-      verb: GET
-    - id: pie-chart-inside-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: pie-chart-inside-column
-      namespace: test-namespace
-      resource: piecharts
-      verb: GET
+    items:
+      - id: table-of-pods
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-of-pods
+        namespace: test-namespace
+        resource: tables
+        verb: GET
+      - id: pie-chart-inside-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: pie-chart-inside-column
+        namespace: test-namespace
+        resource: piecharts
+        verb: GET
