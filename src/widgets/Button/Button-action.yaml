@@ -18,4 +18,5 @@ spec:
             display: true
           successMessage: "Pod letto correttamente"
           errorMessage: "Errore nella lettura del pod"
-  resourcesRefs: {}
+  resourcesRefs:
+    items: []
