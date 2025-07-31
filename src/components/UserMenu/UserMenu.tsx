@@ -21,9 +21,6 @@ const UserMenu = () => {
   // TODO: get role from user role
   const role = 'administrator'
 
-  // TODO: get groups from user data
-  const groups = ['devOps', 'managers']
-
   const onLogout = () => {
     localStorage.removeItem('K_user')
     window.location.replace('/login')
@@ -32,6 +29,10 @@ const UserMenu = () => {
   const items: MenuProps['items'] = [
     {
       key: '1',
+      label: <Link to='/profile'>Profile</Link>,
+    },
+    {
+      key: '2',
       label: <Link to=''>Logout</Link>,
       onClick: onLogout,
     },
@@ -55,7 +56,6 @@ const UserMenu = () => {
             <div className={styles.details}>
               <Typography.Text className={styles.fullname}>{fullName}</Typography.Text>
               <Typography.Text className={styles.role}>{role}</Typography.Text>
-              <Typography.Text className={styles.groups}>{groups.join(', ')}</Typography.Text>
             </div>
           </div>
 
