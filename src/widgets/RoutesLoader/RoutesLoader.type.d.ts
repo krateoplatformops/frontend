@@ -15,14 +15,26 @@ export interface RoutesLoader {
       expression?: string
     }[]
     resourcesRefs?: {
-      items?: {
+      _slice_?: {
+        offset?: number
+        page: number
+        perPage: number
+        continue?: boolean
+        [k: string]: unknown
+      }
+      items: {
         id: string
-        apiVersion: string
-        name: string
-        namespace: string
-        resource: string
-        verb: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
+        name?: string
+        namespace?: string
+        resource?: string
+        apiVersion?: string
+        verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
+        payload?: {
+          [k: string]: unknown
+        }
+        [k: string]: unknown
       }[]
+      [k: string]: unknown
     }
   }
 }

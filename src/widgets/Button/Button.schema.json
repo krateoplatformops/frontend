@@ -313,26 +313,31 @@
         },
         "resourcesRefs": {
           "type": "object",
-          "additionalProperties": false,
           "properties": {
+            "_slice_": {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "perPage": {
+                  "type": "integer"
+                },
+                "continue": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["page", "perPage"]
+            },
             "items": {
               "type": "array",
               "items": {
                 "type": "object",
-                "required": [
-                  "id",
-                  "apiVersion",
-                  "name",
-                  "namespace",
-                  "resource",
-                  "verb"
-                ],
-                "additionalProperties": false,
                 "properties": {
                   "id": {
-                    "type": "string"
-                  },
-                  "apiVersion": {
                     "type": "string"
                   },
                   "name": {
@@ -344,14 +349,22 @@
                   "resource": {
                     "type": "string"
                   },
+                  "apiVersion": {
+                    "type": "string"
+                  },
                   "verb": {
                     "type": "string",
-                    "enum": ["DELETE", "GET", "PATCH", "POST", "PUT"]
+                    "enum": ["POST", "PUT", "PATCH", "DELETE", "GET"]
+                  },
+                  "payload": {
+                    "type": "object"
                   }
-                }
+                },
+                "required": ["id"]
               }
             }
-          }
+          },
+          "required": ["items"]
         },
         "apiRef": {
           "type": "object",
