@@ -242,10 +242,6 @@ export interface Form {
            * HTTP method to use for fetching options
            */
           verb: 'GET' | 'POST'
-          /**
-           * The query parameter to be appended to the base URL to call the API
-           */
-          queryParam?: string
         }
       }[]
       /**
@@ -271,10 +267,6 @@ export interface Form {
            * HTTP method to use for fetching options
            */
           verb: 'GET' | 'POST'
-          /**
-           * The query parameter to be appended to the base URL to call the API
-           */
-          queryParam?: string
         }
       }[]
     }

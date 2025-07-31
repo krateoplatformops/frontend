@@ -4,6 +4,7 @@ import useApp from 'antd/es/app/useApp'
 import { useEffect } from 'react'
 
 import type { FormWidgetData } from '../Form'
+import { interpolateFormUrl } from '../utils'
 
 type AsyncSelectProps = {
   dependency: NonNullable<FormWidgetData['dependencies']>[number]
@@ -12,7 +13,7 @@ type AsyncSelectProps = {
 }
 
 const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
-  const { dependsField: { field }, fetch: { queryParam = 'q', url, verb } } = dependency
+  const { dependsField: { field }, fetch: { url, verb } } = dependency
 
   const { notification } = useApp()
 
@@ -29,12 +30,13 @@ const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
     try {
       let response: Response
 
+      const interpolatedUrl = interpolateFormUrl(url, form, { query: dependField })
+
       if (verb === 'GET') {
-        const searchParams = new URLSearchParams({ [queryParam]: dependField ?? '' })
-        response = await fetch(`${url}?${searchParams.toString()}`)
+        response = await fetch(interpolatedUrl)
       } else if (verb === 'POST') {
-        response = await fetch(url, {
-          body: JSON.stringify({ [queryParam]: dependField ?? '' }),
+        response = await fetch(interpolatedUrl, {
+          body: JSON.stringify(dependField),
           headers: {
             'Content-Type': 'application/json',
           },

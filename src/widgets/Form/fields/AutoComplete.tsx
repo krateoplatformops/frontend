@@ -1,18 +1,21 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import { AutoComplete as AntDAutoComplete, Spin, type AutoCompleteProps as AntDAutoCompleteProps } from 'antd'
+import type { AutoCompleteProps as AntDAutoCompleteProps, FormInstance } from 'antd'
+import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import debounce from 'lodash/debounce'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import useCatchError from '../../../hooks/useCatchError'
 import type { FormWidgetData } from '../Form'
+import { interpolateFormUrl } from '../utils'
 
 interface AutoCompleteProps {
   fetchOptions: NonNullable<FormWidgetData['autocomplete']>[number]
+  form: FormInstance
 }
 
-const AutoComplete = ({ fetchOptions }: AutoCompleteProps) => {
-  const { fetch: { queryParam = 'q', url, verb } } = fetchOptions
+const AutoComplete = ({ fetchOptions, form }: AutoCompleteProps) => {
+  const { fetch: { url, verb } } = fetchOptions
 
   const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
   const { catchError } = useCatchError()
@@ -23,12 +26,13 @@ const AutoComplete = ({ fetchOptions }: AutoCompleteProps) => {
     try {
       let response: Response | undefined
 
+      const interpolatedUrl = interpolateFormUrl(url, form, { query: text })
+
       if (verb === 'GET') {
-        const searchParams = new URLSearchParams({ [queryParam]: text })
-        response = await fetch(`${url}?${searchParams.toString()}`)
+        response = await fetch(interpolatedUrl)
       } else if (verb === 'POST') {
-        response = await fetch(url, {
-          body: JSON.stringify({ [queryParam]: text }),
+        response = await fetch(interpolatedUrl, {
+          body: JSON.stringify(text),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -68,7 +72,7 @@ const AutoComplete = ({ fetchOptions }: AutoCompleteProps) => {
     } finally {
       setIsLoading(false)
     }
-  }, [catchError, notification, queryParam, url, verb])
+  }, [catchError, form, notification, url, verb])
 
   const debouncedGetOptions = useMemo(() => debounce((text: string) => getOptions(text), 1000), [getOptions])
 
