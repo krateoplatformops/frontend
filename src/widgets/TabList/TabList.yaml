@@ -11,15 +11,16 @@ spec:
       - label: second tab
         resourceRefId: first-column
   resourcesRefs:
-    - id: first-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: first-column
-      namespace: krateo-system
-      resource: columns
-      verb: GET
-    - id: second-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: second-column
-      namespace: krateo-system
-      resource: columns
-      verb: GET
+    items:
+      - id: first-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: first-column
+        namespace: krateo-system
+        resource: columns
+        verb: GET
+      - id: second-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: second-column
+        namespace: krateo-system
+        resource: columns
+        verb: GET

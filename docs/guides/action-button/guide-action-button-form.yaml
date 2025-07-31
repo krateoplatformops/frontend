@@ -17,12 +17,13 @@ spec:
           size: large
 
   resourcesRefs:
-    - id: form-id
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: simple-guide-form
-      namespace: simple-guide
-      resource: forms
-      verb: GET
+    items:
+      - id: form-id
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: simple-guide-form
+        namespace: simple-guide
+        resource: forms
+        verb: GET
 ---
 kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -67,9 +68,10 @@ spec:
                     - containerPort: 80
 
   resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: v1
-      resource: pods
-      name: my-pod-name
-      namespace: krateo-system
-      verb: POST
+    items:
+      - id: resource-ref-1
+        apiVersion: v1
+        resource: pods
+        name: my-pod-name
+        namespace: krateo-system
+        verb: POST

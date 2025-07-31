@@ -8,9 +8,10 @@ spec:
     items:
       - resourceRefId: composition-test-row
   resourcesRefs:
-    - id: composition-test-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-row
-      namespace: test-namespace
-      resource: rows
-      verb: GET
+    items:
+      - id: composition-test-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-row
+        namespace: test-namespace
+        resource: rows
+        verb: GET

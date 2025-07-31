@@ -1,12 +1,12 @@
 import type { ResourcesRefs } from '../types/Widget'
 
 export const getResourceRef = (resourceRefId: string, resourcesRefs: ResourcesRefs) => {
-  if (!resourcesRefs || resourcesRefs.length === 0) {
+  if (!resourcesRefs || resourcesRefs.items.length === 0) {
     console.error(`Cannot find resources refs for resource ref with ID ${resourceRefId}`)
     return
   }
 
-  const backendEndpoint = resourcesRefs.find(({ id }) => {
+  const backendEndpoint = resourcesRefs.items.find(({ id }) => {
     return id === resourceRefId
   })
 

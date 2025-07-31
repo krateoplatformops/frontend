@@ -137,12 +137,13 @@ spec:
           type: rest
           requireConfirmation: true
   resourcesRefs:
-    - id: delete
-      apiVersion: composition.krateo.io/v1-1-15
-      resource: testapps
-      name: hello-test-2
-      namespace: test-namespace
-      verb: DELETE
+    items:
+      - id: delete
+        apiVersion: composition.krateo.io/v1-1-15
+        resource: testapps
+        name: hello-test-2
+        namespace: test-namespace
+        verb: DELETE
 ```
 </details>
 
@@ -175,18 +176,19 @@ spec:
       - resourceRefId: table-of-pods
       - resourceRefId: pie-chart-inside-column
   resourcesRefs:
-    - id: table-of-pods
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-of-pods
-      namespace: test-namespace
-      resource: tables
-      verb: GET
-    - id: pie-chart-inside-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: pie-chart-inside-column
-      namespace: test-namespace
-      resource: piecharts
-      verb: GET
+    items:
+      - id: table-of-pods
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-of-pods
+        namespace: test-namespace
+        resource: tables
+        verb: GET
+      - id: pie-chart-inside-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: pie-chart-inside-column
+        namespace: test-namespace
+        resource: piecharts
+        verb: GET
 ```
 </details>
 
@@ -564,12 +566,13 @@ spec:
             - name: metadata.name
               value: ${ git.toRepo.name }
   resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
-      name: new-app
-      namespace: test-namespace
-      resource: fireworksapps
-      verb: POST
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v2-0-0
+        name: new-app
+        namespace: test-namespace
+        resource: fireworksapps
+        verb: POST
 ```
 </details>
 
@@ -686,12 +689,13 @@ spec:
     items:
       - resourceRefId: nav-menu-item-templates
   resourcesRefs:
-    - id: nav-menu-item-templates
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: nav-menu-item-templates
-      namespace: test-namespace
-      resource: navemenuitems
-      verb: GET
+    items:
+      - id: nav-menu-item-templates
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: nav-menu-item-templates
+        namespace: test-namespace
+        resource: navemenuitems
+        verb: GET
 ```
 </details>
 
@@ -729,12 +733,13 @@ spec:
     order: 20
 
   resourcesRefs:
-    - id: templates-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-page
-      namespace: test-namespace
-      resource: pages
-      verb: GET
+    items:
+      - id: templates-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: templates-page
+        namespace: test-namespace
+        resource: pages
+        verb: GET
 ```
 </details>
 
@@ -766,12 +771,13 @@ spec:
     items:
       - resourceRefId: composition-test-row
   resourcesRefs:
-    - id: composition-test-row
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-row
-      namespace: test-namespace
-      resource: rows
-      verb: GET
+    items:
+      - id: composition-test-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-row
+        namespace: test-namespace
+        resource: rows
+        verb: GET
 ```
 </details>
 
@@ -865,30 +871,31 @@ spec:
         - resourceRefId: button-1
         - resourceRefId: button-2
   resourcesRefs:
-    - id: my-table
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-table
-      namespace: test-namespace
-      resource: tables
-      verb: GET
-    - id: my-pie-chart
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: my-pie-chart
-      namespace: test-namespace
-      resource: piecharts
-      verb: GET
-    - id: button-1
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-1
-      namespace: test-namespace
-      resource: buttons
-      verb: GET
-    - id: button-2
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: button-2
-      namespace: test-namespace
-      resource: buttons
-      verb: GET
+    items:
+      - id: my-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-table
+        namespace: test-namespace
+        resource: tables
+        verb: GET
+      - id: my-pie-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-pie-chart
+        namespace: test-namespace
+        resource: piecharts
+        verb: GET
+      - id: button-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-1
+        namespace: test-namespace
+        resource: buttons
+        verb: GET
+      - id: button-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-2
+        namespace: test-namespace
+        resource: buttons
+        verb: GET
 ```
 </details>
 
@@ -1017,12 +1024,13 @@ spec:
     items:
       - resourceRefId: composition-test-panel
   resourcesRefs:
-    - id: composition-test-panel
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-panel
-      namespace: test-namespace
-      resource: panels
-      verb: GET
+    items:
+      - id: composition-test-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-panel
+        namespace: test-namespace
+        resource: panels
+        verb: GET
 ```
 </details>
 
@@ -1107,18 +1115,19 @@ spec:
       - label: second tab
         resourceRefId: second-column
   resourcesRefs:
-    - id: first-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: first-column
-      namespace: test-namespace
-      resource: columns
-      verb: GET
-    - id: second-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: second-column
-      namespace: test-namespace
-      resource: columns
-      verb: GET
+    items:
+      - id: first-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: first-column
+        namespace: test-namespace
+        resource: columns
+        verb: GET
+      - id: second-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: second-column
+        namespace: test-namespace
+        resource: columns
+        verb: GET
 ```
 </details>
 

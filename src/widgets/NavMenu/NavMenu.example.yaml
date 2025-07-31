@@ -8,9 +8,10 @@ spec:
     items:
       - resourceRefId: nav-menu-item-templates
   resourcesRefs:
-    - id: nav-menu-item-templates
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: nav-menu-item-templates
-      namespace: test-namespace
-      resource: navemenuitems
-      verb: GET
+    items:
+      - id: nav-menu-item-templates
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: nav-menu-item-templates
+        namespace: test-namespace
+        resource: navemenuitems
+        verb: GET

@@ -10,7 +10,9 @@ spec:
     icon: fa-sun
     type: primary
     clickActionId: action-1
-  resourcesRefs: []
+  resourcesRefs: {
+    items: []
+  }
 ---
 kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -32,9 +34,10 @@ spec:
     shape: circle
     clickActionId: cleanup
   resourcesRefs:
-    - id: cleanup
-      apiVersion: templates.krateo.io/v1
-      resource: restactions
-      name: fireworksapp-template-restaction-cleanup
-      namespace: krateo-system
-      verb: GET
+    items:
+      - id: cleanup
+        apiVersion: templates.krateo.io/v1
+        resource: restactions
+        name: fireworksapp-template-restaction-cleanup
+        namespace: krateo-system
+        verb: GET

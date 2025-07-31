@@ -24,21 +24,22 @@ spec:
         resourceRefId: template-form
         type: openDrawer
   resourcesRefs:
-    - id: template-panel-paragraph
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: fireworksapp-template-panel-paragraph
-      namespace: fireworksapp-system
-      resource: paragraphs
-      verb: GET
-    - id: template-panel-button
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: fireworksapp-template-panel-button
-      namespace: fireworksapp-system
-      resource: buttons
-      verb: GET
-    - id: template-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: firework-form-from-string-schema
-      namespace: fireworksapp-system
-      resource: forms
-      verb: GET
+    items:
+      - id: template-panel-paragraph
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: fireworksapp-template-panel-paragraph
+        namespace: fireworksapp-system
+        resource: paragraphs
+        verb: GET
+      - id: template-panel-button
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: fireworksapp-template-panel-button
+        namespace: fireworksapp-system
+        resource: buttons
+        verb: GET
+      - id: template-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: firework-form-from-string-schema
+        namespace: fireworksapp-system
+        resource: forms
+        verb: GET

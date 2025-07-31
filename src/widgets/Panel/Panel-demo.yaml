@@ -28,24 +28,25 @@ spec:
           loading:
             display: true
   resourcesRefs:
-    - id: test-markdown
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: test-markdown
-      namespace: krateo-system
-      resource: markdowns
-      verb: GET
-    - id: composition-test-button
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: composition-test-button
-      namespace: krateo-system
-      resource: buttons
-      verb: GET
-    - id: test-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: test-form
-      namespace: krateo-system
-      resource: forms
-      verb: GET
+    items:
+      - id: test-markdown
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-markdown
+        namespace: krateo-system
+        resource: markdowns
+        verb: GET
+      - id: composition-test-button
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: composition-test-button
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: test-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-form
+        namespace: krateo-system
+        resource: forms
+        verb: GET
 ---
 kind: Markdown
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -76,12 +77,13 @@ spec:
     shape: circle
     clickActionId: cleanup
   resourcesRefs:
-    - id: cleanup
-      apiVersion: templates.krateo.io/v1
-      resource: restactions
-      name: fireworksapp-template-restaction-cleanup
-      namespace: krateo-system
-      verb: GET
+    items:
+      - id: cleanup
+        apiVersion: templates.krateo.io/v1
+        resource: restactions
+        name: fireworksapp-template-restaction-cleanup
+        namespace: krateo-system
+        verb: GET
 ---
 kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -192,9 +194,10 @@ spec:
           loading:
             display: true
   resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: composition.krateo.io/v2-0-0
-      name: new-app
-      namespace: fireworksapp-system
-      resource: fireworksapps
-      verb: POST
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v2-0-0
+        name: new-app
+        namespace: fireworksapp-system
+        resource: fireworksapps
+        verb: POST

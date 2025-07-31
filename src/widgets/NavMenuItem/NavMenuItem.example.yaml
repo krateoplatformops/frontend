@@ -12,9 +12,10 @@ spec:
     order: 20
 
   resourcesRefs:
-    - id: templates-page
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: templates-page
-      namespace: test-namespace
-      resource: pages
-      verb: GET
+    items:
+      - id: templates-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: templates-page
+        namespace: test-namespace
+        resource: pages
+        verb: GET

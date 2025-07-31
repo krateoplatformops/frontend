@@ -18,12 +18,13 @@ spec:
           title: Form in Drawer
           size: large
   resourcesRefs:
-    - id: test-firework-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: test-firework-form
-      namespace: krateo-system
-      resource: forms
-      verb: GET
+    items:
+      - id: test-firework-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-firework-form
+        namespace: krateo-system
+        resource: forms
+        verb: GET
 ---
 kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -44,9 +45,10 @@ spec:
           type: openModal
           title: Form in Modal
   resourcesRefs:
-    - id: firework-form
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: firework-form
-      namespace: krateo-system
-      resource: forms
-      verb: GET
+    items:
+      - id: firework-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: firework-form
+        namespace: krateo-system
+        resource: forms
+        verb: GET

@@ -8,7 +8,7 @@ export type RoutesLoaderWidgetData = WidgetType['spec']['widgetData']
 export function RoutesLoader({ resourcesRefs }: WidgetProps<RoutesLoaderWidgetData>) {
   return (
     <>
-      {resourcesRefs.map(({ id, path }, index) => (
+      {resourcesRefs.items.map(({ id, path }, index) => (
         <WidgetRenderer invisible={true} key={`${id}-${index}`} widgetEndpoint={path} />
       ))}
     </>

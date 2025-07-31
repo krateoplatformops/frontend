@@ -16,11 +16,12 @@ spec:
           resourceRefId: my-backend-endpoint
           type: openDrawer
   resourcesRefs:
-    - id: my-backend-endpoint
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      resource: panels
-      name: nginx-form-panel
-      namespace: krateo-system
-      verb: GET
+    items:
+      - id: my-backend-endpoint
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: panels
+        name: nginx-form-panel
+        namespace: krateo-system
+        verb: GET
 
 
