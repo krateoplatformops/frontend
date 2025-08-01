@@ -4,14 +4,15 @@
     gap: 16px;
 
   .button {
-      align-items: center;
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
+    position: absolute;
+    right: 6px;
+    top: 20px;
+    z-index: 1;
   }
 
   .codeViewer {
-      max-height: 600px;
-      overflow-y: auto;
+    max-height: 600px;
+    overflow-y: auto;
+    position: relative;
   }
 }

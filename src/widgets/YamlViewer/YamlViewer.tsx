@@ -40,21 +40,21 @@ const YamlViewer = ({ uid, widgetData }: WidgetProps<YamlViewerWidgetData>) => {
 
   return (
     <div className={styles.container} key={uid}>
-      <div className={styles.button}>
-        {isCopied && 'Copied to clipboard'}
-
-        <CopyToClipboard
-          onCopy={() => {
-            setIsCopied(true)
-            setTimeout(() => setIsCopied(false), 2500)
-          }}
-          text={yamlString}
-        >
-          <Button icon={<CopyOutlined />} size='large' />
-        </CopyToClipboard>
-      </div>
-
       <div className={styles.codeViewer}>
+        <div className={styles.button}>
+          {isCopied && 'Copied to clipboard'}
+
+          <CopyToClipboard
+            onCopy={() => {
+              setIsCopied(true)
+              setTimeout(() => setIsCopied(false), 2500)
+            }}
+            text={yamlString}
+          >
+            <Button icon={<CopyOutlined />} size='large' />
+          </CopyToClipboard>
+        </div>
+
         <SyntaxHighlighter
           language='yaml'
           showLineNumbers
