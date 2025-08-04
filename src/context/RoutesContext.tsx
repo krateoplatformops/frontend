@@ -1,3 +1,4 @@
+import { useIsFetching, useQueryClient } from '@tanstack/react-query'
 import React, { createContext, useCallback, useContext, useState } from 'react'
 import { useParams, type RouteObject } from 'react-router'
 
@@ -16,9 +17,11 @@ export interface AppRoute {
 interface RoutesContextType {
   menuRoutes: AppRoute[]
   routes: RouteObject[]
+  isFetchingRoutes: number
   isLoading: boolean
   updateMenuRoutes: (newRoutes: AppRoute[]) => void
   registerRoutes: (routes: RouteObject[]) => void
+  reloadRoutes: () => Promise<void>
   routerVersion: number
 }
 
@@ -81,11 +84,33 @@ export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [menuRoutes, setMenuRoutes] = useState<AppRoute[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
+  const queryClient = useQueryClient()
+
   const updateMenuRoutes = useCallback((newRoutes: AppRoute[]) => {
     setIsLoading(true)
     setMenuRoutes(newRoutes)
     setIsLoading(false)
   }, [])
+
+  const isFetchingRoutes = useIsFetching({
+    predicate: (query) => {
+      return (
+        (query.queryKey[1] as string).includes('resource=routes')
+        || (query.queryKey[1] as string).includes('resource=routesloaders')
+        || (query.queryKey[1] as string).includes('resource=navmenus')
+      )
+    },
+  })
+
+  const reloadRoutes = async () => {
+    await queryClient.invalidateQueries({
+      predicate: (query) => {
+        // query.queryKey[0] is always 'widgets'
+        // query.queryKey[1] is the URL (e.g. "http://localhost:30081/call?resource=routesloaders&apiVersion=widgets.templates.krateo.io/v1beta1&name=routes-loader&namespace=krateo-system")
+        return (query.queryKey[1] as string).includes('resource=routes')
+      },
+    })
+  }
 
   const registerRoutes = useCallback((newRoutes: RouteObject[]) => {
     setRoutes((prevRoutes) => {
@@ -104,9 +129,11 @@ export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   return (
     <RoutesContext.Provider
       value={{
+        isFetchingRoutes,
         isLoading,
         menuRoutes,
         registerRoutes,
+        reloadRoutes,
         routerVersion,
         routes,
         updateMenuRoutes,
