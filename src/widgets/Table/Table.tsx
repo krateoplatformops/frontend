@@ -11,28 +11,17 @@ import type { Table as WidgetType } from './Table.type'
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
 /**
- * Parses a string that may represent a nested path for Ant Design's `dataIndex`.
+ * Parses a dot-notation string (e.g., "user.name.first") into an array of strings
+ * for use as a nested path in Ant Design's `dataIndex`.
  *
- * If the input string matches the format of a stringified array of strings
- * (e.g., "['user', 'name', 'first']"), it extracts the individual keys and returns them
- * as an array of strings (e.g., ['user', 'name', 'first']).
- *
- * Otherwise, it returns the original string as-is, assuming it represents a flat key.
- *
- * This is useful when `dataIndex` is dynamically provided as a string,
- * but may refer to a nested field in the data record.
+ * If the input contains dot notation, it is split by "." and returned as an array.
+ * Otherwise, the original string is returned.
  *
  * @param {string} input - The valueKey string to parse.
- * @returns {string | string[]} - Parsed array of strings if input is an array-like string; otherwise, the original string.
+ * @returns {string | string[]} - An array of keys if dot notation is detected, otherwise the original string.
  */
 const parseValueKey = (input: string): string | string[] => {
-  const arrayFormatRegex = /^\s*\[\s*'([^']+)'\s*(,\s*'([^']+)'\s*)*\]\s*$/
-
-  if (arrayFormatRegex.test(input)) {
-    return [...input.matchAll(/'([^']+)'/g)].map(match => match[1])
-  }
-
-  return input
+  return input.includes('.') ? input.split('.') : input
 }
 
 const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
