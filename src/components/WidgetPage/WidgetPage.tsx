@@ -1,3 +1,4 @@
+import { useIsFetching } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useLocation, useSearchParams } from 'react-router'
 
@@ -13,11 +14,11 @@ import styles from './WidgetPage.module.css'
 
 export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: string }) => {
   const location = useLocation()
-  const { isFetchingRoutes, menuRoutes, reloadRoutes } = useRoutesContext()
+  const { menuRoutes } = useRoutesContext()
   const [searchParams] = useSearchParams()
   const queryParamWidgetEndpoint = searchParams.get('widgetEndpoint')
   const currentRoute = menuRoutes.find(({ path }) => path === location.pathname)
-  const widgetEndpoint = queryParamWidgetEndpoint || currentRoute?.resourceRef?.path || defaultWidgetEndpoint || null
+  const widgetEndpoint = queryParamWidgetEndpoint || currentRoute?.resourceRef?.path || defaultWidgetEndpoint || ''
 
   useEffect(() => {
     const userData = localStorage.getItem('K_user')
@@ -27,21 +28,15 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
     }
   }, [])
 
-  useEffect(() => {
-    if (isFetchingRoutes) {
-      return
-    }
-
-    // Triggers routes reloading if no registered route is matching the current route
-    // This might happen during the creation of a new kind: Route (e.g. after composition creation)
-    if (!widgetEndpoint) {
-      void reloadRoutes()
-    }
-  }, [isFetchingRoutes, reloadRoutes, widgetEndpoint])
-
-  if (!widgetEndpoint && isFetchingRoutes) {
-    return null
-  }
+  const isFetchingRoutes = useIsFetching({
+    predicate: (query) => {
+      return (
+        (query.queryKey[1] as string).includes('resource=routes')
+        || (query.queryKey[1] as string).includes('resource=routesloaders')
+        || (query.queryKey[1] as string).includes('resource=navmenus')
+      )
+    },
+  })
 
   return (
     <div className={styles.widgetPage}>
@@ -49,7 +44,7 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
       <div className={styles.container}>
         <Header breadcrumbVisible={widgetEndpoint !== null} />
         <div className={styles.content}>
-          {widgetEndpoint ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} /> : <Page404 />}
+          {widgetEndpoint || isFetchingRoutes ? <WidgetRenderer key={'content'} widgetEndpoint={widgetEndpoint} /> : <Page404 />}
         </div>
       </div>
       <Drawer />

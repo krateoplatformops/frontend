@@ -1,4 +1,4 @@
-import { useIsFetching, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import React, { createContext, useCallback, useContext, useState } from 'react'
 import { useParams, type RouteObject } from 'react-router'
 
@@ -17,7 +17,6 @@ export interface AppRoute {
 interface RoutesContextType {
   menuRoutes: AppRoute[]
   routes: RouteObject[]
-  isFetchingRoutes: number
   isLoading: boolean
   updateMenuRoutes: (newRoutes: AppRoute[]) => void
   registerRoutes: (routes: RouteObject[]) => void
@@ -92,16 +91,6 @@ export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsLoading(false)
   }, [])
 
-  const isFetchingRoutes = useIsFetching({
-    predicate: (query) => {
-      return (
-        (query.queryKey[1] as string).includes('resource=routes')
-        || (query.queryKey[1] as string).includes('resource=routesloaders')
-        || (query.queryKey[1] as string).includes('resource=navmenus')
-      )
-    },
-  })
-
   const reloadRoutes = async () => {
     await queryClient.invalidateQueries({
       predicate: (query) => {
@@ -129,7 +118,6 @@ export const RoutesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   return (
     <RoutesContext.Provider
       value={{
-        isFetchingRoutes,
         isLoading,
         menuRoutes,
         registerRoutes,
