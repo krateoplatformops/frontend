@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
+import { useRoutesContext } from '../context/RoutesContext'
 import type { ResourceRef, WidgetAction } from '../types/Widget'
 import { getAccessToken } from '../utils/getAccessToken'
 import type { Payload, RestApiResponse } from '../utils/types'
@@ -229,6 +230,7 @@ export const useHandleAction = () => {
   const queryClient = useQueryClient()
   const { message, notification } = useApp()
   const { config } = useConfigContext()
+  const { reloadRoutes } = useRoutesContext()
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false)
 
   const handleAction = async (
@@ -337,6 +339,10 @@ export const useHandleAction = () => {
                 const data = JSON.parse(event.data as string) as EventData
                 if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
                   eventReceived = true
+
+                  if (onEventNavigateTo.reloadRoutes !== false) {
+                    void reloadRoutes()
+                  }
 
                   eventSource.close()
                   clearTimeout(timeoutId)

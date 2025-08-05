@@ -59,6 +59,7 @@ export interface Panel {
              * the timeout in seconds to wait for the event
              */
             timeout?: number
+            reloadRoutes?: boolean
           }
           /**
            * type of action to execute

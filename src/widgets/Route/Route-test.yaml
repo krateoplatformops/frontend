@@ -1,0 +1,33 @@
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: fireworksapp-system-namespace-route
+  namespace: fireworksapp-system
+spec:
+  widgetData:
+    path: /compositions/fireworksapp-system
+    resourceRefId: fireworksapp-system-compositions-page-datagrid
+  resourcesRefs:
+    - id: fireworksapp-system-compositions-page-datagrid
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: fireworksapp-system-compositions-page-datagrid
+      namespace: fireworksapp-system
+      resource: datagrids
+      verb: GET
+---
+kind: Route
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: fireworksapp-system-composition-route
+  namespace: fireworksapp-system
+spec:
+  widgetData:
+    path: /compositions/fireworksapp-system/{name}
+    resourceRefId: fireworksapp-system-composition-tablist
+  resourcesRefs:
+    - id: fireworksapp-system-composition-tablist
+      apiVersion: widgets.templates.krateo.io/v1beta1
+      name: "{name}-composition-tablist"
+      namespace: fireworksapp-system
+      resource: tablists
+      verb: GET
