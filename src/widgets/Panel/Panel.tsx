@@ -52,9 +52,10 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       return
     }
 
-    const url = action.type === 'navigate' && title
-      ? `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(resourceRef.path)}`
-      : resourceRef.path || null
+    const url =
+      action.type === 'navigate' && title
+        ? `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(resourceRef.path)}`
+        : resourceRef.path || null
 
     if (!url) {
       notification.warning({
@@ -66,7 +67,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       return
     }
 
-    await handleAction(action, url)
+    await handleAction(action, url, resourceRef.verb, undefined, resourceRef.payload as Record<string, unknown>)
   }
 
   const handleClick = () => {
@@ -84,22 +85,19 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
 
   const panelFooter = (
     <div className={`${styles.footer} ${!tags && footer?.length === 1 ? styles.single : ''} `}>
-      {tags && tags.length > 0 && (
-        <div>
-          {tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}
-        </div>
-      )}
+      {tags && tags.length > 0 && <div>{tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}</div>}
       {footer && footer.length > 0 && (
         <div className={styles.items}>
           {footer
             .map(({ resourceRefId }, index) => {
               const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-              if (!endpoint) { return null }
+              if (!endpoint) {
+                return null
+              }
 
               return <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={endpoint} />
             })
-            .filter(Boolean)
-          }
+            .filter(Boolean)}
         </div>
       )}
     </div>
@@ -122,7 +120,13 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       title={
         (title || icon) && (
           <div className={styles.title}>
-            {icon && <Avatar icon={<FontAwesomeIcon icon={icon.name as IconProp} />} size={64} style={{ backgroundColor: getColorCode(icon.color) }} />}
+            {icon && (
+              <Avatar
+                icon={<FontAwesomeIcon icon={icon.name as IconProp} />}
+                size={64}
+                style={{ backgroundColor: getColorCode(icon.color) }}
+              />
+            )}
             {title}
           </div>
         )
@@ -135,12 +139,13 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
           {items
             .map(({ resourceRefId }, index) => {
               const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-              if (!endpoint) { return null }
+              if (!endpoint) {
+                return null
+              }
 
               return <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={endpoint} />
             })
-            .filter(Boolean)
-          }
+            .filter(Boolean)}
         </div>
         {footer && panelFooter}
       </div>
