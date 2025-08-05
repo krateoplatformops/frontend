@@ -103,8 +103,13 @@ const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string)
       }
     }
 
-    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint'
-      || typeof value === 'symbol') {
+    if (
+      typeof value === 'string'
+      || typeof value === 'number'
+      || typeof value === 'boolean'
+      || typeof value === 'bigint'
+      || typeof value === 'symbol'
+    ) {
       return String(value)
     }
 
@@ -126,7 +131,11 @@ const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string)
  * @param {string | undefined} payloadKey - The key under which to nest the extracted new values.
  * @returns {Record<string, unknown>} - The reorganized payload with extracted values nested under `payloadKey`.
  */
-const reorganizePayloadByKey = (payload: Record<string, unknown>, resourcePayload: object, payloadKey: string | undefined): Record<string, unknown> => {
+const reorganizePayloadByKey = (
+  payload: Record<string, unknown>,
+  resourcePayload: object,
+  payloadKey: string | undefined
+): Record<string, unknown> => {
   if (!payloadKey) {
     console.warn('payloadKey is undefined, skipping key reorganization.')
     return payload
@@ -134,16 +143,11 @@ const reorganizePayloadByKey = (payload: Record<string, unknown>, resourcePayloa
 
   const newPayloadKeyObject: Record<string, unknown> = {}
 
-  const valuesKeys = Object.keys(payload).filter(
-    (key) => !Object.prototype.hasOwnProperty.call(resourcePayload, key)
-  )
+  const valuesKeys = Object.keys(payload).filter((key) => !Object.prototype.hasOwnProperty.call(resourcePayload, key))
 
   for (const key of valuesKeys) {
     const value = payload[key]
-    newPayloadKeyObject[key]
-      = typeof value === 'object' && value !== null && !Array.isArray(value)
-        ? { ...value }
-        : value
+    newPayloadKeyObject[key] = typeof value === 'object' && value !== null && !Array.isArray(value) ? { ...value } : value
   }
 
   const cleanedPayload: Record<string, unknown> = {}
@@ -180,8 +184,13 @@ const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath:
       }
 
       const resolved = getObjectByPath(values, el)
-      if (typeof resolved === 'string' || typeof resolved === 'number' || typeof resolved === 'boolean'
-        || typeof resolved === 'bigint' || typeof resolved === 'symbol') {
+      if (
+        typeof resolved === 'string'
+        || typeof resolved === 'number'
+        || typeof resolved === 'boolean'
+        || typeof resolved === 'bigint'
+        || typeof resolved === 'symbol'
+      ) {
         return String(resolved)
       }
 
@@ -225,9 +234,9 @@ export const useHandleAction = () => {
   const handleAction = async (
     action: WidgetAction,
     path: string,
-    verb?: ResourceRef['verb'],
+    verb: ResourceRef['verb'],
     customPayload?: Record<string, unknown>,
-    resourcePayload?: object,
+    resourcePayload?: Record<string, unknown>
   ) => {
     if (action.loading?.display) {
       setIsActionLoading(true)
@@ -261,7 +270,16 @@ export const useHandleAction = () => {
           break
         }
         case 'rest': {
-          const { errorMessage, headers = [], onEventNavigateTo, onSuccessNavigateTo, payload, payloadKey, payloadToOverride, successMessage } = action
+          const {
+            errorMessage,
+            headers = [],
+            onEventNavigateTo,
+            onSuccessNavigateTo,
+            payload,
+            payloadKey,
+            payloadToOverride,
+            successMessage,
+          } = action
 
           if (!requireConfirmation || window.confirm('Are you sure?')) {
             if (onSuccessNavigateTo && onEventNavigateTo) {
@@ -312,7 +330,9 @@ export const useHandleAction = () => {
               message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
 
               eventSource.addEventListener('krateo', (event) => {
-                if (!resourceUid) { return }
+                if (!resourceUid) {
+                  return
+                }
 
                 const data = JSON.parse(event.data as string) as EventData
                 if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
@@ -348,21 +368,21 @@ export const useHandleAction = () => {
             }
 
             const updatedUrl = customPayload
-              ? updateNameNamespace(
-                path,
-                (updatedPayload as Payload)?.metadata?.name,
-                (updatedPayload as Payload)?.metadata?.namespace
-              )
+              ? updateNameNamespace(path, (updatedPayload as Payload)?.metadata?.name, (updatedPayload as Payload)?.metadata?.namespace)
               : path
 
+            const requestBody = Object.keys(updatedPayload).length > 0 ? updatedPayload : payload
+            const requestHeaders = {
+              ...getHeadersObject(headers),
+              Accept: 'application/json',
+              Authorization: `Bearer ${getAccessToken()}`,
+            }
+
+            const shouldSendPayload = ['POST', 'PUT', 'PATCH'].includes(verb)
+
             const res = await fetch(updatedUrl, {
-              ...(verb?.toUpperCase() === 'POST' ? {
-                body: JSON.stringify(updatedPayload || payload),
-              } : {}),
-              headers: {
-                ...getHeadersObject(headers),
-                Authorization: `Bearer ${getAccessToken()}`,
-              },
+              body: shouldSendPayload ? JSON.stringify(requestBody) : undefined,
+              headers: requestHeaders,
               method: verb,
             })
 
@@ -386,7 +406,21 @@ export const useHandleAction = () => {
             if (!onEventNavigateTo) {
               closeDrawer()
 
-              const actionName = verb === 'DELETE' ? 'deleted' : 'created'
+              const actionName = (() => {
+                switch (verb) {
+                  case 'DELETE':
+                    return 'deleted'
+                  case 'POST':
+                    return 'created'
+                  case 'PUT':
+                    return 'updated'
+                  case 'PATCH':
+                    return 'updated'
+                  default:
+                    return 'updated'
+                }
+              })()
+
               notification.success({
                 description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
                 message: json.message,
@@ -404,7 +438,8 @@ export const useHandleAction = () => {
 
           break
         }
-        default: break
+        default:
+          break
       }
     } catch (error) {
       notification.error({

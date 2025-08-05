@@ -441,6 +441,7 @@ export default tsEslint.config(
       // http://eslint.org/docs/rules/
       '@stylistic/js/jsx-quotes': ['error', 'prefer-single'],
       '@stylistic/js/object-curly-spacing': ['error', 'always'],
+      '@stylistic/js/operator-linebreak': 'off',
       // https://github.com/evcohen/eslint-plugin-jsx-a11y/tree/master/docs/rules
       'jsx-a11y/alt-text': 'error',
       'jsx-a11y/anchor-has-content': 'error',
@@ -495,5 +496,5 @@ export default tsEslint.config(
     settings: {
       react: { version: 'detect' },
     },
-  },
+  }
 )
