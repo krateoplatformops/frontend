@@ -25,8 +25,16 @@ export interface FlowChartElement {
 
 export interface NodeElementData {
   date: string
-  health?: HealthStatus
-  icon?: string
+  icon?: {
+    name: string
+    color: string
+    message?: string
+  }
+  statusIcon?: {
+    name: string
+    color: string
+    message?: string
+  }
   kind: string
   name: string
   namespace: string

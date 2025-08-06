@@ -6,205 +6,107 @@ metadata:
 spec:
   widgetData:
     data: [
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {
-            "message": "Kind: Application - Name: hello-test-2 - Namespace: krateo-system - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-            "reason": "False",
-            "status": "Degraded",
-            "type": "CompositionStatus"
-        },
-        "kind": "CompositionReference",
-        "name": "hello-test-2",
-        "namespace": "fireworksapp-system",
-        "parentRefs": [
+        {
+          "createdAt": "2025-07-31T15:30:36Z",
+          "health": {
+            "status": "Ready"
+          },
+          "kind": "FrontendGithubScaffolding",
+          "name": "test2",
+          "namespace": "demo-system",
+          "parentRefs": [
             {}
-        ],
-        "resourceVersion": "39743",
-        "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-        "version": "resourcetrees.krateo.io/v1"
-    },
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {},
-        "kind": "ConfigMap",
-        "name": "hello-test-2-fireworks-app-replace-values",
-        "namespace": "fireworksapp-system",
-        "parentRefs": [
-            {
-                "createdAt": "2025-05-29T14:35:56Z",
-                "health": {
-                    "message": "Kind: Application - Name: hello-test-2 - Namespace: krateo-system - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-                    "reason": "False",
-                    "status": "Degraded",
-                    "type": "CompositionStatus"
-                },
-                "kind": "CompositionReference",
-                "name": "hello-test-2",
-                "namespace": "fireworksapp-system",
-                "parentRefs": [
-                    {}
-                ],
-                "resourceVersion": "39743",
-                "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-                "version": "resourcetrees.krateo.io/v1"
-            }
-        ],
-        "resourceVersion": "27039",
-        "uid": "4ac6e09f-3ccf-4d65-ad3a-d4c1e1438bbf",
-        "version": "v1"
-    },
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {
-            "message": "Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-            "type": "ComparisonError"
+          ],
+          "resourceVersion": "",
+          "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+          "version": "composition.krateo.io/v0-0-1"
         },
-        "kind": "Application",
-        "name": "hello-test-2",
-        "namespace": "krateo-system",
-        "parentRefs": [
+        {
+          "createdAt": "2025-07-31T15:30:39Z",
+          "health": {},
+          "kind": "ConfigMap",
+          "name": "test2-replace-values",
+          "namespace": "demo-system",
+          "parentRefs": [
             {
-                "createdAt": "2025-05-29T14:35:56Z",
-                "health": {
-                    "message": "Kind: Application - Name: hello-test-2 - Namespace: krateo-system - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-                    "reason": "False",
-                    "status": "Degraded",
-                    "type": "CompositionStatus"
-                },
-                "kind": "CompositionReference",
-                "name": "hello-test-2",
-                "namespace": "fireworksapp-system",
-                "parentRefs": [
-                    {}
-                ],
-                "resourceVersion": "39743",
-                "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-                "version": "resourcetrees.krateo.io/v1"
+              "kind": "FrontendGithubScaffolding",
+              "name": "test2",
+              "namespace": "demo-system",
+              "parentRefs": [
+                {}
+              ],
+              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+              "version": "composition.krateo.io/v0-0-1"
             }
-        ],
-        "resourceVersion": "39759",
-        "uid": "bb82a7e9-e756-465e-8cea-cebc560bf71d",
-        "version": "argoproj.io/v1alpha1"
-    },
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {
-            "message": "Kind: Application - Name: hello-test-2 - Namespace: krateo-system - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-            "reason": "False",
-            "status": "Degraded",
-            "type": "CompositionStatus"
+          ],
+          "resourceVersion": "77493",
+          "uid": "e99a3efe-7461-4ffe-b956-55cb3882f0c5",
+          "version": "v1"
         },
-        "kind": "CompositionReference",
-        "name": "hello-test-2",
-        "namespace": "fireworksapp-system",
-        "resourceVersion": "39743",
-        "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-        "version": "resourcetrees.krateo.io/v1"
-    },
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {
-            "message": "cannot determine creation result - remove the krateo.io/external-create-pending annotation if it is safe to proceed",
-            "reason": "ReconcileError",
-            "status": "False",
-            "type": "Synced"
-        },
-        "kind": "Repo",
-        "name": "hello-test-2-fireworks-app-repo",
-        "namespace": "fireworksapp-system",
-        "parentRefs": [
+        {
+          "createdAt": "2025-07-31T15:30:39Z",
+          "health": {},
+          "kind": "Application",
+          "name": "test2",
+          "namespace": "krateo-system",
+          "parentRefs": [
             {
-                "createdAt": "2025-05-29T14:35:56Z",
-                "health": {
-                    "message": "Kind: Application - Name: hello-test-2 - Namespace: krateo-system - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-                    "reason": "False",
-                    "status": "Degraded",
-                    "type": "CompositionStatus"
-                },
-                "kind": "CompositionReference",
-                "name": "hello-test-2",
-                "namespace": "fireworksapp-system",
-                "parentRefs": [
-                    {}
-                ],
-                "resourceVersion": "39743",
-                "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-                "version": "resourcetrees.krateo.io/v1"
+              "kind": "FrontendGithubScaffolding",
+              "name": "test2",
+              "namespace": "demo-system",
+              "parentRefs": [
+                {}
+              ],
+              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+              "version": "composition.krateo.io/v0-0-1"
             }
-        ],
-        "resourceVersion": "31947",
-        "uid": "3e4339ec-e017-4526-a50e-5ffde6bed122",
-        "version": "git.krateo.io/v1alpha1"
-    },
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {
-            "message": "create failed: github: You need admin access to the organization before adding a repository to it. [] https://docs.github.com/rest/repos/repos#create-an-organization-repository",
-            "reason": "ReconcileError",
-            "status": "False",
-            "type": "Synced"
+          ],
+          "resourceVersion": "2769771",
+          "uid": "10c62b82-8096-4f40-a991-8f1a420a7c42",
+          "version": "argoproj.io/v1alpha1"
         },
-        "kind": "Repo",
-        "name": "hello-test-2-fireworks-app-repo",
-        "namespace": "fireworksapp-system",
-        "parentRefs": [
+        {
+          "createdAt": "2025-07-31T15:30:39Z",
+          "health": {},
+          "kind": "Repo",
+          "name": "test2-repo",
+          "namespace": "demo-system",
+          "parentRefs": [
             {
-                "createdAt": "2025-05-29T14:35:56Z",
-                "health": {
-                    "message": "Kind: Application - Name: hello-test-2 - Namespace: krateo-system - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-                    "reason": "False",
-                    "status": "Degraded",
-                    "type": "CompositionStatus"
-                },
-                "kind": "CompositionReference",
-                "name": "hello-test-2",
-                "namespace": "fireworksapp-system",
-                "parentRefs": [
-                    {}
-                ],
-                "resourceVersion": "39743",
-                "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-                "version": "resourcetrees.krateo.io/v1"
+              "kind": "FrontendGithubScaffolding",
+              "name": "test2",
+              "namespace": "demo-system",
+              "parentRefs": [
+                {}
+              ],
+              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+              "version": "composition.krateo.io/v0-0-1"
             }
-        ],
-        "resourceVersion": "179687",
-        "uid": "278c0ae8-4f11-4c12-a931-bc8b63e7784f",
-        "version": "github.krateo.io/v1alpha1"
-    },
-    {
-        "createdAt": "2025-05-29T14:35:52Z",
-        "health": {
-            "message": "Composition values updated.",
-            "reason": "Available",
-            "status": "True",
-            "type": "Ready"
+          ],
+          "resourceVersion": "2771491",
+          "uid": "36177476-08c3-42dd-a148-48d0b94bbf13",
+          "version": "git.krateo.io/v1alpha1"
         },
-        "kind": "FireworksApp",
-        "name": "hello-test-2",
-        "namespace": "fireworksapp-system",
-        "parentRefs": [
+        {
+          "createdAt": "2025-07-31T15:30:39Z",
+          "health": {},
+          "kind": "Repo",
+          "name": "test2-repo",
+          "namespace": "demo-system",
+          "parentRefs": [
             {
-                "createdAt": "2025-05-29T14:35:56Z",
-                "health": {
-                    "message": "Kind: Application - Name: hello-test-2 - Namespace: krateo-system - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-                    "reason": "False",
-                    "status": "Degraded",
-                    "type": "CompositionStatus"
-                },
-                "kind": "CompositionReference",
-                "name": "hello-test-2",
-                "namespace": "fireworksapp-system",
-                "parentRefs": [
-                    {}
-                ],
-                "resourceVersion": "39743",
-                "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-                "version": "resourcetrees.krateo.io/v1"
+              "kind": "FrontendGithubScaffolding",
+              "name": "test2",
+              "namespace": "demo-system",
+              "parentRefs": [
+                {}
+              ],
+              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+              "version": "composition.krateo.io/v0-0-1"
             }
-        ],
-        "resourceVersion": "29080",
-        "uid": "5c0d1cf4-087f-4b7c-96e8-dcc4328b932f",
-        "version": "composition.krateo.io/v1-1-15"
-    }
-]
+          ],
+          "resourceVersion": "77512",
+          "uid": "cc1fb868-3ae9-435a-a748-aa54dcd1b26b",
+          "version": "github.kog.krateo.io/v1alpha1"
+        }
+      ]

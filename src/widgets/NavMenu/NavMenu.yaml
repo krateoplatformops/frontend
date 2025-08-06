@@ -53,6 +53,7 @@ spec:
       - resourceRefId: panel-tab-list
       - resourceRefId: panel-line-chart
       - resourceRefId: panel-bar-chart
+      - resourceRefId: panel-flow-chart
   resourcesRefs:
     items:
       - id: button-delete-fireworks-app
@@ -100,6 +101,12 @@ spec:
       - id: panel-bar-chart
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: panel-bar-chart
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: panel-flow-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-flow-chart
         namespace: krateo-system
         resource: panels
         verb: GET
