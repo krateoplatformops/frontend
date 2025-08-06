@@ -33,6 +33,7 @@
                   "uid",
                   "version"
                 ],
+                "additionalProperties": false,
                 "properties": {
                   "createdAt": {
                     "type": "string",

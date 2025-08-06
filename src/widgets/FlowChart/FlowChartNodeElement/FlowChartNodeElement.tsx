@@ -4,20 +4,16 @@ import { Avatar, Flex, Space, Tooltip } from 'antd'
 import { Handle, Position } from 'reactflow'
 
 import { formatISODate } from '../../../utils/utils'
-import type { NodeElementData } from '../types'
-import { getDaysPeriod } from '../utils'
+import type { FlowChartNodeData } from '../FlowChart'
 
 import styles from './FlowChartNodeElement.module.css'
 
-const TagDateFlow = ({ date }: { date: string }) => (
-  <Tooltip title={formatISODate(date, true)}>
-    <div className={styles.tagFlow}>{getDaysPeriod(date)}</div>
-  </Tooltip>
-)
+const getDaysPeriod = (isoDate: string) => {
+  const deltaMSeconds = new Date().getTime() - new Date(isoDate).getTime()
+  const days = Math.floor(deltaMSeconds / 24 / 60 / 60 / 1000)
 
-const TagVersionFlow = ({ version }: { version: string }) => (
-  <div className={styles.tagFlow}>{version}</div>
-)
+  return days !== 1 ? `${days} days` : `${days} day`
+}
 
 const fallbackIcon = { color: '#fff', name: 'fa-question' }
 
@@ -37,7 +33,7 @@ const renderIcon = (icon: { name?: string; color?: string; message?: string }, s
     : avatar
 }
 
-const FlowChartNodeElement = ({ data }: { data: NodeElementData }) => {
+const FlowChartNodeElement = ({ data }: { data: FlowChartNodeData }) => {
   const { date, icon, kind, name, namespace, statusIcon, version } = data
 
   return (
@@ -51,8 +47,10 @@ const FlowChartNodeElement = ({ data }: { data: NodeElementData }) => {
           <div className={styles.body}>{kind}</div>
           <Flex align='center' className={styles.footer} gap={5}>
             {renderIcon(statusIcon || fallbackIcon, 32)}
-            <TagDateFlow date={date} />
-            <TagVersionFlow version={version} />
+            <Tooltip title={formatISODate(date, true)}>
+              <div className={styles.tagFlow}>{getDaysPeriod(date)}</div>
+            </Tooltip>
+            <div className={styles.tagFlow}>{version}</div>
           </Flex>
         </div>
       </Space>

@@ -154,7 +154,6 @@ export interface FlowChart {
          * api version of the resource
          */
         version: string
-        [k: string]: unknown
       }[]
     }
     apiRef?: {
