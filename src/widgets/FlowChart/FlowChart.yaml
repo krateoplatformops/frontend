@@ -6,107 +6,100 @@ metadata:
 spec:
   widgetData:
     data: [
-        {
-          "createdAt": "2025-07-31T15:30:36Z",
-          "health": {
-            "status": "Ready"
-          },
-          "kind": "FrontendGithubScaffolding",
-          "name": "test2",
-          "namespace": "demo-system",
-          "parentRefs": [
-            {}
-          ],
-          "resourceVersion": "",
-          "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
-          "version": "composition.krateo.io/v0-0-1"
-        },
-        {
-          "createdAt": "2025-07-31T15:30:39Z",
-          "health": {},
-          "kind": "ConfigMap",
-          "name": "test2-replace-values",
-          "namespace": "demo-system",
-          "parentRefs": [
-            {
-              "kind": "FrontendGithubScaffolding",
-              "name": "test2",
-              "namespace": "demo-system",
-              "parentRefs": [
-                {}
-              ],
-              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
-              "version": "composition.krateo.io/v0-0-1"
-            }
-          ],
-          "resourceVersion": "77493",
-          "uid": "e99a3efe-7461-4ffe-b956-55cb3882f0c5",
-          "version": "v1"
-        },
-        {
-          "createdAt": "2025-07-31T15:30:39Z",
-          "health": {},
-          "kind": "Application",
-          "name": "test2",
-          "namespace": "krateo-system",
-          "parentRefs": [
-            {
-              "kind": "FrontendGithubScaffolding",
-              "name": "test2",
-              "namespace": "demo-system",
-              "parentRefs": [
-                {}
-              ],
-              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
-              "version": "composition.krateo.io/v0-0-1"
-            }
-          ],
-          "resourceVersion": "2769771",
-          "uid": "10c62b82-8096-4f40-a991-8f1a420a7c42",
-          "version": "argoproj.io/v1alpha1"
-        },
-        {
-          "createdAt": "2025-07-31T15:30:39Z",
-          "health": {},
-          "kind": "Repo",
-          "name": "test2-repo",
-          "namespace": "demo-system",
-          "parentRefs": [
-            {
-              "kind": "FrontendGithubScaffolding",
-              "name": "test2",
-              "namespace": "demo-system",
-              "parentRefs": [
-                {}
-              ],
-              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
-              "version": "composition.krateo.io/v0-0-1"
-            }
-          ],
-          "resourceVersion": "2771491",
-          "uid": "36177476-08c3-42dd-a148-48d0b94bbf13",
-          "version": "git.krateo.io/v1alpha1"
-        },
-        {
-          "createdAt": "2025-07-31T15:30:39Z",
-          "health": {},
-          "kind": "Repo",
-          "name": "test2-repo",
-          "namespace": "demo-system",
-          "parentRefs": [
-            {
-              "kind": "FrontendGithubScaffolding",
-              "name": "test2",
-              "namespace": "demo-system",
-              "parentRefs": [
-                {}
-              ],
-              "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
-              "version": "composition.krateo.io/v0-0-1"
-            }
-          ],
-          "resourceVersion": "77512",
-          "uid": "cc1fb868-3ae9-435a-a748-aa54dcd1b26b",
-          "version": "github.kog.krateo.io/v1alpha1"
-        }
-      ]
+      {
+        "createdAt": "2025-07-31T15:30:36Z",
+        "icon": { "name": "fa-cubes", "color": "#1890ff" },
+        "statusIcon": { "name": "fa-check", "color": "#52c41a", "message": "Available" },
+        "kind": "FrontendGithubScaffolding",
+        "name": "test2",
+        "namespace": "demo-system",
+        "parentRefs": [{}],
+        "resourceVersion": "",
+        "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+        "version": "composition.krateo.io/v0-0-1"
+      },
+      {
+        "createdAt": "2025-07-31T15:30:39Z",
+        "icon": { "name": "fa-file-alt", "color": "#faad14" },
+        "statusIcon": { "name": "fa-ellipsis", "color": "#1890ff", "message": "Progressing" },
+        "kind": "ConfigMap",
+        "name": "test2-replace-values",
+        "namespace": "demo-system",
+        "parentRefs": [
+          {
+            "kind": "FrontendGithubScaffolding",
+            "name": "test2",
+            "namespace": "demo-system",
+            "parentRefs": [{}],
+            "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+            "version": "composition.krateo.io/v0-0-1"
+          }
+        ],
+        "resourceVersion": "77493",
+        "uid": "e99a3efe-7461-4ffe-b956-55cb3882f0c5",
+        "version": "v1"
+      },
+      {
+        "createdAt": "2025-07-31T15:30:39Z",
+        "icon": { "name": "fa-cogs", "color": "#13c2c2" },
+        "statusIcon": { "name": "fa-pause", "color": "#faad14", "message": "Suspended" },
+        "kind": "Application",
+        "name": "test2",
+        "namespace": "krateo-system",
+        "parentRefs": [
+          {
+            "kind": "FrontendGithubScaffolding",
+            "name": "test2",
+            "namespace": "demo-system",
+            "parentRefs": [{}],
+            "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+            "version": "composition.krateo.io/v0-0-1"
+          }
+        ],
+        "resourceVersion": "2769771",
+        "uid": "10c62b82-8096-4f40-a991-8f1a420a7c42",
+        "version": "argoproj.io/v1alpha1"
+      },
+      {
+        "createdAt": "2025-07-31T15:30:39Z",
+        "icon": { "name": "fa-database", "color": "#722ed1" },
+        "statusIcon": { "name": "fa-xmark", "color": "#ff4d4f", "message": "Degraded" },
+        "kind": "Repo",
+        "name": "test2-repo",
+        "namespace": "demo-system",
+        "parentRefs": [
+          {
+            "kind": "FrontendGithubScaffolding",
+            "name": "test2",
+            "namespace": "demo-system",
+            "parentRefs": [{}],
+            "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+            "version": "composition.krateo.io/v0-0-1"
+          }
+        ],
+        "resourceVersion": "2771491",
+        "uid": "36177476-08c3-42dd-a148-48d0b94bbf13",
+        "version": "git.krateo.io/v1alpha1"
+      },
+      {
+        "createdAt": "2025-07-31T15:30:39Z",
+        "icon": { "name": "fa-book", "color": "#eb2f96" },
+        "statusIcon": { "name": "fa-question", "color": "#d9d9d9", "message": "Unknown" },
+        "kind": "Repo",
+        "name": "test2-repo",
+        "namespace": "demo-system",
+        "parentRefs": [
+          {
+            "kind": "FrontendGithubScaffolding",
+            "name": "test2",
+            "namespace": "demo-system",
+            "parentRefs": [{}],
+            "uid": "1eed3c65-90d2-4823-a85c-3430d4e41944",
+            "version": "composition.krateo.io/v0-0-1"
+          }
+        ],
+        "resourceVersion": "77512",
+        "uid": "cc1fb868-3ae9-435a-a748-aa54dcd1b26b",
+        "version": "github.kog.krateo.io/v1alpha1"
+      }
+    ]

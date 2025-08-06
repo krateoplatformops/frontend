@@ -15,26 +15,42 @@ export interface FlowChart {
          */
         createdAt: string
         /**
-         * health status of the resource
+         * optional date value to be shown in the node, formatted as ISO 8601 string
          */
-        health?: {
+        date: string
+        /**
+         * custom icon displayed for the resource node
+         */
+        icon?: {
           /**
-           * optional description of the health state
+           * FontAwesome icon class name (e.g. 'fa-check')
+           */
+          name?: string
+          /**
+           * CSS color value for the icon background
+           */
+          color?: string
+          /**
+           * optional tooltip message displayed on hover
            */
           message?: string
+        }
+        /**
+         * custom status icon displayed alongside resource info
+         */
+        statusIcon?: {
           /**
-           * reason explaining the current health status
+           * FontAwesome icon class name representing status
            */
-          reason?: string
+          name?: string
           /**
-           * short status keyword (e.g. healthy, degraded)
+           * CSS color value for the status icon background
            */
-          status?: string
+          color?: string
           /**
-           * type or category of health check
+           * optional tooltip message describing the status
            */
-          type?: string
-          [k: string]: unknown
+          message?: string
         }
         /**
          * kubernetes resource type (e.g. Deployment, Service)
@@ -57,26 +73,42 @@ export interface FlowChart {
            */
           createdAt?: string
           /**
-           * health status of the parent resource
+           * optional date value to be shown in the node, formatted as ISO 8601 string
            */
-          health?: {
+          date?: string
+          /**
+           * custom icon for the parent resource
+           */
+          icon?: {
             /**
-             * optional description of the health state
+             * FontAwesome icon class name
+             */
+            name?: string
+            /**
+             * CSS color value for the icon background
+             */
+            color?: string
+            /**
+             * optional tooltip message
              */
             message?: string
+          }
+          /**
+           * custom status icon for the parent resource
+           */
+          statusIcon?: {
             /**
-             * reason explaining the current health status
+             * FontAwesome icon class name
              */
-            reason?: string
+            name?: string
             /**
-             * short status keyword
+             * CSS color value for the status icon background
              */
-            status?: string
+            color?: string
             /**
-             * type or category of health check
+             * optional tooltip message
              */
-            type?: string
-            [k: string]: unknown
+            message?: string
           }
           /**
            * resource type of the parent

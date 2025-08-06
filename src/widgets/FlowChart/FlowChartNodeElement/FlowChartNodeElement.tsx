@@ -19,14 +19,16 @@ const TagVersionFlow = ({ version }: { version: string }) => (
   <div className={styles.tagFlow}>{version}</div>
 )
 
-const renderIcon = (icon: { name: string; color: string; message?: string }, size: number = 40) => {
+const fallbackIcon = { color: '#fff', name: 'fa-question' }
+
+const renderIcon = (icon: { name?: string; color?: string; message?: string }, size: number = 40) => {
   const { color, message, name } = icon
 
   const avatar = (
     <Avatar
-      icon={<FontAwesomeIcon icon={name as IconProp} />}
+      icon={<FontAwesomeIcon icon={(name || fallbackIcon.name) as IconProp} />}
       size={size}
-      style={{ backgroundColor: color, color: 'white' }}
+      style={{ backgroundColor: (color || fallbackIcon.color), color: 'white' }}
     />
   )
 
@@ -34,8 +36,6 @@ const renderIcon = (icon: { name: string; color: string; message?: string }, siz
     ? <Tooltip title={message}><div>{avatar}</div></Tooltip>
     : avatar
 }
-
-const fallbackIcon = { color: '#fff', name: 'fa-question' }
 
 const FlowChartNodeElement = ({ data }: { data: NodeElementData }) => {
   const { date, icon, kind, name, namespace, statusIcon, version } = data
