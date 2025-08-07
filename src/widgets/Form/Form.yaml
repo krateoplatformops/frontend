@@ -112,6 +112,26 @@ spec:
             "title": "Number of Replicas",
             "default": 1
           },
+          "users": {
+            "type": "array",
+            "title": "Users",
+            "description": "List of users for the application",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fullname": {
+                  "type": "string",
+                  "title": "Full Name"
+                },
+                "role": {
+                  "type": "string",
+                  "title": "Role",
+                  "enum": ["admin", "user", "viewer"]
+                }
+              },
+              "required": ["fullname", "role"]
+            }
+          },
           "select1": {
             "type": "string",
             "title": "regione",
@@ -162,6 +182,9 @@ spec:
         fetch:
           url: https://loremipsum.io/api/1
           verb: GET
+    objectFields:
+      - path: users
+        displayField: fullname
     dependencies:
       - path: select2
         dependsField: 

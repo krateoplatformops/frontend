@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
@@ -6,6 +7,7 @@ import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
+import ListObjectFields from '../../components/ListObjectFields'
 
 import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
@@ -19,6 +21,7 @@ type FormGeneratorType = {
   formId: string
   onSubmit: (values: object) => Promise<void>
   dependencies?: FormWidgetData['dependencies']
+  objectFields?: FormWidgetData['objectFields']
   autocomplete?: FormWidgetData['autocomplete']
 }
 
@@ -50,6 +53,7 @@ const FormGenerator = ({
   dependencies,
   descriptionTooltip = false,
   formId,
+  objectFields,
   onSubmit,
   schema,
   showFormStructure = false,
@@ -139,6 +143,27 @@ const FormGenerator = ({
     )
   }
 
+  const parseData = ({ properties, required }: JSONSchema4, name: string = ''): Field[] => {
+    if (properties) {
+      return Object.keys(properties).flatMap((key) => {
+        const currentName = name ? `${name}.${key}` : key
+        const prop = properties[key]
+
+        if (prop.type === 'object') {
+          return parseData(prop, currentName)
+        }
+
+        const isRequired
+          = (Array.isArray(required) && required.indexOf(key) > -1)
+          || requiredFields.indexOf(key) > -1
+
+        const label = prop.title || key
+        return [renderField(label, currentName, prop, isRequired)]
+      })
+    }
+    return []
+  }
+
   const renderField = (label: string, name: string, node: JSONSchema4, required: boolean) => {
     if (Array.isArray(node.type)) {
       console.error(`type as array is not supported: ${node.type.join(',')} for field ${name}`)
@@ -163,7 +188,7 @@ const FormGenerator = ({
             const fetchOptions = autocomplete.find(({ path }) => path === name)
 
             if (fetchOptions) {
-              return <AutoComplete fetchOptions={fetchOptions} />
+              return <AutoComplete fetchOptions={fetchOptions} form={form} />
             }
           }
 
@@ -248,6 +273,28 @@ const FormGenerator = ({
         )
 
       case 'array':
+        if (objectFields && node.items) {
+          const objFields = objectFields.find(({ path }) => path === name)
+          if (objFields) {
+            // objects
+            return (
+              <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
+                <Form.Item
+                  extra={!descriptionTooltip && node.description ? node.description : undefined}
+                  hidden={optionalHidden && !required}
+                  key={name}
+                  label={renderLabel(name, label)}
+                  name={name.split('.')}
+                  rules={rules}
+                  tooltip={descriptionTooltip && node.description ? node.description : undefined}
+                >
+                  <ListObjectFields container={document.body} data={[]} displayField={objFields.displayField} fields={parseData(node.items)} onSubmit={(values) => { form.setFieldValue(name.split('.'), values); console.log(values, form.getFieldsValue()) } } />
+                </Form.Item>
+              </div>
+            )
+          }
+        }
+        // strings
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
@@ -294,27 +341,6 @@ const FormGenerator = ({
         )
       }
     }
-  }
-
-  const parseData = ({ properties, required }: JSONSchema4, name: string = ''): Field[] => {
-    if (properties) {
-      return Object.keys(properties).flatMap((key) => {
-        const currentName = name ? `${name}.${key}` : key
-        const prop = properties[key]
-
-        if (prop.type === 'object') {
-          return parseData(prop, currentName)
-        }
-
-        const isRequired
-          = (Array.isArray(required) && required.indexOf(key) > -1)
-          || requiredFields.indexOf(key) > -1
-
-        const label = prop.title || key
-        return [renderField(label, currentName, prop, isRequired)]
-      })
-    }
-    return []
   }
 
   const getAnchorList = (): AnchorLinkItemProps[] => {

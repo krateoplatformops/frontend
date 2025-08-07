@@ -388,6 +388,25 @@
                   }
                 }
               }
+            },
+            "objectFields": {
+              "type": "array",
+              "description": "configuration for object fields in the form",
+              "items": {
+                "type": "object",
+                "required": ["path", "displayField"],
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "the path of the object field"
+                  },
+                  "displayField": {
+                    "type": "string",
+                    "description": "the field to display in the objects list"
+                  }
+                }
+              }
             }
           },
           "additionalProperties": false
