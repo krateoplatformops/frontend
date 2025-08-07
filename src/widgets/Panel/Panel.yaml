@@ -249,6 +249,26 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: panel-flow-chart
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: Flow chart
+    items:
+      - resourceRefId: my-flow-chart
+  resourcesRefs:
+    items:
+      - id: my-flow-chart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-flow-chart
+        namespace: krateo-system
+        resource: flowcharts
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: composition-test-panel
   namespace: krateo-system
 spec:

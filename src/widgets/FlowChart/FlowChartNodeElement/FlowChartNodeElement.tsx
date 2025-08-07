@@ -1,125 +1,56 @@
-import { LoadingOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Avatar, Flex, Space, Spin, theme, Tooltip } from 'antd'
+import { Avatar, Flex, Space, Tooltip } from 'antd'
 import { Handle, Position } from 'reactflow'
 
 import { formatISODate } from '../../../utils/utils'
-import type { NodeElementData } from '../types'
-import { getDaysPeriod, getNormalizedLabel } from '../utils'
+import type { FlowChartNodeData } from '../FlowChart'
 
 import styles from './FlowChartNodeElement.module.css'
 
-const TagDateFlow = ({ date }: { date: string }) => {
-  return (
-    <Tooltip title={formatISODate(date, true)}>
-      <div className={styles.tagFlow}>
-        {getDaysPeriod(date)}
-      </div>
-    </Tooltip>
-  )
+const getDaysPeriod = (isoDate: string) => {
+  const deltaMSeconds = new Date().getTime() - new Date(isoDate).getTime()
+  const days = Math.floor(deltaMSeconds / 24 / 60 / 60 / 1000)
+
+  return days !== 1 ? `${days} days` : `${days} day`
 }
 
-const TagVersionFlow = ({ version }: { version: string }) => {
-  return (
-    <div className={styles.tagFlow}>
-      {version}
-    </div>
+const fallbackIcon = { color: '#fff', name: 'fa-question' }
+
+const renderIcon = (icon: { name?: string; color?: string; message?: string }, size: number = 40) => {
+  const { color, message, name } = icon
+
+  const avatar = (
+    <Avatar
+      icon={<FontAwesomeIcon icon={(name || fallbackIcon.name) as IconProp} />}
+      size={size}
+      style={{ backgroundColor: (color || fallbackIcon.color), color: 'white' }}
+    />
   )
+
+  return message
+    ? <Tooltip title={message}><div>{avatar}</div></Tooltip>
+    : avatar
 }
 
-const FlowChartNodeElement = ({ data }: { data: NodeElementData }) => {
-  const { useToken } = theme
-  const { token } = useToken()
-
-  const { date, health, icon, kind, name, namespace, status, version } = data
-
-  const statusDisplayer = [
-    { color: token.colorSuccessBg, icon: 'fa-check', label: 'Available' },
-    { color: token.colorSuccessBg, icon: 'fa-check', label: 'Healthy' },
-    { color: token.colorError, icon: 'fa-xmark', label: 'Degraded' },
-    { color: token.colorInfo, icon: 'fa-ellipsis', label: 'Progressing' },
-    { color: token.colorWarning, icon: 'fa-pause', label: 'Suspended' },
-    { color: token.colorBorder, icon: 'fa-link-slash', label: 'Missing' },
-    { color: token.colorBorder, icon: 'fa-question', label: 'Unknown' },
-    { color: token.colorError, icon: 'fa-rotate', label: 'OutOfSync' },
-    { color: token.colorSuccessBg, icon: 'fa-rotate', label: 'Synced' },
-  ]
-
-  const getStatusIcon = (label: string | boolean, message?: string) => {
-    const normalizedLabel = getNormalizedLabel(label)
-
-    const statusItem = statusDisplayer.find(({ label }) => label === normalizedLabel)
-    const icon = statusItem?.icon
-    const color = statusItem?.color
-
-    const statusIcon = (
-      <Avatar
-        icon={<FontAwesomeIcon icon={icon as IconProp} />}
-        style={{
-          backgroundColor: color,
-          border: `solid 4px ${token.colorWhite}`,
-          color: token.colorWhite,
-        }}
-      />
-    )
-
-    return message ? <Tooltip title={message}><div>{statusIcon}</div></Tooltip> : statusIcon
-  }
-
-  const getNodeIcon = (icon: string, statusLabel: string) => {
-    let color: string
-
-    if (['Degraded', 'Progressing', 'Missing'].includes(statusLabel)) {
-      color = statusDisplayer.find(({ label }) => label === statusLabel)?.color || token.colorLink
-    } else if (statusLabel === 'Unknown') {
-      color = token.colorWhite
-    } else {
-      color = token.colorLink
-    }
-
-    const nodeIcon = (
-      <Avatar
-        icon={<FontAwesomeIcon icon={icon as IconProp} />}
-        size={40}
-        style={{ backgroundColor: token.colorBorder, color }}
-      />
-    )
-
-    if (statusLabel === 'Progressing') {
-      const spinColor = statusDisplayer.find(({ label }) => label === statusLabel)?.color || color
-      return (
-        <div className={styles.nodeIconProgressing}>
-          {nodeIcon}
-          <Spin
-            className={styles.nodeIconSpinner}
-            indicator={<LoadingOutlined spin style={{ color: spinColor, fontSize: 40 }} />}
-          />
-        </div>
-      )
-    }
-
-    return nodeIcon
-  }
+const FlowChartNodeElement = ({ data }: { data: FlowChartNodeData }) => {
+  const { date, icon, kind, name, namespace, statusIcon, version } = data
 
   return (
     <div className={styles.node}>
       <Handle position={Position.Left} type='target' />
       <Space>
-        {icon && health?.status && getNodeIcon(icon, health.status)}
+        {renderIcon(icon || fallbackIcon)}
         <div>
-          <div className={styles.header}>
-            {name}
-          </div>
-          { namespace && <div className={styles.subHeader}>NS: {namespace}</div> }
-          <div className={styles.body}>
-            {kind}
-          </div>
+          <div className={styles.header}>{name}</div>
+          {namespace && <div className={styles.subHeader}>NS: {namespace}</div>}
+          <div className={styles.body}>{kind}</div>
           <Flex align='center' className={styles.footer} gap={5}>
-            {health?.status && getStatusIcon(health.status, health.message)}
-            {status && statusDisplayer && getStatusIcon(status, status === 'Synced' ? 'Synced' : 'Out of Sync')}
-            <TagDateFlow date={date} />
-            <TagVersionFlow version={version} />
+            {renderIcon(statusIcon || fallbackIcon, 32)}
+            <Tooltip title={formatISODate(date, true)}>
+              <div className={styles.tagFlow}>{getDaysPeriod(date)}</div>
+            </Tooltip>
+            <div className={styles.tagFlow}>{version}</div>
           </Flex>
         </div>
       </Space>

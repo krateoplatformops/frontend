@@ -10,6 +10,20 @@ import type { Table as WidgetType } from './Table.type'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
+/**
+ * Parses a dot-notation string (e.g., "user.name.first") into an array of strings
+ * for use as a nested path in Ant Design's `dataIndex`.
+ *
+ * If the input contains dot notation, it is split by "." and returned as an array.
+ * Otherwise, the original string is returned.
+ *
+ * @param {string} input - The valueKey string to parse.
+ * @returns {string | string[]} - An array of keys if dot notation is detected, otherwise the original string.
+ */
+const parseValueKey = (input: string): string | string[] => {
+  return input.includes('.') ? input.split('.') : input
+}
+
 const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize, prefix } = widgetData
   const { getFilteredData } = useFilter()
@@ -22,7 +36,7 @@ const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
   return (
     <AntdTable
       columns={columns?.map(({ color, kind, title, valueKey }, index) => ({
-        dataIndex: valueKey,
+        dataIndex: parseValueKey(valueKey),
         key: `${uid}-col-${index}`,
         render: (value?: unknown) => {
           if (kind === 'icon' && typeof value === 'string') {

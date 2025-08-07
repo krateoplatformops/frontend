@@ -15,4 +15,3 @@ spec:
         namespace: "{namespace}"
         resource: tablists
         verb: GET
-    

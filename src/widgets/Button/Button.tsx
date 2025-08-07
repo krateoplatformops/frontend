@@ -46,11 +46,11 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
       return
     }
 
-    const { path } = resourceRef
+    const { path, verb } = resourceRef
 
     const url = action.type === 'rest' ? config?.api.SNOWPLOW_API_BASE_URL + path : path
 
-    await handleAction(action, url)
+    await handleAction(action, url, verb)
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

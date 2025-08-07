@@ -75,6 +75,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
+| actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].headers | no |  | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
@@ -340,21 +341,29 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 |----------|----------|-------------|------|
 | data | no | list of kubernetes resources and their relationships to render as nodes in the flow chart | array |
 | data[].createdAt | yes | timestamp indicating when the resource was created | string |
-| data[].health | no | health status of the resource | object |
-| data[].health.message | no | optional description of the health state | string |
-| data[].health.reason | no | reason explaining the current health status | string |
-| data[].health.status | no | short status keyword (e.g. healthy, degraded) | string |
-| data[].health.type | no | type or category of health check | string |
+| data[].date | yes | optional date value to be shown in the node, formatted as ISO 8601 string | string |
+| data[].icon | no | custom icon displayed for the resource node | object |
+| data[].icon.name | no | FontAwesome icon class name (e.g. 'fa-check') | string |
+| data[].icon.color | no | CSS color value for the icon background | string |
+| data[].icon.message | no | optional tooltip message displayed on hover | string |
+| data[].statusIcon | no | custom status icon displayed alongside resource info | object |
+| data[].statusIcon.name | no | FontAwesome icon class name representing status | string |
+| data[].statusIcon.color | no | CSS color value for the status icon background | string |
+| data[].statusIcon.message | no | optional tooltip message describing the status | string |
 | data[].kind | yes | kubernetes resource type (e.g. Deployment, Service) | string |
 | data[].name | yes | name of the resource | string |
 | data[].namespace | yes | namespace in which the resource is defined | string |
 | data[].parentRefs | no | list of parent resources used to define graph relationships | array |
 | data[].parentRefs[].createdAt | no | timestamp indicating when the parent resource was created | string |
-| data[].parentRefs[].health | no | health status of the parent resource | object |
-| data[].parentRefs[].health.message | no | optional description of the health state | string |
-| data[].parentRefs[].health.reason | no | reason explaining the current health status | string |
-| data[].parentRefs[].health.status | no | short status keyword | string |
-| data[].parentRefs[].health.type | no | type or category of health check | string |
+| data[].parentRefs[].date | no | optional date value to be shown in the node, formatted as ISO 8601 string | string |
+| data[].parentRefs[].icon | no | custom icon for the parent resource | object |
+| data[].parentRefs[].icon.name | no | FontAwesome icon class name | string |
+| data[].parentRefs[].icon.color | no | CSS color value for the icon background | string |
+| data[].parentRefs[].icon.message | no | optional tooltip message | string |
+| data[].parentRefs[].statusIcon | no | custom status icon for the parent resource | object |
+| data[].parentRefs[].statusIcon.name | no | FontAwesome icon class name | string |
+| data[].parentRefs[].statusIcon.color | no | CSS color value for the status icon background | string |
+| data[].parentRefs[].statusIcon.message | no | optional tooltip message | string |
 | data[].parentRefs[].kind | no | resource type of the parent | string |
 | data[].parentRefs[].name | no | name of the parent resource | string |
 | data[].parentRefs[].namespace | no | namespace of the parent resource | string |
@@ -454,6 +463,7 @@ name of the k8s Custom Resource
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
+| actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -803,6 +813,7 @@ Panel is a container to display information
 | actions.rest[].onEventNavigateTo.eventReason | yes | identifier of the awaited event reason | string |
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
+| actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |

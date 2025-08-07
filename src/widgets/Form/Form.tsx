@@ -164,7 +164,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} loading={isActionLoading} /> })
     }
 
-    await handleAction(action, url, verb, payload, resourcePayload)
+    await handleAction(action, url, verb, payload, resourcePayload as Record<string, unknown>)
   }
 
   if (isActionLoading) {

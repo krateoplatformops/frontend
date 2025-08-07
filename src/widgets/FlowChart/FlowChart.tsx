@@ -1,7 +1,7 @@
 import dagre from '@dagrejs/dagre'
 import { Empty } from 'antd'
 import { useMemo } from 'react'
-import type { Edge } from 'reactflow'
+import type { Edge, Node } from 'reactflow'
 import ReactFlow, { Controls, Position, useEdgesState, useNodesState } from 'reactflow'
 
 import type { WidgetProps } from '../../types/Widget'
@@ -9,10 +9,12 @@ import type { WidgetProps } from '../../types/Widget'
 import styles from './FlowChart.module.css'
 import type { FlowChart as WidgetType } from './FlowChart.type'
 import FlowChartNodeElement from './FlowChartNodeElement'
-import type { NodeElement } from './types'
 import { parseGraphData } from './utils'
 
 export type FlowChartWidgetData = WidgetType['spec']['widgetData']
+export type FlowChartData = FlowChartWidgetData['data']
+export type FlowChartNodeData = NonNullable<FlowChartData>[number]
+export type NodeElement = Node<FlowChartNodeData> & { type: 'nodeElement' }
 
 const getLayoutedElements = (nodes: NodeElement[], edges: Edge[], direction: string) => {
   const dagreGraph = new dagre.graphlib.Graph()

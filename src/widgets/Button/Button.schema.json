@@ -75,6 +75,9 @@
                             "type": "integer",
                             "description": "the timeout in seconds to wait for the event",
                             "default": 50
+                          },
+                          "reloadRoutes": {
+                            "type": "boolean"
                           }
                         }
                       },

@@ -1,5 +1,6 @@
 .flowChart {
   height: 100%;
+  min-height: 500px;
 }
 
 :global(.ant-tabs) {

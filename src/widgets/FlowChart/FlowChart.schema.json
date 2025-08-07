@@ -26,37 +26,59 @@
                 "required": [
                   "createdAt",
                   "kind",
+                  "date",
                   "name",
                   "namespace",
                   "resourceVersion",
                   "uid",
                   "version"
                 ],
+                "additionalProperties": false,
                 "properties": {
                   "createdAt": {
                     "type": "string",
                     "format": "date-time",
                     "description": "timestamp indicating when the resource was created"
                   },
-                  "health": {
+                  "date": {
+                    "type": "string",
+                    "description": "optional date value to be shown in the node, formatted as ISO 8601 string"
+                  },
+                  "icon": {
+                    "additionalProperties": false,
                     "type": "object",
-                    "description": "health status of the resource",
+                    "description": "custom icon displayed for the resource node",
                     "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "FontAwesome icon class name (e.g. 'fa-check')"
+                      },
+                      "color": {
+                        "type": "string",
+                        "description": "CSS color value for the icon background"
+                      },
                       "message": {
                         "type": "string",
-                        "description": "optional description of the health state"
-                      },
-                      "reason": {
+                        "description": "optional tooltip message displayed on hover"
+                      }
+                    }
+                  },
+                  "statusIcon": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "description": "custom status icon displayed alongside resource info",
+                    "properties": {
+                      "name": {
                         "type": "string",
-                        "description": "reason explaining the current health status"
+                        "description": "FontAwesome icon class name representing status"
                       },
-                      "status": {
+                      "color": {
                         "type": "string",
-                        "description": "short status keyword (e.g. healthy, degraded)"
+                        "description": "CSS color value for the status icon background"
                       },
-                      "type": {
+                      "message": {
                         "type": "string",
-                        "description": "type or category of health check"
+                        "description": "optional tooltip message describing the status"
                       }
                     }
                   },
@@ -83,25 +105,45 @@
                           "format": "date-time",
                           "description": "timestamp indicating when the parent resource was created"
                         },
-                        "health": {
+                        "date": {
+                          "type": "string",
+                          "description": "optional date value to be shown in the node, formatted as ISO 8601 string"
+                        },
+                        "icon": {
+                          "additionalProperties": false,
                           "type": "object",
-                          "description": "health status of the parent resource",
+                          "description": "custom icon for the parent resource",
                           "properties": {
+                            "name": {
+                              "type": "string",
+                              "description": "FontAwesome icon class name"
+                            },
+                            "color": {
+                              "type": "string",
+                              "description": "CSS color value for the icon background"
+                            },
                             "message": {
                               "type": "string",
-                              "description": "optional description of the health state"
-                            },
-                            "reason": {
+                              "description": "optional tooltip message"
+                            }
+                          }
+                        },
+                        "statusIcon": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "description": "custom status icon for the parent resource",
+                          "properties": {
+                            "name": {
                               "type": "string",
-                              "description": "reason explaining the current health status"
+                              "description": "FontAwesome icon class name"
                             },
-                            "status": {
+                            "color": {
                               "type": "string",
-                              "description": "short status keyword"
+                              "description": "CSS color value for the status icon background"
                             },
-                            "type": {
+                            "message": {
                               "type": "string",
-                              "description": "type or category of health check"
+                              "description": "optional tooltip message"
                             }
                           }
                         },
