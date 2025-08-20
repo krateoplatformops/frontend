@@ -63,11 +63,14 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
   const matchesFilter = (itemValue: unknown, filter: FilterType): boolean => {
     const { fieldType, fieldValue } = filter
 
+    if (!itemValue) { return false }
+
     switch (fieldType) {
       case 'string':
         if (Array.isArray(itemValue)) {
           return itemValue.filter((val: string) => val.toLowerCase().includes((fieldValue as string).toLowerCase())).length > 0
         }
+
         return (itemValue as string).toLowerCase().includes((fieldValue as string).toLowerCase())
 
       case 'number':
@@ -107,12 +110,12 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
     if (filters.length === 0) { return data }
 
     return data.filter((item: DataItem) =>
-      filters.every((filter: FilterType) => (
-        filter.fieldName.map((fieldName) => {
+      filters.every((filter: FilterType) =>
+        filter.fieldName.some((fieldName) => {
           const itemValue = item[fieldName]
           return matchesFilter(itemValue, filter)
         })
-      ))
+      )
     )
   }
 
@@ -142,7 +145,6 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <FiltersContext.Provider value={{ clearFilters, getFilteredData, getFilters, isWidgetFilteredByProps, setFilters }}>
-      {/* <div>FILTERS: {JSON.stringify(filterMap)}</div> */}
       {children}
     </FiltersContext.Provider>
   )
@@ -157,45 +159,3 @@ export const useFilter = () => {
   }
   return context
 }
-
-/**
- * How to apply filters:
-
-import { useFilter } from '../context/FilterContext';
-
-const FilterForm = () => {
-  const { setFilters } = useFilter();
-  const prefix = 'utenti';
-
-  const applyFilter = () => {
-    setFilters(prefix, [
-      { fieldType: 'boolean', fieldName: 'attivo', fieldValue: true },
-      { fieldType: 'date-range', fieldName: 'registratoIl', fieldValue: { from: '2024-06-01', to: '2024-06-30' } }
-    ]);
-  };
-
-  return <button onClick={applyFilter}>Applica filtri</button>;
-};
-
- */
-
-/**
- * How to get filtered data:
- *
-import { useFilter } from '../context/FilterContext';
-
-const UserTable = ({data}) => {
-  const { getFilteredData } = useFilter();
-  const prefix = 'utenti';
-
-  const utentiFiltrati = getFilteredData(data, prefix);
-
-  return (
-    <ul>
-      {utentiFiltrati.map((u) => (
-        <li key={u.id}>{u.nome}</li>
-      ))}
-    </ul>
-  );
-};
- */

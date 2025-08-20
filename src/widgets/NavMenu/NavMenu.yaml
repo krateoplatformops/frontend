@@ -6,12 +6,26 @@ metadata:
 spec:
   widgetData:
     items:
+      - resourceRefId: button-filter-table-fin-ops-test
+      - resourceRefId: table-fin-ops-test
       - resourceRefId: panel-with-row
       - resourceRefId: panel-with-column
       - resourceRefId: panel-backend-endpoint-id
       - resourceRefId: button-with-drawer-backend-endpoint-id
   resourcesRefs:
     items:
+      - id: button-filter-table-fin-ops-test
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-filter-table-fin-ops-test
+        namespace: krateo-system
+        resource: buttons
+        verb: GET  
+      - id: table-fin-ops-test
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-fin-ops-test
+        namespace: krateo-system
+        resource: tables
+        verb: GET  
       - id: panel-with-row
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: panel-with-row
