@@ -69,7 +69,6 @@ export default tsEslint.config(
       '@stylistic/js/eol-last': 'error',
       '@stylistic/js/func-call-spacing': 'off',
       '@stylistic/js/generator-star-spacing': 'error',
-      '@stylistic/js/indent': ['error', 2, { SwitchCase: 1 }],
       '@stylistic/js/key-spacing': 'error',
       '@stylistic/js/keyword-spacing': 'error',
       '@stylistic/js/line-comment-position': 'error',

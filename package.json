@@ -13,7 +13,8 @@
     "send-schemas": "tsx scripts/send-schemas-to-smithery.ts",
     "validate-schemas": "tsx scripts/validate-schemas.ts",
     "get-access-token": "tsx scripts/get-access-token.ts",
-    "update-readme-widgets": "tsx scripts/update-readme-widgets.ts"
+    "update-readme-widgets": "tsx scripts/update-readme-widgets.ts",
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -63,7 +64,8 @@
     "tsx": "^4.19.4",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.28.0",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@dagrejs/dagre": "^1.1.4",

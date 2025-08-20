@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 import { useConfigContext } from '../context/ConfigContext'
 import { useRoutesContext } from '../context/RoutesContext'
 import type { ResourceRef, WidgetAction } from '../types/Widget'
+import { formatMessage } from '../utils/format-message/formatMessage'
 import { getAccessToken } from '../utils/getAccessToken'
 import type { Payload, RestApiResponse } from '../utils/types'
 import { getHeadersObject } from '../utils/utils'
@@ -187,10 +188,10 @@ const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath:
       const resolved = getObjectByPath(values, el)
       if (
         typeof resolved === 'string'
-        || typeof resolved === 'number'
-        || typeof resolved === 'boolean'
-        || typeof resolved === 'bigint'
-        || typeof resolved === 'symbol'
+      || typeof resolved === 'number'
+      || typeof resolved === 'boolean'
+      || typeof resolved === 'bigint'
+      || typeof resolved === 'symbol'
       ) {
         return String(resolved)
       }
@@ -283,6 +284,8 @@ export const useHandleAction = () => {
             successMessage,
           } = action
 
+          let jsonResponse: RestApiResponse | null = null
+
           if (!requireConfirmation || window.confirm('Are you sure?')) {
             if (onSuccessNavigateTo && onEventNavigateTo) {
               notification.error({
@@ -321,7 +324,9 @@ export const useHandleAction = () => {
                   setIsActionLoading(false)
                   eventSource.close()
                   notification.error({
-                    description: errorMessage || `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+                    description: errorMessage
+                      ? formatMessage(errorMessage, { json: updatedPayload, response: jsonResponse })
+                      : `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
                     message: 'Error while executing the action',
                     placement: 'bottomLeft',
                   })
@@ -336,8 +341,8 @@ export const useHandleAction = () => {
                   return
                 }
 
-                const data = JSON.parse(event.data as string) as EventData
-                if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
+                const eventData = JSON.parse(event.data as string) as EventData
+                if (eventData.reason === onEventNavigateTo.eventReason && eventData.involvedObject.uid === resourceUid) {
                   eventReceived = true
 
                   if (onEventNavigateTo.reloadRoutes !== false) {
@@ -358,10 +363,18 @@ export const useHandleAction = () => {
                     return
                   }
 
-                  message.destroy()
+                  let description = 'The action has been executed successfully'
+                  if (successMessage) {
+                    description = formatMessage(successMessage, {
+                      event: eventData as unknown as Record<string, unknown>,
+                      json: updatedPayload,
+                      response: jsonResponse,
+                    })
+                  }
 
+                  message.destroy()
                   notification.success({
-                    description: successMessage || 'The action has been executed successfully',
+                    description,
                     message: `Successfully executed action`,
                     placement: 'bottomLeft',
                   })
@@ -392,21 +405,23 @@ export const useHandleAction = () => {
               method: verb,
             })
 
-            const json = (await res.json()) as RestApiResponse
+            jsonResponse = (await res.json()) as RestApiResponse
 
             setIsActionLoading(false)
 
             if (!res.ok) {
               notification.error({
-                description: errorMessage || json.message,
-                message: `${json.status} - ${json.reason}`,
+                description: errorMessage
+                  ? formatMessage(errorMessage, { json: updatedPayload, response: jsonResponse })
+                  : jsonResponse.message,
+                message: `${jsonResponse.status} - ${jsonResponse.reason}`,
                 placement: 'bottomLeft',
               })
               break
             }
 
-            if (json.metadata?.uid) {
-              resourceUid = json.metadata.uid
+            if (jsonResponse.metadata?.uid) {
+              resourceUid = jsonResponse.metadata.uid
             }
 
             if (!onEventNavigateTo) {
@@ -428,8 +443,10 @@ export const useHandleAction = () => {
               })()
 
               notification.success({
-                description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
-                message: json.message,
+                description: successMessage
+                  ? formatMessage(successMessage, { json: updatedPayload, response: jsonResponse })
+                  : `Successfully ${actionName} ${jsonResponse.metadata?.name} in ${jsonResponse.metadata?.namespace}`,
+                message: jsonResponse.message,
                 placement: 'bottomLeft',
               })
             }
