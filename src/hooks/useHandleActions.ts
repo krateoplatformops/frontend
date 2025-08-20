@@ -234,7 +234,7 @@ export const useHandleAction = () => {
   const { config } = useConfigContext()
   const { reloadRoutes } = useRoutesContext()
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false)
-  const resolveMixedJqString = useResolveJqExpression()
+  const resolveJq = useResolveJqExpression()
 
   const handleAction = async (
     action: WidgetAction,
@@ -321,14 +321,21 @@ export const useHandleAction = () => {
                 withCredentials: false,
               })
 
+              let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
+              // eslint-disable-next-line max-depth
+              if (errorMessage && errorMessage.startsWith('${')) {
+                description = await resolveJq(errorMessage, {
+                  json: updatedPayload,
+                  response: jsonResponse,
+                })
+              }
+
               const timeoutId = setTimeout(() => {
                 if (!eventReceived) {
                   setIsActionLoading(false)
                   eventSource.close()
                   notification.error({
-                    description: errorMessage
-                      ? formatMessage(errorMessage, { json: updatedPayload, response: jsonResponse })
-                      : `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+                    description,
                     message: 'Error while executing the action',
                     placement: 'bottomLeft',
                   })
@@ -367,8 +374,8 @@ export const useHandleAction = () => {
                   }
 
                   let description = 'The action has been executed successfully'
-                  if (successMessage && successMessage.includes('${')) {
-                    description = await resolveMixedJqString(successMessage, {
+                  if (successMessage && successMessage.startsWith('${')) {
+                    description = await resolveJq(successMessage, {
                       event: eventData as unknown as Record<string, unknown>,
                       json: updatedPayload,
                       response: jsonResponse,
@@ -445,10 +452,17 @@ export const useHandleAction = () => {
                 }
               })()
 
+              let description = `Successfully ${actionName} ${jsonResponse.metadata?.name} in ${jsonResponse.metadata?.namespace}`
+              // eslint-disable-next-line max-depth
+              if (successMessage && successMessage.startsWith('${')) {
+                description = await resolveJq(successMessage, {
+                  json: updatedPayload,
+                  response: jsonResponse,
+                })
+              }
+
               notification.success({
-                description: successMessage
-                  ? formatMessage(successMessage, { json: updatedPayload, response: jsonResponse })
-                  : `Successfully ${actionName} ${jsonResponse.metadata?.name} in ${jsonResponse.metadata?.namespace}`,
+                description,
                 message: jsonResponse.message,
                 placement: 'bottomLeft',
               })
