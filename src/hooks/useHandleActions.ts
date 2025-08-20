@@ -9,6 +9,7 @@ import { useRoutesContext } from '../context/RoutesContext'
 import type { ResourceRef, WidgetAction } from '../types/Widget'
 import { formatMessage } from '../utils/format-message/formatMessage'
 import { getAccessToken } from '../utils/getAccessToken'
+import { useResolveJqExpression } from '../utils/jq-expression'
 import type { Payload, RestApiResponse } from '../utils/types'
 import { getHeadersObject } from '../utils/utils'
 import { closeDrawer, openDrawer } from '../widgets/Drawer/Drawer'
@@ -106,11 +107,11 @@ const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string)
     }
 
     if (
-      typeof value === 'string'
-      || typeof value === 'number'
-      || typeof value === 'boolean'
-      || typeof value === 'bigint'
-      || typeof value === 'symbol'
+      typeof value === 'string' ||
+      typeof value === 'number' ||
+      typeof value === 'boolean' ||
+      typeof value === 'bigint' ||
+      typeof value === 'symbol'
     ) {
       return String(value)
     }
@@ -187,11 +188,11 @@ const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath:
 
       const resolved = getObjectByPath(values, el)
       if (
-        typeof resolved === 'string'
-      || typeof resolved === 'number'
-      || typeof resolved === 'boolean'
-      || typeof resolved === 'bigint'
-      || typeof resolved === 'symbol'
+        typeof resolved === 'string' ||
+        typeof resolved === 'number' ||
+        typeof resolved === 'boolean' ||
+        typeof resolved === 'bigint' ||
+        typeof resolved === 'symbol'
       ) {
         return String(resolved)
       }
@@ -233,6 +234,7 @@ export const useHandleAction = () => {
   const { config } = useConfigContext()
   const { reloadRoutes } = useRoutesContext()
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false)
+  const resolveMixedJqString = useResolveJqExpression()
 
   const handleAction = async (
     action: WidgetAction,
@@ -336,7 +338,8 @@ export const useHandleAction = () => {
 
               message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
 
-              eventSource.addEventListener('krateo', (event) => {
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              eventSource.addEventListener('krateo', async (event) => {
                 if (!resourceUid) {
                   return
                 }
@@ -364,8 +367,8 @@ export const useHandleAction = () => {
                   }
 
                   let description = 'The action has been executed successfully'
-                  if (successMessage) {
-                    description = formatMessage(successMessage, {
+                  if (successMessage && successMessage.includes('${')) {
+                    description = await resolveMixedJqString(successMessage, {
                       event: eventData as unknown as Record<string, unknown>,
                       json: updatedPayload,
                       response: jsonResponse,
