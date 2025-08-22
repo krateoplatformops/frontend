@@ -38,7 +38,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       return
     }
 
-    await handleAction(action, resourcesRefs)
+    await handleAction(action, resourcesRefs, undefined, title)
   }
 
   const handleClick = () => {

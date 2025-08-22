@@ -246,7 +246,8 @@ export const useHandleAction = () => {
   const handleAction = async (
     action: WidgetAction,
     resourcesRefs: ResourcesRefs,
-    customPayload?: Record<string, unknown>
+    customPayload?: Record<string, unknown>,
+    customUrlParam?: string
   ) => {
     if (action.loading?.display) {
       setIsActionLoading(true)
@@ -273,16 +274,23 @@ export const useHandleAction = () => {
 
     const { path, payload: resourcePayload, verb } = resourceRef
 
-    const url = action.type === 'navigate'
-      ? `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
-      : config?.api.SNOWPLOW_API_BASE_URL + path
+    let url: string
+    if (action.type === 'navigate') {
+      if (customUrlParam) {
+        url = `${location.pathname}/${encodeURIComponent(customUrlParam)}?widgetEndpoint=${encodeURIComponent(path)}`
+      } else {
+        url = `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
+      }
+    } else {
+      url = config?.api.SNOWPLOW_API_BASE_URL + path
+    }
 
     try {
       const { requireConfirmation, type } = action
 
       switch (type) {
         case 'navigate':
-          await navigate (url)
+          await handleNavigate(requireConfirmation, url)
 
           break
         case 'openDrawer': {
