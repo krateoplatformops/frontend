@@ -362,7 +362,20 @@ export const useHandleAction = () => {
                   eventSource.close()
                   clearTimeout(timeoutId)
 
-                  const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                  const redirectUrl = await (async () => {
+                    /* if it starts with ${ should be resolved by cassing JQ endpoint otherwise use legacy method */
+                    if (onEventNavigateTo.url.startsWith('${')) {
+                      return resolveJq(onEventNavigateTo.url, {
+                        event: eventData as unknown as Record<string, unknown>,
+                        json: updatedPayload,
+                        response: jsonResponse,
+                      })
+                    }
+
+                    const url = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                    return url
+                  })()
+
                   if (!redirectUrl) {
                     notification.error({
                       description: 'Impossible to redirect, the route contains an undefined value',
