@@ -7,7 +7,6 @@ import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
 import { useEffect, useId, useRef } from 'react'
 
-import { useConfigContext } from '../../context/ConfigContext'
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
 import type { Payload } from '../../utils/types'
@@ -81,7 +80,6 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
 
-  const { config } = useConfigContext()
   const { notification } = useApp()
   const { handleAction, isActionLoading } = useHandleAction()
 
@@ -152,11 +150,8 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       return
     }
 
-    const { path, payload: resourcePayload, verb } = resourceRef
-
-    const url = config?.api.SNOWPLOW_API_BASE_URL + path
     const values = convertDayjsToISOString(formValues)
-    const payload: Payload = { ...resourcePayload, ...values }
+    const payload: Payload = { ...resourceRef.payload, ...values }
 
     // TODO: handle disabled buttons
     if (action.onEventNavigateTo) {
@@ -164,7 +159,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} loading={isActionLoading} /> })
     }
 
-    await handleAction(action, url, verb, payload, resourcePayload as Record<string, unknown>)
+    await handleAction(action, resourceRef, payload)
   }
 
   if (isActionLoading) {

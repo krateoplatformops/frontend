@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import useApp from 'antd/es/app/useApp'
 import { merge } from 'lodash'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import { useRoutesContext } from '../context/RoutesContext'
@@ -107,11 +107,11 @@ const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string)
     }
 
     if (
-      typeof value === 'string' ||
-      typeof value === 'number' ||
-      typeof value === 'boolean' ||
-      typeof value === 'bigint' ||
-      typeof value === 'symbol'
+      typeof value === 'string'
+      || typeof value === 'number'
+      || typeof value === 'boolean'
+      || typeof value === 'bigint'
+      || typeof value === 'symbol'
     ) {
       return String(value)
     }
@@ -188,11 +188,11 @@ const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath:
 
       const resolved = getObjectByPath(values, el)
       if (
-        typeof resolved === 'string' ||
-        typeof resolved === 'number' ||
-        typeof resolved === 'boolean' ||
-        typeof resolved === 'bigint' ||
-        typeof resolved === 'symbol'
+        typeof resolved === 'string'
+        || typeof resolved === 'number'
+        || typeof resolved === 'boolean'
+        || typeof resolved === 'bigint'
+        || typeof resolved === 'symbol'
       ) {
         return String(resolved)
       }
@@ -229,6 +229,7 @@ const updateNameNamespace = (path: string, name?: string, namespace?: string) =>
 
 export const useHandleAction = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const queryClient = useQueryClient()
   const { message, notification } = useApp()
   const { config } = useConfigContext()
@@ -238,11 +239,15 @@ export const useHandleAction = () => {
 
   const handleAction = async (
     action: WidgetAction,
-    path: string,
-    verb: ResourceRef['verb'],
-    customPayload?: Record<string, unknown>,
-    resourcePayload?: Record<string, unknown>
+    resourceRef: ResourceRef,
+    customPayload?: Record<string, unknown>
   ) => {
+    const { path, payload: resourcePayload, verb } = resourceRef
+
+    const url = action.type === 'navigate'
+      ? `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
+      : config?.api.SNOWPLOW_API_BASE_URL + path
+
     if (action.loading?.display) {
       setIsActionLoading(true)
     }
@@ -254,7 +259,7 @@ export const useHandleAction = () => {
         case 'navigate':
           if (!requireConfirmation || window.confirm('Are you sure?')) {
             setIsActionLoading(false)
-            await navigate(path)
+            await navigate(url)
           }
 
           break
@@ -397,8 +402,8 @@ export const useHandleAction = () => {
             }
 
             const updatedUrl = customPayload
-              ? updateNameNamespace(path, (updatedPayload as Payload)?.metadata?.name, (updatedPayload as Payload)?.metadata?.namespace)
-              : path
+              ? updateNameNamespace(url, (updatedPayload as Payload)?.metadata?.name, (updatedPayload as Payload)?.metadata?.namespace)
+              : url
 
             const requestBody = Object.keys(updatedPayload).length > 0 ? updatedPayload : payload
             const requestHeaders = {
@@ -415,6 +420,7 @@ export const useHandleAction = () => {
               method: verb,
             })
 
+            // eslint-disable-next-line require-atomic-updates
             jsonResponse = (await res.json()) as RestApiResponse
 
             setIsActionLoading(false)

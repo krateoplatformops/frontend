@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntdButton } from 'antd'
 import useApp from 'antd/es/app/useApp'
 
-import { useConfigContext } from '../../context/ConfigContext'
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
 import { getResourceRef } from '../../utils/utils'
@@ -16,7 +15,6 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
   const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const { notification } = useApp()
-  const { config } = useConfigContext()
   const { handleAction, isActionLoading } = useHandleAction()
 
   const action = Object.values(actions)
@@ -46,11 +44,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
       return
     }
 
-    const { path, verb } = resourceRef
-
-    const url = action.type === 'rest' ? config?.api.SNOWPLOW_API_BASE_URL + path : path
-
-    await handleAction(action, url, verb)
+    await handleAction(action, resourceRef)
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

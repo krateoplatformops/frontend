@@ -6,6 +6,7 @@ metadata:
 spec:
   widgetData:
     items:
+      - resourceRefId: test-navigate-page
       - resourceRefId: button-filter-table-fin-ops-test
       - resourceRefId: table-fin-ops-test
       - resourceRefId: panel-with-row
@@ -14,6 +15,12 @@ spec:
       - resourceRefId: button-with-drawer-backend-endpoint-id
   resourcesRefs:
     items:
+      - id: test-navigate-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-navigate-page
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
       - id: button-filter-table-fin-ops-test
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: button-filter-table-fin-ops-test

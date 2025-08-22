@@ -1,6 +1,31 @@
 kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: test-navigate-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions:
+      navigate:
+        - id: navigate-action-page
+          path: /templates
+          type: navigate    
+    label: Test action navigate
+    icon: fa-sun
+    type: primary
+    clickActionId: navigate-action-page
+  resourcesRefs:
+    items:
+      - id: templates-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: templates-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: button-1
   namespace: krateo-system
 spec:

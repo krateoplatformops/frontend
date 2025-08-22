@@ -3,7 +3,6 @@ import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
 import useApp from 'antd/es/app/useApp'
-import { useLocation } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import { useHandleAction } from '../../hooks/useHandleActions'
@@ -17,7 +16,6 @@ import type { Panel as WidgetType } from './Panel.type'
 export type PanelWidgetData = WidgetType['spec']['widgetData']
 
 const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
-  const location = useLocation()
   const { notification } = useApp()
   const { handleAction, isActionLoading } = useHandleAction()
 
@@ -52,22 +50,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       return
     }
 
-    const url =
-      action.type === 'navigate' && title
-        ? `${location.pathname}/${encodeURIComponent(title)}?widgetEndpoint=${encodeURIComponent(resourceRef.path)}`
-        : resourceRef.path || null
-
-    if (!url) {
-      notification.warning({
-        description: `It is not possible to retrieve a valid URL for the resource ${action.resourceRefId}`,
-        message: 'Error while navigating',
-        placement: 'bottomLeft',
-      })
-
-      return
-    }
-
-    await handleAction(action, url, resourceRef.verb, undefined, resourceRef.payload as Record<string, unknown>)
+    await handleAction(action, resourceRef, undefined)
   }
 
   const handleClick = () => {
