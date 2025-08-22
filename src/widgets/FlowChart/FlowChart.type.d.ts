@@ -11,10 +11,6 @@ export interface FlowChart {
        */
       data?: {
         /**
-         * timestamp indicating when the resource was created
-         */
-        createdAt: string
-        /**
          * optional date value to be shown in the node, formatted as ISO 8601 string
          */
         date: string
@@ -68,10 +64,6 @@ export interface FlowChart {
          * list of parent resources used to define graph relationships
          */
         parentRefs?: {
-          /**
-           * timestamp indicating when the parent resource was created
-           */
-          createdAt?: string
           /**
            * optional date value to be shown in the node, formatted as ISO 8601 string
            */

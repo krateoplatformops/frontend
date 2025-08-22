@@ -86,11 +86,12 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
-| actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no |  | object |
 | actions.navigate[].loading.display | yes |  | boolean |
+| actions.navigate[].path | no | the identifier of the route to navigate to | string |
+| actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -340,7 +341,6 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
 | data | no | list of kubernetes resources and their relationships to render as nodes in the flow chart | array |
-| data[].createdAt | yes | timestamp indicating when the resource was created | string |
 | data[].date | yes | optional date value to be shown in the node, formatted as ISO 8601 string | string |
 | data[].icon | no | custom icon displayed for the resource node | object |
 | data[].icon.name | no | FontAwesome icon class name (e.g. 'fa-check') | string |
@@ -354,7 +354,6 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | data[].name | yes | name of the resource | string |
 | data[].namespace | yes | namespace in which the resource is defined | string |
 | data[].parentRefs | no | list of parent resources used to define graph relationships | array |
-| data[].parentRefs[].createdAt | no | timestamp indicating when the parent resource was created | string |
 | data[].parentRefs[].date | no | optional date value to be shown in the node, formatted as ISO 8601 string | string |
 | data[].parentRefs[].icon | no | custom icon for the parent resource | object |
 | data[].parentRefs[].icon.name | no | FontAwesome icon class name | string |
@@ -387,8 +386,7 @@ metadata:
 spec:
   widgetData:
     data:
-      - createdAt: "2025-07-24T15:30:36Z"
-        date: "2025-07-24T15:30:36Z"
+      - date: "2025-07-24T15:30:36Z"
         icon:
           name: "fa-cubes"
           color: "#1890ff"
@@ -405,8 +403,7 @@ spec:
         uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
         version: "composition.krateo.io/v0-0-1"
 
-      - createdAt: "2024-07-31T15:30:39Z"
-        date: "2024-07-31T15:30:39Z"
+      - date: "2024-07-31T15:30:39Z"
         icon:
           name: "fa-file-alt"
           color: "#faad14"
@@ -428,8 +425,7 @@ spec:
         uid: "e99a3efe-7461-4ffe-b956-55cb3882f0c5"
         version: "v1"
 
-      - createdAt: "2025-07-31T15:30:39Z"
-        date: "2025-07-31T15:30:39Z"
+      - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-cogs"
           color: "#13c2c2"
@@ -451,8 +447,7 @@ spec:
         uid: "10c62b82-8096-4f40-a991-8f1a420a7c42"
         version: "argoproj.io/v1alpha1"
 
-      - createdAt: "2025-07-31T15:30:39Z"
-        date: "2025-07-31T15:30:39Z"
+      - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-database"
           color: "#722ed1"
@@ -474,8 +469,7 @@ spec:
         uid: "36177476-08c3-42dd-a148-48d0b94bbf13"
         version: "git.krateo.io/v1alpha1"
 
-      - createdAt: "2025-07-31T15:30:39Z"
-        date: "2025-07-31T15:30:39Z"
+      - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-book"
           color: "#eb2f96"
@@ -533,11 +527,12 @@ name of the k8s Custom Resource
 | actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
-| actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no |  | object |
 | actions.navigate[].loading.display | yes |  | boolean |
+| actions.navigate[].path | no | the identifier of the route to navigate to | string |
+| actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -886,11 +881,12 @@ Panel is a container to display information
 | actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
-| actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no |  | object |
 | actions.navigate[].loading.display | yes |  | boolean |
+| actions.navigate[].path | no | the identifier of the route to navigate to | string |
+| actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |

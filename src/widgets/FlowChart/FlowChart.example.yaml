@@ -6,8 +6,7 @@ metadata:
 spec:
   widgetData:
     data:
-      - createdAt: "2025-07-24T15:30:36Z"
-        date: "2025-07-24T15:30:36Z"
+      - date: "2025-07-24T15:30:36Z"
         icon:
           name: "fa-cubes"
           color: "#1890ff"
@@ -24,8 +23,7 @@ spec:
         uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
         version: "composition.krateo.io/v0-0-1"
 
-      - createdAt: "2024-07-31T15:30:39Z"
-        date: "2024-07-31T15:30:39Z"
+      - date: "2024-07-31T15:30:39Z"
         icon:
           name: "fa-file-alt"
           color: "#faad14"
@@ -47,8 +45,7 @@ spec:
         uid: "e99a3efe-7461-4ffe-b956-55cb3882f0c5"
         version: "v1"
 
-      - createdAt: "2025-07-31T15:30:39Z"
-        date: "2025-07-31T15:30:39Z"
+      - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-cogs"
           color: "#13c2c2"
@@ -70,8 +67,7 @@ spec:
         uid: "10c62b82-8096-4f40-a991-8f1a420a7c42"
         version: "argoproj.io/v1alpha1"
 
-      - createdAt: "2025-07-31T15:30:39Z"
-        date: "2025-07-31T15:30:39Z"
+      - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-database"
           color: "#722ed1"
@@ -93,8 +89,7 @@ spec:
         uid: "36177476-08c3-42dd-a148-48d0b94bbf13"
         version: "git.krateo.io/v1alpha1"
 
-      - createdAt: "2025-07-31T15:30:39Z"
-        date: "2025-07-31T15:30:39Z"
+      - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-book"
           color: "#eb2f96"
