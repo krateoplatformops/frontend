@@ -5,7 +5,6 @@ import useApp from 'antd/es/app/useApp'
 
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
-import { getResourceRef } from '../../utils/utils'
 
 import type { Button as WidgetType } from './Button.type'
 
@@ -32,19 +31,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
       return
     }
 
-    const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
-    if (!resourceRef) {
-      notification.error({
-        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
-        message: 'Error while executing the action',
-        placement: 'bottomLeft',
-      })
-
-      return
-    }
-
-    await handleAction(action, resourceRef)
+    await handleAction(action, resourcesRefs)
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

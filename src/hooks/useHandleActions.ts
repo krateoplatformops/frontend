@@ -6,12 +6,12 @@ import { useLocation, useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import { useRoutesContext } from '../context/RoutesContext'
-import type { ResourceRef, WidgetAction } from '../types/Widget'
+import type { ResourcesRefs, WidgetAction } from '../types/Widget'
 import { formatMessage } from '../utils/format-message/formatMessage'
 import { getAccessToken } from '../utils/getAccessToken'
 import { useResolveJqExpression } from '../utils/jq-expression'
 import type { Payload, RestApiResponse } from '../utils/types'
-import { getHeadersObject } from '../utils/utils'
+import { getHeadersObject, getResourceRef } from '../utils/utils'
 import { closeDrawer, openDrawer } from '../widgets/Drawer/Drawer'
 import { openModal } from '../widgets/Modal/Modal'
 
@@ -237,30 +237,52 @@ export const useHandleAction = () => {
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false)
   const resolveJq = useResolveJqExpression()
 
+  const handleNavigate = async (requireConfirmation: boolean | undefined, path: string) => {
+    if (!requireConfirmation || window.confirm('Are you sure?')) {
+      await navigate(path)
+    }
+  }
+
   const handleAction = async (
     action: WidgetAction,
-    resourceRef: ResourceRef,
+    resourcesRefs: ResourcesRefs,
     customPayload?: Record<string, unknown>
   ) => {
+    if (action.loading?.display) {
+      setIsActionLoading(true)
+    }
+
+    if (action.type === 'navigate' && action.path) {
+      await handleNavigate(action.requireConfirmation, action.path)
+      setIsActionLoading(false)
+
+      return
+    }
+
+    const resourceRef = action.resourceRefId ? getResourceRef(action.resourceRefId, resourcesRefs) : undefined
+
+    if (!resourceRef) {
+      notification.error({
+        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
+
     const { path, payload: resourcePayload, verb } = resourceRef
 
     const url = action.type === 'navigate'
       ? `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
       : config?.api.SNOWPLOW_API_BASE_URL + path
 
-    if (action.loading?.display) {
-      setIsActionLoading(true)
-    }
-
     try {
       const { requireConfirmation, type } = action
 
       switch (type) {
         case 'navigate':
-          if (!requireConfirmation || window.confirm('Are you sure?')) {
-            setIsActionLoading(false)
-            await navigate(url)
-          }
+          await navigate (url)
 
           break
         case 'openDrawer': {

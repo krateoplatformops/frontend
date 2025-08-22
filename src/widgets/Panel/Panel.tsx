@@ -8,7 +8,7 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetAction, WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
-import { getEndpointUrl, getResourceRef } from '../../utils/utils'
+import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Panel.module.css'
 import type { Panel as WidgetType } from './Panel.type'
@@ -38,19 +38,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       return
     }
 
-    const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
-    if (!resourceRef) {
-      notification.error({
-        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
-        message: 'Error while executing the action',
-        placement: 'bottomLeft',
-      })
-
-      return
-    }
-
-    await handleAction(action, resourceRef, undefined)
+    await handleAction(action, resourcesRefs)
   }
 
   const handleClick = () => {

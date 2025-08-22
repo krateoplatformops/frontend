@@ -136,6 +136,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       return
     }
 
+    // TODO: understand if this could be removed (it's already inside the useHandleActions)
     const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
 
     if (!resourceRef) {
@@ -159,7 +160,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} loading={isActionLoading} /> })
     }
 
-    await handleAction(action, resourceRef, payload)
+    await handleAction(action, resourcesRefs, payload)
   }
 
   if (isActionLoading) {
