@@ -144,19 +144,6 @@
                         "type": "string",
                         "description": "unique identifier for the action"
                       },
-                      "type": {
-                        "type": "string",
-                        "enum": ["navigate"],
-                        "description": "type of navigation action"
-                      },
-                      "resourceRefId": {
-                        "type": "string",
-                        "description": "the identifier of the k8s custom resource that should be represented"
-                      },
-                      "requireConfirmation": {
-                        "type": "boolean",
-                        "description": "whether user confirmation is required before navigating"
-                      },
                       "loading": {
                         "type": "object",
                         "properties": {
@@ -166,9 +153,26 @@
                         },
                         "required": ["display"],
                         "additionalProperties": false
+                      },
+                      "path": {
+                        "description": "the identifier of the route to navigate to",
+                        "type": "string"
+                      },
+                      "resourceRefId": {
+                        "type": "string",
+                        "description": "the identifier of the k8s custom resource that should be represented"
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before navigating"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["navigate"],
+                        "description": "type of navigation action"
                       }
                     },
-                    "required": ["id", "type", "resourceRefId"]
+                    "required": ["id", "type"]
                   }
                 },
                 "openDrawer": {

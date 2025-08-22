@@ -96,21 +96,25 @@ export interface Panel {
            * unique identifier for the action
            */
           id: string
+          loading?: {
+            display: boolean
+          }
           /**
-           * type of navigation action
+           * the identifier of the route to navigate to
            */
-          type: 'navigate'
+          path?: string
           /**
            * the identifier of the k8s custom resource that should be represented
            */
-          resourceRefId: string
+          resourceRefId?: string
           /**
            * whether user confirmation is required before navigating
            */
           requireConfirmation?: boolean
-          loading?: {
-            display: boolean
-          }
+          /**
+           * type of navigation action
+           */
+          type: 'navigate'
         }[]
         /**
          * actions to open side drawer components
