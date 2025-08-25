@@ -1,6 +1,94 @@
 kind: Table
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: test-updated-table
+  namespace: krateo-system
+spec:
+  widgetData:
+    pageSize: 10
+    data:
+      - name:
+          kind: jsonSchemaType
+          type: string
+          value: Alice
+        age:
+          kind: jsonSchemaType
+          type: integer
+          value: "30"
+        active:
+          kind: jsonSchemaType
+          type: boolean
+          value: "true"
+        avatar:
+          kind: icon
+          value: "user-circle"
+        buttonWidget:
+          kind: widget
+          resourceRefId: "test-navigate-page"
+      - name:
+          kind: jsonSchemaType
+          type: string
+          value: Bob
+        age:
+          kind: jsonSchemaType
+          type: integer
+          value: "45"
+        active:
+          kind: jsonSchemaType
+          type: boolean
+          value: "false"
+        avatar:
+          kind: icon
+          value: "user-alt"
+        buttonWidget:
+          kind: widget
+          resourceRefId: "test-navigate-page"
+      - name:
+          kind: jsonSchemaType
+          type: string
+          value: Charlie
+        age:
+          kind: jsonSchemaType
+          type: integer
+          value: "28"
+        active:
+          kind: jsonSchemaType
+          type: boolean
+          value: "true"
+        avatar:
+          kind: icon
+          value: "user-circle"
+        buttonWidget:
+          kind: widget
+          resourceRefId: "test-navigate-page-2"
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: age
+        title: Age
+      - valueKey: active
+        title: Active
+      - valueKey: avatar
+        title: Avatar
+      - valueKey: buttonWidget
+        title: Profile Widget
+  resourcesRefs:
+    items:
+      - id: test-navigate-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-navigate-page
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: test-navigate-page-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-navigate-page-2
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: my-table
   namespace: krateo-system
 spec:

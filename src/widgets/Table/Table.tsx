@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Table as AntdTable, Typography } from 'antd'
 
 import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
+import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
+import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Table.module.css'
 import type { Table as WidgetType } from './Table.type'
@@ -24,7 +26,7 @@ const parseValueKey = (input: string): string | string[] => {
   return input.includes('.') ? input.split('.') : input
 }
 
-const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
+const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize, prefix } = widgetData
   const { getFilteredData } = useFilter()
 
@@ -35,23 +37,74 @@ const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
 
   return (
     <AntdTable
-      columns={columns?.map(({ color, kind, title, valueKey }, index) => ({
+      columns={columns?.map(({ color, title, valueKey }, index) => ({
         dataIndex: parseValueKey(valueKey),
         key: `${uid}-col-${index}`,
-        render: (value?: unknown) => {
-          if (kind === 'icon' && typeof value === 'string') {
-            return <FontAwesomeIcon color={color} icon={value as IconProp} />
-          }
-
-          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-            return <span style={{ color }}>{String(value)}</span>
-          }
-
-          if (value === null || value === undefined) {
+        render: (cell: TableWidgetData['data'][number][string]) => {
+          if (!cell) {
+            console.error('Table rendering error: cell is undefined')
             return <span>-</span>
           }
 
-          return <span style={{ color }}>{JSON.stringify(value)}</span>
+          const { kind, resourceRefId, type, value } = cell
+
+           if (kind === 'icon') {
+            if (typeof value === 'string') {
+              return <FontAwesomeIcon color={color} icon={value as IconProp} />
+            }
+
+            console.error('Table rendering error: icon value has incorrect format')
+          }
+
+          if (kind === 'widget' && resourceRefId) {
+            if (resourceRefId) {
+              const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+              if (!endpoint) {
+                return <span>-</span>
+              }
+
+              return <WidgetRenderer widgetEndpoint={endpoint} />
+            }
+
+            console.error('Table rendering error: widget resourceRefId not found')
+            return <span>-</span>
+          }
+
+          if (kind === 'jsonSchemaType') {
+            if (value === undefined || value === null || type === 'null' || type === undefined) {
+              console.error('Table rendering error: cell with jsonSchemaType kind has undefined or null value or type')
+              return <span>-</span>
+            }
+
+            switch (type) {
+              case 'number':
+              case 'integer': {
+                const num = Number(value)
+                return <span style={{ color }}>{isNaN(num) ? value : num}</span>
+              }
+              case 'boolean': {
+                const boolVal = value.toLowerCase() === 'true'
+                return <span style={{ color }}>{String(boolVal)}</span>
+              }
+              case 'array': {
+                try {
+                  const arr = JSON.parse(value) as unknown[]
+                  if (Array.isArray(arr)) {
+                    return <span style={{ color }}>{JSON.stringify(arr)}</span>
+                  }
+                } catch (error) {
+                  console.error(`Table rendering error: error in parsing cell with array type value ${JSON.stringify(error)}`)
+                  return <span>-</span>
+                }
+                return <span>-</span>
+              }
+              default:
+                return <span style={{ color }}>{value}</span>
+            }
+          }
+
+          console.error('Table rendering error: generic error while rendering cell')
+          return <span>-</span>
         },
         title: (
           <div className={styles.headerEllipsis}>

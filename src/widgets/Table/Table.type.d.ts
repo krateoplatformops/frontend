@@ -14,11 +14,13 @@ export interface Table {
        * number of rows displayed per page
        */
       pageSize?: number
-      /**
-       * array of objects representing the table's row data
-       */
       data: {
-        [k: string]: unknown
+        [k: string]: {
+          kind: 'jsonSchemaType' | 'icon' | 'widget'
+          resourceRefId?: string
+          type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'null'
+          value?: string
+        }
       }[]
       /**
        * configuration of the table's columns
@@ -28,10 +30,6 @@ export interface Table {
          * the color of the value (or the icon) to be represented
          */
         color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
-        /**
-         * type of data to be represented
-         */
-        kind?: 'value' | 'icon'
         /**
          * column header label
          */

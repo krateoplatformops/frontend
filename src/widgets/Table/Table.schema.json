@@ -27,11 +27,33 @@
               "type": "integer"
             },
             "data": {
-              "description": "array of objects representing the table's row data",
               "type": "array",
               "items": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": ["jsonSchemaType", "icon", "widget"]
+                    },
+                    "resourceRefId": { "type": "string" },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "number",
+                        "integer",
+                        "boolean",
+                        "array",
+                        "null"
+                      ]
+                    },
+                    "value": { "type": "string" }
+                  },
+                  "additionalProperties": false,
+                  "required": ["kind"]
+                }
               }
             },
             "columns": {
@@ -51,11 +73,6 @@
                       "red",
                       "green"
                     ]
-                  },
-                  "kind": {
-                    "description": "type of data to be represented",
-                    "type": "string",
-                    "enum": ["value", "icon"]
                   },
                   "title": {
                     "description": "column header label",

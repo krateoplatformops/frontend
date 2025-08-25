@@ -10,7 +10,7 @@ spec:
         - id: navigate-action-page
           path: /templates
           type: navigate    
-    label: Test action navigate
+    label: Navigate to templates
     icon: fa-sun
     type: primary
     clickActionId: navigate-action-page
@@ -19,6 +19,31 @@ spec:
       - id: templates-page
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: templates-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: test-navigate-page-2
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions:
+      navigate:
+        - id: navigate-action-page
+          path: /compositions
+          type: navigate    
+    label: Navigate to composition
+    icon: fa-sun
+    type: primary
+    clickActionId: navigate-action-page
+  resourcesRefs:
+    items:
+      - id: compositions-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: compositions-page
         namespace: krateo-system
         resource: pages
         verb: GET
