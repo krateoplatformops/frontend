@@ -14,14 +14,47 @@ export interface Table {
        * number of rows displayed per page
        */
       pageSize?: number
+      /**
+       * Array of table rows
+       */
       data: {
-        [k: string]: {
-          kind: 'jsonSchemaType' | 'icon' | 'widget'
-          resourceRefId?: string
-          type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'null'
-          value?: string
-        }
-      }[]
+        /**
+         * the key of the column this cell belongs to
+         */
+        valueKey: string
+        /**
+         * type of cell value
+         */
+        kind: 'jsonSchemaType' | 'icon' | 'widget'
+        /**
+         * used if kind = widget
+         */
+        resourceRefId?: string
+        /**
+         * used if kind = jsonSchemaType
+         */
+        type?: 'string' | 'number' | 'integer' | 'decimal' | 'boolean' | 'array' | 'null'
+        /**
+         * value if type = string
+         */
+        stringValue?: string
+        /**
+         * value if type = number or integer
+         */
+        numberValue?: number
+        /**
+         * value if type = number or decimal
+         */
+        decimalValue?: string
+        /**
+         * value if type = boolean
+         */
+        booleanValue?: boolean
+        /**
+         * value if type = array
+         */
+        arrayValue?: string[]
+      }[][]
       /**
        * configuration of the table's columns
        */

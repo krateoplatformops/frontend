@@ -1,3 +1,45 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-filter-new-table
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Filters
+    icon: fa-rocket
+    size: middle
+    type: default
+    clickActionId: action-filter-new-table
+    actions:
+      openDrawer:
+        - id: action-filter-new-table
+          resourceRefId: filter-new-table
+          type: openDrawer
+          title: Filter compositions
+          size: large
+  resourcesRefs:
+    items:
+      - id: filter-new-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        resource: filters
+        name: filter-new-table
+        namespace: krateo-system
+        verb: GET
+---
+kind: Filters
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: filter-new-table
+  namespace: krateo-system
+spec:
+  widgetData:
+    prefix: filter-new-table
+    fields:
+      - label: name
+        name: 
+        - name
+        type: string
+---
 kind: Table
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -6,61 +48,65 @@ metadata:
 spec:
   widgetData:
     pageSize: 10
+    prefix: filter-new-table
     data:
-      - name:
+      - 
+        - valueKey: name
           kind: jsonSchemaType
           type: string
-          value: Alice
-        age:
+          stringValue: Alice
+        - valueKey: age
           kind: jsonSchemaType
           type: integer
-          value: "30"
-        active:
+          numberValue: 30
+        - valueKey: active
           kind: jsonSchemaType
           type: boolean
-          value: "true"
-        avatar:
+          booleanValue: true
+        - valueKey: avatar
           kind: icon
-          value: "user-circle"
-        buttonWidget:
+          stringValue: user-circle
+        - valueKey: buttonWidget
           kind: widget
-          resourceRefId: "test-navigate-page"
-      - name:
+          resourceRefId: test-navigate-page
+      - 
+        - valueKey: name
           kind: jsonSchemaType
           type: string
-          value: Bob
-        age:
+          stringValue: Bob
+        - valueKey: age
           kind: jsonSchemaType
           type: integer
-          value: "45"
-        active:
+          numberValue: 45
+        - valueKey: active
           kind: jsonSchemaType
           type: boolean
-          value: "false"
-        avatar:
+          booleanValue: false
+        - valueKey: avatar
           kind: icon
-          value: "user-alt"
-        buttonWidget:
+          stringValue: user-alt
+        - valueKey: buttonWidget
           kind: widget
-          resourceRefId: "test-navigate-page"
-      - name:
+          resourceRefId: test-navigate-page
+      - 
+        - valueKey: name
           kind: jsonSchemaType
           type: string
-          value: Charlie
-        age:
+          stringValue: Charlie
+        - valueKey: age
           kind: jsonSchemaType
           type: integer
-          value: "28"
-        active:
+          numberValue: 28
+        - valueKey: active
           kind: jsonSchemaType
           type: boolean
-          value: "true"
-        avatar:
+          booleanValue: true
+        - valueKey: avatar
           kind: icon
-          value: "user-circle"
-        buttonWidget:
+          stringValue: user-circle
+        - valueKey: buttonWidget
           kind: widget
-          resourceRefId: "test-navigate-page-2"
+          resourceRefId: test-navigate-page-2
     columns:
       - valueKey: name
         title: Name
@@ -86,50 +132,51 @@ spec:
         namespace: krateo-system
         resource: buttons
         verb: GET
-kind: Table
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-table
-  namespace: krateo-system
-spec:
-  widgetData:
-    pageSize: 10
-    data: []
-    columns:
-      - valueKey: name
-        title: Name
-      - valueKey: age
-        title: Age
 ---
-kind: Table
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: table-inside-row-column
-  namespace: krateo-system
-spec:
-  widgetData:
-    data: []
-    pageSize: 10
-    columns:
-      - valueKey: name
-        title: fa-dots
-        kind: icon
-      - valueKey: age
-        title: Age
+# kind: Table
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: my-table
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     pageSize: 10
+#     data: []
+#     columns:
+#       - valueKey: name
+#         title: Name
+#       - valueKey: age
+#         title: Age
+# ---
+# kind: Table
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: table-inside-row-column
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     data: []
+#     pageSize: 10
+#     columns:
+#       - valueKey: name
+#         title: fa-dots
+#         kind: icon
+#       - valueKey: age
+#         title: Age
 
----
-kind: Table
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: dashboard-table-1
-  namespace: krateo-system
-spec:
-  widgetData:
-    data: []
-    pageSize: 10
-    columns:
-      - valueKey: name
-        title: Name
-      - valueKey: age
-        title: Age
+# ---
+# kind: Table
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: dashboard-table-1
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     data: []
+#     pageSize: 10
+#     columns:
+#       - valueKey: name
+#         title: Name
+#       - valueKey: age
+#         title: Age
 

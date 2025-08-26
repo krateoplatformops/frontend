@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { createContext, useState, useContext, useEffect } from 'react'
 
 import { useEvents } from '../../hooks/useEvents'
+import type { TableWidgetData } from '../../widgets/Table/Table'
 
 export type FilterType = {
   fieldType: 'string' | 'number' | 'boolean' | 'date' | 'daterange'
@@ -10,17 +11,17 @@ export type FilterType = {
   fieldValue: unknown
 }
 
-type DataItem = Record<string, unknown>
+type FilterMap = Record<string, FilterType[]>
+type TableRow = TableWidgetData['data'][number]
+type FilterableRow = Record<string, unknown> | TableRow
 
 type FiltersContextType = {
   setFilters: (prefix: string, filters: FilterType[]) => void
-  getFilteredData: (data: DataItem[], prefix: string) => unknown[]
+  getFilteredData: (data: FilterableRow[], prefix: string) => FilterableRow[]
   isWidgetFilteredByProps: (widgetData: unknown, prefix: string) => boolean
   clearFilters: (prefix: string) => void
   getFilters: (prefix: string) => FilterType[]
 }
-
-type FilterMap = Record<string, FilterType[]>
 
 type FilterEvent = {
   setFilters: { prefix: string; filters: FilterType[] }
@@ -29,6 +30,39 @@ type FilterEvent = {
 }
 
 const FiltersContext = createContext<FiltersContextType | undefined>(undefined)
+
+const getTableValue = (cell: TableRow[number]): unknown => {
+  const { arrayValue, booleanValue, kind, numberValue, resourceRefId, stringValue, type } = cell
+
+  switch (kind) {
+    case 'icon':
+      return stringValue ?? null
+
+    case 'widget':
+      return resourceRefId ?? stringValue ?? null
+
+    case 'jsonSchemaType':
+      if (!type) { return null }
+      switch (type) {
+        case 'string':
+          return stringValue ?? null
+        case 'number':
+        case 'integer':
+          return numberValue ?? null
+        case 'boolean':
+          return booleanValue ?? null
+        case 'array':
+          return arrayValue ?? null
+        case 'null':
+          return null
+        default:
+          return null
+      }
+
+    default:
+      return null
+  }
+}
 
 const FiltersProvider = ({ children }: { children: ReactNode }) => {
   const [filterMap, setFilterMap] = useState<FilterMap>({})
@@ -100,24 +134,33 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const getValueByPath = (obj: DataItem, path: string): unknown => {
+  const getValueByPath = (obj: FilterableRow, path: string): unknown => {
     return path.split('.').reduce<unknown>((acc, part) => (acc as Record<string, unknown>)?.[part], obj)
   }
 
-  const getFilteredData = (data: DataItem[], prefix: string): unknown[] => {
-    const filters: FilterType[] = (filterMap[prefix] as FilterType[] | undefined) ?? []
+const getFilteredData = (data: FilterableRow[], prefix: string): FilterableRow[] => {
+  const filters: FilterType[] = (filterMap[prefix] as FilterType[] | undefined) ?? []
 
-    if (filters.length === 0) { return data }
+  if (filters.length === 0) { return data }
 
-    return data.filter((item: DataItem) =>
-      filters.every((filter: FilterType) =>
-        filter.fieldName.some((fieldName) => {
-          const itemValue = item[fieldName]
-          return matchesFilter(itemValue, filter)
-        })
-      )
+  return data.filter(row =>
+    filters.every(filter =>
+      filter.fieldName.some(fieldName => {
+        let value: unknown
+
+        if (Array.isArray(row)) {
+          const cell = row.find(({ valueKey }) => valueKey === fieldName)
+          if (!cell) { return false }
+          value = getTableValue(cell)
+        } else {
+          value = row[fieldName]
+        }
+
+        return matchesFilter(value, filter)
+      })
     )
-  }
+  )
+}
 
   const isWidgetFilteredByProps = (widgetData: unknown, prefix: string): boolean => {
     if (typeof widgetData !== 'object' || widgetData === null || ('prefix' in widgetData)) {
@@ -144,7 +187,13 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <FiltersContext.Provider value={{ clearFilters, getFilteredData, getFilters, isWidgetFilteredByProps, setFilters }}>
+    <FiltersContext.Provider value={{
+      clearFilters,
+      getFilteredData,
+      getFilters,
+      isWidgetFilteredByProps,
+      setFilters,
+    }}>
       {children}
     </FiltersContext.Provider>
   )
