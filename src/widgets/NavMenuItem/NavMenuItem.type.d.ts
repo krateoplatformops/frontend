@@ -36,13 +36,10 @@ export interface NavMenuItem {
       expression?: string
     }[]
     resourcesRefs?: {
-      _slice_?: {
-        offset?: number
-        page: number
-        perPage: number
-        continue?: boolean
-        [k: string]: unknown
-      }
+      offset?: number
+      page?: number
+      perPage?: number
+      continue?: boolean
       items: {
         id: string
         name?: string
