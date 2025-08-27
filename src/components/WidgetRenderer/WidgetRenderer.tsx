@@ -1,10 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
 import { Result, Skeleton } from 'antd'
 
-import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
+import { useWidgetQuery } from '../../hooks/useWidgetQuery'
 import type { Widget } from '../../types/Widget'
-import { getAccessToken } from '../../utils/getAccessToken'
 import BarChart from '../../widgets/BarChart'
 import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
@@ -192,31 +190,7 @@ const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: 
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
   }
 
-  const { config } = useConfigContext()
-  const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
-
-  const url = new URL(widgetFullUrl)
-  url.searchParams.set('page', '1')
-  url.searchParams.set('per_page', '3')
-
-  const urlString = url.toString()
-  const {
-    data: widget,
-    error,
-    isLoading,
-  } = useQuery({
-    queryFn: async () => {
-      const res = await fetch(urlString, {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      })
-
-      const widget = (await res.json()) as Widget
-      return widget
-    },
-    queryKey: ['widgets', urlString],
-  })
+  const { data: widget, error, isLoading } = useWidgetQuery(widgetEndpoint)
 
   // check if widget is filtered out by filters
   if (typeof widget?.status === 'object' && widget?.status?.widgetData) {
