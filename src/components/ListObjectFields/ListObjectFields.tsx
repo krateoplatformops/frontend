@@ -21,6 +21,24 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
     setList(newList)
   }
 
+  const getValue = (item: unknown): React.ReactNode => {
+    return displayField.split('.').reduce<unknown>((acc, key) => {
+      if (acc && typeof acc === 'object' && key in acc) {
+        return (acc as Record<string, unknown>)[key]
+      }
+      return undefined
+    }, item) as React.ReactNode
+  }
+
+  const getPopoverContent = (obj: unknown, path: string = ''): React.ReactNode[] => {
+    if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+      return Object.entries(obj as Record<string, unknown>).flatMap(([key, value]) =>
+        getPopoverContent(value, path ? `${path}.${key}` : key)
+      )
+    }
+    return [<div><strong>{path}</strong>: { typeof obj === 'string' ? obj : String(obj) }</div>]
+  }
+
   return (
     <div>
       <List
@@ -31,19 +49,15 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
           </Button>
         }
         renderItem={(item, index) => (
-          <List.Item actions={[<Button icon={<DeleteOutlined />} onClick={() => onRemove(index)} shape='circle' type='text' />]}>
-            {(typeof item === 'object' && item !== null && displayField in item)
+          <List.Item actions={[<Button icon={<DeleteOutlined />} onClick={() => onRemove(index)} shape='circle' type='text' />]} key={index}>
+            {(typeof item === 'object' && item !== null)
               ? (
                 <Popover content={
                   <div>
-                    { Object.entries(item).map(([key, value]) => (
-                      <div key={key}>
-                        <strong>{key}:</strong> {value as React.ReactNode}
-                      </div>
-                    )) }
+                    {getPopoverContent(item)}
                   </div>
                 }>
-                  <Tag>{ (item as Record<string, unknown>)[displayField] as React.ReactNode }</Tag>
+                  <Tag>{ getValue(item) }</Tag>
                 </Popover>
               )
               : null}
