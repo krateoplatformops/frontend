@@ -47,7 +47,7 @@ import { useFilter } from '../FiltesProvider/FiltersProvider'
 
 import styles from './WidgetRenderer.module.css'
 
-function parseData(widget: Widget, widgetEndpoint: string) {
+function parseData(widget: Widget, widgetEndpoint: string, fetchNextPage?: () => Promise<unknown> | void) {
   const { kind, metadata, status } = widget
 
   if (!status) {
@@ -105,7 +105,20 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Button':
       return <Button resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
     case 'Column':
-      return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
+      return (
+        <Column
+          fetchNextPage={
+            fetchNextPage
+              ? () => {
+                  void fetchNextPage()
+                }
+              : undefined
+          }
+          resourcesRefs={resourcesRefs}
+          uid={uid}
+          widgetData={widgetData as ColumnWidgetData}
+        />
+      )
     case 'DataGrid':
       return <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
     case 'EventList':
@@ -143,7 +156,6 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'YamlViewer':
       return <YamlViewer resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
     case 'Pod':
-      console.log('widgetData', widgetData)
       return (
         <div style={{ border: '1px solid red' }}>
           <details>
@@ -173,16 +185,18 @@ function parseData(widget: Widget, widgetEndpoint: string) {
 }
 
 type WidgetRendererProps = {
-  widgetEndpoint: string
   invisible?: boolean
+  page?: number
+  perPage?: number
   prefix?: string
+  widgetEndpoint: string
   wrapper?: {
     component: React.ComponentType<{ children: React.ReactNode }>
     props?: Record<string, unknown>
   }
 }
 
-const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
+const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
 
@@ -190,7 +204,15 @@ const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: 
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
   }
 
-  const { data: widget, error, isLoading } = useWidgetQuery(widgetEndpoint)
+  const {
+    data: widget,
+    error,
+    fetchNextPage,
+    isLoading,
+  } = useWidgetQuery(widgetEndpoint, {
+    page: page ?? 1,
+    perPage: perPage ?? 2,
+  })
 
   // check if widget is filtered out by filters
   if (typeof widget?.status === 'object' && widget?.status?.widgetData) {
@@ -267,7 +289,7 @@ const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: 
     return <Wrapper {...wrapper.props}>{parseData(widget, widgetEndpoint)}</Wrapper>
   }
 
-  return parseData(widget, widgetEndpoint)
+  return parseData(widget, widgetEndpoint, fetchNextPage)
 }
 
 export default WidgetRenderer
