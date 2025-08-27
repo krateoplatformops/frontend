@@ -2,7 +2,6 @@
 /* this rules conflicts with react-query ordering required for correct type inference */
 
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { ResourceRef, Widget } from '../types/Widget'
@@ -36,74 +35,65 @@ export const useWidgetQuery = (widgetEndpoint: string, options: PaginationOption
     return widget
   }
 
-  const query = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ['widgets', widgetEndpoint, options],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
     initialPageParam: {
       page: options.page,
       perPage: options.perPage,
     },
-    getNextPageParam: (_lastPage, pages) => {
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.status?.resourcesRefs?._slice_.continue === false) {
+        /* to signal there are not other pages */
+        return undefined
+      }
+
       return {
         page: pages.length + 1,
         perPage: options.perPage,
       }
     },
+    select: (data) => {
+      const [firstPage] = data.pages
+
+      if (typeof firstPage.status !== 'object') {
+        return firstPage
+      }
+
+      // Merge items from all pages
+      const allResourcesRefs: ResourceRef[] = []
+      const allWidgetDataItems: unknown[] = []
+
+      for (const page of data.pages) {
+        if (typeof page.status === 'object' && page.status?.resourcesRefs?.items) {
+          allResourcesRefs.push(...page.status.resourcesRefs.items)
+        }
+        if (
+          typeof page.status === 'object' &&
+          page.status?.widgetData &&
+          typeof page.status.widgetData === 'object' &&
+          'items' in page.status.widgetData &&
+          Array.isArray((page.status.widgetData as { items: unknown[] }).items)
+        ) {
+          allWidgetDataItems.push(...(page.status.widgetData as { items: unknown[] }).items)
+        }
+      }
+
+      // Return NEW object to ensure React detects the change
+      return {
+        ...firstPage,
+        status: {
+          ...firstPage.status,
+          resourcesRefs: {
+            ...firstPage.status.resourcesRefs,
+            items: allResourcesRefs,
+          },
+          widgetData: {
+            ...(firstPage.status.widgetData as Record<string, unknown>),
+            items: allWidgetDataItems,
+          },
+        },
+      }
+    },
   })
-
-  // Merge all page data into a single widget - use useMemo for reactivity
-  const mergedWidget = useMemo(() => {
-    if (!query.data?.pages?.[0]) {
-      return undefined
-    }
-
-    const [firstPage] = query.data.pages
-
-    if (typeof firstPage.status !== 'object') {
-      return firstPage
-    }
-
-    // Merge items from all pages
-    const allResourcesRefs: ResourceRef[] = []
-    const allWidgetDataItems: unknown[] = []
-
-    for (const page of query.data.pages) {
-      if (typeof page.status === 'object' && page.status?.resourcesRefs?.items) {
-        allResourcesRefs.push(...page.status.resourcesRefs.items)
-      }
-      if (
-        typeof page.status === 'object' &&
-        page.status?.widgetData &&
-        typeof page.status.widgetData === 'object' &&
-        'items' in page.status.widgetData &&
-        Array.isArray((page.status.widgetData as { items: unknown[] }).items)
-      ) {
-        allWidgetDataItems.push(...(page.status.widgetData as { items: unknown[] }).items)
-      }
-    }
-
-    return {
-      ...firstPage,
-      status: {
-        ...firstPage.status,
-        resourcesRefs: {
-          ...firstPage.status.resourcesRefs,
-          items: allResourcesRefs,
-        },
-        widgetData: {
-          ...(firstPage.status.widgetData as Record<string, unknown>),
-          items: allWidgetDataItems,
-        },
-      },
-    }
-  }, [query.data?.pages])
-
-  return {
-    data: mergedWidget,
-    error: query.error,
-    fetchNextPage: query.fetchNextPage,
-    hasNextPage: query.hasNextPage,
-    isLoading: query.isLoading,
-    isFetchingNextPage: query.isFetchingNextPage,
-  }
 }

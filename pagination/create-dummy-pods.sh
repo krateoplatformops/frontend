@@ -13,21 +13,30 @@ else
 fi
 
 # Ciclo per creare 20 pod dummy
-for i in {0..19}; do
-  BUTTON_NAME="dummy-button-$i"
+for i in {20..150}; do
+  POD_NAME="dummy-pod-$i"
 
-  echo "Creating button: $BUTTON_NAME"
+  echo "Creating pod: $POD_NAME"
 
   cat <<EOF | kubectl apply -f -
-apiVersion: widgets.templates.krateo.io/v1beta1
-kind: Button
+apiVersion: v1
+kind: Pod
 metadata:
-  name: $BUTTON_NAME
+  name: $POD_NAME
   namespace: $NAMESPACE
 spec:
-  widgetData:
-    label: "Button $i"
-    icon: "fa-solid fa-circle"
+  containers:
+  - name: dummy
+    image: busybox
+    command: ["sleep", "3600"]
+    resources:
+      limits:
+        memory: "16Mi"
+        cpu: "10m"
+      requests:
+        memory: "8Mi"
+        cpu: "5m"
+  restartPolicy: Never
 EOF
 
 done

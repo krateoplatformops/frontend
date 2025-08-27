@@ -47,7 +47,17 @@ import { useFilter } from '../FiltesProvider/FiltersProvider'
 
 import styles from './WidgetRenderer.module.css'
 
-function parseData(widget: Widget, widgetEndpoint: string, fetchNextPage?: () => Promise<unknown> | void) {
+function parseData({
+  fetchNextPage,
+  hasNextPage,
+  widget,
+  widgetEndpoint,
+}: {
+  widget: Widget
+  widgetEndpoint: string
+  fetchNextPage?: () => Promise<unknown> | void
+  hasNextPage?: boolean
+}) {
   const { kind, metadata, status } = widget
 
   if (!status) {
@@ -107,13 +117,8 @@ function parseData(widget: Widget, widgetEndpoint: string, fetchNextPage?: () =>
     case 'Column':
       return (
         <Column
-          fetchNextPage={
-            fetchNextPage
-              ? () => {
-                  void fetchNextPage()
-                }
-              : undefined
-          }
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
           resourcesRefs={resourcesRefs}
           uid={uid}
           widgetData={widgetData as ColumnWidgetData}
@@ -157,7 +162,7 @@ function parseData(widget: Widget, widgetEndpoint: string, fetchNextPage?: () =>
       return <YamlViewer resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
     case 'Pod':
       return (
-        <div style={{ border: '1px solid red' }}>
+        <div style={{ border: '1px solid red', height: '100px' }}>
           <details>
             <summary>Pod {metadata?.name}</summary>
             <pre>
@@ -208,10 +213,11 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
     data: widget,
     error,
     fetchNextPage,
+    hasNextPage,
     isLoading,
   } = useWidgetQuery(widgetEndpoint, {
     page: page ?? 1,
-    perPage: perPage ?? 2,
+    perPage: perPage ?? 10,
   })
 
   // check if widget is filtered out by filters
@@ -225,7 +231,7 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
 
   if (invisible) {
     if (widget) {
-      return parseData(widget, widgetEndpoint)
+      return parseData({ widget, widgetEndpoint })
     }
     return null
   }
@@ -286,10 +292,10 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
   if (wrapper) {
     const Wrapper = wrapper.component
 
-    return <Wrapper {...wrapper.props}>{parseData(widget, widgetEndpoint)}</Wrapper>
+    return <Wrapper {...wrapper.props}>{parseData({ widget, widgetEndpoint })}</Wrapper>
   }
 
-  return parseData(widget, widgetEndpoint, fetchNextPage)
+  return parseData({ fetchNextPage, hasNextPage, widget, widgetEndpoint })
 }
 
 export default WidgetRenderer
