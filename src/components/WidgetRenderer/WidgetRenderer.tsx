@@ -144,6 +144,31 @@ function parseData(widget: Widget, widgetEndpoint: string) {
       return <TabList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
     case 'YamlViewer':
       return <YamlViewer resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
+    case 'Pod':
+      console.log('widgetData', widgetData)
+      return (
+        <div style={{ border: '1px solid red' }}>
+          <details>
+            <summary>Pod {metadata?.name}</summary>
+            <pre>
+              {JSON.stringify(
+                {
+                  metadata,
+                  resourcesRefs,
+                  uid,
+                },
+                null,
+                2
+              )}
+            </pre>
+            {JSON.stringify({
+              metadata,
+              resourcesRefs,
+              uid,
+            })}
+          </details>
+        </div>
+      )
     default:
       throw new Error(`Unknown widget kind: ${kind}`)
   }
@@ -159,12 +184,7 @@ type WidgetRendererProps = {
   }
 }
 
-const WidgetRenderer = ({
-  invisible = false,
-  prefix,
-  widgetEndpoint,
-  wrapper,
-}: WidgetRendererProps) => {
+const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
 
@@ -175,13 +195,18 @@ const WidgetRenderer = ({
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
 
+  const url = new URL(widgetFullUrl)
+  url.searchParams.set('page', '1')
+  url.searchParams.set('per_page', '3')
+
+  const urlString = url.toString()
   const {
     data: widget,
     error,
     isLoading,
   } = useQuery({
     queryFn: async () => {
-      const res = await fetch(widgetFullUrl, {
+      const res = await fetch(urlString, {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
@@ -190,7 +215,7 @@ const WidgetRenderer = ({
       const widget = (await res.json()) as Widget
       return widget
     },
-    queryKey: ['widgets', widgetFullUrl],
+    queryKey: ['widgets', urlString],
   })
 
   // check if widget is filtered out by filters
@@ -212,7 +237,7 @@ const WidgetRenderer = ({
   if (isLoading) {
     return (
       <div className={styles.loading}>
-        <Skeleton active/>
+        <Skeleton active />
       </div>
     )
   }
@@ -240,30 +265,32 @@ const WidgetRenderer = ({
   }
 
   if (widget.kind === 'Status' && widget?.code === 401) {
-    catchError({
-      data: {
-        message: widget?.message,
+    catchError(
+      {
+        data: {
+          message: widget?.message,
+        },
+        message: `Authentication error (code: ${widget.code})`,
+        status: widget.code,
       },
-      message: `Authentication error (code: ${widget.code})`,
-      status: widget.code,
-    }, 'notification')
+      'notification'
+    )
   }
 
   if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
-    catchError({
-      status: widget.code,
-    }, 'notification')
+    catchError(
+      {
+        status: widget.code,
+      },
+      'notification'
+    )
     window.location.replace('/login')
   }
 
   if (wrapper) {
     const Wrapper = wrapper.component
 
-    return (
-      <Wrapper {...wrapper.props}>
-        {parseData(widget, widgetEndpoint)}
-      </Wrapper>
-    )
+    return <Wrapper {...wrapper.props}>{parseData(widget, widgetEndpoint)}</Wrapper>
   }
 
   return parseData(widget, widgetEndpoint)

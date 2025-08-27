@@ -1,0 +1,33 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: DataGrid
+metadata:
+  name: compositions-page-datagrid
+  namespace: krateo-system
+spec:
+  apiRef:
+    name: compositions-panels
+    namespace: krateo-system
+  resourcesRefs:                               
+    items: []                      
+    # _slice_:
+    #   page: 1
+    #   perPage: 2
+  resourcesRefsTemplate:
+  - iterator: ${ .compositionspanels }
+    template:
+      apiVersion: ${ .apiVersion }
+      id: ${ .metadata.name }
+      name: ${ .metadata.name }
+      namespace: ${ .metadata.namespace }
+      resource: panels
+      verb: GET
+  widgetData:
+    asGrid: true
+    grid:
+      column: 1
+    items: []
+    prefix: compositions-datagrid-filters
+  widgetDataTemplate:
+  - expression: |
+      ${ [ .compositionspanels[] | { resourceRefId: .metadata.name} ] }
+    forPath: items
