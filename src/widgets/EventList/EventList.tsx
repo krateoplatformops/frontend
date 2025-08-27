@@ -44,8 +44,9 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
         ({
           icon,
           involvedObject: { apiVersion, kind, name, namespace },
+          lastTimestamp,
           message,
-          metadata: { creationTimestamp, uid: rowUid },
+          metadata: { uid: rowUid },
           reason,
           type,
         }) => (
@@ -64,7 +65,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
                 <Typography.Text type='secondary'>apiVersion:</Typography.Text> <Typography.Text>{apiVersion}</Typography.Text>
               </>
             }
-            secondaryText={formatISODate(creationTimestamp, true)}
+            secondaryText={lastTimestamp && formatISODate(lastTimestamp, true)}
             subPrimaryText={message}
             subSecondaryText={reason}
           />

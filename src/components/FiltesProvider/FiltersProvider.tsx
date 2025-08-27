@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { createContext, useState, useContext, useEffect } from 'react'
 
 import { useEvents } from '../../hooks/useEvents'
+import type { TableWidgetData } from '../../widgets/Table/Table'
 
 export type FilterType = {
   fieldType: 'string' | 'number' | 'boolean' | 'date' | 'daterange'
@@ -10,17 +11,17 @@ export type FilterType = {
   fieldValue: unknown
 }
 
-type DataItem = Record<string, unknown>
+type FilterMap = Record<string, FilterType[]>
+type TableRow = TableWidgetData['data'][number]
+type FilterableRow = Record<string, unknown> | TableRow
 
 type FiltersContextType = {
   setFilters: (prefix: string, filters: FilterType[]) => void
-  getFilteredData: (data: DataItem[], prefix: string) => unknown[]
+  getFilteredData: (data: FilterableRow[], prefix: string) => FilterableRow[]
   isWidgetFilteredByProps: (widgetData: unknown, prefix: string) => boolean
   clearFilters: (prefix: string) => void
   getFilters: (prefix: string) => FilterType[]
 }
-
-type FilterMap = Record<string, FilterType[]>
 
 type FilterEvent = {
   setFilters: { prefix: string; filters: FilterType[] }
@@ -29,6 +30,39 @@ type FilterEvent = {
 }
 
 const FiltersContext = createContext<FiltersContextType | undefined>(undefined)
+
+const getTableValue = (cell: TableRow[number]): unknown => {
+  const { arrayValue, booleanValue, kind, numberValue, resourceRefId, stringValue, type } = cell
+
+  switch (kind) {
+    case 'icon':
+      return stringValue ?? null
+
+    case 'widget':
+      return resourceRefId ?? stringValue ?? null
+
+    case 'jsonSchemaType':
+      if (!type) { return null }
+      switch (type) {
+        case 'string':
+          return stringValue ?? null
+        case 'number':
+        case 'integer':
+          return numberValue ?? null
+        case 'boolean':
+          return booleanValue ?? null
+        case 'array':
+          return arrayValue ?? null
+        case 'null':
+          return null
+        default:
+          return null
+      }
+
+    default:
+      return null
+  }
+}
 
 const FiltersProvider = ({ children }: { children: ReactNode }) => {
   const [filterMap, setFilterMap] = useState<FilterMap>({})
@@ -63,11 +97,14 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
   const matchesFilter = (itemValue: unknown, filter: FilterType): boolean => {
     const { fieldType, fieldValue } = filter
 
+    if (!itemValue) { return false }
+
     switch (fieldType) {
       case 'string':
         if (Array.isArray(itemValue)) {
           return itemValue.filter((val: string) => val.toLowerCase().includes((fieldValue as string).toLowerCase())).length > 0
         }
+
         return (itemValue as string).toLowerCase().includes((fieldValue as string).toLowerCase())
 
       case 'number':
@@ -97,24 +134,33 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const getValueByPath = (obj: DataItem, path: string): unknown => {
+  const getValueByPath = (obj: FilterableRow, path: string): unknown => {
     return path.split('.').reduce<unknown>((acc, part) => (acc as Record<string, unknown>)?.[part], obj)
   }
 
-  const getFilteredData = (data: DataItem[], prefix: string): unknown[] => {
-    const filters: FilterType[] = (filterMap[prefix] as FilterType[] | undefined) ?? []
+const getFilteredData = (data: FilterableRow[], prefix: string): FilterableRow[] => {
+  const filters: FilterType[] = (filterMap[prefix] as FilterType[] | undefined) ?? []
 
-    if (filters.length === 0) { return data }
+  if (filters.length === 0) { return data }
 
-    return data.filter((item: DataItem) =>
-      filters.every((filter: FilterType) => (
-        filter.fieldName.map((fieldName) => {
-          const itemValue = item[fieldName]
-          return matchesFilter(itemValue, filter)
-        })
-      ))
+  return data.filter(row =>
+    filters.every(filter =>
+      filter.fieldName.some(fieldName => {
+        let value: unknown
+
+        if (Array.isArray(row)) {
+          const cell = row.find(({ valueKey }) => valueKey === fieldName)
+          if (!cell) { return false }
+          value = getTableValue(cell)
+        } else {
+          value = row[fieldName]
+        }
+
+        return matchesFilter(value, filter)
+      })
     )
-  }
+  )
+}
 
   const isWidgetFilteredByProps = (widgetData: unknown, prefix: string): boolean => {
     if (typeof widgetData !== 'object' || widgetData === null || ('prefix' in widgetData)) {
@@ -141,8 +187,13 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <FiltersContext.Provider value={{ clearFilters, getFilteredData, getFilters, isWidgetFilteredByProps, setFilters }}>
-      {/* <div>FILTERS: {JSON.stringify(filterMap)}</div> */}
+    <FiltersContext.Provider value={{
+      clearFilters,
+      getFilteredData,
+      getFilters,
+      isWidgetFilteredByProps,
+      setFilters,
+    }}>
       {children}
     </FiltersContext.Provider>
   )
@@ -157,45 +208,3 @@ export const useFilter = () => {
   }
   return context
 }
-
-/**
- * How to apply filters:
-
-import { useFilter } from '../context/FilterContext';
-
-const FilterForm = () => {
-  const { setFilters } = useFilter();
-  const prefix = 'utenti';
-
-  const applyFilter = () => {
-    setFilters(prefix, [
-      { fieldType: 'boolean', fieldName: 'attivo', fieldValue: true },
-      { fieldType: 'date-range', fieldName: 'registratoIl', fieldValue: { from: '2024-06-01', to: '2024-06-30' } }
-    ]);
-  };
-
-  return <button onClick={applyFilter}>Applica filtri</button>;
-};
-
- */
-
-/**
- * How to get filtered data:
- *
-import { useFilter } from '../context/FilterContext';
-
-const UserTable = ({data}) => {
-  const { getFilteredData } = useFilter();
-  const prefix = 'utenti';
-
-  const utentiFiltrati = getFilteredData(data, prefix);
-
-  return (
-    <ul>
-      {utentiFiltrati.map((u) => (
-        <li key={u.id}>{u.nome}</li>
-      ))}
-    </ul>
-  );
-};
- */

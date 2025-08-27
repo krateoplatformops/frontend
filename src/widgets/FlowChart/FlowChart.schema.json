@@ -24,7 +24,6 @@
               "items": {
                 "type": "object",
                 "required": [
-                  "createdAt",
                   "kind",
                   "date",
                   "name",
@@ -35,11 +34,6 @@
                 ],
                 "additionalProperties": false,
                 "properties": {
-                  "createdAt": {
-                    "type": "string",
-                    "format": "date-time",
-                    "description": "timestamp indicating when the resource was created"
-                  },
                   "date": {
                     "type": "string",
                     "description": "optional date value to be shown in the node, formatted as ISO 8601 string"
@@ -100,11 +94,6 @@
                     "items": {
                       "type": "object",
                       "properties": {
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "description": "timestamp indicating when the parent resource was created"
-                        },
                         "date": {
                           "type": "string",
                           "description": "optional date value to be shown in the node, formatted as ISO 8601 string"

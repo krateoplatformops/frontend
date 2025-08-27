@@ -15,11 +15,46 @@ export interface Table {
        */
       pageSize?: number
       /**
-       * array of objects representing the table's row data
+       * Array of table rows
        */
       data: {
-        [k: string]: unknown
-      }[]
+        /**
+         * the key of the column this cell belongs to
+         */
+        valueKey: string
+        /**
+         * type of cell value
+         */
+        kind: 'jsonSchemaType' | 'icon' | 'widget'
+        /**
+         * used if kind = widget
+         */
+        resourceRefId?: string
+        /**
+         * used if kind = jsonSchemaType
+         */
+        type?: 'string' | 'number' | 'integer' | 'decimal' | 'boolean' | 'array' | 'null'
+        /**
+         * value if type = string
+         */
+        stringValue?: string
+        /**
+         * value if type = number or integer
+         */
+        numberValue?: number
+        /**
+         * value if type = number or decimal
+         */
+        decimalValue?: string
+        /**
+         * value if type = boolean
+         */
+        booleanValue?: boolean
+        /**
+         * value if type = array
+         */
+        arrayValue?: string[]
+      }[][]
       /**
        * configuration of the table's columns
        */
@@ -28,10 +63,6 @@ export interface Table {
          * the color of the value (or the icon) to be represented
          */
         color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
-        /**
-         * type of data to be represented
-         */
-        kind?: 'value' | 'icon'
         /**
          * column header label
          */

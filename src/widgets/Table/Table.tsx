@@ -3,55 +3,88 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Table as AntdTable, Typography } from 'antd'
 
 import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
+import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
+import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Table.module.css'
 import type { Table as WidgetType } from './Table.type'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
-/**
- * Parses a dot-notation string (e.g., "user.name.first") into an array of strings
- * for use as a nested path in Ant Design's `dataIndex`.
- *
- * If the input contains dot notation, it is split by "." and returned as an array.
- * Otherwise, the original string is returned.
- *
- * @param {string} input - The valueKey string to parse.
- * @returns {string | string[]} - An array of keys if dot notation is detected, otherwise the original string.
- */
-const parseValueKey = (input: string): string | string[] => {
-  return input.includes('.') ? input.split('.') : input
-}
-
-const Table = ({ uid, widgetData }: WidgetProps<TableWidgetData>) => {
+const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize, prefix } = widgetData
   const { getFilteredData } = useFilter()
 
-  let dataTable: { [k: string]: unknown }[] = data
+  let dataTable: TableWidgetData['data'] = data
   if (prefix && data?.length > 0) {
-    dataTable = getFilteredData(data, prefix) as { [k: string]: unknown }[]
+    dataTable = getFilteredData(data, prefix) as TableWidgetData['data']
   }
 
   return (
     <AntdTable
-      columns={columns?.map(({ color, kind, title, valueKey }, index) => ({
-        dataIndex: parseValueKey(valueKey),
+      columns={columns?.map(({ color, title, valueKey }, index) => ({
+        dataIndex: valueKey,
         key: `${uid}-col-${index}`,
-        render: (value?: unknown) => {
-          if (kind === 'icon' && typeof value === 'string') {
-            return <FontAwesomeIcon color={color} icon={value as IconProp} />
-          }
+        render: (_: unknown, row: TableWidgetData['data'][number]) => {
+          const cell = row.find((cell) => cell.valueKey === valueKey)
 
-          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-            return <span style={{ color }}>{String(value)}</span>
-          }
-
-          if (value === null || value === undefined) {
+          if (!cell) {
+            console.error('Table rendering error: cell is undefined')
             return <span>-</span>
           }
 
-          return <span style={{ color }}>{JSON.stringify(value)}</span>
+          const { arrayValue, booleanValue, decimalValue, kind, numberValue, resourceRefId, stringValue, type } = cell
+          const endpoint = kind === 'widget' && resourceRefId && getEndpointUrl(resourceRefId, resourcesRefs)
+
+          switch (kind) {
+            case 'icon':
+              if (stringValue) { return <FontAwesomeIcon color={color} icon={stringValue as IconProp} /> }
+              console.error('Table rendering error: icon value has incorrect format')
+              return <span>-</span>
+
+            case 'widget':
+              if (!resourceRefId) {
+                console.error('Table rendering error: widget resourceRefId not found')
+                return <span>-</span>
+              }
+
+              if (!endpoint) {
+                console.error('Table rendering error: widget resourceRefId endpoint not found')
+                return <span>-</span>
+               }
+
+              return <WidgetRenderer widgetEndpoint={endpoint} />
+
+            case 'jsonSchemaType':
+              if (!type) {
+                console.error('Table rendering error: jsonSchemaType cell missing type')
+                return <span>-</span>
+              }
+
+              switch (type) {
+                case 'string':
+                  return <span style={{ color }}>{stringValue ?? '-'}</span>
+                case 'number':
+                case 'integer':
+                  return <span style={{ color }}>{numberValue ?? '-'}</span>
+                case 'decimal':
+                  return <span style={{ color }}>{String(decimalValue) ?? '-'}</span>
+                case 'boolean':
+                  return <span style={{ color }}>{booleanValue !== undefined ? String(booleanValue) : '-'}</span>
+                case 'array':
+                  return <span style={{ color }}>{arrayValue ? JSON.stringify(arrayValue) : '-'}</span>
+                case 'null':
+                  return <span>-</span>
+                default:
+                  console.error('Table rendering error: unknown jsonSchemaType')
+                  return <span>-</span>
+              }
+
+            default:
+              console.error('Table rendering error: unknown kind')
+              return <span>-</span>
+          }
         },
         title: (
           <div className={styles.headerEllipsis}>

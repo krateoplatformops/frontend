@@ -66,12 +66,13 @@ export type WidgetActions = {
   }[]
   navigate?: {
     id: string
-    type: 'navigate'
-    resourceRefId: string
-    requireConfirmation?: boolean
     loading?: {
       display: boolean
     }
+    path?: string
+    resourceRefId?: string
+    requireConfirmation?: boolean
+    type: 'navigate'
   }[]
   openDrawer?: {
     id: string

@@ -288,7 +288,15 @@ const FormGenerator = ({
                   rules={rules}
                   tooltip={descriptionTooltip && node.description ? node.description : undefined}
                 >
-                  <ListObjectFields container={document.body} data={[]} displayField={objFields.displayField} fields={parseData(node.items)} onSubmit={(values) => { form.setFieldValue(name.split('.'), values) } } />
+                  <ListObjectFields
+                    container={document.body}
+                    data={[]}
+                    displayField={objFields.displayField}
+                    fields={parseData(node.items)}
+                    onSubmit={(values) => {
+                      form.setFieldValue(name.split('.'), values)
+                    } }
+                    />
                 </Form.Item>
               </div>
             )

@@ -3,10 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button as AntdButton } from 'antd'
 import useApp from 'antd/es/app/useApp'
 
-import { useConfigContext } from '../../context/ConfigContext'
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
-import { getResourceRef } from '../../utils/utils'
 
 import type { Button as WidgetType } from './Button.type'
 
@@ -16,7 +14,6 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
   const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const { notification } = useApp()
-  const { config } = useConfigContext()
   const { handleAction, isActionLoading } = useHandleAction()
 
   const action = Object.values(actions)
@@ -34,23 +31,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
       return
     }
 
-    const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
-    if (!resourceRef) {
-      notification.error({
-        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
-        message: 'Error while executing the action',
-        placement: 'bottomLeft',
-      })
-
-      return
-    }
-
-    const { path, verb } = resourceRef
-
-    const url = action.type === 'rest' ? config?.api.SNOWPLOW_API_BASE_URL + path : path
-
-    await handleAction(action, url, verb)
+    await handleAction(action, resourcesRefs)
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

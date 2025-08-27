@@ -2,14 +2,16 @@ import { useQueryClient } from '@tanstack/react-query'
 import useApp from 'antd/es/app/useApp'
 import { merge } from 'lodash'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import { useRoutesContext } from '../context/RoutesContext'
-import type { ResourceRef, WidgetAction } from '../types/Widget'
+import type { ResourcesRefs, WidgetAction } from '../types/Widget'
+import { formatMessage } from '../utils/format-message/formatMessage'
 import { getAccessToken } from '../utils/getAccessToken'
+import { useResolveJqExpression } from '../utils/jq-expression'
 import type { Payload, RestApiResponse } from '../utils/types'
-import { getHeadersObject } from '../utils/utils'
+import { getHeadersObject, getResourceRef } from '../utils/utils'
 import { closeDrawer, openDrawer } from '../widgets/Drawer/Drawer'
 import { openModal } from '../widgets/Modal/Modal'
 
@@ -227,21 +229,60 @@ const updateNameNamespace = (path: string, name?: string, namespace?: string) =>
 
 export const useHandleAction = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const queryClient = useQueryClient()
   const { message, notification } = useApp()
   const { config } = useConfigContext()
   const { reloadRoutes } = useRoutesContext()
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false)
+  const resolveJq = useResolveJqExpression()
+
+  const handleNavigate = async (requireConfirmation: boolean | undefined, path: string) => {
+    if (!requireConfirmation || window.confirm('Are you sure?')) {
+      await navigate(path)
+    }
+  }
 
   const handleAction = async (
     action: WidgetAction,
-    path: string,
-    verb: ResourceRef['verb'],
+    resourcesRefs: ResourcesRefs,
     customPayload?: Record<string, unknown>,
-    resourcePayload?: Record<string, unknown>
+    customUrlParam?: string
   ) => {
     if (action.loading?.display) {
       setIsActionLoading(true)
+    }
+
+    if (action.type === 'navigate' && action.path) {
+      await handleNavigate(action.requireConfirmation, action.path)
+      setIsActionLoading(false)
+
+      return
+    }
+
+    const resourceRef = action.resourceRefId ? getResourceRef(action.resourceRefId, resourcesRefs) : undefined
+
+    if (!resourceRef) {
+      notification.error({
+        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
+
+    const { path, payload: resourcePayload, verb } = resourceRef
+
+    let url: string
+    if (action.type === 'navigate') {
+      if (customUrlParam) {
+        url = `${location.pathname}/${encodeURIComponent(customUrlParam)}?widgetEndpoint=${encodeURIComponent(path)}`
+      } else {
+        url = `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
+      }
+    } else {
+      url = config?.api.SNOWPLOW_API_BASE_URL + path
     }
 
     try {
@@ -249,10 +290,7 @@ export const useHandleAction = () => {
 
       switch (type) {
         case 'navigate':
-          if (!requireConfirmation || window.confirm('Are you sure?')) {
-            setIsActionLoading(false)
-            await navigate(path)
-          }
+          await handleNavigate(requireConfirmation, url)
 
           break
         case 'openDrawer': {
@@ -282,6 +320,8 @@ export const useHandleAction = () => {
             payloadToOverride,
             successMessage,
           } = action
+
+          let jsonResponse: RestApiResponse | null = null
 
           if (!requireConfirmation || window.confirm('Are you sure?')) {
             if (onSuccessNavigateTo && onEventNavigateTo) {
@@ -316,12 +356,21 @@ export const useHandleAction = () => {
                 withCredentials: false,
               })
 
+              let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
+              // eslint-disable-next-line max-depth
+              if (errorMessage && errorMessage.startsWith('${')) {
+                description = await resolveJq(errorMessage, {
+                  json: updatedPayload,
+                  response: jsonResponse,
+                })
+              }
+
               const timeoutId = setTimeout(() => {
                 if (!eventReceived) {
                   setIsActionLoading(false)
                   eventSource.close()
                   notification.error({
-                    description: errorMessage || `Timeout waiting for event ${onEventNavigateTo.eventReason}`,
+                    description,
                     message: 'Error while executing the action',
                     placement: 'bottomLeft',
                   })
@@ -331,13 +380,14 @@ export const useHandleAction = () => {
 
               message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
 
-              eventSource.addEventListener('krateo', (event) => {
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              eventSource.addEventListener('krateo', async (event) => {
                 if (!resourceUid) {
                   return
                 }
 
-                const data = JSON.parse(event.data as string) as EventData
-                if (data.reason === onEventNavigateTo.eventReason && data.involvedObject.uid === resourceUid) {
+                const eventData = JSON.parse(event.data as string) as EventData
+                if (eventData.reason === onEventNavigateTo.eventReason && eventData.involvedObject.uid === resourceUid) {
                   eventReceived = true
 
                   if (onEventNavigateTo.reloadRoutes !== false) {
@@ -347,7 +397,20 @@ export const useHandleAction = () => {
                   eventSource.close()
                   clearTimeout(timeoutId)
 
-                  const redirectUrl = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                  const redirectUrl = await (async () => {
+                    /* if it starts with ${ should be resolved by cassing JQ endpoint otherwise use legacy method */
+                    if (onEventNavigateTo.url.startsWith('${')) {
+                      return resolveJq(onEventNavigateTo.url, {
+                        event: eventData as unknown as Record<string, unknown>,
+                        json: updatedPayload,
+                        response: jsonResponse,
+                      })
+                    }
+
+                    const url = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                    return url
+                  })()
+
                   if (!redirectUrl) {
                     notification.error({
                       description: 'Impossible to redirect, the route contains an undefined value',
@@ -358,10 +421,18 @@ export const useHandleAction = () => {
                     return
                   }
 
-                  message.destroy()
+                  let description = 'The action has been executed successfully'
+                  if (successMessage && successMessage.startsWith('${')) {
+                    description = await resolveJq(successMessage, {
+                      event: eventData as unknown as Record<string, unknown>,
+                      json: updatedPayload,
+                      response: jsonResponse,
+                    })
+                  }
 
+                  message.destroy()
                   notification.success({
-                    description: successMessage || 'The action has been executed successfully',
+                    description,
                     message: `Successfully executed action`,
                     placement: 'bottomLeft',
                   })
@@ -374,8 +445,8 @@ export const useHandleAction = () => {
             }
 
             const updatedUrl = customPayload
-              ? updateNameNamespace(path, (updatedPayload as Payload)?.metadata?.name, (updatedPayload as Payload)?.metadata?.namespace)
-              : path
+              ? updateNameNamespace(url, (updatedPayload as Payload)?.metadata?.name, (updatedPayload as Payload)?.metadata?.namespace)
+              : url
 
             const requestBody = Object.keys(updatedPayload).length > 0 ? updatedPayload : payload
             const requestHeaders = {
@@ -392,21 +463,24 @@ export const useHandleAction = () => {
               method: verb,
             })
 
-            const json = (await res.json()) as RestApiResponse
+            // eslint-disable-next-line require-atomic-updates
+            jsonResponse = (await res.json()) as RestApiResponse
 
             setIsActionLoading(false)
 
             if (!res.ok) {
               notification.error({
-                description: errorMessage || json.message,
-                message: `${json.status} - ${json.reason}`,
+                description: errorMessage
+                  ? formatMessage(errorMessage, { json: updatedPayload, response: jsonResponse })
+                  : jsonResponse.message,
+                message: `${jsonResponse.status} - ${jsonResponse.reason}`,
                 placement: 'bottomLeft',
               })
               break
             }
 
-            if (json.metadata?.uid) {
-              resourceUid = json.metadata.uid
+            if (jsonResponse.metadata?.uid) {
+              resourceUid = jsonResponse.metadata.uid
             }
 
             if (!onEventNavigateTo) {
@@ -427,9 +501,18 @@ export const useHandleAction = () => {
                 }
               })()
 
+              let description = `Successfully ${actionName} ${jsonResponse.metadata?.name} in ${jsonResponse.metadata?.namespace}`
+              // eslint-disable-next-line max-depth
+              if (successMessage && successMessage.startsWith('${')) {
+                description = await resolveJq(successMessage, {
+                  json: updatedPayload,
+                  response: jsonResponse,
+                })
+              }
+
               notification.success({
-                description: successMessage || `Successfully ${actionName} ${json.metadata?.name} in ${json.metadata?.namespace}`,
-                message: json.message,
+                description,
+                message: jsonResponse.message,
                 placement: 'bottomLeft',
               })
             }

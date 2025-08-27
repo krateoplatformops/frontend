@@ -86,11 +86,12 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
-| actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no |  | object |
 | actions.navigate[].loading.display | yes |  | boolean |
+| actions.navigate[].path | no | the identifier of the route to navigate to | string |
+| actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -340,7 +341,6 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
 | data | no | list of kubernetes resources and their relationships to render as nodes in the flow chart | array |
-| data[].createdAt | yes | timestamp indicating when the resource was created | string |
 | data[].date | yes | optional date value to be shown in the node, formatted as ISO 8601 string | string |
 | data[].icon | no | custom icon displayed for the resource node | object |
 | data[].icon.name | no | FontAwesome icon class name (e.g. 'fa-check') | string |
@@ -354,7 +354,6 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | data[].name | yes | name of the resource | string |
 | data[].namespace | yes | namespace in which the resource is defined | string |
 | data[].parentRefs | no | list of parent resources used to define graph relationships | array |
-| data[].parentRefs[].createdAt | no | timestamp indicating when the parent resource was created | string |
 | data[].parentRefs[].date | no | optional date value to be shown in the node, formatted as ISO 8601 string | string |
 | data[].parentRefs[].icon | no | custom icon for the parent resource | object |
 | data[].parentRefs[].icon.name | no | FontAwesome icon class name | string |
@@ -386,56 +385,111 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
-    data: [
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {
-            "message": "Kind: Application - Name: hello-test-2 - Namespace: test-namespace - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-            "reason": "False",
-            "status": "Degraded",
-            "type": "CompositionStatus"
-        },
-        "kind": "CompositionReference",
-        "name": "hello-test-2",
-        "namespace": "fireworksapp-system",
-        "parentRefs": [
-            {}
-        ],
-        "resourceVersion": "39743",
-        "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-        "version": "resourcetrees.krateo.io/v1"
-    },
-    {
-        "createdAt": "2025-05-29T14:35:56Z",
-        "health": {},
-        "kind": "ConfigMap",
-        "name": "hello-test-2-fireworks-app-replace-values",
-        "namespace": "fireworksapp-system",
-        "parentRefs": [
-            {
-                "createdAt": "2025-05-29T14:35:56Z",
-                "health": {
-                    "message": "Kind: Application - Name: hello-test-2 - Namespace: test-namespace - Message: Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Repository not found.",
-                    "reason": "False",
-                    "status": "Degraded",
-                    "type": "CompositionStatus"
-                },
-                "kind": "CompositionReference",
-                "name": "hello-test-2",
-                "namespace": "fireworksapp-system",
-                "parentRefs": [
-                    {}
-                ],
-                "resourceVersion": "39743",
-                "uid": "a691a7b2-3170-4929-b3cf-a38b10e2d0a2",
-                "version": "resourcetrees.krateo.io/v1"
-            }
-        ],
-        "resourceVersion": "27039",
-        "uid": "4ac6e09f-3ccf-4d65-ad3a-d4c1e1438bbf",
-        "version": "v1"
-    }
-]
+    data:
+      - date: "2025-07-24T15:30:36Z"
+        icon:
+          name: "fa-cubes"
+          color: "#1890ff"
+        statusIcon:
+          name: "fa-check"
+          color: "#52c41a"
+          message: "Available"
+        kind: "FrontendGithubScaffolding"
+        name: "test2"
+        namespace: "demo-system"
+        parentRefs:
+          - {}
+        resourceVersion: ""
+        uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
+        version: "composition.krateo.io/v0-0-1"
+
+      - date: "2024-07-31T15:30:39Z"
+        icon:
+          name: "fa-file-alt"
+          color: "#faad14"
+        statusIcon:
+          name: "fa-ellipsis"
+          color: "#1890ff"
+          message: "Progressing"
+        kind: "ConfigMap"
+        name: "test2-replace-values"
+        namespace: "demo-system"
+        parentRefs:
+          - kind: "FrontendGithubScaffolding"
+            name: "test2"
+            namespace: "demo-system"
+            parentRefs: [{}]
+            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
+            version: "composition.krateo.io/v0-0-1"
+        resourceVersion: "77493"
+        uid: "e99a3efe-7461-4ffe-b956-55cb3882f0c5"
+        version: "v1"
+
+      - date: "2025-07-31T15:30:39Z"
+        icon:
+          name: "fa-cogs"
+          color: "#13c2c2"
+        statusIcon:
+          name: "fa-pause"
+          color: "#faad14"
+          message: "Suspended"
+        kind: "Application"
+        name: "test2"
+        namespace: "krateo-system"
+        parentRefs:
+          - kind: "FrontendGithubScaffolding"
+            name: "test2"
+            namespace: "demo-system"
+            parentRefs: [{}]
+            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
+            version: "composition.krateo.io/v0-0-1"
+        resourceVersion: "2769771"
+        uid: "10c62b82-8096-4f40-a991-8f1a420a7c42"
+        version: "argoproj.io/v1alpha1"
+
+      - date: "2025-07-31T15:30:39Z"
+        icon:
+          name: "fa-database"
+          color: "#722ed1"
+        statusIcon:
+          name: "fa-xmark"
+          color: "#ff4d4f"
+          message: "Degraded"
+        kind: "Repo"
+        name: "test2-repo"
+        namespace: "demo-system"
+        parentRefs:
+          - kind: "FrontendGithubScaffolding"
+            name: "test2"
+            namespace: "demo-system"
+            parentRefs: [{}]
+            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
+            version: "composition.krateo.io/v0-0-1"
+        resourceVersion: "2771491"
+        uid: "36177476-08c3-42dd-a148-48d0b94bbf13"
+        version: "git.krateo.io/v1alpha1"
+
+      - date: "2025-07-31T15:30:39Z"
+        icon:
+          name: "fa-book"
+          color: "#eb2f96"
+        statusIcon:
+          name: "fa-question"
+          color: "#d9d9d9"
+          message: "Unknown"
+        kind: "Repo"
+        name: "test2-repo"
+        namespace: "demo-system"
+        parentRefs:
+          - kind: "FrontendGithubScaffolding"
+            name: "test2"
+            namespace: "demo-system"
+            parentRefs: [{}]
+            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
+            version: "composition.krateo.io/v0-0-1"
+        resourceVersion: "77512"
+        uid: "cc1fb868-3ae9-435a-a748-aa54dcd1b26b"
+        version: "github.kog.krateo.io/v1alpha1"
 ```
 </details>
 
@@ -473,11 +527,12 @@ name of the k8s Custom Resource
 | actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
-| actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no |  | object |
 | actions.navigate[].loading.display | yes |  | boolean |
+| actions.navigate[].path | no | the identifier of the route to navigate to | string |
+| actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -518,6 +573,9 @@ name of the k8s Custom Resource
 | dependencies[].fetch | yes |  | object |
 | dependencies[].fetch.url | yes | the URL to fetch options | string |
 | dependencies[].fetch.verb | yes | HTTP method to use for fetching options | `GET` \| `POST` |
+| objectFields | no | configuration for object fields in the form | array |
+| objectFields[].path | yes | the path of the object field | string |
+| objectFields[].displayField | yes | the field to display in the objects list | string |
 
 <details>
 <summary>Example</summary>
@@ -823,11 +881,12 @@ Panel is a container to display information
 | actions.rest[].loading.display | yes |  | boolean |
 | actions.navigate | no | client-side navigation actions | array |
 | actions.navigate[].id | yes | unique identifier for the action | string |
-| actions.navigate[].type | yes | type of navigation action | `navigate` |
-| actions.navigate[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
-| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].loading | no |  | object |
 | actions.navigate[].loading.display | yes |  | boolean |
+| actions.navigate[].path | no | the identifier of the route to navigate to | string |
+| actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
 | actions.openDrawer[].id | yes | unique identifier for the drawer action | string |
 | actions.openDrawer[].type | yes | type of drawer action | `openDrawer` |
@@ -1055,10 +1114,9 @@ Table displays structured data with customizable columns and pagination
 |----------|----------|-------------|------|
 | prefix | no | it's the filters prefix to get right values | string |
 | pageSize | no | number of rows displayed per page | integer |
-| data | yes | array of objects representing the table's row data | array |
+| data | yes | Array of table rows | array |
 | columns | yes | configuration of the table's columns | array |
 | columns[].color | no | the color of the value (or the icon) to be represented | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
-| columns[].kind | no | type of data to be represented | `value` \| `icon` |
 | columns[].title | yes | column header label | string |
 | columns[].valueKey | yes | key used to extract the value from row data | string |
 

@@ -102,21 +102,25 @@ export interface Form {
            * unique identifier for the action
            */
           id: string
+          loading?: {
+            display: boolean
+          }
           /**
-           * type of navigation action
+           * the identifier of the route to navigate to
            */
-          type: 'navigate'
+          path?: string
           /**
            * the identifier of the k8s custom resource that should be represented
            */
-          resourceRefId: string
+          resourceRefId?: string
           /**
            * whether user confirmation is required before navigating
            */
           requireConfirmation?: boolean
-          loading?: {
-            display: boolean
-          }
+          /**
+           * type of navigation action
+           */
+          type: 'navigate'
         }[]
         /**
          * actions to open side drawer components
@@ -246,19 +250,6 @@ export interface Form {
         }
       }[]
       /**
-       * object fields configuration for the form
-       */
-      objectFields?: {
-        /**
-         * the path of the field to apply object fields
-         */
-        path: string
-        /**
-         * the field to display in the object fields list
-         */
-        displayField: string
-      }[]
-      /**
        * list of dependencies for the form fields
        */
       dependencies?: {
@@ -282,6 +273,19 @@ export interface Form {
            */
           verb: 'GET' | 'POST'
         }
+      }[]
+      /**
+       * configuration for object fields in the form
+       */
+      objectFields?: {
+        /**
+         * the path of the object field
+         */
+        path: string
+        /**
+         * the field to display in the objects list
+         */
+        displayField: string
       }[]
     }
     apiRef?: {

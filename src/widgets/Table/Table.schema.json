@@ -27,10 +27,67 @@
               "type": "integer"
             },
             "data": {
-              "description": "array of objects representing the table's row data",
               "type": "array",
+              "description": "Array of table rows",
               "items": {
-                "type": "object"
+                "type": "array",
+                "description": "Row represented as array of cells",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "valueKey": {
+                      "description": "the key of the column this cell belongs to",
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": ["jsonSchemaType", "icon", "widget"],
+                      "description": "type of cell value"
+                    },
+                    "resourceRefId": {
+                      "type": "string",
+                      "description": "used if kind = widget"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "number",
+                        "integer",
+                        "decimal",
+                        "boolean",
+                        "array",
+                        "null"
+                      ],
+                      "description": "used if kind = jsonSchemaType"
+                    },
+                    "stringValue": {
+                      "type": "string",
+                      "description": "value if type = string"
+                    },
+                    "numberValue": {
+                      "type": "integer",
+                      "description": "value if type = number or integer"
+                    },
+                    "decimalValue": {
+                      "type": "string",
+                      "description": "value if type = number or decimal"
+                    },
+                    "booleanValue": {
+                      "type": "boolean",
+                      "description": "value if type = boolean"
+                    },
+                    "arrayValue": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "value if type = array"
+                    }
+                  },
+                  "required": ["valueKey", "kind"],
+                  "additionalProperties": false
+                }
               }
             },
             "columns": {
@@ -50,11 +107,6 @@
                       "red",
                       "green"
                     ]
-                  },
-                  "kind": {
-                    "description": "type of data to be represented",
-                    "type": "string",
-                    "enum": ["value", "icon"]
                   },
                   "title": {
                     "description": "column header label",
