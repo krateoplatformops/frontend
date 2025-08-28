@@ -254,6 +254,7 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 | events[].source | yes | information about the source generating the event | object |
 | events[].source.component | no | component source of the event | string |
 | events[].source.host | no | host where the event originated | string |
+| prefix | no | filter prefix used to filter data | string |
 | sseEndpoint | no | endpoint url for server sent events connection | string |
 | sseTopic | no | subscription topic for server sent events | string |
 
@@ -1133,12 +1134,32 @@ spec:
   widgetData:
     pageSize: 10
     data: 
-      - name: Alice
-        age: 30
-        icon: fa-rocket
-      - name: Bob
-        age: 45
-        icon: fa-exclamation-circle
+      - 
+        - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: Alice
+        - valueKey: age
+          kind: jsonSchemaType
+          type: integer
+          numberValue: 30
+        - valueKey: icon
+          kind: icon
+          stringValue: fa-rocket
+
+      - 
+        - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: Bob
+        - valueKey: age
+          kind: jsonSchemaType
+          type: integer
+          numberValue: 45
+        - valueKey: icon
+          kind: icon
+          stringValue: fa-exclamation-circle
+
     columns:
       - valueKey: name
         title: Name
