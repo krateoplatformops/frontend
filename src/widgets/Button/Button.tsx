@@ -10,7 +10,7 @@ import type { Button as WidgetType } from './Button.type'
 
 export type ButtonWidgetData = WidgetType['spec']['widgetData']
 
-const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData>) => {
+const Button = ({ resourcesRefs, uid, widget, widgetData }: WidgetProps<ButtonWidgetData>) => {
   const { actions, clickActionId, color, icon, label, shape, size, type } = widgetData
 
   const { notification } = useApp()
@@ -31,7 +31,7 @@ const Button = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonWidgetData
       return
     }
 
-    await handleAction(action, resourcesRefs)
+    await handleAction(action, resourcesRefs, undefined, widget)
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

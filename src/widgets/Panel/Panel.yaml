@@ -288,7 +288,7 @@ spec:
     actions:
       navigate:
         - id: composition-click-action
-          resourceRefId: my-tab-list
+          path: ${"/compositions/" + .widget.metadata.namespace + "/" + .widget.metadata.name}
           type: navigate
           loading:
             display: true

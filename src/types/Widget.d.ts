@@ -112,4 +112,5 @@ export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs
   uid: string
   widgetData: T
+  widget?: Widget
 }

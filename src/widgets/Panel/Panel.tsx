@@ -15,7 +15,7 @@ import type { Panel as WidgetType } from './Panel.type'
 
 export type PanelWidgetData = WidgetType['spec']['widgetData']
 
-const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>) => {
+const Panel = ({ resourcesRefs, uid, widget, widgetData }: WidgetProps<PanelWidgetData>) => {
   const { notification } = useApp()
   const { handleAction, isActionLoading } = useHandleAction()
 
@@ -38,7 +38,7 @@ const Panel = ({ resourcesRefs, uid, widgetData }: WidgetProps<PanelWidgetData>)
       return
     }
 
-    await handleAction(action, resourcesRefs, undefined, title)
+    await handleAction(action, resourcesRefs, undefined, widget)
   }
 
   const handleClick = () => {

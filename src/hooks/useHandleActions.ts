@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router'
 
 import { useConfigContext } from '../context/ConfigContext'
 import { useRoutesContext } from '../context/RoutesContext'
-import type { ResourcesRefs, WidgetAction } from '../types/Widget'
+import type { ResourcesRefs, Widget, WidgetAction } from '../types/Widget'
 import { formatMessage } from '../utils/format-message/formatMessage'
 import { getAccessToken } from '../utils/getAccessToken'
 import { useResolveJqExpression } from '../utils/jq-expression'
@@ -247,14 +247,18 @@ export const useHandleAction = () => {
     action: WidgetAction,
     resourcesRefs: ResourcesRefs,
     customPayload?: Record<string, unknown>,
-    customUrlParam?: string
+    widget?: Widget
   ) => {
     if (action.loading?.display) {
       setIsActionLoading(true)
     }
 
     if (action.type === 'navigate' && action.path) {
-      await handleNavigate(action.requireConfirmation, action.path)
+      const updatedUrl = action.path.startsWith('${')
+        ? await resolveJq(action.path, { widget })
+        : action.path
+
+      await handleNavigate(action.requireConfirmation, updatedUrl)
       setIsActionLoading(false)
 
       return
@@ -276,11 +280,7 @@ export const useHandleAction = () => {
 
     let url: string
     if (action.type === 'navigate') {
-      if (customUrlParam) {
-        url = `${location.pathname}/${encodeURIComponent(customUrlParam)}?widgetEndpoint=${encodeURIComponent(path)}`
-      } else {
-        url = `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
-      }
+      url = `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
     } else {
       url = config?.api.SNOWPLOW_API_BASE_URL + path
     }
