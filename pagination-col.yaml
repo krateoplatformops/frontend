@@ -10,6 +10,9 @@ spec:
     name: list-pods
     namespace: demo-system
   resourcesRefs:
+    _slice_:
+      perPage: 4
+      page: 1
     items: []
   resourcesRefsTemplate:
     - iterator: ${ .pods }

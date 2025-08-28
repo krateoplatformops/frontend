@@ -106,7 +106,7 @@ function parseData({
     )
   }
 
-  const { resourcesRefs, widgetData } = status
+  const { _slice_, resourcesRefs, widgetData } = status
   const uid = metadata?.uid
 
   switch (kind) {
@@ -119,6 +119,8 @@ function parseData({
         <Column
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
+          page={_slice_?.page}
+          perPage={_slice_?.perPage}
           resourcesRefs={resourcesRefs}
           uid={uid}
           widgetData={widgetData as ColumnWidgetData}

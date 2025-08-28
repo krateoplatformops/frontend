@@ -14,6 +14,8 @@ export type ColumnWidgetData = WidgetType['spec']['widgetData']
 const Column = ({
   fetchNextPage,
   hasNextPage,
+  page,
+  perPage,
   resourcesRefs,
   uid,
   widgetData,
