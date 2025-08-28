@@ -75,7 +75,7 @@ const FormExtra = ({ buttonConfig, disabled = false, form, loading }: FormExtraP
   )
 }
 
-const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
+const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>) => {
   const { actions, autocomplete, buttonConfig, dependencies, fieldDescription, objectFields, schema, stringSchema, submitActionId } = widgetData
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
@@ -160,7 +160,7 @@ const Form = ({ resourcesRefs, widgetData }: WidgetProps<FormWidgetData>) => {
       setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} loading={isActionLoading} /> })
     }
 
-    await handleAction(action, resourcesRefs, payload)
+    await handleAction(action, resourcesRefs, payload, widget)
   }
 
   if (isActionLoading) {

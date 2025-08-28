@@ -105,7 +105,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'BarChart':
       return <BarChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as BarChartWidgetData} />
     case 'Button':
-      return <Button resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
+      return <Button resourcesRefs={resourcesRefs} uid={uid} widget={widget} widgetData={widgetData as ButtonWidgetData} />
     case 'Column':
       return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'DataGrid':
@@ -117,7 +117,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'FlowChart':
       return <FlowChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
     case 'Form':
-      return <Form resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FormWidgetData} />
+      return <Form resourcesRefs={resourcesRefs} uid={uid} widget={widget} widgetData={widgetData as FormWidgetData} />
     case 'LineChart':
       return <LineChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
     case 'Markdown':
@@ -127,7 +127,7 @@ function parseData(widget: Widget, widgetEndpoint: string) {
     case 'Page':
       return <Page resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PageWidgetData} />
     case 'Panel':
-      return <Panel resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PanelWidgetData} />
+      return <Panel resourcesRefs={resourcesRefs} uid={uid} widget={widget} widgetData={widgetData as PanelWidgetData} />
     case 'PieChart':
       return <PieChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
     case 'Paragraph':

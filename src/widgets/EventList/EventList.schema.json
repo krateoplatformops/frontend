@@ -159,6 +159,10 @@
               },
               "tsType": "SSEK8sEvent[]"
             },
+            "prefix": {
+              "description": "filter prefix used to filter data",
+              "type": "string"
+            },
             "sseEndpoint": {
               "type": "string",
               "description": "endpoint url for server sent events connection"
