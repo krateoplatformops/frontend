@@ -7,12 +7,32 @@ spec:
   widgetData:
     pageSize: 10
     data: 
-      - name: Alice
-        age: 30
-        icon: fa-rocket
-      - name: Bob
-        age: 45
-        icon: fa-exclamation-circle
+      - 
+        - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: Alice
+        - valueKey: age
+          kind: jsonSchemaType
+          type: integer
+          numberValue: 30
+        - valueKey: icon
+          kind: icon
+          stringValue: fa-rocket
+
+      - 
+        - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: Bob
+        - valueKey: age
+          kind: jsonSchemaType
+          type: integer
+          numberValue: 45
+        - valueKey: icon
+          kind: icon
+          stringValue: fa-exclamation-circle
+
     columns:
       - valueKey: name
         title: Name
