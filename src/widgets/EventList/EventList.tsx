@@ -1,6 +1,7 @@
 import { Divider, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
+import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
 import RichRow from '../../components/RichRow'
 import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
@@ -12,9 +13,10 @@ import type { EventList as WidgetType } from './EventList.type'
 export type EventListWidgetData = WidgetType['spec']['widgetData']
 
 const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
-  const { events, sseEndpoint, sseTopic } = widgetData
+  const { events, prefix, sseEndpoint, sseTopic } = widgetData
 
   const { config } = useConfigContext()
+  const { getFilteredData } = useFilter()
 
   const [eventList, setEventList] = useState<SSEK8sEvent[]>(events || [])
 
@@ -36,11 +38,19 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
 
       return () => eventSource.close()
     }
-  }, [config, eventList, sseEndpoint, sseTopic])
+  }, [config, sseEndpoint, sseTopic])
+
+  const filteredEventList = useMemo(() => {
+    if (prefix && eventList.length > 0) {
+      return getFilteredData(eventList, prefix) as SSEK8sEvent[]
+    }
+
+    return eventList
+  }, [prefix, eventList, getFilteredData])
 
   return (
     <>
-      {eventList.map(
+      {filteredEventList.map(
         ({
           icon,
           involvedObject: { apiVersion, kind, name, namespace },

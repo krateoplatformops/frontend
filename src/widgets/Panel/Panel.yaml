@@ -176,6 +176,7 @@ spec:
     actions: {}
     title: Event list
     items:
+      - resourceRefId: button-event-list-filter
       - resourceRefId: my-event-list
   resourcesRefs:
     items:
@@ -184,6 +185,12 @@ spec:
         name: my-event-list
         namespace: krateo-system
         resource: eventlists
+        verb: GET
+      - id: button-event-list-filter
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-event-list-filter
+        namespace: krateo-system
+        resource: buttons
         verb: GET
 ---
 kind: Panel

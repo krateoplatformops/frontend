@@ -14,6 +14,10 @@ export interface EventList {
        */
       events: SSEK8sEvent[]
       /**
+       * filter prefix used to filter data
+       */
+      prefix?: string
+      /**
        * endpoint url for server sent events connection
        */
       sseEndpoint?: string
