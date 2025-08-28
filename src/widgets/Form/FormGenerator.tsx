@@ -252,7 +252,9 @@ const FormGenerator = ({
       }
 
       case 'boolean':
-        form.setFieldValue(name.split('.'), false)
+        if (form.getFieldValue(name.split('.')) === undefined) {
+          form.setFieldValue(name.split('.'), false)
+        }
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Space direction='vertical' style={{ width: '100%' }}>
@@ -262,6 +264,7 @@ const FormGenerator = ({
                 key={name}
                 label={renderLabel(name, label)}
                 name={name.split('.')}
+                preserve={true}
                 rules={rules}
                 tooltip={descriptionTooltip && node.description ? node.description : undefined}
                 valuePropName='checked'
@@ -324,7 +327,7 @@ const FormGenerator = ({
         )
 
       case 'integer': {
-        form.setFieldValue(name.split('.'), node.minimum || 0)
+        if (node.minimum) { form.setFieldValue(name.split('.'), node.minimum) }
         const min = node.minimum
         const max = node.maximum
 
@@ -423,7 +426,7 @@ const FormGenerator = ({
                 optionalCount > 0 && optionalCount < totalCount && (
                   <div className={styles.optionalFieldsSwitchWrapper}>
                     <Space className={styles.optionalFieldsSwitch} direction='horizontal' size='small'>
-                      <Switch onChange={(value) => setOptionalHidden(value)} value={optionalHidden} />
+                      <Switch onChange={(value) => setOptionalHidden(value) } value={optionalHidden} />
                       <Typography.Text>
                         Hide optional fields
                       </Typography.Text>

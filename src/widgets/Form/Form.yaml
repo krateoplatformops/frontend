@@ -188,12 +188,14 @@ spec:
               "namespace": {
                 "type": "string",
                 "default": "{{ .Release.Namespace }}"
+              },
+              "test check": {
+                "type": "boolean"
               }
             },
             "type": "object",
             "required": [
-              "name",
-              "namespace"
+              "name"
             ]
           },
           "rules": {
