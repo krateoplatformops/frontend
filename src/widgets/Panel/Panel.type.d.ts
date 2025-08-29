@@ -234,10 +234,13 @@ export interface Panel {
       tooltip?: string
     }
     resourcesRefs: {
-      offset?: number
-      page?: number
-      perPage?: number
-      continue?: boolean
+      _slice_?: {
+        offset?: number
+        page: number
+        perPage: number
+        continue?: boolean
+        [k: string]: unknown
+      }
       items: {
         id: string
         name?: string

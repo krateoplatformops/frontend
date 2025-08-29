@@ -344,17 +344,23 @@
         "resourcesRefs": {
           "type": "object",
           "properties": {
-            "offset": {
-              "type": "integer"
-            },
-            "page": {
-              "type": "integer"
-            },
-            "perPage": {
-              "type": "integer"
-            },
-            "continue": {
-              "type": "boolean"
+            "_slice_": {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "perPage": {
+                  "type": "integer"
+                },
+                "continue": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["page", "perPage"]
             },
             "items": {
               "type": "array",

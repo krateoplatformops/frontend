@@ -111,16 +111,24 @@
         "resourcesRefs": {
           "type": "object",
           "properties": {
-            "offset": {
-              "type": "integer"
+            "_slice_": {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "perPage": {
+                  "type": "integer"
+                },
+                "continue": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["page", "perPage"]
             },
-            "page": {
-              "type": "integer"
-            },
-            "perPage": {
-              "type": "integer"
-            },
-            "continue": { "type": "boolean" },
             "items": {
               "type": "array",
               "items": {
