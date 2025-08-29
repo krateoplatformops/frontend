@@ -46,7 +46,8 @@
       & .items {
         align-items: center;
         display: flex;
-        gap: var(--spacing-sm)
+        flex: 1;
+        gap: var(--spacing-sm);
       }
 
       &.single {
