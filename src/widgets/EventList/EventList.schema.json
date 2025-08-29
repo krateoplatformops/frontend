@@ -200,6 +200,12 @@
               "items": {
                 "type": "object",
                 "properties": {
+                  "allowed": {
+                    "type": "boolean"
+                  },
+                  "apiVersion": {
+                    "type": "string"
+                  },
                   "id": {
                     "type": "string"
                   },
@@ -209,25 +215,22 @@
                   "namespace": {
                     "type": "string"
                   },
-                  "resource": {
-                    "type": "string"
+                  "payload": {
+                    "type": "object"
                   },
-                  "apiVersion": {
+                  "resource": {
                     "type": "string"
                   },
                   "verb": {
                     "type": "string",
                     "enum": ["POST", "PUT", "PATCH", "DELETE", "GET"]
-                  },
-                  "payload": {
-                    "type": "object"
                   }
                 },
                 "required": ["id"]
               }
             }
           },
-          "required": ["items"]
+          "required": ["allowed", "id"]
         },
         "apiRef": {
           "type": "object",

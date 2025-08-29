@@ -23,15 +23,16 @@ export interface RoutesLoader {
         [k: string]: unknown
       }
       items: {
+        allowed: boolean
+        apiVersion?: string
         id: string
         name?: string
         namespace?: string
-        resource?: string
-        apiVersion?: string
-        verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
         payload?: {
           [k: string]: unknown
         }
+        resource?: string
+        verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
         [k: string]: unknown
       }[]
       [k: string]: unknown
