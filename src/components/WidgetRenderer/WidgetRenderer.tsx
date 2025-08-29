@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Result, Skeleton } from 'antd'
+import type { ReactNode } from 'react'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
@@ -49,106 +50,6 @@ import { useFilter } from '../FiltesProvider/FiltersProvider'
 
 import styles from './WidgetRenderer.module.css'
 
-function parseData(widget: Widget, widgetEndpoint: string) {
-  const { kind, metadata, status } = widget
-
-  if (!status) {
-    return (
-      <div className={styles.message}>
-        <Result status='error' subTitle={`Widget ${kind} does not have a status specification`} title='Error while rendering widget' />
-      </div>
-    )
-  }
-
-  if (typeof status === 'string') {
-    if (kind === 'Status') {
-      const params = new URLSearchParams(widgetEndpoint)
-
-      return (
-        <div className={styles.message}>
-          <Result
-            status='error'
-            subTitle={`There has been an error while rendering a widget with the following specification:`}
-            title='Error while rendering widget'
-          >
-            <div className={styles.content}>
-              <pre className={styles.pre}>
-                <b>Name:</b> {params.get('name')}
-                {'\n'}
-                <b>Namespace:</b> {params.get('namespace')}
-                {'\n'}
-                <b>Version:</b> {params.get('apiVersion')}
-                {'\n'}
-                <b>Endpoint:</b> {widgetEndpoint}
-                {'\n'}
-                {'\n'}
-                <b>Widget:</b> {JSON.stringify(widget, null, 2)}
-                {'\n'}
-              </pre>
-            </div>
-          </Result>
-        </div>
-      )
-    }
-
-    return (
-      <div className={styles.message}>
-        <Result status='error' subTitle={`Status for ${kind} widget is in string format: ${status}`} title='Error while rendering widget' />
-      </div>
-    )
-  }
-
-  const { resourcesRefs, widgetData } = status
-  const uid = metadata?.uid
-
-  switch (kind) {
-    case 'BarChart':
-      return <BarChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as BarChartWidgetData} />
-    case 'Button':
-      return <Button resourcesRefs={resourcesRefs} uid={uid} widget={widget} widgetData={widgetData as ButtonWidgetData} />
-    case 'Column':
-      return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
-    case 'DataGrid':
-      return <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
-    case 'EventList':
-      return <EventList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
-    case 'Filters':
-      return <Filters resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FiltersWidgetData} />
-    case 'FlowChart':
-      return <FlowChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as FlowChartWidgetData} />
-    case 'Form':
-      return <Form resourcesRefs={resourcesRefs} uid={uid} widget={widget} widgetData={widgetData as FormWidgetData} />
-    case 'LineChart':
-      return <LineChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as LineChartWidgetData} />
-    case 'Markdown':
-      return <Markdown resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as MarkdownWidgetData} />
-    case 'NavMenu':
-      return <NavMenu resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as NavMenuWidgetData} />
-    case 'Page':
-      return <Page resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PageWidgetData} />
-    case 'Panel':
-      return <Panel resourcesRefs={resourcesRefs} uid={uid} widget={widget} widgetData={widgetData as PanelWidgetData} />
-    case 'PieChart':
-      return <PieChart resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as PieChartWidgetData} />
-    case 'Paragraph':
-      return <Paragraph resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ParagraphWidgetData} />
-    case 'Route':
-      return <Route resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RouteWidgetData} />
-    case 'RoutesLoader':
-      return <RoutesLoader resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RoutesLoaderWidgetData} />
-    case 'Row':
-      return <Row resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as RowWidgetData} />
-    case 'Table':
-      return <Table resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TableWidgetData} />
-    case 'TabList':
-      return <TabList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as TabListWidgetData} />
-    case 'YamlViewer':
-      return <YamlViewer resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as YamlViewerWidgetData} />
-    default:
-      throw new Error(`Unknown widget kind: ${kind}`)
-  }
-}
-
 type WidgetRendererProps = {
   widgetEndpoint: string
   invisible?: boolean
@@ -159,6 +60,72 @@ type WidgetRendererProps = {
   }
 }
 
+const parseWidget = (widget: Widget) => {
+  if (typeof widget.status === 'string') {
+    return null
+  }
+
+  const { kind, metadata, status: { resourcesRefs, widgetData } } = widget
+  const props = { resourcesRefs, uid: metadata.uid }
+
+  switch (kind) {
+    case 'BarChart':
+      return <BarChart {...props} widgetData={widgetData as BarChartWidgetData} />
+    case 'Button':
+      return <Button {...props} widget={widget} widgetData={widgetData as ButtonWidgetData} />
+    case 'Column':
+      return <Column {...props} widgetData={widgetData as ColumnWidgetData} />
+    case 'DataGrid':
+      return <DataGrid {...props} widgetData={widgetData as DataGridWidgetData} />
+    case 'EventList':
+      return <EventList {...props} widgetData={widgetData as EventListWidgetData} />
+    case 'Filters':
+      return <Filters {...props} widgetData={widgetData as FiltersWidgetData} />
+    case 'FlowChart':
+      return <FlowChart {...props} widgetData={widgetData as FlowChartWidgetData} />
+    case 'Form':
+      return <Form {...props} widgetData={widgetData as FormWidgetData} />
+    case 'LineChart':
+      return <LineChart {...props} widgetData={widgetData as LineChartWidgetData} />
+    case 'Markdown':
+      return <Markdown {...props} widgetData={widgetData as MarkdownWidgetData} />
+    case 'NavMenu':
+      return <NavMenu {...props} widgetData={widgetData as NavMenuWidgetData} />
+    case 'Page':
+      return <Page {...props} widgetData={widgetData as PageWidgetData} />
+    case 'Panel':
+      return <Panel {...props} widget={widget} widgetData={widgetData as PanelWidgetData} />
+    case 'Paragraph':
+      return <Paragraph {...props} widgetData={widgetData as ParagraphWidgetData} />
+    case 'PieChart':
+      return <PieChart {...props} widgetData={widgetData as PieChartWidgetData} />
+    case 'Route':
+      return <Route {...props} widgetData={widgetData as RouteWidgetData} />
+    case 'RoutesLoader':
+      return <RoutesLoader {...props} widgetData={widgetData as RoutesLoaderWidgetData} />
+    case 'Row':
+      return <Row {...props} widgetData={widgetData as RowWidgetData} />
+    case 'Table':
+      return <Table {...props} widgetData={widgetData as TableWidgetData} />
+    case 'TabList':
+      return <TabList {...props} widgetData={widgetData as TabListWidgetData} />
+    case 'YamlViewer':
+      return <YamlViewer {...props} widgetData={widgetData as YamlViewerWidgetData} />
+    default:
+      throw new Error(`Unknown widget kind: ${kind}`)
+  }
+}
+
+const WidgetRendererError = ({ children, subtitle }: {children?: ReactNode; subtitle: string}) => {
+  return (
+    <div className={styles.message}>
+      <Result status='error' subTitle={subtitle} title={'Error while rendering widget'}>
+        {children}
+      </Result>
+    </div>
+  )
+}
+
 const WidgetRenderer = ({
   invisible = false,
   prefix,
@@ -167,12 +134,12 @@ const WidgetRenderer = ({
 }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
+  const { config } = useConfigContext()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
-    console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
+    console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid. An url is expected.`)
   }
 
-  const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
 
   const {
@@ -193,22 +160,6 @@ const WidgetRenderer = ({
     queryKey: ['widgets', widgetFullUrl],
   })
 
-  // check if widget is filtered out by filters
-  if (typeof widget?.status === 'object' && widget?.status?.widgetData) {
-    if (prefix) {
-      if (isWidgetFilteredByProps(widget.status.widgetData, prefix)) {
-        return null
-      }
-    }
-  }
-
-  if (invisible) {
-    if (widget) {
-      return parseData(widget, widgetEndpoint)
-    }
-    return null
-  }
-
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -217,56 +168,82 @@ const WidgetRenderer = ({
     )
   }
 
-  if (!widget) {
-    return (
-      <div className={styles.message}>
-        <Result status='error' subTitle={`The widget does not exist`} title='Error while rendering widget' />
-      </div>
-    )
-  }
-
   if (error) {
     console.error(error)
-
-    return (
-      <div className={styles.message}>
-        <Result
-          status='error'
-          subTitle={`There has been an error while fetching the widget: ${error}`}
-          title='Error while rendering widget'
-        />
-      </div>
-    )
+    return <WidgetRendererError subtitle={`There has been an error while fetching the widget: ${error}`} />
   }
 
-  if (widget.kind === 'Status' && widget?.code === 401) {
-    catchError({
-      data: {
-        message: widget?.message,
-      },
-      message: `Authentication error (code: ${widget.code})`,
-      status: widget.code,
-    }, 'notification')
+  if (!widget) {
+    return invisible ? null : <WidgetRendererError subtitle={'The widget does not exist'} />
   }
 
-  if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
-    catchError({
-      status: widget.code,
-    }, 'notification')
-    window.location.replace('/login')
+  const { code, kind, message, status } = widget
+
+  if (!status) {
+    return <WidgetRendererError subtitle={`Widget ${kind} does not have a status specification`} />
   }
+
+  if (typeof status === 'string') {
+    if (kind === 'Status') {
+      if (code === 401) {
+        catchError({
+          data: { message },
+          message: `Authentication error (code: ${code})`,
+          status: code,
+        }, 'notification')
+      }
+
+      if (code === 500 && status === 'Failure' && message?.includes('credentials')) {
+        catchError({
+          data: { message },
+          message: `Credentials error (code: ${code})`,
+          status: code,
+        }, 'notification')
+
+        window.location.replace('/login')
+      }
+
+      const params = new URLSearchParams(widgetEndpoint)
+
+      return (
+        <WidgetRendererError subtitle={`There has been an error while rendering a widget with the following specification:`}>
+          <div className={styles.content}>
+            <pre className={styles.pre}>
+              <b>Name:</b> {params.get('name')}
+              {'\n'}
+              <b>Namespace:</b> {params.get('namespace')}
+              {'\n'}
+              <b>Version:</b> {params.get('apiVersion')}
+              {'\n'}
+              <b>Endpoint:</b> {widgetEndpoint}
+              {'\n'}
+              {'\n'}
+              <b>Widget:</b> {JSON.stringify(widget, null, 2)}
+              {'\n'}
+            </pre>
+          </div>
+        </WidgetRendererError>
+      )
+    }
+
+    return <WidgetRendererError subtitle={`Status for ${kind} widget is in string format: ${status}`} />
+  }
+
+  if (prefix && isWidgetFilteredByProps(status.widgetData, prefix)) {
+    return null
+  }
+
+  const renderedWidget = parseWidget(widget)
 
   if (wrapper) {
-    const Wrapper = wrapper.component
-
     return (
-      <Wrapper {...wrapper.props}>
-        {parseData(widget, widgetEndpoint)}
-      </Wrapper>
+      <wrapper.component {...wrapper.props}>
+        {renderedWidget}
+      </wrapper.component>
     )
   }
 
-  return parseData(widget, widgetEndpoint)
+  return renderedWidget
 }
 
 export default WidgetRenderer
