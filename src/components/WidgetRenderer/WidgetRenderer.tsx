@@ -130,7 +130,7 @@ function parseData({
       )
     case 'DataGrid':
       return (
-        <ScrollPagination fetchNextPage={fetchNextPage!} hasNextPage={hasNextPage ?? false}>
+        <ScrollPagination fetchNextPage={fetchNextPage!} hasNextPage={hasNextPage ?? false} isFetching={isFetching}>
           <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
         </ScrollPagination>
       )
@@ -222,6 +222,7 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
     error,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isLoading,
   } = useWidgetQuery(widgetEndpoint, {
     page: page ?? 1,
@@ -303,7 +304,7 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
     return <Wrapper {...wrapper.props}>{parseData({ widget, widgetEndpoint })}</Wrapper>
   }
 
-  return parseData({ fetchNextPage, hasNextPage, widget, widgetEndpoint })
+  return parseData({ fetchNextPage, hasNextPage, isFetching, widget, widgetEndpoint })
 }
 
 export default WidgetRenderer
