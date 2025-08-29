@@ -43,7 +43,7 @@ export const useWidgetQuery = (widgetEndpoint: string, options: PaginationOption
       perPage: options.perPage,
     },
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.status?.resourcesRefs?._slice_.continue === false) {
+      if (lastPage.status?.resourcesRefs?._slice_?.continue === false) {
         /* to signal there are not other pages */
         return undefined
       }

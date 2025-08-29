@@ -7,6 +7,7 @@ export interface ResourceRef {
 
 export type ResourcesRefs = {
   items: ResourceRef[]
+  _slice_?: { page: number; perPage: number; continue: boolean }
 }
 
 export interface Widget<WidgetDataType = unknown> {
@@ -29,13 +30,11 @@ export interface Widget<WidgetDataType = unknown> {
     widgetData: WidgetDataType
     resourcesRefs: ResourcesRefs
   }
-  status:
-    | {
-        actions: WidgetActions
-        widgetData: WidgetDataType
-        resourcesRefs: ResourcesRefs
-      }
-    | string
+  status: {
+    actions: WidgetActions
+    widgetData: WidgetDataType
+    resourcesRefs: ResourcesRefs
+  }
 }
 
 export type WidgetActions = {
@@ -102,11 +101,7 @@ type NavigateAction = NonNullable<WidgetActions['navigate']>[number]
 type OpenDrawerAction = NonNullable<WidgetActions['openDrawer']>[number]
 type OpenModalAction = NonNullable<WidgetActions['openModal']>[number]
 
-export type WidgetAction =
-  | RestAction
-  | NavigateAction
-  | OpenDrawerAction
-  | OpenModalAction
+export type WidgetAction = RestAction | NavigateAction | OpenDrawerAction | OpenModalAction
 
 export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs

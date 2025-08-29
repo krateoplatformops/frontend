@@ -3,6 +3,7 @@ import { Result, Skeleton } from 'antd'
 import useCatchError from '../../hooks/useCatchError'
 import { useWidgetQuery } from '../../hooks/useWidgetQuery'
 import type { Widget } from '../../types/Widget'
+import { withInfiniteScroll } from '../../utils/withInfiniteScroll'
 import BarChart from '../../widgets/BarChart'
 import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
@@ -44,6 +45,7 @@ import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
 import { useFilter } from '../FiltesProvider/FiltersProvider'
+import { ScrollPagination } from '../ScrollPagination'
 
 import styles from './WidgetRenderer.module.css'
 
@@ -127,7 +129,11 @@ function parseData({
         />
       )
     case 'DataGrid':
-      return <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
+      return (
+        <ScrollPagination fetchNextPage={fetchNextPage!} hasNextPage={hasNextPage ?? false}>
+          <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
+        </ScrollPagination>
+      )
     case 'EventList':
       return <EventList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
     case 'Filters':
@@ -219,7 +225,7 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
     isLoading,
   } = useWidgetQuery(widgetEndpoint, {
     page: page ?? 1,
-    perPage: perPage ?? 10,
+    perPage: perPage ?? 5,
   })
 
   // check if widget is filtered out by filters
