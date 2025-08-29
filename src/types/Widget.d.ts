@@ -1,4 +1,5 @@
 export interface ResourceRef {
+  allowed: boolean
   id: string
   path: string
   verb: 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
