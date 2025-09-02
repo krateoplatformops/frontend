@@ -7,9 +7,27 @@ export interface Page {
   spec: {
     widgetData: {
       /**
-       * title of the page shown in the browser tab
+       * the list of resources that are allowed to be children of this widget
        */
-      title?: string
+      allowedResources: (
+        | 'barcharts'
+        | 'buttons'
+        | 'columns'
+        | 'datagrids'
+        | 'eventlists'
+        | 'filters'
+        | 'flowcharts'
+        | 'forms'
+        | 'linecharts'
+        | 'markdowns'
+        | 'panels'
+        | 'paragraphs'
+        | 'piecharts'
+        | 'rows'
+        | 'tables'
+        | 'tablists'
+        | 'yamlviewers'
+      )[]
       /**
        * list of resources to be rendered within the route
        */
@@ -19,6 +37,10 @@ export interface Page {
          */
         resourceRefId: string
       }[]
+      /**
+       * title of the page shown in the browser tab
+       */
+      title?: string
     }
     apiRef?: {
       name: string

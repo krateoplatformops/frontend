@@ -4,9 +4,24 @@ export interface DataGrid {
   spec: {
     widgetData: {
       /**
-       * it's the filters prefix to get right values
+       * the list of resources that are allowed to be children of this widget
        */
-      prefix?: string
+      allowedResources: (
+        | 'barcharts'
+        | 'buttons'
+        | 'eventlists'
+        | 'filters'
+        | 'flowcharts'
+        | 'forms'
+        | 'linecharts'
+        | 'markdowns'
+        | 'panels'
+        | 'paragraphs'
+        | 'piecharts'
+        | 'tables'
+        | 'tablists'
+        | 'yamlviewers'
+      )[]
       /**
        * to show children as list or grid
        */
@@ -51,6 +66,10 @@ export interface DataGrid {
       items: {
         resourceRefId: string
       }[]
+      /**
+       * it's the filters prefix to get right values
+       */
+      prefix?: string
     }
     apiRef?: {
       name: string

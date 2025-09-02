@@ -7,6 +7,10 @@ export interface NavMenu {
   spec: {
     widgetData: {
       /**
+       * the list of resources that are allowed to be children of this widget
+       */
+      allowedResources: 'navmenuitems'[]
+      /**
        * list of navigation entries each pointing to a k8s custom resource
        */
       items: {
