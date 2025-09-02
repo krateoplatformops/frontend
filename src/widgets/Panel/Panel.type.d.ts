@@ -178,7 +178,7 @@ export interface Panel {
         }[]
       }
       /**
-       * the list of resources that are allowed to be children of this widget
+       * the list of resources that are allowed to be children of this widget or referenced by it
        */
       allowedResources: (
         | 'barcharts'
@@ -191,9 +191,11 @@ export interface Panel {
         | 'forms'
         | 'linecharts'
         | 'markdowns'
+        | 'pages'
         | 'panels'
         | 'paragraphs'
         | 'piecharts'
+        | 'restactions'
         | 'rows'
         | 'tables'
         | 'tablists'

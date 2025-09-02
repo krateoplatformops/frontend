@@ -7,7 +7,7 @@ export interface Table {
   spec: {
     widgetData: {
       /**
-       * the list of resources that are allowed to be children of this widget
+       * the list of resources that are allowed to be children of this widget or referenced by it
        */
       allowedResources: (
         | 'barcharts'
