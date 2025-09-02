@@ -5,7 +5,12 @@ export interface RoutesLoader {
    */
   kind: string
   spec: {
-    widgetData: object
+    widgetData: {
+      /**
+       * the list of resources that are allowed to be children of this widget
+       */
+      allowedResources: 'routes'[]
+    }
     apiRef?: {
       name: string
       namespace: string
