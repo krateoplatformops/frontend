@@ -5,6 +5,21 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        tables
+        tablists
+        yamlviewers
     prefix: filters-sample
     asGrid: true
     items:
@@ -39,6 +54,21 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        tables
+        tablists
+        yamlviewers
     prefix: panel-filters
     asGrid: true
     grid:

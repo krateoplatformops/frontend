@@ -5,6 +5,26 @@ metadata:
 spec:
   widgetData:
     actions: {}
+    allowedResources:
+      - barcharts
+        buttons
+        columns
+        datagrids
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        pages
+        panels
+        paragraphs
+        piecharts
+        restactions
+        rows
+        tables
+        tablists
+        yamlviewers
     title: My Panel
     items:
       - resourceRefId: my-pie-chart

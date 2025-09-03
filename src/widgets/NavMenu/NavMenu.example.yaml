@@ -5,6 +5,8 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - navmenuitems
     items:
       - resourceRefId: nav-menu-item-templates
   resourcesRefs:
@@ -13,5 +15,5 @@ spec:
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: nav-menu-item-templates
         namespace: test-namespace
-        resource: navemenuitems
+        resource: navmenuitems
         verb: GET

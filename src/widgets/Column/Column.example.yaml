@@ -5,6 +5,24 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        columns
+        datagrids
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        rows
+        tables
+        tablists
+        yamlviewers
     items:
       - resourceRefId: table-of-pods
       - resourceRefId: pie-chart-inside-column

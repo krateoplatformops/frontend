@@ -5,6 +5,24 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        columns
+        datagrids
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        rows
+        tables
+        tablists
+        yamlviewers
     items:
       - resourceRefId: button-filter-new-table
       - resourceRefId: test-updated-table
@@ -79,6 +97,24 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        columns
+        datagrids
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        rows
+        tables
+        tablists
+        yamlviewers
     items:
       - resourceRefId: button-delete-fireworks-app
       - resourceRefId: panel-paragraph
@@ -153,6 +189,24 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        columns
+        datagrids
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        rows
+        tables
+        tablists
+        yamlviewers
     items:
       - resourceRefId: button-with-drawer-form
       - resourceRefId: button-with-modal-form
@@ -225,6 +279,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - pages
     resourceRefId: dashboard-page
     label: Dashboard
     icon: fa-chart-line
@@ -247,6 +303,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - pages
     resourceRefId: templates-page
     label: Templates
     icon: fa-rectangle-list
@@ -269,6 +327,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - pages
     resourceRefId: form-page
     label: Form
     icon: fa-rectangle-list
@@ -342,6 +402,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - navmenuitems
     items: []
   resourcesRefs:
     items: []
@@ -394,6 +456,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - pages
     resourceRefId: grid-page
     label: Grid
     icon: fa-shapes
@@ -416,6 +480,24 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        columns
+        datagrids
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        rows
+        tables
+        tablists
+        yamlviewers
     items:
       - resourceRefId: button-with-drawer-filters
   resourcesRefs:
@@ -434,6 +516,8 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - pages
     resourceRefId: table-filter-page
     label: Table filter
     icon: fa-shapes
@@ -455,6 +539,24 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        columns
+        datagrids
+        eventlists
+        filters
+        flowcharts
+        forms
+        linecharts
+        markdowns
+        panels
+        paragraphs
+        piecharts
+        rows
+        tables
+        tablists
+        yamlviewers
     items:
       - resourceRefId: table-filters
       # - resourceRefId: panel-with-column
