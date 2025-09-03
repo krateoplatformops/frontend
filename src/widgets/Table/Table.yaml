@@ -5,6 +5,26 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+    - barcharts
+      buttons
+      columns
+      datagrids
+      eventlists
+      filters
+      flowcharts
+      forms
+      linecharts
+      markdowns
+      pages
+      panels
+      paragraphs
+      piecharts
+      restactions
+      rows
+      tables
+      tablists
+      yamlviewers
     label: Filters
     icon: fa-rocket
     size: middle
@@ -47,6 +67,16 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        filters
+        flowcharts
+        linecharts
+        markdowns
+        paragraphs
+        piecharts
+        yamlviewers
     pageSize: 10
     prefix: filter-new-table
     data:

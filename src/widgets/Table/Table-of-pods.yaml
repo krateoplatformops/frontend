@@ -5,6 +5,16 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        filters
+        flowcharts
+        linecharts
+        markdowns
+        paragraphs
+        piecharts
+        yamlviewers
     pageSize: 10
     data: []
     prefix: filters-pods
@@ -12,14 +22,11 @@ spec:
       - valueKey: name
         title: Pod Name
       - valueKey: namespace
-        color: orange
         title: Namespace
       - valueKey: image
         title: Image
       - valueKey: testIcon
-        color: red
-        title: Test icon
-        kind: icon
+        title: Test Icon
 
   widgetDataTemplate:
     - forPath: data
@@ -27,8 +34,6 @@ spec:
   apiRef:
     name: cluster-pods
     namespace: krateo-system
-
-
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
@@ -37,6 +42,33 @@ metadata:
   namespace: krateo-system
 spec:
   api:
-  - name: pods
-    path: "/api/v1/pods"
-    filter: "[.items[] | {key: .metadata.name, name: .metadata.name, namespace: .metadata.namespace, image: .spec.containers[0].image, testIcon: \"fa-rocket\"}]"
+    - name: pods
+      path: "/api/v1/pods"
+      filter: >
+        [.items[]
+          | [
+              {
+                valueKey: "name",
+                kind: "jsonSchemaType",
+                type: "string",
+                stringValue: .metadata.name
+              },
+              {
+                valueKey: "namespace",
+                kind: "jsonSchemaType",
+                type: "string",
+                stringValue: .metadata.namespace
+              },
+              {
+                valueKey: "image",
+                kind: "jsonSchemaType",
+                type: "string",
+                stringValue: .spec.containers[0].image
+              },
+              {
+                valueKey: "testIcon",
+                kind: "icon",
+                stringValue: "fa-rocket"
+              }
+            ]
+        ]

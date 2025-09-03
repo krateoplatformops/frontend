@@ -4,7 +4,18 @@ metadata:
   name: table-of-namespaces
   namespace: krateo-system
 spec:
+
   widgetData:
+    allowedResources:
+      - barcharts
+        buttons
+        filters
+        flowcharts
+        linecharts
+        markdowns
+        paragraphs
+        piecharts
+        yamlviewers
     pageSize: 10
     data: []
     columns:
@@ -27,6 +38,16 @@ metadata:
   namespace: krateo-system
 spec:
   api:
-  - name: namespaces
-    path: "/api/v1/namespaces"
-    filter: "[.items[] | {name: .metadata.name}]"
+    - name: namespaces
+      path: "/api/v1/namespaces"
+      filter: >
+        [.items[] 
+          | [
+              {
+                valueKey: "name",
+                kind: "jsonSchemaType",
+                type: "string",
+                stringValue: .metadata.name
+              }
+            ]
+        ]
