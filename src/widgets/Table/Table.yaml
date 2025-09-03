@@ -7,24 +7,24 @@ spec:
   widgetData:
     allowedResources:
     - barcharts
-      buttons
-      columns
-      datagrids
-      eventlists
-      filters
-      flowcharts
-      forms
-      linecharts
-      markdowns
-      pages
-      panels
-      paragraphs
-      piecharts
-      restactions
-      rows
-      tables
-      tablists
-      yamlviewers
+    - buttons
+    - columns
+    - datagrids
+    - eventlists
+    - filters
+    - flowcharts
+    - forms
+    - linecharts
+    - markdowns
+    - pages
+    - panels
+    - paragraphs
+    - piecharts
+    - restactions
+    - rows
+    - tables
+    - tablists
+    - yamlviewers
     label: Filters
     icon: fa-rocket
     size: middle
@@ -69,14 +69,14 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        filters
-        flowcharts
-        linecharts
-        markdowns
-        paragraphs
-        piecharts
-        yamlviewers
+      - buttons
+      - filters
+      - flowcharts
+      - linecharts
+      - markdowns
+      - paragraphs
+      - piecharts
+      - yamlviewers
     pageSize: 10
     prefix: filter-new-table
     data:

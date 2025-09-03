@@ -8,24 +8,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: 2025-06-12T15:20:41+00:00
     items:
@@ -65,24 +65,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     clickActionId: composition-click-action
     actions:
       navigate:
@@ -116,24 +116,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Panel with Column
     headerLeft: 2025-06-11T15:20:41+00:00
@@ -175,24 +175,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: 2025-06-10T15:20:41+00:00 # Paragraph
     items:
@@ -215,24 +215,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Yaml Viewer
     items:
@@ -255,24 +255,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Markdown
     items:
@@ -295,24 +295,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Event list
     items:
@@ -342,24 +342,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Tab list
     items:
@@ -382,24 +382,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Line chart
     items:
@@ -422,24 +422,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Bar chart
     items:
@@ -462,24 +462,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Flow chart
     items:
@@ -502,24 +502,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     clickActionId: composition-click-action
     footer:
       - resourceRefId: composition-test-button
@@ -575,24 +575,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Composition Filters
     items:
@@ -614,24 +614,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Table Filters
     items:
@@ -655,24 +655,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     clickActionId: template-click-action
     headerLeft: Ready:Unknown
     footer:
@@ -725,24 +725,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     clickActionId: template-click-action
     headerLeft: Ready:Unknown
     footer:

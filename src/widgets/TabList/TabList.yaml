@@ -7,14 +7,14 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        filters
-        flowcharts
-        linecharts
-        markdowns
-        paragraphs
-        piecharts
-        yamlviewers
+      - buttons
+      - filters
+      - flowcharts
+      - linecharts
+      - markdowns
+      - paragraphs
+      - piecharts
+      - yamlviewers
     items:
       - label: first tab
         resourceRefId: second-column

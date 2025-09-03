@@ -7,19 +7,19 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        panels
-        paragraphs
-        piecharts
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - tables
+      - tablists
+      - yamlviewers
     prefix: filters-sample
     asGrid: true
     items:
@@ -56,19 +56,19 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        panels
-        paragraphs
-        piecharts
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - tables
+      - tablists
+      - yamlviewers
     prefix: panel-filters
     asGrid: true
     grid:

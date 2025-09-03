@@ -7,24 +7,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Firework App Form
     items:
@@ -47,24 +47,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     schema: {}
     submitActionId: firework-submit-action
     actions:
@@ -113,24 +113,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     buttonConfig:
       primary: 
         label: Custom submit

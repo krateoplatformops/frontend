@@ -8,24 +8,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     clickActionId: composition-click-action
     footer:
       - resourceRefId: composition-test-button
@@ -86,24 +86,24 @@ spec:
   widgetData:
     allowedResources:
     - barcharts
-      buttons
-      columns
-      datagrids
-      eventlists
-      filters
-      flowcharts
-      forms
-      linecharts
-      markdowns
-      pages
-      panels
-      paragraphs
-      piecharts
-      restactions
-      rows
-      tables
-      tablists
-      yamlviewers
+    - buttons
+    - columns
+    - datagrids
+    - eventlists
+    - filters
+    - flowcharts
+    - forms
+    - linecharts
+    - markdowns
+    - pages
+    - panels
+    - paragraphs
+    - piecharts
+    - restactions
+    - rows
+    - tables
+    - tablists
+    - yamlviewers
     actions: 
       rest:
       - id: cleanup
@@ -134,24 +134,24 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        pages
-        panels
-        paragraphs
-        piecharts
-        restactions
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     buttonConfig:
       primary: 
         label: Submit

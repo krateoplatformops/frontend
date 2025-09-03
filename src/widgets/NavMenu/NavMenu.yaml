@@ -7,22 +7,22 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        panels
-        paragraphs
-        piecharts
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
       - resourceRefId: button-filter-new-table
       - resourceRefId: test-updated-table
@@ -99,22 +99,22 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        panels
-        paragraphs
-        piecharts
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
       - resourceRefId: button-delete-fireworks-app
       - resourceRefId: panel-paragraph
@@ -191,22 +191,22 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        panels
-        paragraphs
-        piecharts
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
       - resourceRefId: button-with-drawer-form
       - resourceRefId: button-with-modal-form
@@ -482,22 +482,22 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        panels
-        paragraphs
-        piecharts
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
       - resourceRefId: button-with-drawer-filters
   resourcesRefs:
@@ -541,22 +541,22 @@ spec:
   widgetData:
     allowedResources:
       - barcharts
-        buttons
-        columns
-        datagrids
-        eventlists
-        filters
-        flowcharts
-        forms
-        linecharts
-        markdowns
-        panels
-        paragraphs
-        piecharts
-        rows
-        tables
-        tablists
-        yamlviewers
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
       - resourceRefId: table-filters
       # - resourceRefId: panel-with-column
