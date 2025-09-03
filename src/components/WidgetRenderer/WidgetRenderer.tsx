@@ -68,7 +68,7 @@ const parseWidget = (widget: Widget) => {
   const { kind, metadata, status: { resourcesRefs, widgetData } } = widget
 
   const props = {
-    resourcesRefs: { ...resourcesRefs, items: resourcesRefs.items.filter(({ allowed }) => allowed) },
+    resourcesRefs: { ...resourcesRefs, items: resourcesRefs ? resourcesRefs.items.filter(({ allowed }) => allowed) : [] },
     uid: metadata.uid,
   }
 
