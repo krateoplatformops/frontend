@@ -65,10 +65,14 @@ const parseWidget = (widget: Widget) => {
     return null
   }
 
-  const { kind, metadata, status: { resourcesRefs, widgetData } } = widget
+  const {
+    kind,
+    metadata,
+    status: { resourcesRefs, widgetData },
+  } = widget
 
   const props = {
-    resourcesRefs: { ...resourcesRefs, items: resourcesRefs.items.filter(({ allowed }) => allowed) },
+    resourcesRefs: { ...resourcesRefs, items: resourcesRefs?.items?.filter(({ allowed }) => allowed) ?? [] },
     uid: metadata.uid,
   }
 
@@ -120,7 +124,7 @@ const parseWidget = (widget: Widget) => {
   }
 }
 
-const WidgetRendererError = ({ children, subtitle }: {children?: ReactNode; subtitle: string}) => {
+const WidgetRendererError = ({ children, subtitle }: { children?: ReactNode; subtitle: string }) => {
   return (
     <div className={styles.message}>
       <Result status='error' subTitle={subtitle} title={'Error while rendering widget'}>
@@ -130,12 +134,7 @@ const WidgetRendererError = ({ children, subtitle }: {children?: ReactNode; subt
   )
 }
 
-const WidgetRenderer = ({
-  invisible = false,
-  prefix,
-  widgetEndpoint,
-  wrapper,
-}: WidgetRendererProps) => {
+const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
   const { config } = useConfigContext()
@@ -167,7 +166,7 @@ const WidgetRenderer = ({
   if (isLoading) {
     return (
       <div className={styles.loading}>
-        <Skeleton active/>
+        <Skeleton active />
       </div>
     )
   }
@@ -190,19 +189,25 @@ const WidgetRenderer = ({
   if (typeof status === 'string') {
     if (kind === 'Status') {
       if (code === 401) {
-        catchError({
-          data: { message },
-          message: `Authentication error (code: ${code})`,
-          status: code,
-        }, 'notification')
+        catchError(
+          {
+            data: { message },
+            message: `Authentication error (code: ${code})`,
+            status: code,
+          },
+          'notification'
+        )
       }
 
       if (code === 500 && status === 'Failure' && message?.includes('credentials')) {
-        catchError({
-          data: { message },
-          message: `Credentials error (code: ${code})`,
-          status: code,
-        }, 'notification')
+        catchError(
+          {
+            data: { message },
+            message: `Credentials error (code: ${code})`,
+            status: code,
+          },
+          'notification'
+        )
 
         window.location.replace('/login')
       }
@@ -240,11 +245,7 @@ const WidgetRenderer = ({
   const renderedWidget = parseWidget(widget)
 
   if (wrapper) {
-    return (
-      <wrapper.component {...wrapper.props}>
-        {renderedWidget}
-      </wrapper.component>
-    )
+    return <wrapper.component {...wrapper.props}>{renderedWidget}</wrapper.component>
   }
 
   return renderedWidget
