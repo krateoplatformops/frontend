@@ -53,22 +53,23 @@ const Panel = ({ resourcesRefs, uid, widget, widgetData }: WidgetProps<PanelWidg
       <div>{headerRight}</div>
     </div>
   )
-
   const panelFooter = (
-    <div className={`${styles.footer} ${!tags && footer?.length === 1 ? styles.single : ''} `}>
-      {tags && tags.length > 0 && <div>{tags?.map((tag, index) => <Tag key={`tag-${index}`}>{tag}</Tag>)}</div>}
+    <div className={`${styles.footer} ${!tags && footer?.length === 1 ? styles.single : ''}`}>
+      {tags && tags.length > 0 && (
+        <div className={styles.tags}>
+          {tags.map((tag, index) => (
+            <Tag key={`tag-${index}`}>{tag}</Tag>
+          ))}
+        </div>
+      )}
+
       {footer && footer.length > 0 && (
         <div className={styles.items}>
-          {footer
-            .map(({ resourceRefId }, index) => {
-              const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-              if (!endpoint) {
-                return null
-              }
-
-              return <WidgetRenderer key={`${uid}-footer-${index}`} widgetEndpoint={endpoint} />
-            })
-            .filter(Boolean)}
+          {footer.map(({ resourceRefId }, index) => (
+            <div className={styles.item} key={`${uid}-footer-${index}`}>
+              <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)!} />
+            </div>
+          ))}
         </div>
       )}
     </div>

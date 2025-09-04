@@ -5,6 +5,26 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     actions: {}
     title: Firework App Form
     items:
@@ -25,6 +45,26 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     schema: {}
     submitActionId: firework-submit-action
     actions:
@@ -71,6 +111,26 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     buttonConfig:
       primary: 
         label: Custom submit

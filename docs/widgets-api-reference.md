@@ -109,6 +109,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
 | label | no | the label of the button | string |
 | icon | no | the icon of the button (font awesome icon name eg: `fa-inbox`) | string |
@@ -128,6 +129,26 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+    - barcharts
+    - buttons
+    - columns
+    - datagrids
+    - eventlists
+    - filters
+    - flowcharts
+    - forms
+    - linecharts
+    - markdowns
+    - pages
+    - panels
+    - paragraphs
+    - piecharts
+    - restactions
+    - rows
+    - tables
+    - tablists
+    - yamlviewers
     icon: fa-trash
     type: default
     shape: circle
@@ -159,6 +180,7 @@ Column is a layout component that arranges its children in a vertical stack, ali
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | items | yes | the items of the column | array |
 | items[].resourceRefId | yes | the identifier of the k8s Custom Resource that should be represented, usually a widget | string |
 | size | no | the number of cells that the column will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
@@ -174,6 +196,24 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
       - resourceRefId: table-of-pods
       - resourceRefId: pie-chart-inside-column
@@ -204,7 +244,7 @@ spec:
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| prefix | no | it's the filters prefix to get right values | string |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | asGrid | no | to show children as list or grid | boolean |
 | grid | no | The grid type of list. You can set grid to something like {gutter: 16, column: 4} or specify the integer for columns based on their size, e.g. sm, md, etc. to make it responsive. | object |
 | grid.gutter | no | The spacing between grid | integer |
@@ -217,6 +257,7 @@ spec:
 | grid.xxl | no | ≥1600px column of grid | integer |
 | items | yes |  | array |
 | items[].resourceRefId | yes |  | string |
+| prefix | no | it's the filters prefix to get right values | string |
 
 ---
 
@@ -551,6 +592,7 @@ name of the k8s Custom Resource
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | buttonConfig | no | custom labels and icons for form buttons | object |
 | buttonConfig.primary | no | primary button configuration | object |
 | buttonConfig.primary.label | no | text label for primary button | string |
@@ -589,6 +631,26 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     submitActionId: firework-submit-action
     stringSchema: |
       {
@@ -739,6 +801,7 @@ NavMenu is a container for NavMenuItem widgets, which are used to setup navigati
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | items | yes | list of navigation entries each pointing to a k8s custom resource | array |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a NavMenuItem | string |
 
@@ -753,6 +816,8 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - navmenuitems
     items:
       - resourceRefId: nav-menu-item-templates
   resourcesRefs:
@@ -761,7 +826,7 @@ spec:
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: nav-menu-item-templates
         namespace: test-namespace
-        resource: navemenuitems
+        resource: navmenuitems
         verb: GET
 ```
 </details>
@@ -776,11 +841,12 @@ NavMenuItem represents a single item in the navigation menu and links to a speci
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| label | yes | text displayed as the menu item's label | string |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | icon | yes | name of the icon to display alongside the label (font awesome icon name eg: `fa-inbox`) | string |
+| label | yes | text displayed as the menu item's label | string |
+| order | no | a weight to be used to sort the items in the menu | integer |
 | path | yes | route path to navigate to when the menu item is clicked | string |
 | resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
-| order | no | a weight to be used to sort the items in the menu | integer |
 
 <details>
 <summary>Example</summary>
@@ -793,6 +859,8 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - pages
     resourceRefId: templates-page
     label: Templates
     icon: fa-rectangle-list
@@ -820,9 +888,10 @@ Page is a wrapper component, placed at the top of the component tree, that wraps
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| title | no | title of the page shown in the browser tab | string |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | items | yes | list of resources to be rendered within the route | array |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource that should be rendered, usually a widget | string |
+| title | no | title of the page shown in the browser tab | string |
 
 <details>
 <summary>Example</summary>
@@ -835,15 +904,33 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
-      - resourceRefId: composition-test-row
+      - resourceRefId: composition-test-item
   resourcesRefs:
     items:
-      - id: composition-test-row
+      - id: composition-test-item
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: composition-test-row
+        name: composition-test-item
         namespace: test-namespace
-        resource: rows
+        resource: nav
         verb: GET
 ```
 </details>
@@ -905,10 +992,10 @@ Panel is a container to display information
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
 | footer | no | footer section of the panel containing additional items | array |
 | footer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
-| tags | no | list of string tags to be displayed in the footer | array |
 | headerLeft | no | optional text to be displayed under the title, on the left side of the Panel | string |
 | headerRight | no | optional text to be displayed under the title, on the right side of the Panel | string |
 | icon | no | icon displayed in the panel header | object |
@@ -916,6 +1003,7 @@ Panel is a container to display information
 | icon.color | no | color of the icon | string |
 | items | yes | list of resource references to display as main content in the panel | array |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
+| tags | no | list of string tags to be displayed in the footer | array |
 | title | no | text to be displayed as the panel title | string |
 | tooltip | no | optional tooltip text shown on the top right side of the card to provide additional context | string |
 
@@ -930,6 +1018,26 @@ metadata:
 spec:
   widgetData:
     actions: {}
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     title: My Panel
     items:
       - resourceRefId: my-pie-chart
@@ -1063,7 +1171,9 @@ RoutesLoader loads the Route widgets it doesn't render anything by itself
 
 #### Props
 
-*No props available.*
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 
 ---
 
@@ -1075,6 +1185,7 @@ name of the k8s Custom Resource
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | items | yes | the items of the row | array |
 | items[].resourceRefId | yes |  | string |
 | items[].size | no | the number of cells that the item will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
@@ -1090,6 +1201,24 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
       - resourceRefId: composition-test-panel
   resourcesRefs:
@@ -1113,13 +1242,14 @@ Table displays structured data with customizable columns and pagination
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| prefix | no | it's the filters prefix to get right values | string |
-| pageSize | no | number of rows displayed per page | integer |
-| data | yes | Array of table rows | array |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | columns | yes | configuration of the table's columns | array |
 | columns[].color | no | the color of the value (or the icon) to be represented | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
 | columns[].title | yes | column header label | string |
 | columns[].valueKey | yes | key used to extract the value from row data | string |
+| data | yes | Array of table rows | array |
+| pageSize | no | number of rows displayed per page | integer |
+| prefix | no | it's the filters prefix to get right values | string |
 
 <details>
 <summary>Example</summary>
@@ -1132,6 +1262,16 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - filters
+      - flowcharts
+      - linecharts
+      - markdowns
+      - paragraphs
+      - piecharts
+      - yamlviewers
     pageSize: 10
     data: 
       - 
@@ -1182,6 +1322,7 @@ TabList display a set of tab items for navigation or content grouping
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | items | yes | the items of the tab list | array |
 | items[].label | no | text displayed on the tab | string |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource represented by the tab content | string |
@@ -1197,6 +1338,16 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - filters
+      - flowcharts
+      - linecharts
+      - markdowns
+      - paragraphs
+      - piecharts
+      - yamlviewers
     items:
       - label: first tab
         resourceRefId: first-column

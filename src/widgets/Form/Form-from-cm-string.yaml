@@ -5,6 +5,26 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - pages
+      - panels
+      - paragraphs
+      - piecharts
+      - restactions
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     stringSchema: |
       {
         "type": "object",

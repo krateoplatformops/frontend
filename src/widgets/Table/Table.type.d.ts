@@ -7,13 +7,36 @@ export interface Table {
   spec: {
     widgetData: {
       /**
-       * it's the filters prefix to get right values
+       * the list of resources that are allowed to be children of this widget or referenced by it
        */
-      prefix?: string
+      allowedResources: (
+        | 'barcharts'
+        | 'buttons'
+        | 'filters'
+        | 'flowcharts'
+        | 'linecharts'
+        | 'markdowns'
+        | 'paragraphs'
+        | 'piecharts'
+        | 'yamlviewers'
+      )[]
       /**
-       * number of rows displayed per page
+       * configuration of the table's columns
        */
-      pageSize?: number
+      columns: {
+        /**
+         * the color of the value (or the icon) to be represented
+         */
+        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+        /**
+         * column header label
+         */
+        title: string
+        /**
+         * key used to extract the value from row data
+         */
+        valueKey: string
+      }[]
       /**
        * Array of table rows
        */
@@ -56,22 +79,13 @@ export interface Table {
         arrayValue?: string[]
       }[][]
       /**
-       * configuration of the table's columns
+       * number of rows displayed per page
        */
-      columns: {
-        /**
-         * the color of the value (or the icon) to be represented
-         */
-        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
-        /**
-         * column header label
-         */
-        title: string
-        /**
-         * key used to extract the value from row data
-         */
-        valueKey: string
-      }[]
+      pageSize?: number
+      /**
+       * it's the filters prefix to get right values
+       */
+      prefix?: string
     }
     resourcesRefs?: {
       _slice_?: {

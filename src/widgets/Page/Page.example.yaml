@@ -5,13 +5,31 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
     items:
-      - resourceRefId: composition-test-row
+      - resourceRefId: composition-test-item
   resourcesRefs:
     items:
-      - id: composition-test-row
+      - id: composition-test-item
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: composition-test-row
+        name: composition-test-item
         namespace: test-namespace
-        resource: rows
+        resource: nav
         verb: GET

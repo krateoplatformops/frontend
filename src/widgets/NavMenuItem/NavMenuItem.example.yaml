@@ -5,6 +5,8 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
+    allowedResources:
+      - pages
     resourceRefId: templates-page
     label: Templates
     icon: fa-rectangle-list

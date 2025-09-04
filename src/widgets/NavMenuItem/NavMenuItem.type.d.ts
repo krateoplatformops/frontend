@@ -7,13 +7,21 @@ export interface NavMenuItem {
   spec: {
     widgetData: {
       /**
-       * text displayed as the menu item's label
+       * the list of resources that are allowed to be children of this widget or referenced by it
        */
-      label: string
+      allowedResources: 'pages'[]
       /**
        * name of the icon to display alongside the label (font awesome icon name eg: `fa-inbox`)
        */
       icon: string
+      /**
+       * text displayed as the menu item's label
+       */
+      label: string
+      /**
+       * a weight to be used to sort the items in the menu
+       */
+      order?: number
       /**
        * route path to navigate to when the menu item is clicked
        */
@@ -22,10 +30,6 @@ export interface NavMenuItem {
        * the identifier of the k8s custom resource that should be represented, usually a widget
        */
       resourceRefId: string
-      /**
-       * a weight to be used to sort the items in the menu
-       */
-      order?: number
     }
     apiRef?: {
       name: string

@@ -34,7 +34,7 @@ export interface Widget<WidgetDataType = unknown> {
     | {
         actions: WidgetActions
         widgetData: WidgetDataType
-        resourcesRefs: ResourcesRefs
+        resourcesRefs?: ResourcesRefs
       }
     | string
 }

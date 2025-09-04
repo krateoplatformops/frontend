@@ -178,6 +178,30 @@ export interface Panel {
         }[]
       }
       /**
+       * the list of resources that are allowed to be children of this widget or referenced by it
+       */
+      allowedResources: (
+        | 'barcharts'
+        | 'buttons'
+        | 'columns'
+        | 'datagrids'
+        | 'eventlists'
+        | 'filters'
+        | 'flowcharts'
+        | 'forms'
+        | 'linecharts'
+        | 'markdowns'
+        | 'pages'
+        | 'panels'
+        | 'paragraphs'
+        | 'piecharts'
+        | 'restactions'
+        | 'rows'
+        | 'tables'
+        | 'tablists'
+        | 'yamlviewers'
+      )[]
+      /**
        * the id of the action to be executed when the panel is clicked
        */
       clickActionId?: string
@@ -190,10 +214,6 @@ export interface Panel {
          */
         resourceRefId: string
       }[]
-      /**
-       * list of string tags to be displayed in the footer
-       */
-      tags?: string[]
       /**
        * optional text to be displayed under the title, on the left side of the Panel
        */
@@ -224,6 +244,10 @@ export interface Panel {
          */
         resourceRefId: string
       }[]
+      /**
+       * list of string tags to be displayed in the footer
+       */
+      tags?: string[]
       /**
        * text to be displayed as the panel title
        */

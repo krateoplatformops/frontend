@@ -299,7 +299,7 @@ const FormGenerator = ({
                     onSubmit={(values) => {
                       form.setFieldValue(name.split('.'), values)
                     } }
-                    />
+                  />
                 </Form.Item>
               </div>
             )

@@ -264,6 +264,34 @@
               },
               "additionalProperties": false
             },
+            "allowedResources": {
+              "description": "the list of resources that are allowed to be children of this widget or referenced by it",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "barcharts",
+                  "buttons",
+                  "columns",
+                  "datagrids",
+                  "eventlists",
+                  "filters",
+                  "flowcharts",
+                  "forms",
+                  "linecharts",
+                  "markdowns",
+                  "pages",
+                  "panels",
+                  "paragraphs",
+                  "piecharts",
+                  "restactions",
+                  "rows",
+                  "tables",
+                  "tablists",
+                  "yamlviewers"
+                ]
+              }
+            },
             "clickActionId": {
               "type": "string",
               "description": "the id of the action to be executed when the panel is clicked"
@@ -281,13 +309,6 @@
                   }
                 },
                 "additionalProperties": false
-              }
-            },
-            "tags": {
-              "type": "array",
-              "description": "list of string tags to be displayed in the footer",
-              "items": {
-                "type": "string"
               }
             },
             "headerLeft": {
@@ -329,6 +350,13 @@
                 "additionalProperties": false
               }
             },
+            "tags": {
+              "type": "array",
+              "description": "list of string tags to be displayed in the footer",
+              "items": {
+                "type": "string"
+              }
+            },
             "title": {
               "type": "string",
               "description": "text to be displayed as the panel title"
@@ -338,7 +366,7 @@
               "description": "optional tooltip text shown on the top right side of the card to provide additional context"
             }
           },
-          "required": ["items", "actions"],
+          "required": ["allowedResources", "items", "actions"],
           "additionalProperties": false
         },
         "resourcesRefs": {

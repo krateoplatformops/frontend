@@ -52,7 +52,7 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
               if (!endpoint) {
                 console.error('Table rendering error: widget resourceRefId endpoint not found')
                 return <span>-</span>
-               }
+              }
 
               return <WidgetRenderer widgetEndpoint={endpoint} />
 

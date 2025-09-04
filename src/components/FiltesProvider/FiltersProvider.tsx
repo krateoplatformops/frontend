@@ -138,29 +138,29 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
     return path.split('.').reduce<unknown>((acc, part) => (acc as Record<string, unknown>)?.[part], obj)
   }
 
-const getFilteredData = (data: FilterableRow[], prefix: string): FilterableRow[] => {
-  const filters: FilterType[] = (filterMap[prefix] as FilterType[] | undefined) ?? []
+  const getFilteredData = (data: FilterableRow[], prefix: string): FilterableRow[] => {
+    const filters: FilterType[] = (filterMap[prefix] as FilterType[] | undefined) ?? []
 
-  if (filters.length === 0) { return data }
+    if (filters.length === 0) { return data }
 
-  return data.filter(row =>
-    filters.every(filter =>
-      filter.fieldName.some(fieldName => {
-        let value: unknown
+    return data.filter(row =>
+      filters.every(filter =>
+        filter.fieldName.some(fieldName => {
+          let value: unknown
 
-        if (Array.isArray(row)) {
-          const cell = row.find(({ valueKey }) => valueKey === fieldName)
-          if (!cell) { return false }
-          value = getTableValue(cell)
-        } else {
-          value = row[fieldName]
-        }
+          if (Array.isArray(row)) {
+            const cell = row.find(({ valueKey }) => valueKey === fieldName)
+            if (!cell) { return false }
+            value = getTableValue(cell)
+          } else {
+            value = row[fieldName]
+          }
 
-        return matchesFilter(value, filter)
-      })
+          return matchesFilter(value, filter)
+        })
+      )
     )
-  )
-}
+  }
 
   const isWidgetFilteredByProps = (widgetData: unknown, prefix: string): boolean => {
     if (typeof widgetData !== 'object' || widgetData === null || ('prefix' in widgetData)) {

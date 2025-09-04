@@ -13,6 +13,28 @@ export interface TabList {
      */
     widgetData: {
       /**
+       * the list of resources that are allowed to be children of this widget or referenced by it
+       */
+      allowedResources: (
+        | 'barcharts'
+        | 'buttons'
+        | 'columns'
+        | 'datagrids'
+        | 'eventlists'
+        | 'filters'
+        | 'flowcharts'
+        | 'forms'
+        | 'linecharts'
+        | 'markdowns'
+        | 'panels'
+        | 'paragraphs'
+        | 'piecharts'
+        | 'rows'
+        | 'tables'
+        | 'tablists'
+        | 'yamlviewers'
+      )[]
+      /**
        * the items of the tab list
        */
       items: {
