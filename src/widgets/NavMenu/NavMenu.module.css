@@ -31,7 +31,7 @@
   }
 
   :global(.ant-menu-item-selected) {
-    background-color: var(--menuitem-bg);
+    background-color: var(--menuitembg-color);
     border-radius: 0;
     color: var(--light-color);
 

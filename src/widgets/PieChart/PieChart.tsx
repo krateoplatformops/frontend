@@ -1,8 +1,8 @@
 import { Result } from 'antd'
 import ReactECharts from 'echarts-for-react'
 
+import { getColorCode } from '../../theme/palette'
 import type { WidgetProps } from '../../types/Widget'
-import { getColorCode } from '../../utils/palette'
 
 import type { PieChart as WidgetType } from './PieChart.type'
 

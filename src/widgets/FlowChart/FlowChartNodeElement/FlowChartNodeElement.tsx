@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Avatar, Flex, Space, Tooltip } from 'antd'
 import { Handle, Position } from 'reactflow'
 
+import { getColorCode } from '../../../theme/palette'
 import { formatISODate } from '../../../utils/utils'
 import type { FlowChartNodeData } from '../FlowChart'
 
@@ -15,7 +16,7 @@ const getDaysPeriod = (isoDate: string) => {
   return days !== 1 ? `${days} days` : `${days} day`
 }
 
-const fallbackIcon = { color: '#fff', name: 'fa-question' }
+const fallbackIcon = { color: getColorCode('gray'), name: 'fa-question' }
 
 const renderIcon = (icon: { name?: string; color?: string; message?: string }, size: number = 40) => {
   const { color, message, name } = icon
@@ -24,7 +25,7 @@ const renderIcon = (icon: { name?: string; color?: string; message?: string }, s
     <Avatar
       icon={<FontAwesomeIcon icon={(name || fallbackIcon.name) as IconProp} />}
       size={size}
-      style={{ backgroundColor: (color || fallbackIcon.color), color: 'white' }}
+      style={{ backgroundColor: (getColorCode(color) || fallbackIcon.color), color: 'white' }}
     />
   )
 

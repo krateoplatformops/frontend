@@ -29,7 +29,7 @@ export interface PieChart {
           /**
            * color used to represent the segment
            */
-          color: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+          color: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green' | 'violet'
           /**
            * numeric value for the segment
            */

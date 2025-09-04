@@ -10,13 +10,14 @@ import { useMemo } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import '../index.css'
-import '../variables.css'
+import './theme/variables.css'
 import 'reactflow/dist/style.css'
 
 import styles from './App.module.css'
 import FiltersProvider from './components/FiltesProvider/FiltersProvider'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
+import { cssVariables } from './theme/palette'
 
 library.add(fab, fas, far)
 
@@ -43,6 +44,8 @@ const AppInitializer: React.FC = () => {
 }
 
 const App: React.FC = () => {
+  cssVariables()
+
   return (
     <ConfigProvider>
       <QueryClientProvider client={queryClient}>

@@ -49,7 +49,16 @@
                       },
                       "color": {
                         "type": "string",
-                        "description": "CSS color value for the icon background"
+                        "description": "CSS color value for the icon background",
+                        "enum": [
+                          "blue",
+                          "darkBlue",
+                          "orange",
+                          "gray",
+                          "red",
+                          "green",
+                          "violet"
+                        ]
                       },
                       "message": {
                         "type": "string",
@@ -68,7 +77,16 @@
                       },
                       "color": {
                         "type": "string",
-                        "description": "CSS color value for the status icon background"
+                        "description": "CSS color value for the status icon background",
+                        "enum": [
+                          "blue",
+                          "darkBlue",
+                          "orange",
+                          "gray",
+                          "red",
+                          "green",
+                          "violet"
+                        ]
                       },
                       "message": {
                         "type": "string",
@@ -109,7 +127,16 @@
                             },
                             "color": {
                               "type": "string",
-                              "description": "CSS color value for the icon background"
+                              "description": "CSS color value for the icon background",
+                              "enum": [
+                                "blue",
+                                "darkBlue",
+                                "orange",
+                                "gray",
+                                "red",
+                                "green",
+                                "violet"
+                              ]
                             },
                             "message": {
                               "type": "string",
@@ -128,7 +155,16 @@
                             },
                             "color": {
                               "type": "string",
-                              "description": "CSS color value for the status icon background"
+                              "description": "CSS color value for the status icon background",
+                              "enum": [
+                                "blue",
+                                "darkBlue",
+                                "orange",
+                                "gray",
+                                "red",
+                                "green",
+                                "violet"
+                              ]
                             },
                             "message": {
                               "type": "string",

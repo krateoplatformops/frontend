@@ -1,7 +1,7 @@
 import { Empty, Progress, Space } from 'antd'
 
+import { getColorCode } from '../../theme/palette'
 import type { WidgetProps } from '../../types/Widget'
-import { getColorCode } from '../../utils/palette'
 
 import styles from './BarChart.module.css'
 import type { BarChart as WidgetType } from './BarChart.type'

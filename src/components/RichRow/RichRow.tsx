@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Avatar, Flex, Space, Typography } from 'antd'
 import type { ReactNode } from 'react'
 
-import { getColorCode } from '../../utils/palette'
+import { getColorCode } from '../../theme/palette'
 
 import styles from './RichRow.module.css'
 

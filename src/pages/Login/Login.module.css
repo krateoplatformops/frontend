@@ -1,5 +1,5 @@
 .login {
-  background-image: linear-gradient(var(--menu-bg-start), var(--menu-bg-end));
+  background-image: linear-gradient(var(--menubgstart-color), var(--menubgend-color));
   box-sizing: border-box;
   display: flex;
   height: 100%;
