@@ -521,7 +521,7 @@ export const useHandleAction = () => {
 
             if (onSuccessNavigateTo) {
               closeDrawer()
-              await navigate(onSuccessNavigateTo)
+              window.location.replace(onSuccessNavigateTo)
             }
           }
 
