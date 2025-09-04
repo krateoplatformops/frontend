@@ -8,7 +8,7 @@ import PALETTE from './theme/palette.ts'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ConfigProvider theme={{ token: {
-      colorBgBase: PALETTE.background,
+      colorBgBase: PALETTE.panelbg,
       colorBorder: PALETTE.border,
       colorError: PALETTE.error,
       colorInfo: PALETTE.info,
