@@ -43,11 +43,25 @@
       justify-content: space-between;
       margin-top: auto;
 
-      & .items {
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+      }
+
+      .items {
         align-items: center;
         display: flex;
         flex: 1;
         gap: var(--spacing-sm);
+        justify-content: flex-end; 
+
+        .item {
+          align-items: center;
+          display: flex;
+          flex: 1;               
+          min-height: 50px;      
+        }
       }
 
       &.single {

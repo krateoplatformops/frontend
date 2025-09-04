@@ -32,6 +32,10 @@ spec:
       - resourceRefId: my-pie-chart
       - resourceRefId: my-table
     tooltip: this is a tooltip!
+    tags:
+      - ciao
+      - tag2
+      - tag3
     footer:
       - resourceRefId: button-1
       - resourceRefId: button-1
