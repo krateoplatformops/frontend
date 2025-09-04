@@ -16,10 +16,7 @@ type DrawerProviderProps = {
   setDrawerData: (data: DrawerData) => void
 }
 
-const DrawerContext = createContext<DrawerContextValue>({
-  insideDrawer: true,
-  setDrawerData: noop,
-})
+const DrawerContext = createContext<DrawerContextValue | null>(null)
 
 export const DrawerProvider: React.FC<DrawerProviderProps> = ({ children, setDrawerData }) => {
   return (
@@ -37,6 +34,5 @@ export const DrawerProvider: React.FC<DrawerProviderProps> = ({ children, setDra
 export const useDrawerContext = () => {
   const context = useContext(DrawerContext)
 
-  /* is ok that context is nullable, we will use this to check if the consumer is a child of the context provider (and so if it's inside a Drawer) */
-  return context || { insideDrawer: false }
+  return context ?? { insideDrawer: false, setDrawerData: noop }
 }

@@ -173,8 +173,6 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
 
   return (
     <div className={styles.form}>
-      {shouldRenderButtonsInsideForm ? <FormExtra buttonConfig={buttonConfig} form={formId} loading={isActionLoading} /> : null}
-
       <FormGenerator
         autocomplete={autocomplete}
         dependencies={dependencies}
@@ -185,6 +183,10 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
         schema={formSchema}
         showFormStructure={true}
       />
+
+      <div className={styles.extra}>
+        {shouldRenderButtonsInsideForm ? <FormExtra buttonConfig={buttonConfig} form={formId} loading={isActionLoading} /> : null}
+      </div>
     </div>
   )
 }
