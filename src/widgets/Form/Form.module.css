@@ -106,10 +106,14 @@
   }
 
   .anchorLabelWrapper {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
     overflow-y: auto;
     padding: 0 20px;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    width: 100%;
 
     :global .ant-anchor-link-title-active {
       font-weight: 600;

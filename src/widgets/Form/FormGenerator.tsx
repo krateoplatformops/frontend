@@ -414,6 +414,14 @@ const FormGenerator = ({
 
   const handleAnchorClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
+    const linkElement = event.currentTarget as HTMLAnchorElement
+    const [_, href] = linkElement.href.split('#') /* only take the part after the # */
+    const element = document.getElementById(href)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } else {
+      console.warn(`Anchor link ${href} not found`)
+    }
   }
 
   return (
