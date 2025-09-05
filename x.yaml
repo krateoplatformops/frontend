@@ -1,19 +1,49 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: compositions-panels-paginated
+  namespace: demo-system
+spec:
+  api:
+  - filter: '[.namespaces.items[] | .metadata.name]'
+    name: namespaces
+    path: /api/v1/namespaces
+  - continueOnError: true
+    dependsOn:
+      iterator: .namespaces
+      name: namespaces
+    name: compositionspanelspaginated
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/panels"
+      }
+  filter: |
+    {
+      compositionspanelspaginated: (
+        (if (.compositionspanelspaginated | type) == "array" then
+          [.compositionspanelspaginated[]?.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "compositions")]
+        elif (.compositionspanelspaginated | type) == "object" then
+          [.compositionspanelspaginated.items[]?    | select((.metadata.labels // {})["krateo.io/portal-page"] == "compositions")]
+        else
+          []
+        end)
+      )
+    }
+
+---
 apiVersion: widgets.templates.krateo.io/v1beta1
 kind: DataGrid
 metadata:
-  name: compositions-page-datagrid
-  namespace: krateo-system
+  name: compositions-page-datagrid-paginated
+  namespace: demo-system
 spec:
   apiRef:
-    name: compositions-panels
-    namespace: krateo-system
-  resourcesRefs:                               
-    items: []                      
-    # _slice_:
-    #   page: 1
-    #   perPage: 2
+    name: compositions-panels-paginated
+    namespace: demo-system
+  resourcesRefs:
+    items: []                   
   resourcesRefsTemplate:
-  - iterator: ${ .compositionspanels }
+  - iterator: ${ .compositionspanelspaginated }
     template:
       apiVersion: ${ .apiVersion }
       id: ${ .metadata.name }
@@ -27,7 +57,51 @@ spec:
       column: 1
     items: []
     prefix: compositions-datagrid-filters
+    allowedResources: []
   widgetDataTemplate:
   - expression: |
-      ${ [ .compositionspanels[] | { resourceRefId: .metadata.name} ] }
+      ${ [ .compositionspanelspaginated[] | { resourceRefId: .metadata.name} ] }
     forPath: items
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: compositions-page-datagrid-paginated
+  namespace: demo-system
+spec:
+  widgetData:
+    allowedResources: []
+    items:
+      - resourceRefId: compositions-page-datagrid-paginated
+  resourcesRefs:
+    items:
+      - id: compositions-page-datagrid-paginated
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: compositions-page-datagrid-paginated
+        namespace: demo-system
+        resource: datagrids
+        verb: GET
+---
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: pagination-menu-item-paginated
+  namespace: demo-system
+spec:
+  widgetData:
+    resourceRefId: compositions-page-datagrid-paginated
+    label: Paginated datagrid
+    icon: fa-rectangle-list
+    path: /datagrid-paginated
+    order: 90
+    allowedResources: []
+
+  resourcesRefs:
+    items:
+      - id: compositions-page-datagrid-paginated
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: compositions-page-datagrid-paginated
+        namespace: demo-system
+        resource: pages
+        verb: GET
+---

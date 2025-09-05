@@ -3,7 +3,6 @@ import { Result, Skeleton } from 'antd'
 import useCatchError from '../../hooks/useCatchError'
 import { useWidgetQuery } from '../../hooks/useWidgetQuery'
 import type { Widget } from '../../types/Widget'
-import { withInfiniteScroll } from '../../utils/withInfiniteScroll'
 import BarChart from '../../widgets/BarChart'
 import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
@@ -122,7 +121,7 @@ function parseData({
       return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'DataGrid':
       return (
-        <ScrollPagination fetchNextPage={fetchNextPage!} hasNextPage={hasNextPage ?? false} isFetching={isFetching}>
+        <ScrollPagination fetchNextPage={fetchNextPage!} hasNextPage={hasNextPage ?? false} isFetching={isFetching ?? false}>
           <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
         </ScrollPagination>
       )
@@ -218,7 +217,7 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
     isLoading,
   } = useWidgetQuery(widgetEndpoint, {
     page: page ?? 1,
-    perPage: perPage ?? 5,
+    perPage: perPage ?? 2,
   })
 
   // check if widget is filtered out by filters
