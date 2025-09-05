@@ -378,7 +378,11 @@ export const useHandleAction = () => {
                 message.destroy()
               }, onEventNavigateTo.timeout! * 1000)
 
-              message.loading('Creating the new resource and redirecting...', onEventNavigateTo.timeout)
+              const loadingMessage = onEventNavigateTo.loadingMessage
+                ? await resolveJq(onEventNavigateTo.loadingMessage, { json: updatedPayload, response: jsonResponse })
+                : 'Waiting for resource and redirecting...'
+
+              message.loading(loadingMessage, onEventNavigateTo.timeout)
 
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               eventSource.addEventListener('krateo', async (event) => {

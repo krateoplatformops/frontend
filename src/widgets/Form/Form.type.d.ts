@@ -66,6 +66,10 @@ export interface Form {
              */
             timeout?: number
             reloadRoutes?: boolean
+            /**
+             * message to display while waiting for the event
+             */
+            loadingMessage?: string
           }
           /**
            * type of action to execute

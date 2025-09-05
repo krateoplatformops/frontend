@@ -84,6 +84,10 @@
                           },
                           "reloadRoutes": {
                             "type": "boolean"
+                          },
+                          "loadingMessage": {
+                            "type": "string",
+                            "description": "message to display while waiting for the event"
                           }
                         }
                       },

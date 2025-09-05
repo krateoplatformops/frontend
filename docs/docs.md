@@ -153,23 +153,24 @@ Widgets can define actions inside widgetData
 
 Used to trigger an HTTP request to a specified resource (mathing the resourceRefId)
 
-| Property                      | Type    | Required | Description                                                          | Additional Info                    |
-| ----------------------------- | ------- | -------- | -------------------------------------------------------------------- | ---------------------------------- |
-| payloadKey                    | string  | No       | Key used to nest the payload in the request body                     |                                    |
-| id                            | string  | No       | Unique identifier for the action                                     |                                    |
-| resourceRefId                 | string  | No       | The identifier of the k8s custom resource that should be represented |                                    |
-| requireConfirmation           | boolean | No       | Whether user confirmation is required before triggering the action   |                                    |
-| onSuccessNavigateTo           | string  | No       | URL to navigate to after successful execution                        |                                    |
-| onEventNavigateTo             | object  | No       | Conditional navigation triggered by a specific event                 | additionalProperties: false        |
-| onEventNavigateTo.eventReason | string  | Yes      | Identifier of the awaited event reason                               |                                    |
-| onEventNavigateTo.url         | string  | Yes      | URL to navigate to when the event is received                        |                                    |
-| onEventNavigateTo.timeout     | integer | No       | The timeout in seconds to wait for the event                         | Default: 50                        |
-| loading                       | string  | No       | Defines the loading indicator behavior for the action                | Enum: ["global", "inline", "none"] |
-| type                          | string  | No       | Type of action to execute                                            | Enum: ["rest"]                     |
-| payload                       | object  | No       | Static payload sent with the request                                 | additionalProperties: true         |
-| payloadToOverride             | array   | No       | List of payload fields to override dynamically                       | Array of objects                   |
-| payloadToOverride.name        | string  | Yes      | Name of the field to override                                        |                                    |
-| payloadToOverride.value       | string  | Yes      | Value to use for overriding the field                                |                                    |
+| Property                         | Type    | Required | Description                                                          | Additional Info                    |
+| -------------------------------- | ------- | -------- | -------------------------------------------------------------------- | ---------------------------------- |
+| payloadKey                       | string  | No       | Key used to nest the payload in the request body                     |                                    |
+| id                               | string  | No       | Unique identifier for the action                                     |                                    |
+| resourceRefId                    | string  | No       | The identifier of the k8s custom resource that should be represented |                                    |
+| requireConfirmation              | boolean | No       | Whether user confirmation is required before triggering the action   |                                    |
+| onSuccessNavigateTo              | string  | No       | URL to navigate to after successful execution                        |                                    |
+| onEventNavigateTo                | object  | No       | Conditional navigation triggered by a specific event                 | additionalProperties: false        |
+| onEventNavigateTo.eventReason    | string  | Yes      | Identifier of the awaited event reason                               |                                    |
+| onEventNavigateTo.url            | string  | Yes      | URL to navigate to when the event is received                        |                                    |
+| onEventNavigateTo.timeout        | integer | No       | The timeout in seconds to wait for the event                         | Default: 50                        |
+| onEventNavigateTo.loadingMessage | string  | No       | Message to display while waiting for the event                       |                                    |
+| loading                          | string  | No       | Defines the loading indicator behavior for the action                | Enum: ["global", "inline", "none"] |
+| type                             | string  | No       | Type of action to execute                                            | Enum: ["rest"]                     |
+| payload                          | object  | No       | Static payload sent with the request                                 | additionalProperties: true         |
+| payloadToOverride                | array   | No       | List of payload fields to override dynamically                       | Array of objects                   |
+| payloadToOverride.name           | string  | Yes      | Name of the field to override                                        |                                    |
+| payloadToOverride.value          | string  | Yes      | Value to use for overriding the field                                |                                    |
 
 #### Example
 
