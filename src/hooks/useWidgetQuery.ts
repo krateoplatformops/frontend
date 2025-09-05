@@ -19,7 +19,6 @@ export const useWidgetQuery = (widgetEndpoint: string, options: PaginationOption
   const fetchWidget = async ({ page, perPage }: { page: number; perPage: number }) => {
     const url = new URL(widgetFullUrl)
 
-    /* TODO: read from _slice_ */
     url.searchParams.set('page', page.toString())
     url.searchParams.set('per_page', perPage.toString())
 

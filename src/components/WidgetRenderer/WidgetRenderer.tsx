@@ -52,6 +52,7 @@ import styles from './WidgetRenderer.module.css'
 function parseData({
   fetchNextPage,
   hasNextPage,
+  isFetching,
   widget,
   widgetEndpoint,
 }: {
@@ -59,6 +60,7 @@ function parseData({
   widgetEndpoint: string
   fetchNextPage?: () => Promise<unknown> | void
   hasNextPage?: boolean
+  isFetching?: boolean
 }) {
   const { kind, metadata, status } = widget
 
@@ -108,7 +110,7 @@ function parseData({
     )
   }
 
-  const { _slice_, resourcesRefs, widgetData } = status
+  const { resourcesRefs, widgetData } = status
   const uid = metadata?.uid
 
   switch (kind) {
@@ -117,17 +119,7 @@ function parseData({
     case 'Button':
       return <Button resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ButtonWidgetData} />
     case 'Column':
-      return (
-        <Column
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          page={_slice_?.page}
-          perPage={_slice_?.perPage}
-          resourcesRefs={resourcesRefs}
-          uid={uid}
-          widgetData={widgetData as ColumnWidgetData}
-        />
-      )
+      return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'DataGrid':
       return (
         <ScrollPagination fetchNextPage={fetchNextPage!} hasNextPage={hasNextPage ?? false} isFetching={isFetching}>

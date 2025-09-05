@@ -24,7 +24,8 @@ export const ScrollPagination = ({
     <>
       {children}
 
-      <div ref={ref} style={{ fontSize: '80px', height: '100px' }}>
+      <div ref={ref} style={{ fontSize: '45px', height: '100px' }}>
+        <div>isFetching: {isFetching.toString()}</div>
         <div>inView: {inView.toString()}</div>
         <div>has more items: {hasNextPage?.toString()}</div>
       </div>
