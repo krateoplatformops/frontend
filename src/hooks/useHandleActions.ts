@@ -407,8 +407,12 @@ export const useHandleAction = () => {
                       })
                     }
 
-                    const url = customPayload && interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
-                    return url
+                    if (customPayload) {
+                      const url = interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                      return url
+                    }
+
+                    return onEventNavigateTo.url
                   })()
 
                   if (!redirectUrl) {
