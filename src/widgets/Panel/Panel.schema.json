@@ -264,34 +264,6 @@
               },
               "additionalProperties": false
             },
-            "allowedResources": {
-              "description": "the list of resources that are allowed to be children of this widget or referenced by it",
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "barcharts",
-                  "buttons",
-                  "columns",
-                  "datagrids",
-                  "eventlists",
-                  "filters",
-                  "flowcharts",
-                  "forms",
-                  "linecharts",
-                  "markdowns",
-                  "pages",
-                  "panels",
-                  "paragraphs",
-                  "piecharts",
-                  "restactions",
-                  "rows",
-                  "tables",
-                  "tablists",
-                  "yamlviewers"
-                ]
-              }
-            },
             "clickActionId": {
               "type": "string",
               "description": "the id of the action to be executed when the panel is clicked"
@@ -366,7 +338,7 @@
               "description": "optional tooltip text shown on the top right side of the card to provide additional context"
             }
           },
-          "required": ["allowedResources", "items", "actions"],
+          "required": ["items", "actions"],
           "additionalProperties": false
         },
         "resourcesRefs": {

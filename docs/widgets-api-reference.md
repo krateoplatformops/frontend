@@ -109,7 +109,6 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
-| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
 | label | no | the label of the button | string |
 | icon | no | the icon of the button (font awesome icon name eg: `fa-inbox`) | string |
@@ -592,7 +591,6 @@ name of the k8s Custom Resource
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
-| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | buttonConfig | no | custom labels and icons for form buttons | object |
 | buttonConfig.primary | no | primary button configuration | object |
 | buttonConfig.primary.label | no | text label for primary button | string |
@@ -992,7 +990,6 @@ Panel is a container to display information
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
-| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
 | footer | no | footer section of the panel containing additional items | array |
 | footer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |

@@ -5,26 +5,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    allowedResources:
-    - barcharts
-    - buttons
-    - columns
-    - datagrids
-    - eventlists
-    - filters
-    - flowcharts
-    - forms
-    - linecharts
-    - markdowns
-    - pages
-    - panels
-    - paragraphs
-    - piecharts
-    - restactions
-    - rows
-    - tables
-    - tablists
-    - yamlviewers
     label: Open Form (in Drawer)
     icon: fa-rocket
     size: large
@@ -53,26 +33,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    allowedResources:
-    - barcharts
-    - buttons
-    - columns
-    - datagrids
-    - eventlists
-    - filters
-    - flowcharts
-    - forms
-    - linecharts
-    - markdowns
-    - pages
-    - panels
-    - paragraphs
-    - piecharts
-    - restactions
-    - rows
-    - tables
-    - tablists
-    - yamlviewers
     label: Open Form (in Modal)
     icon: fa-rocket
     size: large
