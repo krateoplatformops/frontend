@@ -172,7 +172,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
   }
 
   return (
-    <div className={styles.form}>
+    <div className={styles.form} data-inside-drawer={insideDrawer}>
       <FormGenerator
         autocomplete={autocomplete}
         dependencies={dependencies}

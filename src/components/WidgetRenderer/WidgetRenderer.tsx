@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Result, Skeleton } from 'antd'
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
@@ -53,6 +53,7 @@ import styles from './WidgetRenderer.module.css'
 type WidgetRendererProps = {
   widgetEndpoint: string
   invisible?: boolean
+  onLoadingChange?: (isLoading: boolean) => void
   prefix?: string
   wrapper?: {
     component: React.ComponentType<{ children: React.ReactNode }>
@@ -134,7 +135,7 @@ const WidgetRendererError = ({ children, subtitle }: { children?: ReactNode; sub
   )
 }
 
-const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
+const WidgetRenderer = ({ invisible = false, onLoadingChange, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
   const { config } = useConfigContext()
@@ -162,6 +163,10 @@ const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: 
     },
     queryKey: ['widgets', widgetFullUrl],
   })
+
+  useEffect(() => {
+    if (onLoadingChange) { onLoadingChange(isLoading) }
+  }, [isLoading, onLoadingChange])
 
   if (isLoading) {
     return (

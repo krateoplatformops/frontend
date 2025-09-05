@@ -55,12 +55,19 @@
         flex: 1;
         gap: var(--spacing-sm);
         justify-content: flex-end; 
+        min-width: 0;
 
         .item {
           align-items: center;
           display: flex;
-          flex: 1;               
-          min-height: 50px;      
+          flex: 0 0 auto;
+        
+          &.itemLoading {
+            flex: 1;  
+            max-height: 100px;
+            max-width: 100px;   
+            min-width: 0;
+          }
         }
       }
 

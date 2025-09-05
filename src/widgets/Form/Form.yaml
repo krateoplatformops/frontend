@@ -78,104 +78,6 @@ spec:
       secondary:
         label: Go back
     submitActionId: firework-submit-action
-    # stringSchema: |
-    #   {
-    #     "type": "object",
-    #     "properties": {
-    #       "loremipsum2": {
-    #         "type": "string",
-    #         "title": "Lorem ipsum2",
-    #         "description": "bla bla bla"
-    #       },
-    #       "loremipsum3": {
-    #         "type": "string",
-    #         "title": "Lorem ipsum3",
-    #         "description": "bla bla bla"
-    #       },
-    #       "name": {
-    #         "type": "string",
-    #         "title": "Application Name",
-    #         "description": "The name of your fireworks app"
-    #       },
-    #       "loremipsum": {
-    #         "type": "string",
-    #         "title": "Lorem ipsum",
-    #         "description": "bla bla bla"
-    #       },
-    #       "image": {
-    #         "type": "string",
-    #         "title": "Container Image",
-    #         "description": "Full image path (e.g., ghcr.io/org/image:tag)"
-    #       },
-    #       "replicas": {
-    #         "type": "integer",
-    #         "title": "Number of Replicas",
-    #         "default": 1
-    #       },
-    #       "users": {
-    #         "type": "array",
-    #         "title": "Users",
-    #         "description": "List of users for the application",
-    #         "items": {
-    #           "type": "object",
-    #           "properties": {
-    #             "fullname": {
-    #               "type": "string",
-    #               "title": "Full Name"
-    #             },
-    #             "role": {
-    #               "type": "string",
-    #               "title": "Role",
-    #               "enum": ["admin", "user", "viewer"]
-    #             }
-    #           },
-    #           "required": ["fullname", "role"]
-    #         }
-    #       },
-    #       "select1": {
-    #         "type": "string",
-    #         "title": "regione",
-    #         "description": "The list of regions",
-    #         "enum": [
-    #           "Piemonte",
-    #           "Lombardia",
-    #           "Veneto",
-    #           "Emilia-Romagna",
-    #           "Toscana",
-    #           "Liguria"
-    #         ]
-    #       },
-    #       "select2": {
-    #         "type": "string",
-    #         "title": "provincia",
-    #         "description": "The list of provinces",
-    #         "enum": []
-    #       },
-    #       "select3": {
-    #         "type": "string",
-    #         "title": "comune",
-    #         "description": "The list of cities",
-    #         "enum": []
-    #       },
-    #       "enableMetrics": {
-    #         "type": "boolean",
-    #         "title": "Enable Metrics",
-    #         "default": false
-    #       },
-    #       "test": {
-    #         "type": "object",
-    #         "properties": {
-    #           "property1": {
-    #             "type": "string"
-    #           },
-    #           "property2": {
-    #             "type": "string"
-    #           }
-    #         },
-    #         "required": ["property2"]
-    #       }
-    #     },
-    #     "required": ["name", "image", "enableMetrics"]
     #   }
     stringSchema: |
       {
@@ -191,6 +93,29 @@ spec:
               },
               "test check": {
                 "type": "boolean"
+              },
+              "labels": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Mappa di etichette key/value per organizzare le risorse"
+              },
+              "annotations": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Annotazioni per informazioni aggiuntive non strutturate"
+              },
+              "createdBy": {
+                "type": "string",
+                "description": "Nome utente o sistema che ha creato questa risorsa"
+              },
+              "creationTimestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Data/ora di creazione della risorsa"
               }
             },
             "type": "object",

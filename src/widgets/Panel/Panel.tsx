@@ -3,10 +3,11 @@ import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card as AntdCard, Avatar, Button, Tag, Tooltip } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import { useState } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import { useHandleAction } from '../../hooks/useHandleActions'
-import type { WidgetAction, WidgetProps } from '../../types/Widget'
+import type { ResourcesRefs, WidgetAction, WidgetProps } from '../../types/Widget'
 import { getColorCode } from '../../utils/palette'
 import { getEndpointUrl } from '../../utils/utils'
 
@@ -14,6 +15,19 @@ import styles from './Panel.module.css'
 import type { Panel as WidgetType } from './Panel.type'
 
 export type PanelWidgetData = WidgetType['spec']['widgetData']
+
+const FooterItem = ({ resourceRefId, resourcesRefs }: { resourceRefId: string; resourcesRefs: ResourcesRefs }) => {
+  const [isLoading, setIsLoading] = useState(true)
+
+  const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+  if (!endpoint) { return null }
+
+  return (
+    <div className={`${styles.item} ${isLoading ? styles.itemLoading : ''}`}>
+      <WidgetRenderer onLoadingChange={setIsLoading} widgetEndpoint={endpoint}/>
+    </div>
+  )
+}
 
 const Panel = ({ resourcesRefs, uid, widget, widgetData }: WidgetProps<PanelWidgetData>) => {
   const { notification } = useApp()
@@ -66,9 +80,11 @@ const Panel = ({ resourcesRefs, uid, widget, widgetData }: WidgetProps<PanelWidg
       {footer && footer.length > 0 && (
         <div className={styles.items}>
           {footer.map(({ resourceRefId }, index) => (
-            <div className={styles.item} key={`${uid}-footer-${index}`}>
-              <WidgetRenderer widgetEndpoint={getEndpointUrl(resourceRefId, resourcesRefs)!} />
-            </div>
+            <FooterItem
+              key={`${uid}-footer-${index}`}
+              resourceRefId={resourceRefId}
+              resourcesRefs={resourcesRefs}
+            />
           ))}
         </div>
       )}
