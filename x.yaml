@@ -1,23 +1,22 @@
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  labels:
-    app.kubernetes.io/managed-by: Helm
   name: compositions-panels-paginated
   namespace: demo-system
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
   api:
-  - filter: '[.namespaces.items[] | .metadata.name]'
-    name: namespaces
-    path: /api/v1/namespaces
-  - continueOnError: true
-    dependsOn:
-      iterator: .namespaces
+  - name: namespaces
+    path: "/api/v1/namespaces"
+    filter: "[.namespaces.items[] | .metadata.name]"
+  - name: compositionspanelspaginated
+    dependsOn: 
       name: namespaces
-    name: compositionspanelspaginated
-    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/panels"
-      }
-  filter: |
+      iterator: .namespaces
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/panels" }
+    continueOnError: true
+  filter: >
     {
       compositionspanelspaginated: (
         (if (.compositionspanelspaginated | type) == "array" then
@@ -26,10 +25,18 @@ spec:
           [.compositionspanelspaginated.items[]?    | select((.metadata.labels // {})["krateo.io/portal-page"] == "compositions")]
         else
           []
-        end)
+        end) as $items
+        | (._slice_.offset  // 0)                 as $offset
+        | (._slice_.perPage // ($items | length)) as $perPage
+        | [
+            $items
+            | length as $len
+            | range($offset; $offset + $perPage)
+            | select(. < $len)         # avoid out-of-bounds
+            | $items[.]
+          ]
       )
     }
-
 ---
 apiVersion: widgets.templates.krateo.io/v1beta1
 kind: DataGrid

@@ -57,9 +57,9 @@ function parseData({
 }: {
   widget: Widget
   widgetEndpoint: string
-  fetchNextPage?: () => Promise<unknown> | void
-  hasNextPage?: boolean
-  isFetching?: boolean
+  fetchNextPage: () => Promise<unknown> | void
+  hasNextPage: boolean
+  isFetching: boolean
 }) {
   const { kind, metadata, status } = widget
 
@@ -121,7 +121,7 @@ function parseData({
       return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'DataGrid':
       return (
-        <ScrollPagination fetchNextPage={fetchNextPage!} hasNextPage={hasNextPage ?? false} isFetching={isFetching ?? false}>
+        <ScrollPagination fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} isFetching={isFetching}>
           <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
         </ScrollPagination>
       )
@@ -190,8 +190,6 @@ function parseData({
 
 type WidgetRendererProps = {
   invisible?: boolean
-  page?: number
-  perPage?: number
   prefix?: string
   widgetEndpoint: string
   wrapper?: {
@@ -200,7 +198,7 @@ type WidgetRendererProps = {
   }
 }
 
-const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
+const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
 
@@ -208,17 +206,9 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid an url is expected`)
   }
 
-  const {
-    data: widget,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isLoading,
-  } = useWidgetQuery(widgetEndpoint, {
-    page: page ?? 1,
-    perPage: perPage ?? 2,
-  })
+  // const url = new URL(widgetFullUrl)
+
+  const { data: widget, error, fetchNextPage, hasNextPage, isFetching, isLoading } = useWidgetQuery(widgetEndpoint)
 
   // check if widget is filtered out by filters
   if (typeof widget?.status === 'object' && widget?.status?.widgetData) {
@@ -231,7 +221,7 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
 
   if (invisible) {
     if (widget) {
-      return parseData({ widget, widgetEndpoint })
+      return parseData({ fetchNextPage, hasNextPage, isFetching, widget, widgetEndpoint })
     }
     return null
   }
@@ -279,7 +269,13 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
     )
   }
 
-  if (widget.kind === 'Status' && widget?.code === 500 && widget?.status === 'Failure' && widget?.message?.includes('credentials')) {
+  if (
+    widget.kind === 'Status' &&
+    widget?.code === 500 &&
+    widget?.status === 'Failure' &&
+    typeof widget?.message === 'string' &&
+    widget?.message?.includes('credentials')
+  ) {
     catchError(
       {
         status: widget.code,
@@ -292,7 +288,7 @@ const WidgetRenderer = ({ invisible = false, page, perPage, prefix, widgetEndpoi
   if (wrapper) {
     const Wrapper = wrapper.component
 
-    return <Wrapper {...wrapper.props}>{parseData({ widget, widgetEndpoint })}</Wrapper>
+    return <Wrapper {...wrapper.props}>{parseData({ fetchNextPage, hasNextPage, isFetching, widget, widgetEndpoint })}</Wrapper>
   }
 
   return parseData({ fetchNextPage, hasNextPage, isFetching, widget, widgetEndpoint })

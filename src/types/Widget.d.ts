@@ -30,11 +30,13 @@ export interface Widget<WidgetDataType = unknown> {
     widgetData: WidgetDataType
     resourcesRefs: ResourcesRefs
   }
-  status: {
-    actions: WidgetActions
-    widgetData: WidgetDataType
-    resourcesRefs: ResourcesRefs
-  }
+  status:
+    | {
+        actions: WidgetActions
+        widgetData: WidgetDataType
+        resourcesRefs: ResourcesRefs
+      }
+    | string
 }
 
 export type WidgetActions = {

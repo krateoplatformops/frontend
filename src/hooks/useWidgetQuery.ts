@@ -7,22 +7,41 @@ import { useConfigContext } from '../context/ConfigContext'
 import type { ResourceRef, Widget } from '../types/Widget'
 import { getAccessToken } from '../utils/getAccessToken'
 
-export interface PaginationOptions {
-  page: number
-  perPage: number
+function parseNumberParam(param: string | null) {
+  const parsed = param ? parseInt(param) : undefined
+  return isNaN(parsed!) ? undefined : parsed
 }
 
-export const useWidgetQuery = (widgetEndpoint: string, options: PaginationOptions) => {
+export const useWidgetQuery = (widgetEndpoint: string) => {
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
+  const requestUrl = new URL(widgetFullUrl)
 
-  const fetchWidget = async ({ page, perPage }: { page: number; perPage: number }) => {
-    const url = new URL(widgetFullUrl)
+  if (requestUrl.searchParams.get('resource') === 'datagrids') {
+    requestUrl.searchParams.set('page', '1')
+    requestUrl.searchParams.set('per_page', '3')
+  }
 
-    url.searchParams.set('page', page.toString())
-    url.searchParams.set('per_page', perPage.toString())
+  const initialPage = parseNumberParam(requestUrl.searchParams.get('page'))
+  const initialPerPage = parseNumberParam(requestUrl.searchParams.get('per_page'))
 
-    const urlString = url.toString()
+  async function fetchWidget({ page, perPage }: { page?: number; perPage?: number }) {
+    /* set new page and perPage to the original requestUrl with updated values */
+    if (typeof page === 'number') {
+      requestUrl.searchParams.set('page', page.toString())
+    }
+    if (typeof perPage === 'number') {
+      requestUrl.searchParams.set('per_page', perPage.toString())
+    }
+
+    const urlString = requestUrl.toString()
+
+    // console.log({
+    //   kind: url.searchParams.get('resource'),
+    //   page: url.searchParams.get('page'),
+    //   perPage: url.searchParams.get('per_page'),
+    //   urlString,
+    // })
 
     const res = await fetch(urlString, {
       headers: {
@@ -35,21 +54,28 @@ export const useWidgetQuery = (widgetEndpoint: string, options: PaginationOption
   }
 
   return useInfiniteQuery({
-    queryKey: ['widgets', widgetEndpoint, options],
+    queryKey: ['widgets', widgetEndpoint],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
     initialPageParam: {
-      page: options.page,
-      perPage: options.perPage,
+      page: initialPage,
+      perPage: initialPerPage,
     },
-    getNextPageParam: (lastPage, pages) => {
-      if (lastPage.status?.resourcesRefs?._slice_?.continue === false) {
+    getNextPageParam: (lastPage, _allPages, pageParams) => {
+      if (typeof pageParams.page !== 'number') {
+        // no initial page, so no more pages
+        return undefined
+      }
+
+      const hasMorePages = typeof lastPage.status === 'object' && lastPage.status?.resourcesRefs?._slice_?.continue === true
+
+      if (!hasMorePages) {
         /* to signal there are not other pages */
         return undefined
       }
 
       return {
-        page: pages.length + 1,
-        perPage: options.perPage,
+        page: pageParams.page + 1,
+        perPage: pageParams.perPage,
       }
     },
     select: (data) => {
