@@ -50,7 +50,8 @@
                           "orange",
                           "gray",
                           "red",
-                          "green"
+                          "green",
+                          "violet"
                         ],
                         "description": "color used to represent the segment"
                       },

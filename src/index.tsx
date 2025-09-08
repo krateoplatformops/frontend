@@ -3,21 +3,22 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import App from './App.tsx'
+import PALETTE from './theme/palette.ts'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ConfigProvider theme={{ token: {
-      colorBgBase: '#fbfbfb',
-      colorBorder: '#E1E3E8',
-      colorError: '#f84c4c',
-      colorInfo: '#11B2E2',
-      colorLink: '#05629A',
-      colorPrimary: '#05629A',
-      colorSuccess: '#00d690',
-      colorSuccessBg: '#00D690',
-      colorTextBase: '#323b40',
-      colorWarning: '#ffaa00',
-      colorWhite: '#FFFFFF',
+      colorBgBase: PALETTE.panelbg,
+      colorBorder: PALETTE.border,
+      colorError: PALETTE.error,
+      colorInfo: PALETTE.info,
+      colorLink: PALETTE.primary,
+      colorPrimary: PALETTE.primary,
+      colorSuccess: PALETTE.success,
+      colorSuccessBg: PALETTE.success,
+      colorTextBase: PALETTE.text,
+      colorWarning: PALETTE.warning,
+      colorWhite: PALETTE.light,
       fontFamily: 'Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif',
     } }}>
       <App />

@@ -25,7 +25,7 @@ export interface FlowChart {
           /**
            * CSS color value for the icon background
            */
-          color?: string
+          color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
           /**
            * optional tooltip message displayed on hover
            */
@@ -42,7 +42,7 @@ export interface FlowChart {
           /**
            * CSS color value for the status icon background
            */
-          color?: string
+          color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
           /**
            * optional tooltip message describing the status
            */
@@ -79,7 +79,7 @@ export interface FlowChart {
             /**
              * CSS color value for the icon background
              */
-            color?: string
+            color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
             /**
              * optional tooltip message
              */
@@ -96,7 +96,7 @@ export interface FlowChart {
             /**
              * CSS color value for the status icon background
              */
-            color?: string
+            color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
             /**
              * optional tooltip message
              */

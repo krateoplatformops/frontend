@@ -7,8 +7,8 @@ import { useState } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 import { useHandleAction } from '../../hooks/useHandleActions'
+import { getColorCode } from '../../theme/palette'
 import type { ResourcesRefs, WidgetAction, WidgetProps } from '../../types/Widget'
-import { getColorCode } from '../../utils/palette'
 import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Panel.module.css'

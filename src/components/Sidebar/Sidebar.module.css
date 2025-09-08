@@ -1,5 +1,5 @@
 .sidebar {
-  background-image: linear-gradient(var(--menu-bg-start), var(--menu-bg-end));
+  background-image: linear-gradient(var(--menubgstart-color), var(--menubgend-color));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);

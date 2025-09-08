@@ -2,8 +2,8 @@ import { Empty } from 'antd'
 import ReactECharts from 'echarts-for-react'
 
 import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
+import { getColorCode } from '../../theme/palette'
 import type { WidgetProps } from '../../types/Widget'
-import { getColorCode } from '../../utils/palette'
 
 import type { LineChart as WidgetType } from './LineChart.type'
 

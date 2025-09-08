@@ -430,10 +430,10 @@ spec:
       - date: "2025-07-24T15:30:36Z"
         icon:
           name: "fa-cubes"
-          color: "#1890ff"
+          color: "blue"
         statusIcon:
           name: "fa-check"
-          color: "#52c41a"
+          color: "green"
           message: "Available"
         kind: "FrontendGithubScaffolding"
         name: "test2"
@@ -447,10 +447,10 @@ spec:
       - date: "2024-07-31T15:30:39Z"
         icon:
           name: "fa-file-alt"
-          color: "#faad14"
+          color: "orange"
         statusIcon:
           name: "fa-ellipsis"
-          color: "#1890ff"
+          color: "blue"
           message: "Progressing"
         kind: "ConfigMap"
         name: "test2-replace-values"
@@ -469,10 +469,10 @@ spec:
       - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-cogs"
-          color: "#13c2c2"
+          color: "orange"
         statusIcon:
           name: "fa-pause"
-          color: "#faad14"
+          color: "orange"
           message: "Suspended"
         kind: "Application"
         name: "test2"
@@ -491,10 +491,10 @@ spec:
       - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-database"
-          color: "#722ed1"
+          color: "violet"
         statusIcon:
           name: "fa-xmark"
-          color: "#ff4d4f"
+          color: "red"
           message: "Degraded"
         kind: "Repo"
         name: "test2-repo"
@@ -513,10 +513,10 @@ spec:
       - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-book"
-          color: "#eb2f96"
+          color: "red"
         statusIcon:
           name: "fa-question"
-          color: "#d9d9d9"
+          color: "gray"
           message: "Unknown"
         kind: "Repo"
         name: "test2-repo"
