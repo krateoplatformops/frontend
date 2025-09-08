@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys/sort-keys-fix */
 /* this rules conflicts with react-query ordering required for correct type inference */
 
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useIsFetching } from '@tanstack/react-query'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { ResourceRef, Widget } from '../types/Widget'
@@ -17,9 +17,10 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
   const requestUrl = new URL(widgetFullUrl)
 
+  /* TO DEBUG BEFORE SNOWPLOW RETURNS THESE IN THE widgetEndpoint */
   if (requestUrl.searchParams.get('resource') === 'datagrids') {
     requestUrl.searchParams.set('page', '1')
-    requestUrl.searchParams.set('per_page', '3')
+    requestUrl.searchParams.set('per_page', '1')
   }
 
   const initialPage = parseNumberParam(requestUrl.searchParams.get('page'))
@@ -53,7 +54,7 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
     return widget
   }
 
-  return useInfiniteQuery({
+  const queryResult = useInfiniteQuery({
     queryKey: ['widgets', widgetEndpoint],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
     initialPageParam: {
@@ -121,4 +122,19 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
       }
     },
   })
+
+  const resourcesRefsPaths =
+    typeof queryResult.data?.status === 'object' ? queryResult.data.status.resourcesRefs.items.map((item) => item.path) : []
+
+  const resourcesRefsFetching = useIsFetching({
+    predicate: (query) => {
+      const resourceRefPath = query.queryKey[1] as string
+      return resourcesRefsPaths.includes(resourceRefPath)
+    },
+  })
+
+  return {
+    queryResult,
+    isFetchingResourcesRefs: resourcesRefsFetching > 0,
+  }
 }

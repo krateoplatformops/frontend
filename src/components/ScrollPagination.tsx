@@ -6,28 +6,33 @@ export const ScrollPagination = ({
   fetchNextPage,
   hasNextPage,
   isFetching,
+  isFetchingNextPage,
+  isFetchingResourcesRefs,
 }: {
   fetchNextPage: () => Promise<unknown> | void
   hasNextPage: boolean
   children: React.ReactNode
   isFetching: boolean
+  isFetchingNextPage: boolean
+  isFetchingResourcesRefs: boolean
 }) => {
   const { inView, ref } = useInView()
 
   useEffect(() => {
-    if (inView && hasNextPage && !isFetching) {
+    if (inView && hasNextPage && !isFetchingNextPage && !isFetchingResourcesRefs) {
       void fetchNextPage()
     }
-  }, [fetchNextPage, hasNextPage, inView, isFetching])
+  }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage, isFetchingResourcesRefs])
 
   return (
     <>
       {children}
 
-      <div ref={ref} style={{ fontSize: '45px', height: '100px' }}>
-        <div>isFetching: {isFetching.toString()}</div>
-        <div>inView: {inView.toString()}</div>
-        <div>has more items: {hasNextPage?.toString()}</div>
+      <div ref={ref}>
+        {/* <div>isFetching: {isFetching.toString()}</div>
+        <div>isFetchingNextPage: {isFetchingNextPage.toString()}</div>
+        <div>isFetchingResourcesRefs: {isFetchingResourcesRefs.toString()}</div>
+        <div>has more items: {hasNextPage?.toString()}</div> */}
       </div>
     </>
   )

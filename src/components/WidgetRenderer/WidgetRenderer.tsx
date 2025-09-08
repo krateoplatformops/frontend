@@ -43,6 +43,7 @@ import TabList from '../../widgets/TabList'
 import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
+import { ButtonPagination } from '../ButtonPagination'
 import { useFilter } from '../FiltesProvider/FiltersProvider'
 import { ScrollPagination } from '../ScrollPagination'
 
@@ -52,6 +53,8 @@ function parseData({
   fetchNextPage,
   hasNextPage,
   isFetching,
+  isFetchingNextPage,
+  isFetchingResourcesRefs,
   widget,
   widgetEndpoint,
 }: {
@@ -60,6 +63,8 @@ function parseData({
   fetchNextPage: () => Promise<unknown> | void
   hasNextPage: boolean
   isFetching: boolean
+  isFetchingNextPage: boolean
+  isFetchingResourcesRefs: boolean
 }) {
   const { kind, metadata, status } = widget
 
@@ -121,9 +126,25 @@ function parseData({
       return <Column resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as ColumnWidgetData} />
     case 'DataGrid':
       return (
-        <ScrollPagination fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} isFetching={isFetching}>
+        /* for fetch on scroll */
+        <ScrollPagination
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetching={isFetching}
+          isFetchingNextPage={isFetchingNextPage}
+          isFetchingResourcesRefs={isFetchingResourcesRefs}
+        >
           <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
         </ScrollPagination>
+        // <ButtonPagination
+        //   fetchNextPage={fetchNextPage}
+        //   hasNextPage={hasNextPage}
+        //   isFetching={isFetching}
+        //   isFetchingNextPage={isFetchingNextPage}
+        //   isFetchingResourcesRefs={isFetchingResourcesRefs}
+        // >
+        //   <DataGrid resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as DataGridWidgetData} />
+        // </ButtonPagination>
       )
     case 'EventList':
       return <EventList resourcesRefs={resourcesRefs} uid={uid} widgetData={widgetData as EventListWidgetData} />
@@ -208,7 +229,8 @@ const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: 
 
   // const url = new URL(widgetFullUrl)
 
-  const { data: widget, error, fetchNextPage, hasNextPage, isFetching, isLoading } = useWidgetQuery(widgetEndpoint)
+  const { isFetchingResourcesRefs, queryResult } = useWidgetQuery(widgetEndpoint)
+  const { data: widget, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isLoading } = queryResult
 
   // check if widget is filtered out by filters
   if (typeof widget?.status === 'object' && widget?.status?.widgetData) {
@@ -221,7 +243,7 @@ const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: 
 
   if (invisible) {
     if (widget) {
-      return parseData({ fetchNextPage, hasNextPage, isFetching, widget, widgetEndpoint })
+      return parseData({ fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, widget, widgetEndpoint })
     }
     return null
   }
@@ -288,10 +310,14 @@ const WidgetRenderer = ({ invisible = false, prefix, widgetEndpoint, wrapper }: 
   if (wrapper) {
     const Wrapper = wrapper.component
 
-    return <Wrapper {...wrapper.props}>{parseData({ fetchNextPage, hasNextPage, isFetching, widget, widgetEndpoint })}</Wrapper>
+    return (
+      <Wrapper {...wrapper.props}>
+        {parseData({ fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isFetchingResourcesRefs, widget, widgetEndpoint })}
+      </Wrapper>
+    )
   }
 
-  return parseData({ fetchNextPage, hasNextPage, isFetching, widget, widgetEndpoint })
+  return parseData({ fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isFetchingResourcesRefs, widget, widgetEndpoint })
 }
 
 export default WidgetRenderer
