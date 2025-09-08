@@ -76,6 +76,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
+| actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].headers | no |  | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
@@ -128,26 +129,6 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
-    allowedResources:
-    - barcharts
-    - buttons
-    - columns
-    - datagrids
-    - eventlists
-    - filters
-    - flowcharts
-    - forms
-    - linecharts
-    - markdowns
-    - pages
-    - panels
-    - paragraphs
-    - piecharts
-    - restactions
-    - rows
-    - tables
-    - tablists
-    - yamlviewers
     icon: fa-trash
     type: default
     shape: circle
@@ -385,11 +366,11 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | data[].date | yes | optional date value to be shown in the node, formatted as ISO 8601 string | string |
 | data[].icon | no | custom icon displayed for the resource node | object |
 | data[].icon.name | no | FontAwesome icon class name (e.g. 'fa-check') | string |
-| data[].icon.color | no | CSS color value for the icon background | string |
+| data[].icon.color | no | CSS color value for the icon background | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | data[].icon.message | no | optional tooltip message displayed on hover | string |
 | data[].statusIcon | no | custom status icon displayed alongside resource info | object |
 | data[].statusIcon.name | no | FontAwesome icon class name representing status | string |
-| data[].statusIcon.color | no | CSS color value for the status icon background | string |
+| data[].statusIcon.color | no | CSS color value for the status icon background | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | data[].statusIcon.message | no | optional tooltip message describing the status | string |
 | data[].kind | yes | kubernetes resource type (e.g. Deployment, Service) | string |
 | data[].name | yes | name of the resource | string |
@@ -398,11 +379,11 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | data[].parentRefs[].date | no | optional date value to be shown in the node, formatted as ISO 8601 string | string |
 | data[].parentRefs[].icon | no | custom icon for the parent resource | object |
 | data[].parentRefs[].icon.name | no | FontAwesome icon class name | string |
-| data[].parentRefs[].icon.color | no | CSS color value for the icon background | string |
+| data[].parentRefs[].icon.color | no | CSS color value for the icon background | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | data[].parentRefs[].icon.message | no | optional tooltip message | string |
 | data[].parentRefs[].statusIcon | no | custom status icon for the parent resource | object |
 | data[].parentRefs[].statusIcon.name | no | FontAwesome icon class name | string |
-| data[].parentRefs[].statusIcon.color | no | CSS color value for the status icon background | string |
+| data[].parentRefs[].statusIcon.color | no | CSS color value for the status icon background | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | data[].parentRefs[].statusIcon.message | no | optional tooltip message | string |
 | data[].parentRefs[].kind | no | resource type of the parent | string |
 | data[].parentRefs[].name | no | name of the parent resource | string |
@@ -469,7 +450,7 @@ spec:
       - date: "2025-07-31T15:30:39Z"
         icon:
           name: "fa-cogs"
-          color: "orange"
+          color: "gray"
         statusIcon:
           name: "fa-pause"
           color: "orange"
@@ -559,6 +540,7 @@ name of the k8s Custom Resource
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
+| actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -629,26 +611,6 @@ metadata:
   namespace: test-namespace
 spec:
   widgetData:
-    allowedResources:
-      - barcharts
-      - buttons
-      - columns
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - pages
-      - panels
-      - paragraphs
-      - piecharts
-      - restactions
-      - rows
-      - tables
-      - tablists
-      - yamlviewers
     submitActionId: firework-submit-action
     stringSchema: |
       {
@@ -958,6 +920,7 @@ Panel is a container to display information
 | actions.rest[].onEventNavigateTo.url | yes | url to navigate to when the event is received | string |
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
+| actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -1008,6 +971,7 @@ Panel is a container to display information
 <summary>Example</summary>
 
 ```yaml
+kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: my-panel
@@ -1015,35 +979,14 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    allowedResources:
-      - barcharts
-      - buttons
-      - columns
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - pages
-      - panels
-      - paragraphs
-      - piecharts
-      - restactions
-      - rows
-      - tables
-      - tablists
-      - yamlviewers
     title: My Panel
     items:
       - resourceRefId: my-pie-chart
       - resourceRefId: my-table
     tooltip: this is a tooltip!
     footer:
-      items:
-        - resourceRefId: button-1
-        - resourceRefId: button-2
+      - resourceRefId: button-1
+      - resourceRefId: button-2
   resourcesRefs:
     items:
       - id: my-table
@@ -1115,7 +1058,7 @@ PieChart is a visual component used to display categorical data as segments of a
 | series | no | data to be visualized in the pie chart | object |
 | series.total | yes | sum of all data values, used to calculate segment sizes | integer |
 | series.data | yes | individual segments of the pie chart | array |
-| series.data[].color | yes | color used to represent the segment | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
+| series.data[].color | yes | color used to represent the segment | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | series.data[].value | yes | numeric value for the segment | integer |
 | series.data[].label | yes | label for the segment | string |
 
