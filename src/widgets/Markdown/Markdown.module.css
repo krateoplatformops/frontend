@@ -1,0 +1,5 @@
+.markdown {
+  overflow-wrap: break-word;    
+  overflow-x: hidden;
+  white-space: pre-wrap;        
+}

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
 
-import styles from './Drawer.module.css'
 import { DrawerProvider } from './DrawerContext'
 
 interface DrawerProps {
@@ -65,7 +64,6 @@ const Drawer = () => {
         setDrawerData({})
       }}
       open={isOpen}
-      rootClassName={styles.drawer}
       size={size || 'default'}
       title={drawerData.title || title}
     >
