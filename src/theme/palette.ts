@@ -36,9 +36,9 @@ export const getColorCode = (colorName: string | undefined) => {
 
 export const cssVariables = () => {
   const root = document.documentElement
-    Object.entries(PALETTE).forEach(([key, value]) => {
-      root.style.setProperty(`--${key}-color`, value)
-    })
+  Object.entries(PALETTE).forEach(([key, value]) => {
+    root.style.setProperty(`--${key}-color`, value)
+  })
 }
 
 export default PALETTE

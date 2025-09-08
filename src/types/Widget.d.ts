@@ -54,7 +54,7 @@ export type WidgetActions = {
       url: string
       eventReason: string
       timeout?: number
-      reloadRoutes?: boolean,
+      reloadRoutes?: boolean
       loadingMessage?: string
     }
     payloadToOverride?: {
