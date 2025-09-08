@@ -30,6 +30,7 @@ spec:
       - resourceRefId: test-navigate-page
       - resourceRefId: button-filter-table-fin-ops-test
       - resourceRefId: table-fin-ops-test
+      - resourceRefId: panel-table-fin-ops-test
       - resourceRefId: panel-with-row
       - resourceRefId: panel-with-column
       - resourceRefId: button-with-drawer-backend-endpoint-id
@@ -64,6 +65,12 @@ spec:
         name: table-fin-ops-test
         namespace: krateo-system
         resource: tables
+        verb: GET  
+      - id: panel-table-fin-ops-test
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: panel-table-fin-ops-test
+        namespace: krateo-system
+        resource: panels
         verb: GET  
       - id: panel-with-row
         apiVersion: widgets.templates.krateo.io/v1beta1

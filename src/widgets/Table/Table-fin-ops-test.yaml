@@ -40,6 +40,26 @@ spec:
         - releaseName
         type: string
 ---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: panel-table-fin-ops-test
+  namespace: krateo-system
+spec:
+  widgetData:   
+    actions: {}
+    title: Panel with Table FinOps
+    items:
+      - resourceRefId: table-fin-ops-test
+  resourcesRefs:
+    items:
+      - id: table-fin-ops-test
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-fin-ops-test
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
 kind: Table
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -72,6 +92,12 @@ spec:
         title: Status
       - valueKey: updated
         title: Last Update
+      - valueKey: updated2
+        title: Last Update 2
+      - valueKey: updated3
+        title: Last Update 3
+      - valueKey: updated4
+        title: Last Update 4
     data:
       - - valueKey: releaseName
           kind: jsonSchemaType
