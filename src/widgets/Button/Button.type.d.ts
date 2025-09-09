@@ -230,7 +230,7 @@ export interface Button {
       clickActionId: string
     }
     resourcesRefs?: {
-      _slice_?: {
+      slice?: {
         offset?: number
         page: number
         perPage: number
@@ -248,6 +248,13 @@ export interface Button {
         }
         resource?: string
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
+        slice?: {
+          offset?: number
+          page: number
+          perPage: number
+          continue?: boolean
+          [k: string]: unknown
+        }
         [k: string]: unknown
       }[]
       [k: string]: unknown

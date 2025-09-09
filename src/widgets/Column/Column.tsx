@@ -17,12 +17,13 @@ const Column = ({ resourcesRefs, uid, widgetData }: WidgetProps<ColumnWidgetData
       {items
         .map(({ resourceRefId }, index) => {
           const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-          if (!endpoint) { return null }
+          if (!endpoint) {
+            return null
+          }
 
           return <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={endpoint} />
         })
-        .filter(Boolean)
-      }
+        .filter(Boolean)}
     </AntdColumn>
   )
 }

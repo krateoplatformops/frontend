@@ -24,14 +24,7 @@
               "description": "list of events received from a k8s cluster or server sent event",
               "items": {
                 "type": "object",
-                "required": [
-                  "metadata",
-                  "involvedObject",
-                  "reason",
-                  "message",
-                  "type",
-                  "source"
-                ],
+                "required": ["metadata", "involvedObject", "reason", "message", "type", "source"],
                 "properties": {
                   "icon": {
                     "type": "string",
@@ -84,12 +77,7 @@
                   "metadata": {
                     "type": "object",
                     "description": "metadata of the event such as name, namespace, and uid",
-                    "required": [
-                      "name",
-                      "namespace",
-                      "uid",
-                      "creationTimestamp"
-                    ],
+                    "required": ["name", "namespace", "uid", "creationTimestamp"],
                     "properties": {
                       "name": {
                         "type": "string",
@@ -177,7 +165,7 @@
         "resourcesRefs": {
           "type": "object",
           "properties": {
-            "_slice_": {
+            "slice": {
               "type": "object",
               "properties": {
                 "offset": {
@@ -224,6 +212,24 @@
                   "verb": {
                     "type": "string",
                     "enum": ["POST", "PUT", "PATCH", "DELETE", "GET"]
+                  },
+                  "slice": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer"
+                      },
+                      "page": {
+                        "type": "integer"
+                      },
+                      "perPage": {
+                        "type": "integer"
+                      },
+                      "continue": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["page", "perPage"]
                   }
                 },
                 "required": ["id"]

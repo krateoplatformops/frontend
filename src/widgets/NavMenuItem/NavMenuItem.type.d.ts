@@ -40,7 +40,7 @@ export interface NavMenuItem {
       expression?: string
     }[]
     resourcesRefs?: {
-      _slice_?: {
+      slice?: {
         offset?: number
         page: number
         perPage: number
@@ -58,6 +58,13 @@ export interface NavMenuItem {
         }
         resource?: string
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
+        slice?: {
+          offset?: number
+          page: number
+          perPage: number
+          continue?: boolean
+          [k: string]: unknown
+        }
         [k: string]: unknown
       }[]
       [k: string]: unknown
