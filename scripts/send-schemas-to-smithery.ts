@@ -52,7 +52,8 @@ async function selectConfig(): Promise<string> {
 
     const choices = validConfigs.map((config) => {
       const apiUrl = getConfigSmitheryUrl(config)
-      const configLabel = config === 'default' ? 'Default (config.json)' : `${config.charAt(0).toUpperCase() + config.slice(1)} (config.${config}.json)`
+      const configLabel =
+        config === 'default' ? 'Default (config.json)' : `${config.charAt(0).toUpperCase() + config.slice(1)} (config.${config}.json)`
       return {
         name: `${configLabel} - ${chalk.gray(apiUrl)}`,
         value: config,
@@ -133,7 +134,9 @@ async function sendSchemaToSmithery(schemaPath: string, api: { SMITHERY_API_BASE
       console.error(`❌ ${chalk.red('Connection failed:')} Could not send ${schemaName} to ${chalk.cyan(forgeUrl)}`)
       console.error(`   ${chalk.yellow('💡 Possible causes:')}`)
       console.error(`   • Smithery service is not running`)
-      console.error(`   • Wrong port or URL in config (check ${chalk.cyan(`config.${configType === 'default' ? 'json' : `${configType}.json`}`)})`)
+      console.error(
+        `   • Wrong port or URL in config (check ${chalk.cyan(`config.${configType === 'default' ? 'json' : `${configType}.json`}`)})`
+      )
       console.error(`   • Network connectivity issues`)
       console.error(`   • Firewall blocking the connection`)
     } else {
@@ -170,7 +173,7 @@ async function main() {
     console.log(chalk.gray(`   Smithery API: ${api.SMITHERY_API_BASE_URL}`))
 
     // Find all .schema.json files in the widgets directory
-    const schemaFiles = await glob('**/*.schema.json', {
+    const schemaFiles = await glob('**/DataGrid.schema.json', {
       absolute: true,
       cwd: WIDGETS_DIR,
     })
