@@ -173,7 +173,7 @@ async function main() {
     console.log(chalk.gray(`   Smithery API: ${api.SMITHERY_API_BASE_URL}`))
 
     // Find all .schema.json files in the widgets directory
-    const schemaFiles = await glob('**/DataGrid.schema.json', {
+    const schemaFiles = await glob('**/*.schema.json', {
       absolute: true,
       cwd: WIDGETS_DIR,
     })

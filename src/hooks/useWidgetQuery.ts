@@ -18,10 +18,10 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
   const requestUrl = new URL(widgetFullUrl)
 
   /* TO DEBUG BEFORE SNOWPLOW RETURNS THESE IN THE widgetEndpoint */
-  if (requestUrl.searchParams.get('resource') === 'datagrids') {
-    requestUrl.searchParams.set('page', '1')
-    requestUrl.searchParams.set('per_page', '1')
-  }
+  // if (requestUrl.searchParams.get('resource') === 'datagrids') {
+  //   requestUrl.searchParams.set('page', '1')
+  //   requestUrl.searchParams.set('per_page', '1')
+  // }
 
   const initialPage = parseNumberParam(requestUrl.searchParams.get('page'))
   const initialPerPage = parseNumberParam(requestUrl.searchParams.get('per_page'))
@@ -67,7 +67,7 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
         return undefined
       }
 
-      const hasMorePages = typeof lastPage.status === 'object' && lastPage.status?.resourcesRefs?._slice_?.continue === true
+      const hasMorePages = typeof lastPage.status === 'object' && lastPage.status?.resourcesRefs?.slice?.continue === true
 
       if (!hasMorePages) {
         /* to signal there are not other pages */

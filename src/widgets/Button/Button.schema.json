@@ -325,7 +325,7 @@
         "resourcesRefs": {
           "type": "object",
           "properties": {
-            "_slice_": {
+            "slice": {
               "type": "object",
               "properties": {
                 "offset": {
@@ -372,6 +372,24 @@
                   "verb": {
                     "type": "string",
                     "enum": ["POST", "PUT", "PATCH", "DELETE", "GET"]
+                  },
+                  "slice": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer"
+                      },
+                      "page": {
+                        "type": "integer"
+                      },
+                      "perPage": {
+                        "type": "integer"
+                      },
+                      "continue": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["page", "perPage"]
                   }
                 },
                 "required": ["allowed", "id"]
