@@ -59,7 +59,7 @@ const FormGenerator = ({
   showFormStructure = false,
 }: FormGeneratorType) => {
   const [form] = Form.useForm()
-  const requiredFields = schema.required as string[]
+  const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
   const { optionalCount, totalCount } = getOptionalCount(schema, requiredFields)
@@ -143,24 +143,24 @@ const FormGenerator = ({
     )
   }
 
-  const parseData = ({ properties, required }: JSONSchema4, name: string = ''): Field[] => {
+  const parseData = ({ properties, required }: JSONSchema4, name: string[] = [], parentIsRequired: boolean = true): Field[] => {
     if (properties) {
-      return Object.keys(properties).flatMap((key) => {
-        const currentName = name ? `${name}.${key}` : key
-        const prop = properties[key]
+      const requiredFields = Array.isArray(required) ? required : []
 
-        if (prop.type === 'object') {
-          return parseData(prop, currentName)
+      return Object.keys(properties).flatMap((key) => {
+        const prop = properties[key]
+        const currentPath = [...name, key]
+
+        const isRequired = requiredFields.includes(key) && parentIsRequired
+
+        if (prop.type === 'object' && prop.properties) {
+          return parseData(prop, currentPath, isRequired)
         }
 
-        const isRequired
-          = (Array.isArray(required) && required.indexOf(key) > -1)
-          || requiredFields.indexOf(key) > -1
-
-        const label = prop.title || key
-        return [renderField(label, currentName, prop, isRequired)]
+        return [renderField(prop.title || key, currentPath.join('.'), prop, isRequired)]
       })
     }
+
     return []
   }
 
