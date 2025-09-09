@@ -115,7 +115,11 @@ const Panel = ({ resourcesRefs, uid, widget, widgetData }: WidgetProps<PanelWidg
                 style={{ backgroundColor: getColorCode(icon.color) }}
               />
             )}
-            {title}
+            <div className={styles.text}>
+              <Tooltip title={title}>
+                {title}
+              </Tooltip>
+            </div>
           </div>
         )
       }

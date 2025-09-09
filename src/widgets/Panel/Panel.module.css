@@ -95,5 +95,14 @@
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-lighter);
     gap: var(--spacing-md);
+    min-width: 0;
+
+    .text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
