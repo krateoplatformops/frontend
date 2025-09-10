@@ -19,7 +19,7 @@ type FormGeneratorType = {
   showFormStructure?: boolean
   schema: JSONSchema4
   formId: string
-  onSubmit: (values: object) => Promise<void>
+  onSubmit: (values: Record<string, unknown>) => Promise<void>
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
   autocomplete?: FormWidgetData['autocomplete']
@@ -448,11 +448,12 @@ const FormGenerator = ({
                 id={formId}
                 layout='vertical'
                 name='formGenerator'
-                onFinish={(values: object) => {
+                onFinish={(values: Record<string, unknown>) => {
                   onSubmit(values).catch((error) => {
                     console.error(`Error while executing the Form onFinish function: ${error}`)
                   })
-                }} onFinishFailed={onFinishFailed}
+                }}
+                onFinishFailed={onFinishFailed}
                 onReset={(event) => {
                   event.preventDefault()
                   setInitialValues()

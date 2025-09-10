@@ -1,11 +1,13 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Ajv from 'ajv'
 import { Button, Result, Space, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import dayjs from 'dayjs'
 import type { JSONSchema4 } from 'json-schema'
 import { useEffect, useId, useRef } from 'react'
+import validator from 'validator'
 
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
@@ -29,10 +31,10 @@ export type FormWidgetData = WidgetType['spec']['widgetData']
  * @param values - A flat object with values that may include Dayjs instances
  * @returns A new object with Dayjs instances converted to ISO strings
  */
-const convertDayjsToISOString = (values: object): object => {
+const convertDayjsToISOString = (values: Record<string, unknown>) => {
   const result: Record<string, unknown> = {}
 
-  Object.entries(values as Record<string, unknown>).forEach(([key, value]) => {
+  Object.entries(values).forEach(([key, value]) => {
     if (dayjs.isDayjs(value)) {
       result[key] = value.toISOString()
     } else {
@@ -41,6 +43,50 @@ const convertDayjsToISOString = (values: object): object => {
   })
 
   return result
+}
+
+const sanitizeFormValues = (values: Record<string, unknown>): Record<string, unknown> => {
+  const sanitizeString = (value: string) => {
+    let clean = value.trim()
+    clean = validator.escape(clean)
+    clean = clean.replace(/[;'"\\]/g, '')
+
+    return clean
+  }
+
+  const sanitized: Record<string, unknown> = {}
+
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value === 'string') {
+      sanitized[key] = sanitizeString(value)
+      continue
+    }
+
+    if (Array.isArray(value)) {
+      sanitized[key] = value.map((item): unknown => {
+        if (typeof item === 'string') {
+          return sanitizeString(item)
+        }
+
+        if (item && typeof item === 'object') {
+          return sanitizeFormValues(item as Record<string, unknown>)
+        }
+
+        return item
+      })
+
+      continue
+    }
+
+    if (value && typeof value === 'object') {
+      sanitized[key] = sanitizeFormValues(value as Record<string, unknown>)
+      continue
+    }
+
+    sanitized[key] = value
+  }
+
+  return sanitized
 }
 
 interface FormExtraProps {
@@ -79,6 +125,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
   const { actions, autocomplete, buttonConfig, dependencies, fieldDescription, objectFields, schema, stringSchema, submitActionId } = widgetData
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
+  const ajv = new Ajv()
 
   const { notification } = useApp()
   const { handleAction, isActionLoading } = useHandleAction()
@@ -114,7 +161,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
   // If the form is inside a Drawer, button will be already rendered in the Drawer
   const shouldRenderButtonsInsideForm = !insideDrawer
 
-  const onSubmit = async (formValues: object) => {
+  const onSubmit = async (formValues: Record<string, unknown>) => {
     if (!action) {
       notification.error({
         description: `The widget definition does not include an action (ID: ${submitActionId})`,
@@ -151,14 +198,26 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
       return
     }
 
-    const values = convertDayjsToISOString(formValues)
-    const payload: Payload = { ...resourceRef.payload, ...values }
+    const values = sanitizeFormValues(convertDayjsToISOString(formValues))
+    const validate = ajv.compile(formSchema)
+
+    if (!validate(values)) {
+      notification.error({
+        description: `Invalid form data: ${JSON.stringify(validate.errors)}`,
+        message: 'Error while executing the action',
+        placement: 'bottomLeft',
+      })
+
+      return
+    }
 
     // TODO: handle disabled buttons
     if (action.onEventNavigateTo) {
       /* FIXME: This is a bit dirty, should disable the already present buttons instead */
       setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} loading={isActionLoading} /> })
     }
+
+    const payload: Payload = { ...resourceRef.payload, ...values }
 
     await handleAction(action, resourcesRefs, payload, widget)
   }
