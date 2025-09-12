@@ -111,7 +111,7 @@ jobs:
         run: helm install authn krateo/authn --version=0.20.1 --wait --set service.type=NodePort  --set service.nodePort=30082
 
       - name: Install Krateo PlatformOps authn
-        run: helm install smithery krateo/smithery --version=0.9.1 --wait --set service.type=NodePort  --set service.nodePort=30088
+        run: helm install smithery krateo/smithery --version=0.10.0 --wait --set service.type=NodePort  --set service.nodePort=30088
 
       - name: Generate random password
         id: genpass
