@@ -169,7 +169,7 @@ jobs:
         run: helm install authn krateo/authn --version=0.20.1 --wait --set service.type=NodePort  --set service.nodePort=30082
 
       - name: Install Krateo PlatformOps authn
-        run: helm install smithery krateo/smithery --version=0.9.1 --wait --set service.type=NodePort  --set service.nodePort=30088
+        run: helm install smithery krateo/smithery --version=0.10.0 --wait --set service.type=NodePort  --set service.nodePort=30088
 
       - name: Generate random password
         id: genpass
@@ -305,14 +305,14 @@ jobs:
           git checkout main
           git pull origin main
 
-          # Ensure chart/crds directory exists
-          mkdir -p chart/crds
+          # Ensure crd-chart/templates directory exists
+          mkdir -p crd-chart/templates
 
-          # Compare local YAML files with target repo's chart/crds
+          # Compare local YAML files with target repo's crd-chart/templates
           echo "=== Checking alignment between local and remote YAML files ==="
           
-          echo "Files in remote chart/crds:"
-          ls -la chart/crds/ || echo "No files in chart/crds"
+          echo "Files in remote crd-chart/templates:"
+          ls -la crd-chart/templates/ || echo "No files in crd-chart/templates"
           
           echo "Files in local smithery-output:"
           ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" || echo "No files in smithery-output"
@@ -321,12 +321,12 @@ jobs:
           mkdir -p "$TEMP_DIR/remote" "$TEMP_DIR/local"
           
           # Copy current remote files (only .yaml files)
-          if ls chart/crds/*.yaml >/dev/null 2>&1; then
-            cp chart/crds/*.yaml "$TEMP_DIR/remote/"
+          if ls crd-chart/templates/*.yaml >/dev/null 2>&1; then
+            cp crd-chart/templates/*.yaml "$TEMP_DIR/remote/"
             echo "Copied remote .yaml files:"
             ls -la "$TEMP_DIR/remote/"
           else
-            echo "No .yaml files in remote chart/crds directory"
+            echo "No .yaml files in remote crd-chart/templates directory"
           fi
           
           # Copy local files
@@ -391,7 +391,7 @@ jobs:
           echo "Creating new branch '$BRANCH' from main"
           git checkout -b "$BRANCH"
 
-          # Copy local YAML files to chart/crds
+          # Copy local YAML files to crd-chart/templates
           echo "=== DETAILED COPY DEBUGGING ==="
           echo "Current working directory: $(pwd)"
           echo "Current git branch: $(git branch --show-current)"
@@ -402,22 +402,22 @@ jobs:
           echo "  Files: $(ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" 2>/dev/null || echo "Directory not accessible")"
           
           echo "Destination directory check:"
-          echo "  Path: $(pwd)/chart/crds"
-          echo "  Exists: $([ -d "chart/crds" ] && echo "YES" || echo "NO")"
-          echo "  Before copy: $(ls -la chart/crds/ 2>/dev/null || echo "Directory empty or not accessible")"
+          echo "  Path: $(pwd)/crd-chart/templates"
+          echo "  Exists: $([ -d "crd-chart/templates" ] && echo "YES" || echo "NO")"
+          echo "  Before copy: $(ls -la crd-chart/templates/ 2>/dev/null || echo "Directory empty or not accessible")"
           
           echo "Git status before copy:"
           git status --porcelain
           
           echo "Checking .gitignore rules:"
-          git check-ignore chart/crds/*.yaml 2>/dev/null && echo "FILES ARE GITIGNORED!" || echo "Files not gitignored"
+          git check-ignore crd-chart/templates/*.yaml 2>/dev/null && echo "FILES ARE GITIGNORED!" || echo "Files not gitignored"
           
           # Remove all existing .yaml files first, then copy new ones
           echo "Removing existing .yaml files..."
-          rm -f chart/crds/*.yaml 2>/dev/null || true
+          rm -f crd-chart/templates/*.yaml 2>/dev/null || true
           
           echo "Copying files..."
-          if cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml chart/crds/ 2>&1; then
+          if cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml crd-chart/templates/ 2>&1; then
             echo "Copy command succeeded"
           else
             echo "Copy command failed with exit code: $?"
@@ -425,8 +425,8 @@ jobs:
           fi
           
           echo "After copy:"
-          echo "  Files in chart/crds: $(ls -la chart/crds/ 2>/dev/null || echo "Directory empty or not accessible")"
-          echo "  File count: $(ls chart/crds/*.yaml 2>/dev/null | wc -l)"
+          echo "  Files in crd-chart/templates: $(ls -la crd-chart/templates/ 2>/dev/null || echo "Directory empty or not accessible")"
+          echo "  File count: $(ls crd-chart/templates/*.yaml 2>/dev/null | wc -l)"
           
           echo "Git status after copy:"
           git status --porcelain
@@ -438,30 +438,30 @@ jobs:
           git ls-files --others --exclude-standard
 
           # Check if there are changes to commit
-          if git diff --quiet -- chart/crds && git diff --cached --quiet -- chart/crds; then
+          if git diff --quiet -- crd-chart/templates && git diff --cached --quiet -- crd-chart/templates; then
             echo "=== NO CHANGES DETECTED - DEBUGGING ==="
             echo "Git thinks there are no changes. Let's investigate..."
             
-            echo "1. Files in chart/crds directory:"
-            find chart/crds -name "*.yaml" -exec echo "  File: {}" \; -exec wc -l {} \;
+            echo "1. Files in crd-chart/templates directory:"
+            find crd-chart/templates -name "*.yaml" -exec echo "  File: {}" \; -exec wc -l {} \;
             
             echo "2. Git status (verbose):"
             git status
             
             echo "3. Are files tracked?"
-            git ls-files chart/crds/
+            git ls-files crd-chart/templates/
             
             echo "4. Are files in working directory different from index?"
-            git diff --name-status -- chart/crds/
+            git diff --name-status -- crd-chart/templates/
             
             echo "5. Are there untracked files?"
-            git ls-files --others --exclude-standard chart/crds/
+            git ls-files --others --exclude-standard crd-chart/templates/
             
             echo "6. What does git see in the directory?"
-            git ls-tree HEAD chart/crds/ 2>/dev/null || echo "No chart/crds in HEAD"
+            git ls-tree HEAD crd-chart/templates/ 2>/dev/null || echo "No crd-chart/templates in HEAD"
             
             echo "7. Forcing add to see what happens:"
-            git add chart/crds/ -v
+            git add crd-chart/templates/ -v
             
             echo "8. After forced add:"
             git status --porcelain
@@ -476,10 +476,10 @@ jobs:
           fi
 
           # Stage and commit changes
-          git add chart/crds
+          git add crd-chart/templates
           git commit -m "Update Smithery YAML files from tag ${LATEST_TAG}
 
-          Updated YAML files in chart/crds directory to align with local smithery output.
+          Updated YAML files in crd-chart/templates directory to align with local smithery output.
           Source tag: ${LATEST_TAG}
           Workflow run: ${GITHUB_RUN_ID}"
 
@@ -517,14 +517,14 @@ jobs:
                     --title "Update Smithery YAML files (${LATEST_TAG})" \
                     --body "## Smithery YAML Update
 
-          This PR updates the YAML files in \`chart/crds/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
           - Workflow run: \`${GITHUB_RUN_ID}\`
 
           **Changes:**
-          - Updated YAML files in \`chart/crds/\` directory
+          - Updated YAML files in \`crd-chart/templates/\` directory
           - Files were not aligned between local and remote repositories
 
           **Note:** This replaces closed PR #${PR_NUMBER} which could not be reopened.
@@ -543,14 +543,14 @@ jobs:
                   --title "Update Smithery YAML files (${LATEST_TAG})" \
                   --body "## Smithery YAML Update
 
-          This PR updates the YAML files in \`chart/crds/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
           - Workflow run: \`${GITHUB_RUN_ID}\`
 
           **Changes:**
-          - Updated YAML files in \`chart/crds/\` directory
+          - Updated YAML files in \`crd-chart/templates/\` directory
           - Files were not aligned between local and remote repositories
 
           **Note:** Previous PR #${PR_NUMBER} was already merged.
@@ -568,14 +568,14 @@ jobs:
                   --title "Update Smithery YAML files (${LATEST_TAG})" \
                   --body "## Smithery YAML Update
 
-          This PR updates the YAML files in \`chart/crds/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
           - Workflow run: \`${GITHUB_RUN_ID}\`
 
           **Changes:**
-          - Updated YAML files in \`chart/crds/\` directory
+          - Updated YAML files in \`crd-chart/templates/\` directory
           - Files were not aligned between local and remote repositories
 
           **Note:** Previous PR #${PR_NUMBER} had unexpected state: ${PR_STATE}
@@ -593,14 +593,14 @@ jobs:
               --title "Update Smithery YAML files (${LATEST_TAG})" \
               --body "## Smithery YAML Update
 
-          This PR updates the YAML files in \`chart/crds/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
           - Workflow run: \`${GITHUB_RUN_ID}\`
 
           **Changes:**
-          - Updated YAML files in \`chart/crds/\` directory
+          - Updated YAML files in \`crd-chart/templates/\` directory
           - Files were not aligned between local and remote repositories
 
           This PR was automatically generated by the smithery workflow." \
