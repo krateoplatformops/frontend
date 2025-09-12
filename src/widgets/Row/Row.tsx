@@ -16,7 +16,7 @@ const Row = ({ resourcesRefs, uid, widgetData }: WidgetProps<RowWidgetData>) => 
 
   return (
     <div className={styles.row}>
-      <AntdRow align={'stretch'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} key={uid} wrap>
+      <AntdRow align={'middle'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} key={uid} wrap>
         {items
           .map(({ resourceRefId, size }, index) => {
             const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
