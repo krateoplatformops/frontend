@@ -106,9 +106,9 @@ spec:
       - yamlviewers
     items:
       - resourceRefId: markdown-title
-        size: 23
+        size: 22
       - resourceRefId: button-filter-new-table
-        size: 1
+        size: 2
   resourcesRefs:
     items:
       - id: markdown-title

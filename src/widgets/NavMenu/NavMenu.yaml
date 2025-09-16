@@ -25,6 +25,7 @@ spec:
       - yamlviewers
     items:
       - resourceRefId: test-alignment-row
+      - resourceRefId: test-alignment-row-in-panel
       - resourceRefId: panel-backend-endpoint-id
       - resourceRefId: button-filter-new-table
       - resourceRefId: test-updated-table
@@ -42,6 +43,12 @@ spec:
         name: test-alignment-row
         namespace: krateo-system
         resource: rows
+        verb: GET  
+      - id: test-alignment-row-in-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-alignment-row-in-panel
+        namespace: krateo-system
+        resource: panels
         verb: GET  
       - id: button-filter-new-table
         apiVersion: widgets.templates.krateo.io/v1beta1

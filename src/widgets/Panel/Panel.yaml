@@ -467,3 +467,35 @@ spec:
         namespace: krateo-system
         resource: forms
         verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: test-alignment-row-in-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: Test Row in Panel
+    items:
+      - resourceRefId: test-alignment-row
+    tags:
+      - ciao
+      - tag2
+      - tag3
+    footer:
+      - resourceRefId: button-1
+  resourcesRefs:
+    items:
+      - id: test-alignment-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-alignment-row
+        namespace: krateo-system
+        resource: rows
+        verb: GET  
+      - id: button-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-1
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
