@@ -1267,6 +1267,7 @@ TabList display a set of tab items for navigation or content grouping
 | items | yes | the items of the tab list | array |
 | items[].label | no | text displayed on the tab | string |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource represented by the tab content | string |
+| items[].title | no | optional title to be displayed inside the tab | string |
 
 <details>
 <summary>Example</summary>
