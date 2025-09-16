@@ -109,6 +109,7 @@ spec:
         size: 22
       - resourceRefId: button-filter-new-table
         size: 2
+        alignment: right
   resourcesRefs:
     items:
       - id: markdown-title

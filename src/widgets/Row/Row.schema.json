@@ -61,6 +61,11 @@
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 24
+                  },
+                  "alignment": {
+                    "type": "string",
+                    "description": "the alignment of the element inside the cell. Default is 'left'",
+                    "enum": ["center", "left", "right"]
                   }
                 },
                 "additionalProperties": false

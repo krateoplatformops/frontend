@@ -43,6 +43,10 @@ export interface Row {
          * the number of cells that the item will occupy, from 0 (not displayed) to 24 (occupies all space)
          */
         size?: number
+        /**
+         * the alignment of the element inside the cell. Default is 'left'
+         */
+        alignment?: 'center' | 'left' | 'right'
       }[]
     }
     resourcesRefs: {
