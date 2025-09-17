@@ -17,20 +17,21 @@ spec:
       - yamlviewers
     items:
       - label: first tab
-        resourceRefId: second-column
+        title: Ciao
+        resourceRefId: my-panel
       - label: second tab
         resourceRefId: first-column
   resourcesRefs:
     items:
+      - id: my-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: my-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
       - id: first-column
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: first-column
-        namespace: krateo-system
-        resource: columns
-        verb: GET
-      - id: second-column
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: second-column
         namespace: krateo-system
         resource: columns
         verb: GET

@@ -60,6 +60,10 @@
                   "resourceRefId": {
                     "type": "string",
                     "description": "the identifier of the k8s custom resource represented by the tab content"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "optional title to be displayed inside the tab"
                   }
                 },
                 "additionalProperties": false

@@ -311,7 +311,7 @@
             "schema": {
               "description": "the schema of the form as an object",
               "type": "object",
-              "additionalProperties": false,
+              "additionalProperties": true,
               "tsType": "object"
             },
             "stringSchema": {

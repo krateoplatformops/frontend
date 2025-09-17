@@ -46,6 +46,10 @@ export interface TabList {
          * the identifier of the k8s custom resource represented by the tab content
          */
         resourceRefId: string
+        /**
+         * optional title to be displayed inside the tab
+         */
+        title?: string
       }[]
     }
     resourcesRefs?: {

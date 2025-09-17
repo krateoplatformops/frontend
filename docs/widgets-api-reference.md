@@ -1129,6 +1129,7 @@ name of the k8s Custom Resource
 | items | yes | the items of the row | array |
 | items[].resourceRefId | yes |  | string |
 | items[].size | no | the number of cells that the item will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
+| items[].alignment | no | the alignment of the element inside the cell. Default is 'left' | `center` \| `left` \| `right` |
 
 <details>
 <summary>Example</summary>
@@ -1266,6 +1267,7 @@ TabList display a set of tab items for navigation or content grouping
 | items | yes | the items of the tab list | array |
 | items[].label | no | text displayed on the tab | string |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource represented by the tab content | string |
+| items[].title | no | optional title to be displayed inside the tab | string |
 
 <details>
 <summary>Example</summary>

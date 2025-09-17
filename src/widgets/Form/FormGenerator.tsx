@@ -19,7 +19,7 @@ type FormGeneratorType = {
   showFormStructure?: boolean
   schema: JSONSchema4
   formId: string
-  onSubmit: (values: object) => Promise<void>
+  onSubmit: (values: Record<string, unknown>) => Promise<void>
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
   autocomplete?: FormWidgetData['autocomplete']
@@ -59,12 +59,14 @@ const FormGenerator = ({
   showFormStructure = false,
 }: FormGeneratorType) => {
   const [form] = Form.useForm()
-  const requiredFields = schema.required as string[]
+  const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
   const { optionalCount, totalCount } = getOptionalCount(schema, requiredFields)
 
   type Field = ReturnType<typeof renderField>
+
+  const getFormItemId = (name: string) => `${formId}-${name}`.replace(/[^a-zA-Z0-9_-]/g, '_')
 
   const setInitialValues = useCallback(() => {
     const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
@@ -143,24 +145,24 @@ const FormGenerator = ({
     )
   }
 
-  const parseData = ({ properties, required }: JSONSchema4, name: string = ''): Field[] => {
+  const parseData = ({ properties, required }: JSONSchema4, name: string[] = [], parentIsRequired: boolean = true): Field[] => {
     if (properties) {
-      return Object.keys(properties).flatMap((key) => {
-        const currentName = name ? `${name}.${key}` : key
-        const prop = properties[key]
+      const requiredFields = Array.isArray(required) ? required : []
 
-        if (prop.type === 'object') {
-          return parseData(prop, currentName)
+      return Object.keys(properties).flatMap((key) => {
+        const prop = properties[key]
+        const currentPath = [...name, key]
+
+        const isRequired = requiredFields.includes(key) && parentIsRequired
+
+        if (prop.type === 'object' && prop.properties) {
+          return parseData(prop, currentPath, isRequired)
         }
 
-        const isRequired
-          = (Array.isArray(required) && required.indexOf(key) > -1)
-          || requiredFields.indexOf(key) > -1
-
-        const label = prop.title || key
-        return [renderField(label, currentName, prop, isRequired)]
+        return [renderField(prop.title || key, getFormItemId(currentPath.join('.')), prop, isRequired)]
       })
     }
+
     return []
   }
 
@@ -374,8 +376,8 @@ const FormGenerator = ({
         if (!shouldShow) { return [] }
 
         const nodeItem: AnchorLinkItemProps = {
-          href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
-          key: currentName,
+          href: schemaItem.type === 'object' ? '#' : `#${getFormItemId(currentName)}`,
+          key: getFormItemId(currentName),
           title:
             schemaItem.type === 'object' ? (
               <span className={styles.anchorObjectLabel}>{key}</span>
@@ -448,11 +450,12 @@ const FormGenerator = ({
                 id={formId}
                 layout='vertical'
                 name='formGenerator'
-                onFinish={(values: object) => {
+                onFinish={(values: Record<string, unknown>) => {
                   onSubmit(values).catch((error) => {
                     console.error(`Error while executing the Form onFinish function: ${error}`)
                   })
-                }} onFinishFailed={onFinishFailed}
+                }}
+                onFinishFailed={onFinishFailed}
                 onReset={(event) => {
                   event.preventDefault()
                   setInitialValues()

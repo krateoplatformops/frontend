@@ -9,6 +9,15 @@ import type { Row as WidgetType } from './Row.type'
 
 export type RowWidgetData = WidgetType['spec']['widgetData']
 
+const justifyContentMap: Record<
+  NonNullable<RowWidgetData['items'][number]['alignment']>,
+  React.CSSProperties['justifyContent']
+> = {
+  center: 'center',
+  left: 'flex-start',
+  right: 'flex-end',
+}
+
 const Row = ({ resourcesRefs, uid, widgetData }: WidgetProps<RowWidgetData>) => {
   const { items } = widgetData
 
@@ -16,14 +25,22 @@ const Row = ({ resourcesRefs, uid, widgetData }: WidgetProps<RowWidgetData>) => 
 
   return (
     <div className={styles.row}>
-      <AntdRow align={'stretch'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} key={uid} wrap>
+      <AntdRow align={'middle'} gutter={{ lg: 32, md: 24, sm: 16, xs: 8 }} key={uid} wrap>
         {items
-          .map(({ resourceRefId, size }, index) => {
+          .map(({ alignment, resourceRefId, size }, index) => {
             const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
             if (!endpoint) { return null }
 
             return (
-              <AntdColumn className={styles.column} key={`${uid}-col-${index}`} span={size ?? defaultSize}>
+              <AntdColumn
+                className={styles.column}
+                key={`${uid}-col-${index}`}
+                span={size ?? defaultSize}
+                style={{
+                  display: alignment ? 'flex' : undefined,
+                  justifyContent: alignment ? justifyContentMap[alignment] : undefined,
+                }}
+              >
                 <WidgetRenderer key={`${uid}-${index}`} widgetEndpoint={endpoint} />
               </AntdColumn>
             )
