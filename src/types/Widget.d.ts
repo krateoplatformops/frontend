@@ -8,7 +8,11 @@ export interface ResourceRef {
 
 export type ResourcesRefs = {
   items: ResourceRef[]
-  slice?: { page: number; perPage: number; continue: boolean }
+  slice?: {
+    page: number
+    perPage: number
+    continue: boolean
+  }
 }
 
 export interface Widget<WidgetDataType = unknown> {

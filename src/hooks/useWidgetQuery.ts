@@ -20,11 +20,11 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
   /* TO DEBUG BEFORE SNOWPLOW RETURNS THESE IN THE widgetEndpoint */
   // if (requestUrl.searchParams.get('resource') === 'datagrids') {
   //   requestUrl.searchParams.set('page', '1')
-  //   requestUrl.searchParams.set('per_page', '1')
+  //   requestUrl.searchParams.set('perpage', '1')
   // }
 
   const initialPage = parseNumberParam(requestUrl.searchParams.get('page'))
-  const initialPerPage = parseNumberParam(requestUrl.searchParams.get('per_page'))
+  const initialPerPage = parseNumberParam(requestUrl.searchParams.get('perpage'))
 
   async function fetchWidget({ page, perPage }: { page?: number; perPage?: number }) {
     /* set new page and perPage to the original requestUrl with updated values */
@@ -32,7 +32,7 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
       requestUrl.searchParams.set('page', page.toString())
     }
     if (typeof perPage === 'number') {
-      requestUrl.searchParams.set('per_page', perPage.toString())
+      requestUrl.searchParams.set('perpage', perPage.toString())
     }
 
     const urlString = requestUrl.toString()
@@ -40,7 +40,7 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
     // console.log({
     //   kind: url.searchParams.get('resource'),
     //   page: url.searchParams.get('page'),
-    //   perPage: url.searchParams.get('per_page'),
+    //   perPage: url.searchParams.get('perpage'),
     //   urlString,
     // })
 
@@ -124,12 +124,15 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
   })
 
   const resourcesRefsPaths = typeof queryResult.data?.status === 'object'
-    ? queryResult.data.status.resourcesRefs.items.map((item) => item.path)
+    ? queryResult.data.status.resourcesRefs?.items.map((item) => item.path)
     : []
 
   const resourcesRefsFetching = useIsFetching({
     predicate: (query) => {
       const resourceRefPath = query.queryKey[1] as string
+
+      if (!resourcesRefsPaths) { return false }
+
       return resourcesRefsPaths.includes(resourceRefPath)
     },
   })
