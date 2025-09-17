@@ -51,11 +51,6 @@ import { ScrollPagination } from '../ScrollPagination'
 import styles from './WidgetRenderer.module.css'
 
 type WidgetRendererProps = {
-  fetchNextPage: () => Promise<unknown> | void
-  hasNextPage: boolean
-  isFetching: boolean
-  isFetchingNextPage: boolean
-  isFetchingResourcesRefs: boolean
   invisible?: boolean
   onLoadingChange?: (isLoading: boolean) => void
   prefix?: string

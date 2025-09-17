@@ -3,7 +3,6 @@ import type { ListGridType } from 'antd/es/list'
 import { useMemo } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
-import { useProgressiveLoading } from '../../hooks/useProgressiveLoading'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
@@ -15,19 +14,15 @@ export type DataGridWidgetData = WidgetType['spec']['widgetData']
 const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>) => {
   const { asGrid, grid, items, prefix } = widgetData
 
-  const datalist = useMemo(
-    () =>
-      items
-        .map(({ resourceRefId }) => {
-          const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-          if (!endpoint) {
-            return null
-          }
+  const datalist = useMemo(() => items
+    .map(({ resourceRefId }) => {
+      const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+      if (!endpoint) { return null }
 
-          return <WidgetRenderer key={resourceRefId} prefix={prefix} widgetEndpoint={endpoint} wrapper={{ component: List.Item }} />
-        })
-        .filter(Boolean),
-    [items, prefix, resourcesRefs]
+      return <WidgetRenderer key={resourceRefId} prefix={prefix} widgetEndpoint={endpoint} wrapper={{ component: List.Item }} />
+    })
+    .filter(Boolean),
+  [items, prefix, resourcesRefs]
   )
 
   const renderedGrid: ListGridType = useMemo(() => {
