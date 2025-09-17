@@ -5,7 +5,7 @@ export const ScrollPagination = ({
   children,
   fetchNextPage,
   hasNextPage,
-  isFetching,
+  // isFetching,
   isFetchingNextPage,
   isFetchingResourcesRefs,
 }: {

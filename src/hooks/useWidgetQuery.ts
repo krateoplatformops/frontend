@@ -95,11 +95,11 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
           allResourcesRefs.push(...page.status.resourcesRefs.items)
         }
         if (
-          typeof page.status === 'object' &&
-          page.status?.widgetData &&
-          typeof page.status.widgetData === 'object' &&
-          'items' in page.status.widgetData &&
-          Array.isArray((page.status.widgetData as { items: unknown[] }).items)
+          typeof page.status === 'object'
+          && page.status?.widgetData
+          && typeof page.status.widgetData === 'object'
+          && 'items' in page.status.widgetData
+          && Array.isArray((page.status.widgetData as { items: unknown[] }).items)
         ) {
           allWidgetDataItems.push(...(page.status.widgetData as { items: unknown[] }).items)
         }
@@ -123,8 +123,9 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
     },
   })
 
-  const resourcesRefsPaths =
-    typeof queryResult.data?.status === 'object' ? queryResult.data.status.resourcesRefs.items.map((item) => item.path) : []
+  const resourcesRefsPaths = typeof queryResult.data?.status === 'object'
+    ? queryResult.data.status.resourcesRefs.items.map((item) => item.path)
+    : []
 
   const resourcesRefsFetching = useIsFetching({
     predicate: (query) => {

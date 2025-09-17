@@ -52,8 +52,8 @@ async function selectConfig(): Promise<string> {
 
     const choices = validConfigs.map((config) => {
       const apiUrl = getConfigSmitheryUrl(config)
-      const configLabel =
-        config === 'default' ? 'Default (config.json)' : `${config.charAt(0).toUpperCase() + config.slice(1)} (config.${config}.json)`
+      const configLabel
+        = config === 'default' ? 'Default (config.json)' : `${config.charAt(0).toUpperCase() + config.slice(1)} (config.${config}.json)`
       return {
         name: `${configLabel} - ${chalk.gray(apiUrl)}`,
         value: config,

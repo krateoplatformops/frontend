@@ -21,7 +21,7 @@ export const ButtonPagination = ({
 
       <div>
         {hasNextPage && (
-          <Button disabled={isFetchingNextPage || isFetchingResourcesRefs} onClick={() => void fetchNextPage()}>
+          <Button disabled={isFetchingNextPage || isFetchingResourcesRefs} onClick={() => { void fetchNextPage() }}>
             Load more
           </Button>
         )}

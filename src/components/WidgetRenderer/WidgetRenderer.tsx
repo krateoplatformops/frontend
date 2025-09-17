@@ -1,7 +1,6 @@
 import { Result, Skeleton } from 'antd'
 import { useEffect, type ReactNode } from 'react'
 
-import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
 import { useWidgetQuery } from '../../hooks/useWidgetQuery'
 import type { Widget } from '../../types/Widget'
@@ -45,7 +44,7 @@ import TabList from '../../widgets/TabList'
 import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
-import { ButtonPagination } from '../ButtonPagination'
+// import { ButtonPagination } from '../ButtonPagination'
 import { useFilter } from '../FiltesProvider/FiltersProvider'
 import { ScrollPagination } from '../ScrollPagination'
 
@@ -170,7 +169,6 @@ const WidgetRendererError = ({ children, subtitle }: { children?: ReactNode; sub
 const WidgetRenderer = ({ invisible = false, onLoadingChange, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
-  const { config } = useConfigContext()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid. An url is expected.`)
