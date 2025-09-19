@@ -182,6 +182,14 @@ export interface Button {
           loading?: {
             display: boolean
           }
+          /**
+           * the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property
+           */
+          customWidth?: string
+          /**
+           * sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property
+           */
+          size?: 'default' | 'large' | 'fullscreen' | 'custom'
         }[]
       }
       /**

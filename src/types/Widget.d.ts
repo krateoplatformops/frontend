@@ -101,6 +101,8 @@ export type WidgetActions = {
     loading?: {
       display: boolean
     }
+    customWidth?: string
+    size?: 'custom' | 'default' | 'fullscreen' | 'large'
   }[]
 }
 

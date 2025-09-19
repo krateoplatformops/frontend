@@ -110,6 +110,8 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
+| actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
+| actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
 | color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
 | label | no | the label of the button | string |
 | icon | no | the icon of the button (font awesome icon name eg: `fa-inbox`) | string |
@@ -573,6 +575,8 @@ name of the k8s Custom Resource
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
+| actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
+| actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
 | buttonConfig | no | custom labels and icons for form buttons | object |
 | buttonConfig.primary | no | primary button configuration | object |
 | buttonConfig.primary.label | no | text label for primary button | string |
@@ -953,6 +957,8 @@ Panel is a container to display information
 | actions.openModal[].title | no | title shown in the modal header | string |
 | actions.openModal[].loading | no |  | object |
 | actions.openModal[].loading.display | yes |  | boolean |
+| actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
+| actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
 | footer | no | footer section of the panel containing additional items | array |
 | footer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
