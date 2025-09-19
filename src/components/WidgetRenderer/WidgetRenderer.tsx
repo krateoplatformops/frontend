@@ -44,9 +44,9 @@ import TabList from '../../widgets/TabList'
 import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
-// import { ButtonPagination } from '../ButtonPagination'
+// import { ButtonPagination } from '../Pagination/ButtonPagination'
 import { useFilter } from '../FiltesProvider/FiltersProvider'
-import { ScrollPagination } from '../ScrollPagination'
+import { ScrollPagination } from '../Pagination/ScrollPagination'
 
 import styles from './WidgetRenderer.module.css'
 

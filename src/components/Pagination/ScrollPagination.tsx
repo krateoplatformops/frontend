@@ -1,11 +1,15 @@
+import { LoadingOutlined } from '@ant-design/icons'
+import { Spin } from 'antd'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
+
+import styles from './Pagination.module.css'
 
 export const ScrollPagination = ({
   children,
   fetchNextPage,
   hasNextPage,
-  // isFetching,
+  isFetching,
   isFetchingNextPage,
   isFetchingResourcesRefs,
 }: {
@@ -28,7 +32,8 @@ export const ScrollPagination = ({
     <>
       {children}
 
-      <div ref={ref}>
+      <div className={styles.loading} ref={ref}>
+        {isFetching && <Spin indicator={<LoadingOutlined />} size='large' spinning />}
         {/* <div>isFetching: {isFetching.toString()}</div>
         <div>isFetchingNextPage: {isFetchingNextPage.toString()}</div>
         <div>isFetchingResourcesRefs: {isFetchingResourcesRefs.toString()}</div>
