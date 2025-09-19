@@ -44,6 +44,7 @@ spec:
           resourceRefId: firework-form
           type: openModal
           title: Form in Modal
+          size: large
   resourcesRefs:
     items:
       - id: firework-form

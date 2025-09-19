@@ -302,10 +302,10 @@ export const useHandleAction = () => {
           break
         }
         case 'openModal': {
-          const { title } = action
+          const { customWidth, size, title } = action
 
           setIsActionLoading(false)
-          openModal({ title, widgetEndpoint: path })
+          openModal({ customWidth, size, title, widgetEndpoint: path })
 
           break
         }
