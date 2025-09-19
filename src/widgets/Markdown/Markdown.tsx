@@ -1,4 +1,4 @@
-import { CopyOutlined } from '@ant-design/icons'
+import { CopyOutlined, DownloadOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
@@ -16,6 +16,16 @@ const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
 
   const [isCopied, setIsCopied] = useState(false)
 
+  const handleDownload = () => {
+    const blob = new Blob([markdown], { type: 'text/plain;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const file = document.createElement('a')
+    file.href = url
+    file.download = `file.${fileExtension}`
+    file.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className={styles.markdown}>
       <div className={styles.buttons}>
@@ -31,6 +41,10 @@ const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
           >
             <Button icon={<CopyOutlined />} size='large' />
           </CopyToClipboard>
+        </div>
+
+        <div className={styles.button}>
+          <Button icon={<DownloadOutlined />} onClick={handleDownload} size='large' />
         </div>
       </div>
 
