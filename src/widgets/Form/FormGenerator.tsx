@@ -66,7 +66,7 @@ const FormGenerator = ({
 
   type Field = ReturnType<typeof renderField>
 
-  const getFormItemId = (name: string) => `${formId}-${name}`.replace(/[^a-zA-Z0-9_-]/g, '_')
+  const getFormItemId = useCallback((name: string) => `${formId}-${name}`.replace(/[^a-zA-Z0-9_-]/g, '_'), [formId])
 
   const setInitialValues = useCallback(() => {
     const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
@@ -96,14 +96,14 @@ const FormGenerator = ({
               )
             }
 
-            form.setFieldValue(currentName.split('.'), defaultValue)
+            form.setFieldValue(getFormItemId(currentName).split('.'), defaultValue)
           }
         })
       }
     }
 
     parseData(schema)
-  }, [form, schema])
+  }, [form, getFormItemId, schema])
 
   useEffect(() => {
     setInitialValues()
