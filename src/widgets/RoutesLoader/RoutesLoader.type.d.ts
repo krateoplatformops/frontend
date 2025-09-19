@@ -20,13 +20,6 @@ export interface RoutesLoader {
       expression?: string
     }[]
     resourcesRefs?: {
-      _slice_?: {
-        offset?: number
-        page: number
-        perPage: number
-        continue?: boolean
-        [k: string]: unknown
-      }
       items: {
         allowed: boolean
         apiVersion?: string
@@ -38,6 +31,13 @@ export interface RoutesLoader {
         }
         resource?: string
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
+        slice?: {
+          offset?: number
+          page: number
+          perPage: number
+          continue?: boolean
+          [k: string]: unknown
+        }
         [k: string]: unknown
       }[]
       [k: string]: unknown

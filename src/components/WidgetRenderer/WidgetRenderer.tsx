@@ -1,11 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
 import { Result, Skeleton } from 'antd'
 import { useEffect, type ReactNode } from 'react'
 
-import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
+import { useWidgetQuery } from '../../hooks/useWidgetQuery'
 import type { Widget } from '../../types/Widget'
-import { getAccessToken } from '../../utils/getAccessToken'
 import BarChart from '../../widgets/BarChart'
 import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
@@ -46,22 +44,31 @@ import TabList from '../../widgets/TabList'
 import type { TabListWidgetData } from '../../widgets/TabList/TabList'
 import YamlViewer from '../../widgets/YamlViewer'
 import type { YamlViewerWidgetData } from '../../widgets/YamlViewer/YamlViewer'
+// import { ButtonPagination } from '../Pagination/ButtonPagination'
 import { useFilter } from '../FiltesProvider/FiltersProvider'
+import { ScrollPagination } from '../Pagination/ScrollPagination'
 
 import styles from './WidgetRenderer.module.css'
 
 type WidgetRendererProps = {
-  widgetEndpoint: string
   invisible?: boolean
   onLoadingChange?: (isLoading: boolean) => void
   prefix?: string
+  widgetEndpoint: string
   wrapper?: {
     component: React.ComponentType<{ children: React.ReactNode }>
     props?: Record<string, unknown>
   }
 }
 
-const parseWidget = (widget: Widget) => {
+const parseWidget = (
+  widget: Widget,
+  fetchNextPage: () => Promise<unknown> | void,
+  hasNextPage: boolean,
+  isFetching: boolean,
+  isFetchingNextPage: boolean,
+  isFetchingResourcesRefs: boolean
+) => {
   if (typeof widget.status === 'string') {
     return null
   }
@@ -85,7 +92,26 @@ const parseWidget = (widget: Widget) => {
     case 'Column':
       return <Column {...props} widgetData={widgetData as ColumnWidgetData} />
     case 'DataGrid':
-      return <DataGrid {...props} widgetData={widgetData as DataGridWidgetData} />
+      return (
+        // <ButtonPagination
+        //   fetchNextPage={fetchNextPage}
+        //   hasNextPage={hasNextPage}
+        //   isFetching={isFetching}
+        //   isFetchingNextPage={isFetchingNextPage}
+        //   isFetchingResourcesRefs={isFetchingResourcesRefs}
+        // >
+        //   <DataGrid {...props} widgetData={widgetData as DataGridWidgetData} />
+        // </ButtonPagination>
+        <ScrollPagination
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetching={isFetching}
+          isFetchingNextPage={isFetchingNextPage}
+          isFetchingResourcesRefs={isFetchingResourcesRefs}
+        >
+          <DataGrid {...props} widgetData={widgetData as DataGridWidgetData} />
+        </ScrollPagination>
+      )
     case 'EventList':
       return <EventList {...props} widgetData={widgetData as EventListWidgetData} />
     case 'Filters':
@@ -138,34 +164,18 @@ const WidgetRendererError = ({ children, subtitle }: { children?: ReactNode; sub
 const WidgetRenderer = ({ invisible = false, onLoadingChange, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
-  const { config } = useConfigContext()
 
   if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid. An url is expected.`)
   }
 
-  const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
-
-  const {
-    data: widget,
-    error,
-    isLoading,
-  } = useQuery({
-    queryFn: async () => {
-      const res = await fetch(widgetFullUrl, {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      })
-
-      const widget = (await res.json()) as Widget
-      return widget
-    },
-    queryKey: ['widgets', widgetFullUrl],
-  })
+  const { isFetchingResourcesRefs, queryResult } = useWidgetQuery(widgetEndpoint)
+  const { data: widget, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isLoading } = queryResult
 
   useEffect(() => {
-    if (onLoadingChange) { onLoadingChange(isLoading) }
+    if (onLoadingChange) {
+      onLoadingChange(isLoading)
+    }
   }, [isLoading, onLoadingChange])
 
   if (isLoading) {
@@ -247,7 +257,7 @@ const WidgetRenderer = ({ invisible = false, onLoadingChange, prefix, widgetEndp
     return null
   }
 
-  const renderedWidget = parseWidget(widget)
+  const renderedWidget = parseWidget(widget, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isFetchingResourcesRefs)
 
   if (wrapper) {
     return <wrapper.component {...wrapper.props}>{renderedWidget}</wrapper.component>

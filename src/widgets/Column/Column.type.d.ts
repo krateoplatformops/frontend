@@ -46,13 +46,6 @@ export interface Column {
       size?: number
     }
     resourcesRefs: {
-      _slice_?: {
-        offset?: number
-        page: number
-        perPage: number
-        continue?: boolean
-        [k: string]: unknown
-      }
       items: {
         allowed: boolean
         apiVersion?: string
@@ -64,6 +57,13 @@ export interface Column {
         }
         resource?: string
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
+        slice?: {
+          offset?: number
+          page: number
+          perPage: number
+          continue?: boolean
+          [k: string]: unknown
+        }
         [k: string]: unknown
       }[]
       [k: string]: unknown

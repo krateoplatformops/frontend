@@ -24,13 +24,6 @@ export interface Route {
       expression?: string
     }[]
     resourcesRefs?: {
-      _slice_?: {
-        offset?: number
-        page: number
-        perPage: number
-        continue?: boolean
-        [k: string]: unknown
-      }
       items: {
         allowed: boolean
         apiVersion?: string
@@ -42,6 +35,13 @@ export interface Route {
         }
         resource?: string
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
+        slice?: {
+          offset?: number
+          page: number
+          perPage: number
+          continue?: boolean
+          [k: string]: unknown
+        }
         [k: string]: unknown
       }[]
       [k: string]: unknown

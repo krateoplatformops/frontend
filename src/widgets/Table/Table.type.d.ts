@@ -88,13 +88,6 @@ export interface Table {
       prefix?: string
     }
     resourcesRefs?: {
-      _slice_?: {
-        offset?: number
-        page: number
-        perPage: number
-        continue?: boolean
-        [k: string]: unknown
-      }
       items: {
         allowed: boolean
         apiVersion?: string
@@ -106,6 +99,13 @@ export interface Table {
         }
         resource?: string
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
+        slice?: {
+          offset?: number
+          page: number
+          perPage: number
+          continue?: boolean
+          [k: string]: unknown
+        }
         [k: string]: unknown
       }[]
       [k: string]: unknown
