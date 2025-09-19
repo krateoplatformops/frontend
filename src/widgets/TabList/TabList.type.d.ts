@@ -53,13 +53,6 @@ export interface TabList {
       }[]
     }
     resourcesRefs?: {
-      slice?: {
-        offset?: number
-        page: number
-        perPage: number
-        continue?: boolean
-        [k: string]: unknown
-      }
       items: {
         allowed: boolean
         apiVersion?: string
