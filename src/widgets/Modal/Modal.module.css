@@ -11,3 +11,29 @@
     padding-right: 16px;
   }
 }
+
+.modalDefault {
+  max-width: 90vw;
+  width: 520px !important;
+}
+
+.modalLarge {
+  max-width: 1200px;
+  width: 80% !important;
+}
+
+.modalFullscreen {
+  height: 100% !important;
+  max-width: 100%;
+  width: 100% !important;
+
+  :global(.ant-modal-content) {
+    border-radius: 0;
+    height: 100%;
+    max-height: 100vh;
+  }
+
+  :global(.ant-modal-body) {
+    padding-right: 0;
+  }
+}
