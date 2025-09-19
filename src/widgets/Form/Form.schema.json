@@ -36,6 +36,7 @@
                         "description": "key used to nest the payload in the request body"
                       },
                       "headers": {
+                        "description": "array of headers as strings, format 'key: value'",
                         "type": "array",
                         "items": {
                           "type": "string",
@@ -134,7 +135,7 @@
                         "additionalProperties": false
                       }
                     },
-                    "required": ["id", "type", "resourceRefId"]
+                    "required": ["headers", "id", "type", "resourceRefId"]
                   }
                 },
                 "navigate": {

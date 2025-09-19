@@ -18,7 +18,10 @@ export interface Panel {
            * key used to nest the payload in the request body
            */
           payloadKey?: string
-          headers?: string[]
+          /**
+           * array of headers as strings, format 'key: value'
+           */
+          headers: string[]
           /**
            * unique identifier for the action
            */

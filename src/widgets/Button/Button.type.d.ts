@@ -71,7 +71,10 @@ export interface Button {
            * type of action to execute
            */
           type: 'rest'
-          headers?: string[]
+          /**
+           * array of headers as strings, format 'key: value'
+           */
+          headers: string[]
           /**
            * static payload sent with the request
            */

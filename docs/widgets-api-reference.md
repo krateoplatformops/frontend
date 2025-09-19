@@ -78,7 +78,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
 | actions.rest[].type | yes | type of action to execute | `rest` |
-| actions.rest[].headers | no |  | array |
+| actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
 | actions.rest[].payloadToOverride[].name | yes | name of the field to override | string |
@@ -530,7 +530,7 @@ name of the k8s Custom Resource
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
 | actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
-| actions.rest[].headers | no |  | array |
+| actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -915,7 +915,7 @@ Panel is a container to display information
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
 | actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
-| actions.rest[].headers | no |  | array |
+| actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |

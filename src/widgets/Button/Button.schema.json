@@ -91,6 +91,7 @@
                         "description": "type of action to execute"
                       },
                       "headers": {
+                        "description": "array of headers as strings, format 'key: value'",
                         "type": "array",
                         "items": {
                           "type": "string",
@@ -132,7 +133,7 @@
                         "additionalProperties": false
                       }
                     },
-                    "required": ["id", "type", "resourceRefId"]
+                    "required": ["headers", "id", "type", "resourceRefId"]
                   }
                 },
                 "navigate": {
