@@ -1,5 +1,16 @@
 .markdown {
   overflow-wrap: break-word;    
   overflow-x: hidden;
-  white-space: pre-wrap;        
+  white-space: pre-wrap;   
+  
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    .button {
+      align-items: center;
+      display: flex;
+      gap: var(--spacing-xs);
+    }
+  }
 }
