@@ -1,6 +1,6 @@
 import { CopyOutlined, DownloadOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import { default as ReactMarkdown } from 'react-markdown'
 
@@ -12,41 +12,49 @@ import type { Markdown as WidgetType } from './Markdown.type'
 export type MarkdownWidgetData = WidgetType['spec']['widgetData']
 
 const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
-  const { markdown } = widgetData
+  const { allowCopy, allowDownload, downloadFileExtension = 'txt', markdown } = widgetData
 
   const [isCopied, setIsCopied] = useState(false)
+
+  const hasActions = useMemo(() => allowCopy || allowDownload, [allowCopy, allowDownload])
 
   const handleDownload = () => {
     const blob = new Blob([markdown], { type: 'text/plain;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const file = document.createElement('a')
     file.href = url
-    file.download = `file.${fileExtension}`
+    file.download = `file.${downloadFileExtension}`
     file.click()
     URL.revokeObjectURL(url)
   }
 
   return (
     <div className={styles.markdown}>
-      <div className={styles.buttons}>
-        <div className={styles.button}>
-          {isCopied && 'Copied to clipboard'}
+      {hasActions && (
+        <div className={styles.actions}>
+          {allowCopy && (
+            <div className={styles.button}>
+              {isCopied && 'Copied to clipboard'}
 
-          <CopyToClipboard
-            onCopy={() => {
-              setIsCopied(true)
-              setTimeout(() => setIsCopied(false), 2500)
-            }}
-            text={markdown}
-          >
-            <Button icon={<CopyOutlined />} size='large' />
-          </CopyToClipboard>
-        </div>
+              <CopyToClipboard
+                onCopy={() => {
+                  setIsCopied(true)
+                  setTimeout(() => setIsCopied(false), 2500)
+                }}
+                text={markdown}
+              >
+                <Button icon={<CopyOutlined />} size='large' />
+              </CopyToClipboard>
+            </div>
+          )}
 
-        <div className={styles.button}>
-          <Button icon={<DownloadOutlined />} onClick={handleDownload} size='large' />
+          {allowDownload && (
+            <div className={styles.button}>
+              <Button icon={<DownloadOutlined />} onClick={handleDownload} size='large' />
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
       <ReactMarkdown key={uid}>{markdown}</ReactMarkdown>
     </div>

@@ -738,6 +738,9 @@ Markdown receives markdown in string format and renders it gracefully
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
+| allowCopy | no | displays a copy button on top of the widget to allow copy to clipboard | boolean |
+| allowDownload | no | displays a download button on top of the widget to allow download of the text | boolean |
+| downloadFileExtension | no | if 'allowDownload' is set, this property allows to set an extension for the downloaded file. Default is .txt | string |
 | markdown | yes | markdown string to be displayed | string |
 
 <details>
