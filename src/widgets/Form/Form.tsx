@@ -1,7 +1,6 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Ajv from 'ajv'
 import { Button, Result, Space, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import dayjs from 'dayjs'
@@ -125,7 +124,6 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
   const { actions, autocomplete, buttonConfig, dependencies, fieldDescription, objectFields, schema, stringSchema, submitActionId } = widgetData
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
-  const ajv = new Ajv()
 
   const { notification } = useApp()
   const { handleAction, isActionLoading } = useHandleAction()
@@ -199,17 +197,6 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
     }
 
     const values = sanitizeFormValues(convertDayjsToISOString(formValues))
-    const validate = ajv.compile(formSchema)
-
-    if (!validate(values)) {
-      notification.error({
-        description: `Invalid form data: ${JSON.stringify(validate.errors)}`,
-        message: 'Error while executing the action',
-        placement: 'bottomLeft',
-      })
-
-      return
-    }
 
     // TODO: handle disabled buttons
     if (action.onEventNavigateTo) {
