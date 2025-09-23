@@ -66,8 +66,6 @@ const FormGenerator = ({
 
   type Field = ReturnType<typeof renderField>
 
-  const getFormItemId = useCallback((name: string) => `${formId}-${name}`.replace(/[^a-zA-Z0-9_-]/g, '_'), [formId])
-
   const setInitialValues = useCallback(() => {
     const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
       if (properties) {
@@ -96,14 +94,14 @@ const FormGenerator = ({
               )
             }
 
-            form.setFieldValue(getFormItemId(currentName).split('.'), defaultValue)
+            form.setFieldValue(currentName.split('.'), defaultValue)
           }
         })
       }
     }
 
     parseData(schema)
-  }, [form, getFormItemId, schema])
+  }, [form, schema])
 
   useEffect(() => {
     setInitialValues()
@@ -159,7 +157,7 @@ const FormGenerator = ({
           return parseData(prop, currentPath, isRequired)
         }
 
-        return [renderField(prop.title || key, getFormItemId(currentPath.join('.')), prop, isRequired)]
+        return [renderField(prop.title || key, currentPath.join('.'), prop, isRequired)]
       })
     }
 
@@ -376,8 +374,8 @@ const FormGenerator = ({
         if (!shouldShow) { return [] }
 
         const nodeItem: AnchorLinkItemProps = {
-          href: schemaItem.type === 'object' ? '#' : `#${getFormItemId(currentName)}`,
-          key: getFormItemId(currentName),
+          href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
+          key: currentName,
           title:
             schemaItem.type === 'object' ? (
               <span className={styles.anchorObjectLabel}>{key}</span>
