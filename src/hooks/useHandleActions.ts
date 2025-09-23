@@ -267,6 +267,7 @@ export const useHandleAction = () => {
     const resourceRef = action.resourceRefId ? getResourceRef(action.resourceRefId, resourcesRefs) : undefined
 
     if (!resourceRef) {
+      message.destroy()
       notification.error({
         description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
         message: 'Error while executing the action',
@@ -325,6 +326,7 @@ export const useHandleAction = () => {
 
           if (!requireConfirmation || window.confirm('Are you sure?')) {
             if (onSuccessNavigateTo && onEventNavigateTo) {
+              message.destroy()
               notification.error({
                 description: 'Action has defined both the "onSuccessNavigateTo" and "onEventNavigateTo" properties',
                 message: 'Warning while executing the action',
@@ -420,6 +422,7 @@ export const useHandleAction = () => {
                   })()
 
                   if (!redirectUrl) {
+                    message.destroy()
                     notification.error({
                       description: 'Impossible to redirect, the route contains an undefined value',
                       message: 'Error while redirecting',
@@ -477,6 +480,7 @@ export const useHandleAction = () => {
             setIsActionLoading(false)
 
             if (!res.ok) {
+              message.destroy()
               notification.error({
                 description: errorMessage
                   ? formatMessage(errorMessage, { json: updatedPayload, response: jsonResponse })
@@ -539,6 +543,7 @@ export const useHandleAction = () => {
           break
       }
     } catch (error) {
+      message.destroy()
       notification.error({
         description: `Unhandled error: ${JSON.stringify(error)}`,
         message: 'Error while executing the action',
