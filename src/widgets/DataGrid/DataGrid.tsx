@@ -26,7 +26,7 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
   )
 
   const renderedGrid: ListGridType = useMemo(() => {
-    if (asGrid && items && items.length > 1) {
+    if (asGrid && items) {
       if (grid) {
         return grid
       }
