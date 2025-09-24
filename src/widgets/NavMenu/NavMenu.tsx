@@ -68,25 +68,23 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
       const validMenuItems = navMenuItems.filter((item): item is NavMenuItemResponse => !!item)
 
       const routesToSave = validMenuItems
-        .map(
-          ({
-            status: {
-              resourcesRefs,
-              widgetData: { path, resourceRefId },
-            },
-          }) => {
-            const routeResourceRef = resourcesRefs?.items.find(({ id }) => id === resourceRefId)
-            if (!routeResourceRef) {
-              return null
-            }
+        .map(item => {
+          const { status } = item
+          const widgetData = status?.widgetData
+          const resourcesRefs = status?.resourcesRefs
 
-            return {
-              path,
-              resourceRef: { ...routeResourceRef, payload: {} },
-              resourceRefId,
-            }
+          if (!widgetData || !resourcesRefs) { return null }
+
+          const { path, resourceRefId } = widgetData
+          const routeResourceRef = resourcesRefs.items.find(({ id }) => id === resourceRefId)
+          if (!routeResourceRef) { return null }
+
+          return {
+            path,
+            resourceRef: { ...routeResourceRef, payload: {} },
+            resourceRefId,
           }
-        )
+        })
         .filter(Boolean) as AppRoute[]
 
       localStorage.setItem('routes', JSON.stringify(routesToSave))
@@ -107,19 +105,16 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
 
     const validMenuItems = navMenuItems.filter((item): item is NavMenuItemResponse => !!item)
 
-    return validMenuItems.map(
-      ({
-        status: {
-          widgetData: { icon, label, path },
-        },
-      }) => {
-        return {
-          icon: <FontAwesomeIcon icon={icon as IconProp} />,
-          key: path,
-          label,
-        }
+    return validMenuItems.flatMap(item => {
+      const widgetData = item.status?.widgetData
+      if (!widgetData) { return [] }
+      const { icon, label, path } = widgetData
+      return {
+        icon: <FontAwesomeIcon icon={icon as IconProp} />,
+        key: path,
+        label,
       }
-    )
+    })
   }, [navMenuItems, loadedAllMenuItems])
 
   const handleClick = (key: string) => {
