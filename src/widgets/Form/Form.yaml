@@ -36,6 +36,8 @@ spec:
           payloadToOverride:
           - name: metadata.name
             value: ${ git.toRepo.name }
+          headers:
+            - 'Accept: application/json'
   widgetDataTemplate:
     - forPath: schema
       expression: ${ .getSchema | .spec.versions[] | select(.name == "v2-0-0") | .schema.openAPIV3Schema.properties.spec }
@@ -211,6 +213,8 @@ spec:
               value: ${ git.toRepo.name }
           loading:
             display: true
+          headers:
+            - 'Accept: application/json'
   resourcesRefs:
     items:
       - id: resource-ref-1

@@ -18,5 +18,7 @@ spec:
             display: true
           successMessage: "Pod letto correttamente"
           errorMessage: "Errore nella lettura del pod"
+          headers:
+            - 'Accept: application/json'
   resourcesRefs:
     items: []

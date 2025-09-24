@@ -72,6 +72,8 @@ spec:
         resourceRefId: cleanup
         type: rest
         onSuccessNavigateTo: /templates
+        headers:
+            - 'Accept: application/json'
     icon: fa-trash
     type: default
     shape: circle
@@ -192,6 +194,8 @@ spec:
               value: ${ git.toRepo.name }
           loading:
             display: true
+          headers:
+            - 'Accept: application/json'
   resourcesRefs:
     items:
       - id: resource-ref-1

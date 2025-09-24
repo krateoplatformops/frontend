@@ -27,7 +27,8 @@ spec:
                   name: nginx
                   ports:
                     - containerPort: 80
-                  
+          headers:
+          - 'Accept: application/json'    
   resourcesRefs:
     items:
       - id: resource-ref-1

@@ -105,7 +105,8 @@ spec:
           # - name: metadata.namespace
           #   value: ${ "krateo-system" }
         
-
+          headers:
+            - 'Accept: application/json'
   widgetDataTemplate:
     - forPath: stringSchema
       expression: ${ .getSchemaNotOrdered.data["values.schema.json"] }

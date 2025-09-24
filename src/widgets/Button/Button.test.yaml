@@ -79,6 +79,8 @@ spec:
         resourceRefId: cleanup
         type: rest
         onSuccessNavigateTo: /templates
+        headers:
+            - 'Accept: application/json'
     icon: fa-trash
     type: default
     shape: circle

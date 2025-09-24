@@ -1,5 +1,6 @@
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Drawer, Form, List, Popover, Tag } from 'antd'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button, Drawer, Flex, Form, List, Popover, Tag, Typography } from 'antd'
 import React, { useState } from 'react'
 
 type ListObjectFieldsType = {
@@ -21,10 +22,18 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
     setList(newList)
   }
 
-  const getValue = (item: unknown): React.ReactNode => {
+  const getValue = (item: unknown, index: number): React.ReactNode => {
+    if (!displayField || displayField === '') {
+      // show default label
+      return `object item #${index + 1}`
+    }
+
     return displayField.split('.').reduce<unknown>((acc, key) => {
       if (acc && typeof acc === 'object' && key in acc) {
-        return (acc as Record<string, unknown>)[key]
+        const label = (acc as Record<string, unknown>)[key]
+        if (label !== undefined && label !== null) { return label }
+        // warning: label is not found
+        return <Flex align='center' gap={5}><FontAwesomeIcon color='orange' icon='triangle-exclamation' /><Typography.Text>object item #{index + 1}</Typography.Text></Flex>
       }
       return undefined
     }, item) as React.ReactNode
@@ -57,7 +66,7 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
                     {getPopoverContent(item)}
                   </div>
                 }>
-                  <Tag>{ getValue(item) }</Tag>
+                  <Tag>{ getValue(item, index) }</Tag>
                 </Popover>
               )
               : null}
