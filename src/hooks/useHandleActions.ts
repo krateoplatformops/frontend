@@ -69,12 +69,14 @@ const convertStringToObject = (dottedString: string, value: unknown): Record<str
  * @returns The value found at the given path, or `undefined` if the path is invalid.
  */
 const getObjectByPath = (obj: Record<string, unknown>, path: string): unknown => {
-  return path.split('.').reduce<unknown>((acc, part) => {
-    if (typeof acc === 'object' && acc !== null && part in acc) {
-      return (acc as Record<string, unknown>)[part]
-    }
-    return undefined
-  }, obj)
+  return path
+    .replace(/^\./, '')
+    .split('.').reduce<unknown>((acc, part) => {
+      if (typeof acc === 'object' && acc !== null && part in acc) {
+        return (acc as Record<string, unknown>)[part]
+      }
+      return undefined
+    }, obj)
 }
 
 /**
