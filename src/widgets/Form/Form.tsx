@@ -15,7 +15,7 @@ import { useDrawerContext } from '../Drawer/DrawerContext'
 import styles from './Form.module.css'
 import type { Form as WidgetType } from './Form.type'
 import FormGenerator from './FormGenerator'
-import { convertDayjsToISOString, sanitizeFormValues } from './utils'
+import { convertDayjsToISOString } from './utils'
 
 export type FormWidgetData = WidgetType['spec']['widgetData']
 
@@ -127,7 +127,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
       return
     }
 
-    const values = sanitizeFormValues(convertDayjsToISOString(formValues))
+    const values = convertDayjsToISOString(formValues)
 
     // TODO: handle disabled buttons
     if (action.onEventNavigateTo) {

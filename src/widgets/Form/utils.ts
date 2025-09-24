@@ -1,6 +1,5 @@
 import type { FormInstance } from 'antd'
 import dayjs from 'dayjs'
-import validator from 'validator'
 
 export const interpolateFormUrl = (template: string, form: FormInstance, context: Record<string, unknown> = {}): string => {
   return template.replace(/\${(.*?)}/g, (_: string, key: string) => {
@@ -38,48 +37,4 @@ export const convertDayjsToISOString = (values: Record<string, unknown>) => {
   })
 
   return result
-}
-
-export const sanitizeFormValues = (values: Record<string, unknown>): Record<string, unknown> => {
-  const sanitizeString = (value: string) => {
-    let clean = value.trim()
-    clean = validator.escape(clean)
-    clean = clean.replace(/[;'"\\]/g, '')
-
-    return clean
-  }
-
-  const sanitized: Record<string, unknown> = {}
-
-  for (const [key, value] of Object.entries(values)) {
-    if (typeof value === 'string') {
-      sanitized[key] = sanitizeString(value)
-      continue
-    }
-
-    if (Array.isArray(value)) {
-      sanitized[key] = value.map((item): unknown => {
-        if (typeof item === 'string') {
-          return sanitizeString(item)
-        }
-
-        if (item && typeof item === 'object') {
-          return sanitizeFormValues(item as Record<string, unknown>)
-        }
-
-        return item
-      })
-
-      continue
-    }
-
-    if (value && typeof value === 'object') {
-      sanitized[key] = sanitizeFormValues(value as Record<string, unknown>)
-      continue
-    }
-
-    sanitized[key] = value
-  }
-
-  return sanitized
 }
