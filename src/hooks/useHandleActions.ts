@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import useApp from 'antd/es/app/useApp'
-import { merge } from 'lodash'
+import { merge, set } from 'lodash'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -34,25 +34,25 @@ interface EventData {
  * @param value - The value to assign at the final nested key
  * @returns A nested object with the specified value at the correct path
  */
-const convertStringToObject = (dottedString: string, value: unknown): Record<string, unknown> => {
-  const keys = dottedString.split('.')
-  const result: Record<string, unknown> = {}
-  let current: Record<string, unknown> = result
+// const convertStringToObject = (dottedString: string, value: unknown): Record<string, unknown> => {
+//   const keys = dottedString.split('.')
+//   const result: Record<string, unknown> = {}
+//   let current: Record<string, unknown> = result
 
-  keys.forEach((key, index) => {
-    if (index === keys.length - 1) {
-      current[key] = value
-    } else {
-      if (typeof current[key] !== 'object' || current[key] === null) {
-        current[key] = {}
-      }
+//   keys.forEach((key, index) => {
+//     if (index === keys.length - 1) {
+//       current[key] = value
+//     } else {
+//       if (typeof current[key] !== 'object' || current[key] === null) {
+//         current[key] = {}
+//       }
 
-      current = current[key] as Record<string, unknown>
-    }
-  })
+//       current = current[key] as Record<string, unknown>
+//     }
+//   })
 
-  return result
-}
+//   return result
+// }
 
 /**
  * Retrieves a nested value from an object using a dot-separated path string.
@@ -68,16 +68,16 @@ const convertStringToObject = (dottedString: string, value: unknown): Record<str
  * @param path - A dot-separated string path representing the property to access (e.g., "user.profile.id").
  * @returns The value found at the given path, or `undefined` if the path is invalid.
  */
-const getObjectByPath = (obj: Record<string, unknown>, path: string): unknown => {
-  return path
-    .replace(/^\./, '')
-    .split('.').reduce<unknown>((acc, part) => {
-      if (typeof acc === 'object' && acc !== null && part in acc) {
-        return (acc as Record<string, unknown>)[part]
-      }
-      return undefined
-    }, obj)
-}
+// const getObjectByPath = (obj: Record<string, unknown>, path: string): unknown => {
+//   return path
+//     .replace(/^\./, '')
+//     .split('.').reduce<unknown>((acc, part) => {
+//       if (typeof acc === 'object' && acc !== null && part in acc) {
+//         return (acc as Record<string, unknown>)[part]
+//       }
+//       return undefined
+//     }, obj)
+// }
 
 /**
  * Interpolates a route template using values from a nested payload object.
@@ -136,37 +136,37 @@ const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string)
  * @param {string | undefined} payloadKey - The key under which to nest the extracted new values.
  * @returns {Record<string, unknown>} - The reorganized payload with extracted values nested under `payloadKey`.
  */
-const reorganizePayloadByKey = (
-  payload: Record<string, unknown>,
-  resourcePayload: object,
-  payloadKey: string | undefined
-): Record<string, unknown> => {
-  if (!payloadKey) {
-    console.warn('payloadKey is undefined, skipping key reorganization.')
-    return payload
-  }
+// const reorganizePayloadByKey = (
+//   payload: Record<string, unknown>,
+//   resourcePayload: object,
+//   payloadKey: string | undefined
+// ): Record<string, unknown> => {
+//   if (!payloadKey) {
+//     console.warn('payloadKey is undefined, skipping key reorganization.')
+//     return payload
+//   }
 
-  const newPayloadKeyObject: Record<string, unknown> = {}
+//   const newPayloadKeyObject: Record<string, unknown> = {}
 
-  const valuesKeys = Object.keys(payload).filter((key) => !Object.prototype.hasOwnProperty.call(resourcePayload, key))
+//   const valuesKeys = Object.keys(payload).filter((key) => !Object.prototype.hasOwnProperty.call(resourcePayload, key))
 
-  for (const key of valuesKeys) {
-    const value = payload[key]
-    newPayloadKeyObject[key] = typeof value === 'object' && value !== null && !Array.isArray(value) ? { ...value } : value
-  }
+//   for (const key of valuesKeys) {
+//     const value = payload[key]
+//     newPayloadKeyObject[key] = typeof value === 'object' && value !== null && !Array.isArray(value) ? { ...value } : value
+//   }
 
-  const cleanedPayload: Record<string, unknown> = {}
+//   const cleanedPayload: Record<string, unknown> = {}
 
-  for (const key in payload) {
-    if (!valuesKeys.includes(key)) {
-      cleanedPayload[key] = payload[key]
-    }
-  }
+//   for (const key in payload) {
+//     if (!valuesKeys.includes(key)) {
+//       cleanedPayload[key] = payload[key]
+//     }
+//   }
 
-  cleanedPayload[payloadKey] = newPayloadKeyObject
+//   cleanedPayload[payloadKey] = newPayloadKeyObject
 
-  return cleanedPayload
-}
+//   return cleanedPayload
+// }
 
 /**
  * Updates a nested property in an object at the given key path with a value derived from another path expression.
@@ -178,33 +178,33 @@ const reorganizePayloadByKey = (
  * @param valuePath - A template-style string (e.g., "${user.firstName + ' ' + user.lastName}") used to build the new value.
  * @returns A new object with the updated keyPath set to the interpolated value.
  */
-const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath: string): Record<string, unknown> => {
-  const substr = valuePath.replace('${', '').replace('}', '')
-  const parts = substr.split('+').map((el) => el.trim())
+// const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath: string): Record<string, unknown> => {
+//   const substr = valuePath.replace('${', '').replace('}', '')
+//   const parts = substr.split('+').map((el) => el.trim())
 
-  const value = parts
-    .map((el) => {
-      if (el.startsWith('"') || el.startsWith("'")) {
-        return el.replace(/^['"]|['"]$/g, '')
-      }
+//   const value = parts
+//     .map((el) => {
+//       if (el.startsWith('"') || el.startsWith("'")) {
+//         return el.replace(/^['"]|['"]$/g, '')
+//       }
 
-      const resolved = getObjectByPath(values, el)
-      if (
-        typeof resolved === 'string'
-        || typeof resolved === 'number'
-        || typeof resolved === 'boolean'
-        || typeof resolved === 'bigint'
-        || typeof resolved === 'symbol'
-      ) {
-        return String(resolved)
-      }
+//       const resolved = getObjectByPath(values, el)
+//       if (
+//         typeof resolved === 'string'
+//         || typeof resolved === 'number'
+//         || typeof resolved === 'boolean'
+//         || typeof resolved === 'bigint'
+//         || typeof resolved === 'symbol'
+//       ) {
+//         return String(resolved)
+//       }
 
-      return ''
-    })
-    .join('')
+//       return ''
+//     })
+//     .join('')
 
-  return merge({}, values, convertStringToObject(keyPath, value))
-}
+//   return merge({}, values, convertStringToObject(keyPath, value))
+// }
 
 /**
  * Adds or replaces `name` and `namespace` query parameters in a given URL.
@@ -227,6 +227,43 @@ const updateNameNamespace = (path: string, name?: string, namespace?: string) =>
     .join('&')
 
   return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
+}
+
+const buildPayload = async (
+  action: WidgetAction & {type: 'rest'},
+  resourcePayload: object,
+  customPayload: Record<string, unknown> | undefined,
+  resolveJq: (expression: string, values: Record<string, unknown>) => Promise<string>
+): Promise<Payload> => {
+  const { payload, payloadToOverride } = action
+  // 1. the action payload is the starting object
+  let finalPayload = payload ?? {}
+
+  // 2. the action payload and the referenced resource payload are merged
+  finalPayload = merge(payload, resourcePayload)
+
+  if (payloadToOverride && payloadToOverride.length > 0 && customPayload) {
+    // 3. the values defined in payloadToOverride are interpolated
+    const overridePromises = payloadToOverride.map(async ({ name, value }) => {
+      let resolvedValue: unknown = value
+
+      if (typeof value === 'string' && value.startsWith('${')) {
+        resolvedValue = await resolveJq(value, { json: customPayload })
+      }
+
+      return { name, resolvedValue }
+    })
+
+    const resolvedOverrides = await Promise.all(overridePromises)
+
+    // 4. the interpolated values replace the original values
+    for (const { name, resolvedValue } of resolvedOverrides) {
+      finalPayload = merge({}, finalPayload)
+      set(finalPayload, name, resolvedValue)
+    }
+  }
+
+  return finalPayload
 }
 
 export const useHandleAction = () => {
@@ -318,9 +355,6 @@ export const useHandleAction = () => {
             headers = [],
             onEventNavigateTo,
             onSuccessNavigateTo,
-            payload,
-            payloadKey,
-            payloadToOverride,
             successMessage,
           } = action
 
@@ -340,16 +374,7 @@ export const useHandleAction = () => {
               return
             }
 
-            let updatedPayload = customPayload ?? {}
-            if (payloadToOverride && payloadToOverride.length > 0) {
-              payloadToOverride.forEach(({ name, value }) => {
-                updatedPayload = updateJson(updatedPayload, name, value)
-              })
-            }
-
-            if (payloadKey && resourcePayload) {
-              updatedPayload = reorganizePayloadByKey(updatedPayload, resourcePayload, payloadKey)
-            }
+            const payload = await buildPayload(action, resourcePayload, customPayload, resolveJq)
 
             let resourceUid: string | null = null
             let eventReceived = false
