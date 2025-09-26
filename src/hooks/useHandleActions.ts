@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from 'react-router'
 import { useConfigContext } from '../context/ConfigContext'
 import { useRoutesContext } from '../context/RoutesContext'
 import type { ResourcesRefs, Widget, WidgetAction } from '../types/Widget'
-import { formatMessage } from '../utils/format-message/formatMessage'
 import { getAccessToken } from '../utils/getAccessToken'
 import { useResolveJqExpression } from '../utils/jq-expression'
 import type { Payload, RestApiResponse } from '../utils/types'
@@ -21,63 +20,6 @@ interface EventData {
   }
   reason: string
 }
-
-/**
- * Converts a dotted string path (e.g., "a.b.c") into a nested object structure,
- * assigning the given value to the innermost key.
- *
- * Example:
- *   convertStringToObject("user.name", "Alice")
- *   → { user: { name: "Alice" } }
- *
- * @param dottedString - The dotted path string representing the nested object keys
- * @param value - The value to assign at the final nested key
- * @returns A nested object with the specified value at the correct path
- */
-// const convertStringToObject = (dottedString: string, value: unknown): Record<string, unknown> => {
-//   const keys = dottedString.split('.')
-//   const result: Record<string, unknown> = {}
-//   let current: Record<string, unknown> = result
-
-//   keys.forEach((key, index) => {
-//     if (index === keys.length - 1) {
-//       current[key] = value
-//     } else {
-//       if (typeof current[key] !== 'object' || current[key] === null) {
-//         current[key] = {}
-//       }
-
-//       current = current[key] as Record<string, unknown>
-//     }
-//   })
-
-//   return result
-// }
-
-/**
- * Retrieves a nested value from an object using a dot-separated path string.
- *
- * The function safely traverses the object structure and returns the value found at the given path.
- * If any segment in the path does not exist or is not an object, it returns `undefined`.
- *
- * Example:
- *   getObjectByPath({ user: { profile: { id: 42 } } }, "user.profile.id")
- *   → 42
- *
- * @param obj - The object to traverse.
- * @param path - A dot-separated string path representing the property to access (e.g., "user.profile.id").
- * @returns The value found at the given path, or `undefined` if the path is invalid.
- */
-// const getObjectByPath = (obj: Record<string, unknown>, path: string): unknown => {
-//   return path
-//     .replace(/^\./, '')
-//     .split('.').reduce<unknown>((acc, part) => {
-//       if (typeof acc === 'object' && acc !== null && part in acc) {
-//         return (acc as Record<string, unknown>)[part]
-//       }
-//       return undefined
-//     }, obj)
-// }
 
 /**
  * Interpolates a route template using values from a nested payload object.
@@ -126,87 +68,6 @@ const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string)
 }
 
 /**
- * Reorganizes the payload by extracting keys that do not exist in the `resourcePayload`
- * and nesting them under a new object keyed by `payloadKey`. All other keys remain at the top level.
- *
- * This is typically used to group newly added form values separately from existing ones.
- *
- * @param {Record<string, unknown>} payload - The original payload, typically from form values.
- * @param {object} resourcePayload - The reference payload to compare against.
- * @param {string | undefined} payloadKey - The key under which to nest the extracted new values.
- * @returns {Record<string, unknown>} - The reorganized payload with extracted values nested under `payloadKey`.
- */
-// const reorganizePayloadByKey = (
-//   payload: Record<string, unknown>,
-//   resourcePayload: object,
-//   payloadKey: string | undefined
-// ): Record<string, unknown> => {
-//   if (!payloadKey) {
-//     console.warn('payloadKey is undefined, skipping key reorganization.')
-//     return payload
-//   }
-
-//   const newPayloadKeyObject: Record<string, unknown> = {}
-
-//   const valuesKeys = Object.keys(payload).filter((key) => !Object.prototype.hasOwnProperty.call(resourcePayload, key))
-
-//   for (const key of valuesKeys) {
-//     const value = payload[key]
-//     newPayloadKeyObject[key] = typeof value === 'object' && value !== null && !Array.isArray(value) ? { ...value } : value
-//   }
-
-//   const cleanedPayload: Record<string, unknown> = {}
-
-//   for (const key in payload) {
-//     if (!valuesKeys.includes(key)) {
-//       cleanedPayload[key] = payload[key]
-//     }
-//   }
-
-//   cleanedPayload[payloadKey] = newPayloadKeyObject
-
-//   return cleanedPayload
-// }
-
-/**
- * Updates a nested property in an object at the given key path with a value derived from another path expression.
- *
- * The valuePath can include expressions like: ${user.firstName + " " + user.lastName}
- *
- * @param values - The source object from which to extract values.
- * @param keyPath - Dot-separated path where to set the new value.
- * @param valuePath - A template-style string (e.g., "${user.firstName + ' ' + user.lastName}") used to build the new value.
- * @returns A new object with the updated keyPath set to the interpolated value.
- */
-// const updateJson = (values: Record<string, unknown>, keyPath: string, valuePath: string): Record<string, unknown> => {
-//   const substr = valuePath.replace('${', '').replace('}', '')
-//   const parts = substr.split('+').map((el) => el.trim())
-
-//   const value = parts
-//     .map((el) => {
-//       if (el.startsWith('"') || el.startsWith("'")) {
-//         return el.replace(/^['"]|['"]$/g, '')
-//       }
-
-//       const resolved = getObjectByPath(values, el)
-//       if (
-//         typeof resolved === 'string'
-//         || typeof resolved === 'number'
-//         || typeof resolved === 'boolean'
-//         || typeof resolved === 'bigint'
-//         || typeof resolved === 'symbol'
-//       ) {
-//         return String(resolved)
-//       }
-
-//       return ''
-//     })
-//     .join('')
-
-//   return merge({}, values, convertStringToObject(keyPath, value))
-// }
-
-/**
  * Adds or replaces `name` and `namespace` query parameters in a given URL.
  * Existing `name` and `namespace` parameters (if any) are removed before appending the new values.
  *
@@ -220,13 +81,13 @@ const interpolateRedirectUrl = (payload: Record<string, unknown>, route: string)
  * @returns The updated URL with the new query parameters
  */
 const updateNameNamespace = (path: string, name?: string, namespace?: string) => {
-  const qsParameters = path
-    .split('?')[1]
+  const [base, queryString = ''] = path.split('?')
+  const qsParameters = queryString
     .split('&')
-    .filter((el) => el.indexOf('name=') === -1 && el.indexOf('namespace=') === -1)
+    .filter((el) => !el.startsWith('name=') && !el.startsWith('namespace='))
     .join('&')
 
-  return `${path.split('?')[0]}?${qsParameters}&name=${name}&namespace=${namespace}`
+  return `${base}?${qsParameters ? `${qsParameters}&` : ''}name=${name}&namespace=${namespace}`
 }
 
 const buildPayload = async (
@@ -240,7 +101,7 @@ const buildPayload = async (
   let finalPayload = payload ?? {}
 
   // 2. the action payload and the referenced resource payload are merged
-  finalPayload = merge(payload, resourcePayload)
+  finalPayload = merge({}, payload, resourcePayload)
 
   if (payloadToOverride && payloadToOverride.length > 0 && customPayload) {
     // 3. the values defined in payloadToOverride are interpolated
@@ -258,7 +119,6 @@ const buildPayload = async (
 
     // 4. the interpolated values replace the original values
     for (const { name, resolvedValue } of resolvedOverrides) {
-      finalPayload = merge({}, finalPayload)
       set(finalPayload, name, resolvedValue)
     }
   }
@@ -375,7 +235,6 @@ export const useHandleAction = () => {
             }
 
             const payload = await buildPayload(action, resourcePayload, customPayload, resolveJq)
-            console.log(payload)
 
             let resourceUid: string | null = null
             let eventReceived = false
@@ -386,7 +245,6 @@ export const useHandleAction = () => {
                 withCredentials: false,
               })
 
-              // TODO: check
               let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
               // eslint-disable-next-line max-depth
               if (errorMessage && errorMessage.startsWith('${')) {
@@ -409,7 +267,6 @@ export const useHandleAction = () => {
                 message.destroy()
               }, onEventNavigateTo.timeout! * 1000)
 
-              // TODO: check
               const loadingMessage = onEventNavigateTo.loadingMessage
                 ? await resolveJq(onEventNavigateTo.loadingMessage, { json: payload, response: jsonResponse })
                 : 'Waiting for resource and redirecting...'
@@ -508,12 +365,11 @@ export const useHandleAction = () => {
 
             setIsActionLoading(false)
 
-            // TODO: check
             if (!res.ok) {
               message.destroy()
               notification.error({
                 description: errorMessage
-                  ? formatMessage(errorMessage, { json: payload, response: jsonResponse })
+                  ? await resolveJq(errorMessage, { json: payload, response: jsonResponse })
                   : jsonResponse.message,
                 message: `${jsonResponse.status} - ${jsonResponse.reason}`,
                 placement: 'bottomLeft',
@@ -543,14 +399,10 @@ export const useHandleAction = () => {
                 }
               })()
 
-              // TODO: check
               let description = `Successfully ${actionName} ${jsonResponse.metadata?.name} in ${jsonResponse.metadata?.namespace}`
               // eslint-disable-next-line max-depth
               if (successMessage && successMessage.startsWith('${')) {
-                description = await resolveJq(successMessage, {
-                  json: payload,
-                  response: jsonResponse,
-                })
+                description = await resolveJq(successMessage, { json: payload, response: jsonResponse })
               }
 
               notification.success({
@@ -564,7 +416,12 @@ export const useHandleAction = () => {
 
             if (onSuccessNavigateTo) {
               closeDrawer()
-              window.location.replace(onSuccessNavigateTo)
+
+              const onSuccessUrl = onSuccessNavigateTo.startsWith('${')
+                ? await resolveJq(onSuccessNavigateTo, { json: payload, response: jsonResponse })
+                : onSuccessNavigateTo
+
+              window.location.replace(onSuccessUrl)
             }
           }
 
