@@ -375,6 +375,7 @@ export const useHandleAction = () => {
             }
 
             const payload = await buildPayload(action, resourcePayload, customPayload, resolveJq)
+            console.log(payload)
 
             let resourceUid: string | null = null
             let eventReceived = false
@@ -385,11 +386,12 @@ export const useHandleAction = () => {
                 withCredentials: false,
               })
 
+              // TODO: check
               let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
               // eslint-disable-next-line max-depth
               if (errorMessage && errorMessage.startsWith('${')) {
                 description = await resolveJq(errorMessage, {
-                  json: updatedPayload,
+                  json: payload,
                   response: jsonResponse,
                 })
               }
@@ -407,8 +409,9 @@ export const useHandleAction = () => {
                 message.destroy()
               }, onEventNavigateTo.timeout! * 1000)
 
+              // TODO: check
               const loadingMessage = onEventNavigateTo.loadingMessage
-                ? await resolveJq(onEventNavigateTo.loadingMessage, { json: updatedPayload, response: jsonResponse })
+                ? await resolveJq(onEventNavigateTo.loadingMessage, { json: payload, response: jsonResponse })
                 : 'Waiting for resource and redirecting...'
 
               message.loading(loadingMessage, onEventNavigateTo.timeout)
@@ -435,7 +438,7 @@ export const useHandleAction = () => {
                     if (onEventNavigateTo.url.startsWith('${')) {
                       return resolveJq(onEventNavigateTo.url, {
                         event: eventData as unknown as Record<string, unknown>,
-                        json: updatedPayload,
+                        json: payload,
                         response: jsonResponse,
                       })
                     }
@@ -463,7 +466,7 @@ export const useHandleAction = () => {
                   if (successMessage && successMessage.startsWith('${')) {
                     description = await resolveJq(successMessage, {
                       event: eventData as unknown as Record<string, unknown>,
-                      json: updatedPayload,
+                      json: payload,
                       response: jsonResponse,
                     })
                   }
@@ -483,10 +486,9 @@ export const useHandleAction = () => {
             }
 
             const updatedUrl = customPayload
-              ? updateNameNamespace(url, (updatedPayload as Payload)?.metadata?.name, (updatedPayload as Payload)?.metadata?.namespace)
+              ? updateNameNamespace(url, payload?.metadata?.name, payload?.metadata?.namespace)
               : url
 
-            const requestBody = Object.keys(updatedPayload).length > 0 ? updatedPayload : payload
             const requestHeaders = {
               ...getHeadersObject(headers),
               Accept: 'application/json',
@@ -496,7 +498,7 @@ export const useHandleAction = () => {
             const shouldSendPayload = ['POST', 'PUT', 'PATCH'].includes(verb)
 
             const res = await fetch(updatedUrl, {
-              body: shouldSendPayload ? JSON.stringify(requestBody) : undefined,
+              body: shouldSendPayload ? JSON.stringify(payload) : undefined,
               headers: requestHeaders,
               method: verb,
             })
@@ -506,11 +508,12 @@ export const useHandleAction = () => {
 
             setIsActionLoading(false)
 
+            // TODO: check
             if (!res.ok) {
               message.destroy()
               notification.error({
                 description: errorMessage
-                  ? formatMessage(errorMessage, { json: updatedPayload, response: jsonResponse })
+                  ? formatMessage(errorMessage, { json: payload, response: jsonResponse })
                   : jsonResponse.message,
                 message: `${jsonResponse.status} - ${jsonResponse.reason}`,
                 placement: 'bottomLeft',
@@ -540,11 +543,12 @@ export const useHandleAction = () => {
                 }
               })()
 
+              // TODO: check
               let description = `Successfully ${actionName} ${jsonResponse.metadata?.name} in ${jsonResponse.metadata?.namespace}`
               // eslint-disable-next-line max-depth
               if (successMessage && successMessage.startsWith('${')) {
                 description = await resolveJq(successMessage, {
-                  json: updatedPayload,
+                  json: payload,
                   response: jsonResponse,
                 })
               }
