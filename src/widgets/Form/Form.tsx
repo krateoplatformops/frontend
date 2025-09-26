@@ -8,8 +8,6 @@ import { useEffect, useId, useRef } from 'react'
 
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { WidgetProps } from '../../types/Widget'
-import type { Payload } from '../../utils/types'
-import { getResourceRef } from '../../utils/utils'
 import { useDrawerContext } from '../Drawer/DrawerContext'
 
 import styles from './Form.module.css'
@@ -112,32 +110,15 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
       return
     }
 
-    // TODO: understand if this could be removed (it's already inside the useHandleActions)
-    const resourceRef = getResourceRef(action.resourceRefId, resourcesRefs)
-
-    if (!resourceRef) {
-      notification.error({
-        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
-        message: 'Error while executing the action',
-        placement: 'bottomLeft',
-      })
-
-      setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} form={formId} loading={isActionLoading} /> })
-
-      return
-    }
-
-    const values = convertDayjsToISOString(formValues)
-
     // TODO: handle disabled buttons
     if (action.onEventNavigateTo) {
       /* FIXME: This is a bit dirty, should disable the already present buttons instead */
       setDrawerData({ extra: <FormExtra buttonConfig={buttonConfig} disabled form={formId} loading={isActionLoading} /> })
     }
 
-    const payload: Payload = { ...resourceRef.payload, ...values }
+    const values = convertDayjsToISOString(formValues)
 
-    await handleAction(action, resourcesRefs, payload, widget)
+    await handleAction(action, resourcesRefs, values, widget)
   }
 
   if (isActionLoading) {
