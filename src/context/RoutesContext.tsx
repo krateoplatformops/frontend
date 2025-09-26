@@ -57,10 +57,20 @@ const normalizeRouteParameters = (route: string) => {
  * returns: '/call?resource=collections&apiVersion=templates.krateo.io/v1alpha1&name=pino&namespace=gino'
  */
 const substituteEndpointParams = (endpoint: string, routerParams: Record<string, string>): string => {
-  return endpoint.replace(/\{([^}]+)\}/g, (match, paramName: string) => {
+  const decoded = decodeURIComponent(endpoint)
+
+  const substituted = decoded.replace(/\{([^}]+)\}/g, (match, paramName: string) => {
     const paramValue = routerParams[paramName]
     return paramValue !== undefined ? paramValue : match
   })
+
+  try {
+    const url = new URL(substituted, window.location.origin)
+    url.search = new URLSearchParams(url.searchParams).toString()
+    return url.pathname + url.search
+  } catch {
+    return substituted
+  }
 }
 
 export function createRoute({ endpoint, path }: { endpoint: string; path: string }) {
