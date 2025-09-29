@@ -6,7 +6,6 @@ import type { RoutesLoader as WidgetType } from './RoutesLoader.type'
 export type RoutesLoaderWidgetData = WidgetType['spec']['widgetData']
 
 export function RoutesLoader({ resourcesRefs }: WidgetProps<RoutesLoaderWidgetData>) {
-  console.log('RoutesLoader render', resourcesRefs)
   return (
     <>
       {resourcesRefs.items.map(({ id, path }, index) => (
