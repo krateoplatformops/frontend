@@ -345,26 +345,31 @@
                 "required": ["path", "fetch"],
                 "additionalProperties": false,
                 "properties": {
+                  "extra": {
+                    "description": "optional additional parameters to be added to the RESTAction call",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "name": {
+                          "description": "the name of the additional parameter",
+                          "type": "string"
+                        },
+                        "value": {
+                          "description": "the type of the additional parameter",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
                   "path": {
                     "type": "string",
                     "description": "the path of the field to apply autocomplete"
                   },
-                  "fetch": {
-                    "type": "object",
-                    "description": "remote data source configuration for autocomplete",
-                    "required": ["url", "verb"],
-                    "additionalProperties": false,
-                    "properties": {
-                      "url": {
-                        "type": "string",
-                        "description": "the URL to fetch autocomplete options from"
-                      },
-                      "verb": {
-                        "type": "string",
-                        "enum": ["GET", "POST"],
-                        "description": "HTTP method to use for fetching options"
-                      }
-                    }
+                  "resourceRefId": {
+                    "type": "string",
+                    "description": "the identifier of the RESTAction that should be called to retrieve autocomplete data"
                   }
                 }
               }

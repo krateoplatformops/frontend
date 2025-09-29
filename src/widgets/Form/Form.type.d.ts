@@ -247,22 +247,26 @@ export interface Form {
        */
       autocomplete?: {
         /**
+         * optional additional parameters to be added to the RESTAction call
+         */
+        extra?: {
+          /**
+           * the name of the additional parameter
+           */
+          name?: string
+          /**
+           * the type of the additional parameter
+           */
+          value?: string
+        }[]
+        /**
          * the path of the field to apply autocomplete
          */
         path: string
         /**
-         * remote data source configuration for autocomplete
+         * the identifier of the RESTAction that should be called to retrieve autocomplete data
          */
-        fetch: {
-          /**
-           * the URL to fetch autocomplete options from
-           */
-          url: string
-          /**
-           * HTTP method to use for fetching options
-           */
-          verb: 'GET' | 'POST'
-        }
+        resourceRefId?: string
       }[]
       /**
        * list of dependencies for the form fields
