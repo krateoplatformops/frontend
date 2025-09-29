@@ -49,8 +49,6 @@ const Modal = () => {
 
   const { customWidth, size = 'default', title, widgetEndpoint } = properties
 
-  console.log(size)
-
   const modalClassName = `
     ${styles.modal}
     ${size === 'large' ? styles.modalLarge : ''}
