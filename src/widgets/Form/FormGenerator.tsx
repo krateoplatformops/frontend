@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 import ListObjectFields from '../../components/ListObjectFields'
+import type { ResourcesRefs } from '../../types/Widget'
 
 import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
@@ -16,13 +17,14 @@ import styles from './Form.module.css'
 
 type FormGeneratorType = {
   descriptionTooltip: boolean
-  showFormStructure?: boolean
-  schema: JSONSchema4
   formId: string
   onSubmit: (values: Record<string, unknown>) => Promise<void>
+  resourcesRefs: ResourcesRefs
+  schema: JSONSchema4
+  autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
-  autocomplete?: FormWidgetData['autocomplete']
+  showFormStructure?: boolean
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
@@ -55,6 +57,7 @@ const FormGenerator = ({
   formId,
   objectFields,
   onSubmit,
+  resourcesRefs,
   schema,
   showFormStructure = false,
 }: FormGeneratorType) => {
@@ -188,7 +191,7 @@ const FormGenerator = ({
             const fetchOptions = autocomplete.find(({ path }) => path === name)
 
             if (fetchOptions) {
-              return <AutoComplete fetchOptions={fetchOptions} form={form} />
+              return <AutoComplete fetchOptions={fetchOptions} resourcesRefs={resourcesRefs} />
             }
           }
 

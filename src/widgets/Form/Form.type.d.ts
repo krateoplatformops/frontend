@@ -253,11 +253,11 @@ export interface Form {
           /**
            * the name of the additional parameter
            */
-          name?: string
+          name: string
           /**
            * the type of the additional parameter
            */
-          value?: string
+          value: string
         }[]
         /**
          * the path of the field to apply autocomplete
@@ -266,32 +266,42 @@ export interface Form {
         /**
          * the identifier of the RESTAction that should be called to retrieve autocomplete data
          */
-        resourceRefId?: string
+        resourceRefId: string
       }[]
       /**
        * list of dependencies for the form fields
        */
       dependencies?: {
         /**
-         * the path of the field
+         * the field on which this field depends on
          */
-        path: string
         dependsField: {
           /**
-           * the field that this field depends on
+           * the name of the field on which this field depends on
            */
-          field?: string
+          field: string
         }
-        fetch: {
+        /**
+         * optional additional parameters to be added to the RESTAction call
+         */
+        extra?: {
           /**
-           * the URL to fetch options
+           * the name of the additional parameter
            */
-          url: string
+          name: string
           /**
-           * HTTP method to use for fetching options
+           * the type of the additional parameter
            */
-          verb: 'GET' | 'POST'
-        }
+          value: string
+        }[]
+        /**
+         * the path of the field to apply autocomplete
+         */
+        path: string
+        /**
+         * the identifier of the RESTAction that should be called to retrieve autocomplete data
+         */
+        resourceRefId: string
       }[]
       /**
        * configuration for object fields in the form

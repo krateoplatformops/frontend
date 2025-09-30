@@ -1,44 +1,58 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import type { AutoCompleteProps as AntDAutoCompleteProps, FormInstance } from 'antd'
+import type { AutoCompleteProps as AntDAutoCompleteProps } from 'antd'
 import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import type { DefaultOptionType } from 'antd/es/select'
 import debounce from 'lodash/debounce'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import useCatchError from '../../../hooks/useCatchError'
+import type { ResourcesRefs } from '../../../types/Widget'
+import { getEndpointUrl } from '../../../utils/utils'
 import type { FormWidgetData } from '../Form'
-import { interpolateFormUrl } from '../utils'
 
 interface AutoCompleteProps {
   fetchOptions: NonNullable<FormWidgetData['autocomplete']>[number]
-  form: FormInstance
+  resourcesRefs: ResourcesRefs
 }
 
-const AutoComplete = ({ fetchOptions, form }: AutoCompleteProps) => {
-  const { fetch: { url, verb } } = fetchOptions
+const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
+  const { extra = [], resourceRefId } = fetchOptions
 
   const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
-  const { catchError } = useCatchError()
   const { notification } = useApp()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getOptions = useCallback(async (text: string) => {
+    const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+
+    if (!endpoint) {
+      notification.error({
+        description: `Cannot find resources refs for resource ref with ID ${resourceRefId}`,
+        message: 'Error while retrieving options',
+        placement: 'bottomLeft',
+      })
+
+      setIsLoading(false)
+      return
+    }
+
     try {
-      let response: Response | undefined
+      const extras = extra.reduce<Record<string, string>>((acc, { name, value }) => {
+        acc[name] = value
+        return acc
+      }, {})
 
-      const interpolatedUrl = interpolateFormUrl(url, form, { query: text })
+      const url = new URL(endpoint)
+      if (text) { url.searchParams.set('query', text) }
+      if (extra.length) { url.searchParams.set('extras', JSON.stringify(extras)) }
 
-      if (verb === 'GET') {
-        response = await fetch(interpolatedUrl)
-      } else if (verb === 'POST') {
-        response = await fetch(interpolatedUrl, {
-          body: JSON.stringify(text),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        })
-      }
+      const response = await fetch(url.toString(), {
+        body: JSON.stringify(text),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      })
 
       if (!response) {
         notification.error({
@@ -47,32 +61,21 @@ const AutoComplete = ({ fetchOptions, form }: AutoCompleteProps) => {
           placement: 'bottomLeft',
         })
 
-        return []
+        return
       }
 
-      const data = await response.json() as string[]
-
-      if (Array.isArray(data)) {
-        setOptions(data.map((item: string) => ({ value: item })))
-      } else {
-        notification.error({
-          description: 'Invalid response format',
-          message: 'Error while retrieving options',
-          placement: 'bottomLeft',
-        })
-        console.error('Invalid response format:', data)
-      }
+      const data = await response.json() as DefaultOptionType[]
+      setOptions(data)
     } catch {
       notification.error({
         description: 'There has been an unhandled error while retrieving field options',
         message: 'Error while retrieving options',
         placement: 'bottomLeft',
       })
-      catchError({ message: 'Unable to retrieve field data' })
     } finally {
       setIsLoading(false)
     }
-  }, [catchError, form, notification, url, verb])
+  }, [extra, notification, resourceRefId, resourcesRefs])
 
   const debouncedGetOptions = useMemo(() => debounce((text: string) => getOptions(text), 1000), [getOptions])
 

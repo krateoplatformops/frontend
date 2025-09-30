@@ -138,6 +138,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
         formId={formId}
         objectFields={objectFields}
         onSubmit={values => onSubmit(values)}
+        resourcesRefs={resourcesRefs}
         schema={formSchema}
         showFormStructure={true}
       />

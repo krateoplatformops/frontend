@@ -342,7 +342,7 @@
               "description": "autocomplete configuration for the form fields",
               "items": {
                 "type": "object",
-                "required": ["path", "fetch"],
+                "required": ["path", "resourceRefId"],
                 "additionalProperties": false,
                 "properties": {
                   "extra": {
@@ -359,6 +359,7 @@
                           "type": "string"
                         }
                       },
+                      "required": ["name", "value"],
                       "type": "object"
                     },
                     "type": "array"
@@ -379,38 +380,47 @@
               "description": "list of dependencies for the form fields",
               "items": {
                 "type": "object",
-                "required": ["path", "fetch", "dependsField"],
+                "required": ["dependsField", "path", "resourceRefId"],
                 "additionalProperties": false,
                 "properties": {
-                  "path": {
-                    "type": "string",
-                    "description": "the path of the field"
-                  },
                   "dependsField": {
+                    "description": "the field on which this field depends on",
                     "type": "object",
                     "additionalProperties": false,
                     "properties": {
                       "field": {
                         "type": "string",
-                        "description": "the field that this field depends on"
+                        "description": "the name of the field on which this field depends on"
                       }
-                    }
+                    },
+                    "required": ["field"]
                   },
-                  "fetch": {
-                    "type": "object",
-                    "required": ["url", "verb"],
-                    "additionalProperties": false,
-                    "properties": {
-                      "url": {
-                        "type": "string",
-                        "description": "the URL to fetch options"
+                  "extra": {
+                    "description": "optional additional parameters to be added to the RESTAction call",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "name": {
+                          "description": "the name of the additional parameter",
+                          "type": "string"
+                        },
+                        "value": {
+                          "description": "the type of the additional parameter",
+                          "type": "string"
+                        }
                       },
-                      "verb": {
-                        "type": "string",
-                        "enum": ["GET", "POST"],
-                        "description": "HTTP method to use for fetching options"
-                      }
-                    }
+                      "required": ["name", "value"],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "the path of the field to apply autocomplete"
+                  },
+                  "resourceRefId": {
+                    "type": "string",
+                    "description": "the identifier of the RESTAction that should be called to retrieve data"
                   }
                 }
               }
