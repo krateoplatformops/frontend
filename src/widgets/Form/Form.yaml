@@ -118,11 +118,59 @@ spec:
                 "type": "string",
                 "format": "date-time",
                 "description": "Data/ora di creazione della risorsa"
+              },
+              "lorem_1": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_2": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_3": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_4": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_5": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_6": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_7": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_8": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_9": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_10": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_11": {
+                "type": "string",
+                "description": "lorem ipsum"
+              },
+              "lorem_12": {
+                "type": "string",
+                "description": "lorem ipsum"
               }
             },
             "type": "object",
             "required": [
-              "name"
+              "name", "lorem_12"
             ]
           },
           "rules": {

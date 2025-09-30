@@ -229,7 +229,7 @@ spec:
       - tablists
       - yamlviewers
     items:
-      - resourceRefId: test-firework-form
+      # - resourceRefId: test-firework-form
       - resourceRefId: button-with-drawer-form
       - resourceRefId: button-with-modal-form
       - resourceRefId: button-with-drawer-filters-2
@@ -238,12 +238,12 @@ spec:
       - resourceRefId: test-panel
   resourcesRefs:
     items:
-      - id: test-firework-form
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: test-firework-form
-        namespace: krateo-system
-        resource: forms
-        verb: GET
+      # - id: test-firework-form
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: test-firework-form
+      #   namespace: krateo-system
+      #   resource: forms
+      #   verb: GET
       - id: button-with-drawer-form
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: button-with-drawer-form
