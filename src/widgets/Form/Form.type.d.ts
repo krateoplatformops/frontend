@@ -247,22 +247,14 @@ export interface Form {
        */
       autocomplete?: {
         /**
-         * optional additional parameters to be added to the RESTAction call
+         * parameter to be added to the RESTAction call
          */
-        extra?: {
+        extra: {
           /**
-           * the name of the additional parameter
+           * the key of the additional parameter
            */
-          name: string
-          /**
-           * the type of the additional parameter
-           */
-          value: string
-        }[]
-        /**
-         * the path of the field to apply autocomplete
-         */
-        path: string
+          key: string
+        }
         /**
          * the identifier of the RESTAction that should be called to retrieve autocomplete data
          */
@@ -282,24 +274,16 @@ export interface Form {
           field: string
         }
         /**
-         * optional additional parameters to be added to the RESTAction call
+         * parameter to be added to the RESTAction call
          */
-        extra?: {
+        extra: {
           /**
-           * the name of the additional parameter
+           * the key of the additional parameter
            */
-          name: string
-          /**
-           * the type of the additional parameter
-           */
-          value: string
-        }[]
+          key: string
+        }
         /**
-         * the path of the field to apply autocomplete
-         */
-        path: string
-        /**
-         * the identifier of the RESTAction that should be called to retrieve autocomplete data
+         * the identifier of the RESTAction that should be called to retrieve dependency data
          */
         resourceRefId: string
       }[]

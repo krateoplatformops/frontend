@@ -7,7 +7,7 @@ import debounce from 'lodash/debounce'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import type { ResourcesRefs } from '../../../types/Widget'
-import { getEndpointUrl } from '../../../utils/utils'
+import { getResourceRef } from '../../../utils/utils'
 import type { FormWidgetData } from '../Form'
 
 interface AutoCompleteProps {
@@ -16,16 +16,16 @@ interface AutoCompleteProps {
 }
 
 const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
-  const { extra = [], resourceRefId } = fetchOptions
+  const { extra, resourceRefId } = fetchOptions
 
   const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
   const { notification } = useApp()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const getOptions = useCallback(async (text: string) => {
-    const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
+  const getOptions = useCallback(async (value: string) => {
+    const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
 
-    if (!endpoint) {
+    if (!resourceRef) {
       notification.error({
         description: `Cannot find resources refs for resource ref with ID ${resourceRefId}`,
         message: 'Error while retrieving options',
@@ -37,21 +37,14 @@ const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
     }
 
     try {
-      const extras = extra.reduce<Record<string, string>>((acc, { name, value }) => {
-        acc[name] = value
-        return acc
-      }, {})
+      const { path, verb } = resourceRef
 
-      const url = new URL(endpoint)
-      if (text) { url.searchParams.set('query', text) }
-      if (extra.length) { url.searchParams.set('extras', JSON.stringify(extras)) }
+      const url = new URL(path)
+      url.searchParams.set('extras', JSON.stringify({ [extra.key]: value }))
 
       const response = await fetch(url.toString(), {
-        body: JSON.stringify(text),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
+        ...(verb === 'POST' && { headers: { 'Content-Type': 'application/json' } }),
+        method: verb,
       })
 
       if (!response) {
@@ -61,6 +54,7 @@ const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
           placement: 'bottomLeft',
         })
 
+        setIsLoading(false)
         return
       }
 

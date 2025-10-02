@@ -342,31 +342,20 @@
               "description": "autocomplete configuration for the form fields",
               "items": {
                 "type": "object",
-                "required": ["path", "resourceRefId"],
+                "required": ["extra", "resourceRefId"],
                 "additionalProperties": false,
                 "properties": {
                   "extra": {
-                    "description": "optional additional parameters to be added to the RESTAction call",
-                    "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "name": {
-                          "description": "the name of the additional parameter",
-                          "type": "string"
-                        },
-                        "value": {
-                          "description": "the type of the additional parameter",
-                          "type": "string"
-                        }
-                      },
-                      "required": ["name", "value"],
-                      "type": "object"
+                    "additionalProperties": false,
+                    "description": "parameter to be added to the RESTAction call",
+                    "properties": {
+                      "key": {
+                        "description": "the key of the additional parameter",
+                        "type": "string"
+                      }
                     },
-                    "type": "array"
-                  },
-                  "path": {
-                    "type": "string",
-                    "description": "the path of the field to apply autocomplete"
+                    "required": ["key"],
+                    "type": "object"
                   },
                   "resourceRefId": {
                     "type": "string",
@@ -380,7 +369,7 @@
               "description": "list of dependencies for the form fields",
               "items": {
                 "type": "object",
-                "required": ["dependsField", "path", "resourceRefId"],
+                "required": ["dependsField", "extra", "resourceRefId"],
                 "additionalProperties": false,
                 "properties": {
                   "dependsField": {
@@ -396,31 +385,20 @@
                     "required": ["field"]
                   },
                   "extra": {
-                    "description": "optional additional parameters to be added to the RESTAction call",
-                    "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "name": {
-                          "description": "the name of the additional parameter",
-                          "type": "string"
-                        },
-                        "value": {
-                          "description": "the type of the additional parameter",
-                          "type": "string"
-                        }
-                      },
-                      "required": ["name", "value"],
-                      "type": "object"
+                    "additionalProperties": false,
+                    "description": "parameter to be added to the RESTAction call",
+                    "properties": {
+                      "key": {
+                        "description": "the key of the additional parameter",
+                        "type": "string"
+                      }
                     },
-                    "type": "array"
-                  },
-                  "path": {
-                    "type": "string",
-                    "description": "the path of the field to apply autocomplete"
+                    "required": ["key"],
+                    "type": "object"
                   },
                   "resourceRefId": {
                     "type": "string",
-                    "description": "the identifier of the RESTAction that should be called to retrieve data"
+                    "description": "the identifier of the RESTAction that should be called to retrieve dependency data"
                   }
                 }
               }
