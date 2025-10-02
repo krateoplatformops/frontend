@@ -11,12 +11,12 @@ import { getResourceRef } from '../../../utils/utils'
 import type { FormWidgetData } from '../Form'
 
 interface AutoCompleteProps {
-  fetchOptions: NonNullable<FormWidgetData['autocomplete']>[number]
+  data: NonNullable<FormWidgetData['autocomplete']>[number]
   resourcesRefs: ResourcesRefs
 }
 
-const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
-  const { extra, resourceRefId } = fetchOptions
+const AutoComplete = ({ data, resourcesRefs }: AutoCompleteProps) => {
+  const { extra, resourceRefId } = data
 
   const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
   const { notification } = useApp()
@@ -33,7 +33,7 @@ const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
       })
 
       setIsLoading(false)
-      return
+      return []
     }
 
     try {
@@ -47,7 +47,7 @@ const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
         method: verb,
       })
 
-      if (!response) {
+      if (!response.ok) {
         notification.error({
           description: 'No response received',
           message: 'Error while retrieving options',
@@ -55,11 +55,11 @@ const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
         })
 
         setIsLoading(false)
-        return
+        return []
       }
 
       const data = await response.json() as DefaultOptionType[]
-      setOptions(data)
+      return data
     } catch {
       notification.error({
         description: 'There has been an unhandled error while retrieving field options',
@@ -71,15 +71,20 @@ const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
     }
   }, [extra, notification, resourceRefId, resourcesRefs])
 
-  const debouncedGetOptions = useMemo(() => debounce((text: string) => getOptions(text), 1000), [getOptions])
+  const debouncedGetOptions = useMemo(() =>
+    debounce(async (searchValue: string) => {
+      const options = await getOptions(searchValue)
+      setOptions(options)
+    }, 1000),
+  [getOptions])
 
   useEffect(() => {
     return () => { debouncedGetOptions.cancel() }
   }, [debouncedGetOptions])
 
-  const handleSearch = (text: string) => {
+  const handleSearch = (searchValue: string) => {
     setIsLoading(true)
-    void debouncedGetOptions(text)
+    void debouncedGetOptions(searchValue)
   }
 
   return (
@@ -90,7 +95,7 @@ const AutoComplete = ({ fetchOptions, resourcesRefs }: AutoCompleteProps) => {
         }
         return false
       }}
-      onSearch={(text) => handleSearch(text)}
+      onSearch={(searchValue) => handleSearch(searchValue)}
       options={options}
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
     />

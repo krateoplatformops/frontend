@@ -188,10 +188,10 @@ const FormGenerator = ({
         const formItemContent = (() => {
           // Autocomplete
           if (autocomplete) {
-            const fetchOptions = autocomplete.find(({ path }) => path === name)
+            const data = autocomplete.find(field => field.name === name)
 
-            if (fetchOptions) {
-              return <AutoComplete fetchOptions={fetchOptions} resourcesRefs={resourcesRefs} />
+            if (data) {
+              return <AutoComplete data={data} resourcesRefs={resourcesRefs} />
             }
           }
 
@@ -201,27 +201,17 @@ const FormGenerator = ({
 
             // AsyncSelect
             if (dependencies) {
-              const dependency = dependencies.find(({ path }) => path === name)
+              const data = dependencies.find(field => field.name === name)
 
-              if (dependency) {
-                return (
-                  <AsyncSelect
-                    dependency={dependency}
-                    form={form}
-                    name={name}
-                  />
-                )
+              if (data) {
+                return <AsyncSelect data={data} form={form} name={name} />
               }
             }
 
             if (enumArr.length > 4) {
-              return (
-                <Select
-                  allowClear
-                  options={enumArr.map((opt) => ({ label: opt, value: opt }))}
-                />
-              )
+              return <Select allowClear options={enumArr.map((opt) => ({ label: opt, value: opt }))} />
             }
+
             return (
               <Radio.Group>
                 {enumArr.map((el) => (

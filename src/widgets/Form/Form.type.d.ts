@@ -256,6 +256,10 @@ export interface Form {
           key: string
         }
         /**
+         * the name of the autocomplete field
+         */
+        name: string
+        /**
          * the identifier of the RESTAction that should be called to retrieve autocomplete data
          */
         resourceRefId: string
@@ -282,6 +286,10 @@ export interface Form {
            */
           key: string
         }
+        /**
+         * the name of the autocomplete field
+         */
+        name: string
         /**
          * the identifier of the RESTAction that should be called to retrieve dependency data
          */

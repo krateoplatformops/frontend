@@ -342,7 +342,7 @@
               "description": "autocomplete configuration for the form fields",
               "items": {
                 "type": "object",
-                "required": ["extra", "resourceRefId"],
+                "required": ["extra", "name", "resourceRefId"],
                 "additionalProperties": false,
                 "properties": {
                   "extra": {
@@ -357,6 +357,10 @@
                     "required": ["key"],
                     "type": "object"
                   },
+                  "name": {
+                    "description": "the name of the autocomplete field",
+                    "type": "string"
+                  },
                   "resourceRefId": {
                     "type": "string",
                     "description": "the identifier of the RESTAction that should be called to retrieve autocomplete data"
@@ -369,7 +373,7 @@
               "description": "list of dependencies for the form fields",
               "items": {
                 "type": "object",
-                "required": ["dependsField", "extra", "resourceRefId"],
+                "required": ["dependsField", "extra", "name", "resourceRefId"],
                 "additionalProperties": false,
                 "properties": {
                   "dependsField": {
@@ -395,6 +399,10 @@
                     },
                     "required": ["key"],
                     "type": "object"
+                  },
+                  "name": {
+                    "description": "the name of the autocomplete field",
+                    "type": "string"
                   },
                   "resourceRefId": {
                     "type": "string",
