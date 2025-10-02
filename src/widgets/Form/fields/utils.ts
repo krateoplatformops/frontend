@@ -53,7 +53,8 @@ export const getOptionsFromResourceRefId = async (
       message: 'Error while retrieving options',
       placement: 'bottomLeft',
     })
-    console.error('fetchDependField error:', error)
+    console.error('getOptionsFromResourceRefId error:', error)
+
     return []
   }
 }

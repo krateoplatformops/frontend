@@ -22,7 +22,9 @@ const AutoComplete = ({ data, resourcesRefs }: AutoCompleteProps) => {
 
   const debouncedGetOptions = useMemo(() =>
     debounce(async (searchValue: string) => {
+      setIsLoading(true)
       const options = await getOptionsFromResourceRefId(searchValue, resourceRefId, resourcesRefs, extra.key)
+      setIsLoading(false)
       setOptions(options)
     }, 1000),
   [extra.key, resourceRefId, resourcesRefs])

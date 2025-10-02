@@ -1,7 +1,8 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Form, type FormInstance, Select } from 'antd'
+import { Form, type FormInstance, Select, Spin } from 'antd'
 import type { DefaultOptionType } from 'antd/es/select'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import type { ResourcesRefs } from '../../../types/Widget'
 import type { FormWidgetData } from '../Form'
@@ -17,6 +18,8 @@ type AsyncSelectProps = {
 const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
   const { dependsField: { field }, extra, name, resourceRefId } = data
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const dependField = Form.useWatch<string | undefined>(field, form)
 
   useEffect(() => {
@@ -28,7 +31,13 @@ const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
 
   const { data: options } = useQuery<DefaultOptionType[]>({
     enabled: dependField !== undefined,
-    queryFn: async () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, extra.key),
+    queryFn: async () => {
+      setIsLoading(true)
+      const options = await getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, extra.key)
+      setIsLoading(false)
+
+      return options
+    },
     queryKey: ['dependField', dependField, name, resourceRefId, resourcesRefs, extra.key],
   })
 
@@ -41,6 +50,7 @@ const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
       allowClear
       onChange={value => form.setFieldsValue({ [name]: value })}
       options={options}
+      suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
       value={form.getFieldValue(name) as string | undefined}
     />
   )
