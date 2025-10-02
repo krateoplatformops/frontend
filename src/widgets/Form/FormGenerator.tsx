@@ -204,7 +204,7 @@ const FormGenerator = ({
               const data = dependencies.find(field => field.name === name)
 
               if (data) {
-                return <AsyncSelect data={data} form={form} name={name} />
+                return <AsyncSelect data={data} form={form} resourcesRefs={resourcesRefs} />
               }
             }
 

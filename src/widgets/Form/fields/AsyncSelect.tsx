@@ -1,19 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import type { DefaultOptionType } from 'antd/es/select'
 import { useEffect } from 'react'
 
+import type { ResourcesRefs } from '../../../types/Widget'
+import { getResourceRef } from '../../../utils/utils'
 import type { FormWidgetData } from '../Form'
-import { interpolateFormUrl } from '../utils'
 
 type AsyncSelectProps = {
-  dependency: NonNullable<FormWidgetData['dependencies']>[number]
+  data: NonNullable<FormWidgetData['dependencies']>[number]
   form: FormInstance
-  name: string
+  resourcesRefs: ResourcesRefs
 }
 
-const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
-  const { dependsField: { field }, fetch: { url, verb } } = dependency
+const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
+  const { dependsField: { field }, extra, name, resourceRefId } = data
 
   const { notification } = useApp()
 
@@ -26,27 +28,41 @@ const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
     }
   }, [dependField, form, name])
 
-  const fetchDependField = async (): Promise<string[]> => {
+  const fetchDependField = async (value: string | undefined): Promise<DefaultOptionType[]> => {
+    const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
+
+    if (!resourceRef) {
+      notification.error({
+        description: `Cannot find resources refs for resource ref with ID ${resourceRefId}`,
+        message: 'Error while retrieving options',
+        placement: 'bottomLeft',
+      })
+
+      return []
+    }
+
     try {
-      let response: Response
+      const { path, verb } = resourceRef
 
-      const interpolatedUrl = interpolateFormUrl(url, form, { query: dependField })
+      const url = new URL(path)
+      url.searchParams.set('extras', JSON.stringify({ [extra.key]: value }))
 
-      if (verb === 'GET') {
-        response = await fetch(interpolatedUrl)
-      } else if (verb === 'POST') {
-        response = await fetch(interpolatedUrl, {
-          body: JSON.stringify(dependField),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
+      const response = await fetch(url.toString(), {
+        ...(verb === 'POST' && { headers: { 'Content-Type': 'application/json' } }),
+        method: verb,
+      })
+
+      if (!response.ok) {
+        notification.error({
+          description: 'No response received',
+          message: 'Error while retrieving options',
+          placement: 'bottomLeft',
         })
-      } else {
+
         return []
       }
 
-      const data = await response.json() as string[]
+      const data = await response.json() as DefaultOptionType[]
       return data
     } catch (error) {
       notification.error({
@@ -59,10 +75,10 @@ const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
     }
   }
 
-  const { data: options } = useQuery<string[]>({
+  const { data: options } = useQuery<DefaultOptionType[]>({
     enabled: dependField !== undefined,
-    queryFn: async (): Promise<string[]> => fetchDependField(),
-    queryKey: ['dependField', dependField, name, url],
+    queryFn: async (): Promise<DefaultOptionType[]> => fetchDependField(dependField),
+    queryKey: ['dependField', dependField, name, resourceRefId],
   })
 
   if (dependField === undefined) {

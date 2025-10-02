@@ -22,7 +22,7 @@ const AutoComplete = ({ data, resourcesRefs }: AutoCompleteProps) => {
   const { notification } = useApp()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const getOptions = useCallback(async (value: string) => {
+  const getOptions = useCallback(async (value: string | undefined) => {
     const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
 
     if (!resourceRef) {
