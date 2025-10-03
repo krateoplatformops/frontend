@@ -8,12 +8,12 @@ spec:
     actions: {}
     title: Firework App Form
     items:
-      - resourceRefId: firework-form
+      - resourceRefId: test-firework-form
   resourcesRefs:
     items:
-      - id: firework-form
+      - id: test-firework-form
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: firework-form
+        name: test-firework-form
         namespace: krateo-system
         resource: forms
         verb: GET
