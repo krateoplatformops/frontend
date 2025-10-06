@@ -1,9 +1,11 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import type { AutoCompleteProps as AntDAutoCompleteProps } from 'antd'
 import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
+import useApp from 'antd/es/app/useApp'
 import debounce from 'lodash/debounce'
 import { useEffect, useMemo, useState } from 'react'
 
+import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
 import type { FormWidgetData } from '../Form'
 
@@ -15,6 +17,9 @@ interface AutoCompleteProps {
 }
 
 const AutoComplete = ({ data, resourcesRefs }: AutoCompleteProps) => {
+  const { notification } = useApp()
+  const { config } = useConfigContext()
+
   const { extra, resourceRefId } = data
 
   const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
@@ -23,11 +28,11 @@ const AutoComplete = ({ data, resourcesRefs }: AutoCompleteProps) => {
   const debouncedGetOptions = useMemo(() =>
     debounce(async (searchValue: string) => {
       setIsLoading(true)
-      const options = await getOptionsFromResourceRefId(searchValue, resourceRefId, resourcesRefs, extra.key)
+      const options = await getOptionsFromResourceRefId(searchValue, resourceRefId, resourcesRefs, extra.key, notification, config)
       setIsLoading(false)
       setOptions(options)
     }, 1000),
-  [extra.key, resourceRefId, resourcesRefs])
+  [config, extra.key, notification, resourceRefId, resourcesRefs])
 
   useEffect(() => {
     return () => { debouncedGetOptions.cancel() }

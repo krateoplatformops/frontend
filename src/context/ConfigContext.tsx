@@ -1,7 +1,7 @@
 import { noop } from 'lodash'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-interface Config {
+export interface Config {
   api: {
     AUTHN_API_BASE_URL: string
     SNOWPLOW_API_BASE_URL: string
