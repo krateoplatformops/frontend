@@ -2,6 +2,7 @@
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
+import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useState } from 'react'
@@ -186,12 +187,18 @@ const FormGenerator = ({
     switch (node.type) {
       case 'string': {
         const formItemContent = (() => {
+          const options = Array.isArray(node.enum)
+            ? node.enum
+              .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
+              .map((optionValue) => ({ label: String(optionValue), value: optionValue } as DefaultOptionType))
+            : undefined
+
           // Autocomplete
           if (autocomplete) {
             const data = autocomplete.find(field => field.name === name)
 
             if (data) {
-              return <AutoComplete data={data} form={form} optionsEnum={node.enum} resourcesRefs={resourcesRefs} />
+              return <AutoComplete data={data} form={form} options={options} resourcesRefs={resourcesRefs} />
             }
           }
 
@@ -200,23 +207,21 @@ const FormGenerator = ({
             const data = dependencies.find(field => field.name === name)
 
             if (data) {
-              return <AsyncSelect data={data} form={form} optionsEnum={node.enum} resourcesRefs={resourcesRefs} />
+              return <AsyncSelect data={data} form={form} options={options} resourcesRefs={resourcesRefs} />
             }
           }
 
           // Enum
-          if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
-            const enumArr = node.enum as (string | number)[]
-
-            if (enumArr.length > 4) {
-              return <Select allowClear options={enumArr.map((opt) => ({ label: opt, value: opt }))} />
+          if (options) {
+            if (options.length > 4) {
+              return <Select allowClear options={options} />
             }
 
             return (
               <Radio.Group>
-                {enumArr.map((el) => (
-                  <Radio key={`radio_${el}`} value={el}>
-                    {el}
+                {options.map(({ label, value }) => (
+                  <Radio key={`radio_${value}`} value={value}>
+                    {label}
                   </Radio>
                 ))}
               </Radio.Group>
