@@ -1,8 +1,10 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import type { AutoCompleteProps as AntDAutoCompleteProps, FormInstance } from 'antd'
+import type { FormInstance } from 'antd'
 import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import type { DefaultOptionType } from 'antd/es/select'
+import type { JSONSchema4Type } from 'json-schema'
 import debounce from 'lodash/debounce'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -16,9 +18,10 @@ interface AutoCompleteProps {
   data: NonNullable<FormWidgetData['autocomplete']>[number]
   form: FormInstance
   resourcesRefs: ResourcesRefs
+  optionsEnum?: JSONSchema4Type[] | undefined
 }
 
-const AutoComplete = ({ data, form, resourcesRefs }: AutoCompleteProps) => {
+const AutoComplete = ({ data, form, optionsEnum, resourcesRefs }: AutoCompleteProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
   const { extra: { key }, name, resourceRefId } = data
@@ -33,7 +36,17 @@ const AutoComplete = ({ data, form, resourcesRefs }: AutoCompleteProps) => {
     return () => debouncedUpdate.cancel()
   }, [searchValue, debouncedUpdate])
 
-  const { data: options = [], isLoading } = useQuery<AntDAutoCompleteProps['options']>({
+  const options: DefaultOptionType[] = useMemo(() => {
+    if (optionsEnum?.length) {
+      return optionsEnum
+        .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
+        .map((optionValue) => ({ label: String(optionValue), value: optionValue }))
+    }
+
+    return []
+  }, [optionsEnum])
+
+  const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(debouncedValue && resourceRefId && config),
     queryFn: () =>
       getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, key, notification, config),
@@ -53,7 +66,7 @@ const AutoComplete = ({ data, form, resourcesRefs }: AutoCompleteProps) => {
       }}
       onChange={(value) => form.setFieldsValue({ [name]: value })}
       onSearch={setSearchValue}
-      options={options}
+      options={optionsEnum ? options : queriedOptions}
       placeholder='Start typing...'
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
       value={form.getFieldValue(name) as string | undefined}

@@ -191,7 +191,7 @@ const FormGenerator = ({
             const data = autocomplete.find(field => field.name === name)
 
             if (data) {
-              return <AutoComplete data={data} form={form} resourcesRefs={resourcesRefs} />
+              return <AutoComplete data={data} form={form} optionsEnum={node.enum} resourcesRefs={resourcesRefs} />
             }
           }
 
