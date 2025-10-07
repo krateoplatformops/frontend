@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
-import { useEffect } from 'react'
+import type { JSONSchema4Type } from 'json-schema'
+import { useEffect, useMemo } from 'react'
 
 import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
@@ -15,9 +16,10 @@ type AsyncSelectProps = {
   data: NonNullable<FormWidgetData['dependencies']>[number]
   form: FormInstance
   resourcesRefs: ResourcesRefs
+  optionsEnum?: JSONSchema4Type[] | undefined
 }
 
-const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
+const AsyncSelect = ({ data, form, optionsEnum, resourcesRefs }: AsyncSelectProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
 
@@ -32,7 +34,17 @@ const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
     }
   }, [dependField, form, name])
 
-  const { data: options = [], isLoading } = useQuery<DefaultOptionType[]>({
+  const options: DefaultOptionType[] = useMemo(() => {
+    if (optionsEnum?.length) {
+      return optionsEnum
+        .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
+        .map((optionValue) => ({ label: String(optionValue), value: optionValue }))
+    }
+
+    return []
+  }, [optionsEnum])
+
+  const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(dependField && config),
     queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -49,7 +61,7 @@ const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
     <Select
       allowClear
       onChange={value => form.setFieldsValue({ [name]: value })}
-      options={options}
+      options={optionsEnum ? options : queriedOptions}
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
       value={form.getFieldValue(name) as string | undefined}
     />
