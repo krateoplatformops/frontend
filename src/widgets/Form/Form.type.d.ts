@@ -243,7 +243,7 @@ export interface Form {
       submitActionId: string
       fieldDescription?: 'tooltip' | 'inline'
       /**
-       * autocomplete configuration for the form fields
+       * Configuration for the Autocomplete form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.
        */
       autocomplete?: {
         /**
@@ -265,7 +265,7 @@ export interface Form {
         resourceRefId: string
       }[]
       /**
-       * list of dependencies for the form fields
+       * Configuration for the form fields who are dependent from other form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.
        */
       dependencies?: {
         /**
