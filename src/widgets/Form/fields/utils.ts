@@ -12,7 +12,7 @@ export const getOptionsFromResourceRefId = async (
   resourcesRefs: ResourcesRefs,
   valueKey: string,
   notification: NotificationInstance,
-  config: Config
+  config: Config | null
 ): Promise<DefaultOptionType[]> => {
   const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
 
@@ -29,9 +29,8 @@ export const getOptionsFromResourceRefId = async (
   try {
     const { path, verb } = resourceRef
 
-    const url = new URL(path, config.api.SNOWPLOW_API_BASE_URL)
+    const url = new URL(path, config!.api.SNOWPLOW_API_BASE_URL)
     url.searchParams.set('extras', JSON.stringify({ [valueKey]: value }))
-    console.log(url)
 
     const response = await fetch(url.toString(), {
       headers: {
@@ -67,28 +66,6 @@ export const getOptionsFromResourceRefId = async (
     }
 
     return []
-
-    //   if (
-    //     typeof data === 'object'
-    // && data !== null
-    // && 'status' in data
-    // && typeof (data as Record<string, unknown>).status === 'object'
-    // && (data as Record<string, { getNomi?: unknown }>).status?.getNomi
-    // && Array.isArray((data as Record<string, { getNomi?: unknown }>).status.getNomi)
-    //   ) {
-    //     const { getNomi } = (data as Record<string, { getNomi: unknown[] }>).status
-
-    //     const options: DefaultOptionType[] = getNomi
-    //       .filter((item: unknown): item is string => typeof item === 'string')
-    //       .map((nome) => ({
-    //         label: nome,
-    //         value: nome,
-    //       }))
-
-    //     return options
-    //   }
-
-  //   return []
   } catch (error) {
     notification.error({
       description: 'There has been an unhandled error while retrieving field options',

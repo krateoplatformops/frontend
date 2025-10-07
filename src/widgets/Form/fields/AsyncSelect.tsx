@@ -1,9 +1,11 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select, Spin } from 'antd'
+import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
 import { useEffect, useState } from 'react'
 
+import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
 import type { FormWidgetData } from '../Form'
 
@@ -16,6 +18,9 @@ type AsyncSelectProps = {
 }
 
 const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
+  const { notification } = useApp()
+  const { config } = useConfigContext()
+
   const { dependsField: { field }, extra, name, resourceRefId } = data
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -33,12 +38,12 @@ const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
     enabled: dependField !== undefined,
     queryFn: async () => {
       setIsLoading(true)
-      const options = await getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, extra.key)
+      const options = await getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, extra.key, notification, config)
       setIsLoading(false)
 
       return options
     },
-    queryKey: ['dependField', dependField, name, resourceRefId, resourcesRefs, extra.key],
+    queryKey: ['dependField', dependField, name, resourceRefId, resourcesRefs, extra.key, notification, config],
   })
 
   if (dependField === undefined) {

@@ -195,18 +195,18 @@ const FormGenerator = ({
             }
           }
 
+          // AsyncSelect
+          if (dependencies) {
+            const data = dependencies.find(field => field.name === name)
+
+            if (data) {
+              return <AsyncSelect data={data} form={form} resourcesRefs={resourcesRefs} />
+            }
+          }
+
           // Enum
           if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
             const enumArr = node.enum as (string | number)[]
-
-            // AsyncSelect
-            if (dependencies) {
-              const data = dependencies.find(field => field.name === name)
-
-              if (data) {
-                return <AsyncSelect data={data} form={form} resourcesRefs={resourcesRefs} />
-              }
-            }
 
             if (enumArr.length > 4) {
               return <Select allowClear options={enumArr.map((opt) => ({ label: opt, value: opt }))} />
