@@ -1,5 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import type { AutoCompleteProps as AntDAutoCompleteProps } from 'antd'
+import type { AutoCompleteProps as AntDAutoCompleteProps, FormInstance } from 'antd'
 import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import debounce from 'lodash/debounce'
@@ -13,14 +13,15 @@ import { getOptionsFromResourceRefId } from './utils'
 
 interface AutoCompleteProps {
   data: NonNullable<FormWidgetData['autocomplete']>[number]
+  form: FormInstance
   resourcesRefs: ResourcesRefs
 }
 
-const AutoComplete = ({ data, resourcesRefs }: AutoCompleteProps) => {
+const AutoComplete = ({ data, form, resourcesRefs }: AutoCompleteProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
 
-  const { extra, resourceRefId } = data
+  const { extra, name, resourceRefId } = data
 
   const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -51,6 +52,7 @@ const AutoComplete = ({ data, resourcesRefs }: AutoCompleteProps) => {
         }
         return false
       }}
+      onChange={value => form.setFieldsValue({ [name]: value as string })}
       onSearch={(searchValue) => handleSearch(searchValue)}
       options={options}
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
