@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
@@ -21,9 +21,7 @@ const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
 
-  const { dependsField: { field }, extra, name, resourceRefId } = data
-
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { dependsField: { field }, extra: { key }, name, resourceRefId } = data
 
   const dependField = Form.useWatch<string | undefined>(field, form)
 
@@ -34,19 +32,16 @@ const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
     }
   }, [dependField, form, name])
 
-  const { data: options } = useQuery<DefaultOptionType[]>({
-    enabled: dependField !== undefined,
-    queryFn: async () => {
-      setIsLoading(true)
-      const options = await getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, extra.key, notification, config)
-      setIsLoading(false)
-
-      return options
-    },
-    queryKey: ['dependField', dependField, name, resourceRefId, resourcesRefs, extra.key, notification, config],
+  const { data: options = [], isLoading } = useQuery<DefaultOptionType[]>({
+    enabled: !!(dependField && config),
+    queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, key, notification, config),
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ['async-select-options', resourceRefId, dependField, key],
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
   })
 
-  if (dependField === undefined) {
+  if (!dependField) {
     return <Select disabled options={[]} />
   }
 

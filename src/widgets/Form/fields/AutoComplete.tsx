@@ -1,4 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
 import type { AutoCompleteProps as AntDAutoCompleteProps, FormInstance } from 'antd'
 import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
@@ -20,42 +21,42 @@ interface AutoCompleteProps {
 const AutoComplete = ({ data, form, resourcesRefs }: AutoCompleteProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
+  const { extra: { key }, name, resourceRefId } = data
 
-  const { extra, name, resourceRefId } = data
+  const [searchValue, setSearchValue] = useState<string>('')
+  const [debouncedValue, setDebouncedValue] = useState<string>('')
 
-  const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  const debouncedGetOptions = useMemo(() =>
-    debounce(async (searchValue: string) => {
-      setIsLoading(true)
-      const options = await getOptionsFromResourceRefId(searchValue, resourceRefId, resourcesRefs, extra.key, notification, config)
-      setIsLoading(false)
-      setOptions(options)
-    }, 1000),
-  [config, extra.key, notification, resourceRefId, resourcesRefs])
+  const debouncedUpdate = useMemo(() => debounce((val: string) => setDebouncedValue(val), 500), [])
 
   useEffect(() => {
-    return () => { debouncedGetOptions.cancel() }
-  }, [debouncedGetOptions])
+    debouncedUpdate(searchValue)
+    return () => debouncedUpdate.cancel()
+  }, [searchValue, debouncedUpdate])
 
-  const handleSearch = (searchValue: string) => {
-    setIsLoading(true)
-    void debouncedGetOptions(searchValue)
-  }
+  const { data: options = [], isLoading } = useQuery<AntDAutoCompleteProps['options']>({
+    enabled: !!(debouncedValue && resourceRefId && config),
+    queryFn: () =>
+      getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, key, notification, config),
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ['autocomplete-options', resourceRefId, debouncedValue, key],
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+  })
 
   return (
     <AntDAutoComplete
       filterOption={(inputValue, option) => {
         if (option && typeof option.value === 'string') {
-          return option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          return option.value.toUpperCase().includes(inputValue.toUpperCase())
         }
         return false
       }}
-      onChange={value => form.setFieldsValue({ [name]: value as string })}
-      onSearch={(searchValue) => handleSearch(searchValue)}
+      onChange={(value) => form.setFieldsValue({ [name]: value })}
+      onSearch={setSearchValue}
       options={options}
+      placeholder='Start typing...'
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
+      value={form.getFieldValue(name) as string | undefined}
     />
   )
 }
