@@ -27,18 +27,15 @@ export const getOptionsFromResourceRefId = async (
   }
 
   try {
-    const { path, verb } = resourceRef
-
-    const url = new URL(path, config!.api.SNOWPLOW_API_BASE_URL)
+    const url = new URL(resourceRef.path, config!.api.SNOWPLOW_API_BASE_URL)
     url.searchParams.set('extras', JSON.stringify({ [valueKey]: value }))
 
     const response = await fetch(url.toString(), {
       headers: {
+        Accept: 'application/json',
         Authorization: `Bearer ${getAccessToken()}`,
-        ...(verb === 'POST' && { 'Content-Type': 'application/json' }),
-        ...(verb === 'GET' && { Accept: 'application/json' }),
       },
-      method: verb,
+      method: 'GET',
     })
 
     if (!response.ok) {
