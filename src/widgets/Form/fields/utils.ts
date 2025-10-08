@@ -8,12 +8,16 @@ import { getResourceRef } from '../../../utils/utils'
 
 export const getOptionsFromResourceRefId = async (
   value: string | undefined,
-  resourceRefId: string,
+  resourceRefId: string | undefined,
   resourcesRefs: ResourcesRefs,
-  valueKey: string,
+  valueKey: string | undefined,
   notification: NotificationInstance,
   config: Config | null
 ): Promise<DefaultOptionType[]> => {
+  if (!resourceRefId || !valueKey) {
+    return []
+  }
+
   const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
 
   if (!resourceRef) {

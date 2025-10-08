@@ -22,7 +22,7 @@ const AsyncSelect = ({ data, form, options, resourcesRefs }: AsyncSelectProps) =
   const { notification } = useApp()
   const { config } = useConfigContext()
 
-  const { dependsOn, extra: { key }, name, resourceRefId } = data
+  const { dependsOn, extra, name, resourceRefId } = data
 
   const dependField = Form.useWatch<string | undefined>(dependsOn.name, form)
 
@@ -35,15 +35,23 @@ const AsyncSelect = ({ data, form, options, resourcesRefs }: AsyncSelectProps) =
 
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(dependField && config),
-    queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, key, notification, config),
+    queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, extra?.key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ['async-select-options', resourceRefId, dependField, key],
+    queryKey: ['async-select-options', resourceRefId, dependField, extra?.key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })
 
   if (!dependField) {
     return <Select disabled options={[]} />
+  }
+
+  if (!options && (!resourceRefId || !extra)) {
+    notification.error({
+      description: `Missing "resourceRefId" or "extra" for field "${name}". The component cannot load options.`,
+      message: 'Dependencies configuration error',
+    })
+    return null
   }
 
   return (

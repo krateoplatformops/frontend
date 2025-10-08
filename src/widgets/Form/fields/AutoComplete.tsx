@@ -23,7 +23,7 @@ interface AutoCompleteProps {
 const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
-  const { extra: { key }, name, resourceRefId } = data
+  const { extra, name, resourceRefId } = data
 
   const [searchValue, setSearchValue] = useState<string>('')
   const [debouncedValue, setDebouncedValue] = useState<string>('')
@@ -36,14 +36,22 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
   }, [searchValue, debouncedUpdate])
 
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
-    enabled: !!(debouncedValue && resourceRefId && config),
+    enabled: !!(debouncedValue && resourceRefId && config && extra),
     queryFn: () =>
-      getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, key, notification, config),
+      getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, extra?.key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ['autocomplete-options', resourceRefId, debouncedValue, key],
+    queryKey: ['autocomplete-options', resourceRefId, debouncedValue, extra?.key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })
+
+  if (!options && (!resourceRefId || !extra)) {
+    notification.error({
+      description: `Missing "resourceRefId" or "extra" for field "${name}". The component cannot load options.`,
+      message: 'Autocomplete configuration error',
+    })
+    return null
+  }
 
   return (
     <AntDAutoComplete
