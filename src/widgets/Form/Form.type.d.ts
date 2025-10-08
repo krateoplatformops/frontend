@@ -265,7 +265,7 @@ export interface Form {
         resourceRefId?: string
       }[]
       /**
-       * Configuration for the form fields who are dependent from other form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.
+       * Configuration for the form fields who are dependent from other form fields. The field options are set via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.
        */
       dependencies?: {
         /**
@@ -275,12 +275,12 @@ export interface Form {
           /**
            * the name of the field on which this field depends on
            */
-          name?: string
+          name: string
         }
         /**
          * parameter to be added to the RESTAction call
          */
-        extra?: {
+        extra: {
           /**
            * the key of the additional parameter
            */
@@ -293,7 +293,7 @@ export interface Form {
         /**
          * the identifier of the RESTAction that should be called to retrieve dependency data
          */
-        resourceRefId?: string
+        resourceRefId: string
       }[]
       /**
        * configuration for object fields in the form

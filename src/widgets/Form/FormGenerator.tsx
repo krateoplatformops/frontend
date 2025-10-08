@@ -187,6 +187,15 @@ const FormGenerator = ({
     switch (node.type) {
       case 'string': {
         const formItemContent = (() => {
+          // AsyncSelect
+          if (dependencies) {
+            const data = dependencies.find(field => field.name === name)
+
+            if (data) {
+              return <AsyncSelect data={data} form={form} resourcesRefs={resourcesRefs} />
+            }
+          }
+
           const options = Array.isArray(node.enum)
             ? node.enum
               .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
@@ -199,15 +208,6 @@ const FormGenerator = ({
 
             if (data) {
               return <AutoComplete data={data} form={form} options={options} resourcesRefs={resourcesRefs} />
-            }
-          }
-
-          // AsyncSelect
-          if (dependencies) {
-            const data = dependencies.find(field => field.name === name)
-
-            if (data) {
-              return <AsyncSelect data={data} form={form} options={options} resourcesRefs={resourcesRefs} />
             }
           }
 

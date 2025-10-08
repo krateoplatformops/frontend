@@ -15,14 +15,13 @@ type AsyncSelectProps = {
   data: NonNullable<FormWidgetData['dependencies']>[number]
   form: FormInstance
   resourcesRefs: ResourcesRefs
-  options?: DefaultOptionType[] | undefined
 }
 
-const AsyncSelect = ({ data, form, options, resourcesRefs }: AsyncSelectProps) => {
+const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
 
-  const { dependsOn, extra, name, resourceRefId } = data
+  const { dependsOn, extra: { key }, name, resourceRefId } = data
 
   const dependField = Form.useWatch<string | undefined>(dependsOn.name, form)
 
@@ -33,11 +32,11 @@ const AsyncSelect = ({ data, form, options, resourcesRefs }: AsyncSelectProps) =
     }
   }, [dependField, form, name])
 
-  const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
+  const { data: options = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(dependField && config),
-    queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, extra?.key, notification, config),
+    queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ['async-select-options', resourceRefId, dependField, extra?.key],
+    queryKey: ['async-select-options', resourceRefId, dependField, key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })
@@ -46,19 +45,11 @@ const AsyncSelect = ({ data, form, options, resourcesRefs }: AsyncSelectProps) =
     return <Select disabled options={[]} />
   }
 
-  if (!options && (!resourceRefId || !extra)) {
-    notification.error({
-      description: `Missing "resourceRefId" or "extra" for field "${name}". The component cannot load options.`,
-      message: 'Dependencies configuration error',
-    })
-    return null
-  }
-
   return (
     <Select
       allowClear
       onChange={value => form.setFieldsValue({ [name]: value })}
-      options={options ?? queriedOptions}
+      options={options}
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
       value={form.getFieldValue(name) as string | undefined}
     />
