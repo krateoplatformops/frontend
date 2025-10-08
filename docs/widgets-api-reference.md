@@ -594,8 +594,8 @@ name of the k8s Custom Resource
 | autocomplete[].name | yes | the name of the autocomplete field | string |
 | autocomplete[].resourceRefId | yes | the identifier of the RESTAction that should be called to retrieve autocomplete data | string |
 | dependencies | no | Configuration for the form fields who are dependent from other form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.  | array |
-| dependencies[].dependsField | yes | the field on which this field depends on | object |
-| dependencies[].dependsField.field | yes | the name of the field on which this field depends on | string |
+| dependencies[].dependsOn | yes | the field on which this field depends on | object |
+| dependencies[].dependsOn.name | no | the name of the field on which this field depends on | string |
 | dependencies[].extra | yes | parameter to be added to the RESTAction call | object |
 | dependencies[].extra.key | yes | the key of the additional parameter | string |
 | dependencies[].name | yes | the name of the autocomplete field | string |

@@ -22,9 +22,9 @@ const AsyncSelect = ({ data, form, options, resourcesRefs }: AsyncSelectProps) =
   const { notification } = useApp()
   const { config } = useConfigContext()
 
-  const { dependsField: { field }, extra: { key }, name, resourceRefId } = data
+  const { dependsOn, extra: { key }, name, resourceRefId } = data
 
-  const dependField = Form.useWatch<string | undefined>(field, form)
+  const dependField = Form.useWatch<string | undefined>(dependsOn.name, form)
 
   useEffect(() => {
     const currentValue = form.getFieldValue(name) as string

@@ -271,11 +271,11 @@ export interface Form {
         /**
          * the field on which this field depends on
          */
-        dependsField: {
+        dependsOn: {
           /**
            * the name of the field on which this field depends on
            */
-          field: string
+          name?: string
         }
         /**
          * parameter to be added to the RESTAction call
