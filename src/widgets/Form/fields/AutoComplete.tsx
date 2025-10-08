@@ -1,101 +1,72 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import type { AutoCompleteProps as AntDAutoCompleteProps, FormInstance } from 'antd'
+import { useQuery } from '@tanstack/react-query'
+import type { FormInstance } from 'antd'
 import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import type { DefaultOptionType } from 'antd/es/select'
 import debounce from 'lodash/debounce'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import useCatchError from '../../../hooks/useCatchError'
+import { useConfigContext } from '../../../context/ConfigContext'
+import type { ResourcesRefs } from '../../../types/Widget'
 import type { FormWidgetData } from '../Form'
-import { interpolateFormUrl } from '../utils'
+
+import { getOptionsFromResourceRefId } from './utils'
 
 interface AutoCompleteProps {
-  fetchOptions: NonNullable<FormWidgetData['autocomplete']>[number]
+  data: NonNullable<FormWidgetData['autocomplete']>[number]
   form: FormInstance
+  resourcesRefs: ResourcesRefs
+  options?: DefaultOptionType[] | undefined
 }
 
-const AutoComplete = ({ fetchOptions, form }: AutoCompleteProps) => {
-  const { fetch: { url, verb } } = fetchOptions
-
-  const [options, setOptions] = useState<AntDAutoCompleteProps['options']>([])
-  const { catchError } = useCatchError()
+const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps) => {
   const { notification } = useApp()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { config } = useConfigContext()
+  const { extra, name, resourceRefId } = data
 
-  const getOptions = useCallback(async (text: string) => {
-    try {
-      let response: Response | undefined
+  const [searchValue, setSearchValue] = useState<string>('')
+  const [debouncedValue, setDebouncedValue] = useState<string>('')
 
-      const interpolatedUrl = interpolateFormUrl(url, form, { query: text })
-
-      if (verb === 'GET') {
-        response = await fetch(interpolatedUrl)
-      } else if (verb === 'POST') {
-        response = await fetch(interpolatedUrl, {
-          body: JSON.stringify(text),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        })
-      }
-
-      if (!response) {
-        notification.error({
-          description: 'No response received',
-          message: 'Error while retrieving options',
-          placement: 'bottomLeft',
-        })
-
-        return []
-      }
-
-      const data = await response.json() as string[]
-
-      if (Array.isArray(data)) {
-        setOptions(data.map((item: string) => ({ value: item })))
-      } else {
-        notification.error({
-          description: 'Invalid response format',
-          message: 'Error while retrieving options',
-          placement: 'bottomLeft',
-        })
-        console.error('Invalid response format:', data)
-      }
-    } catch {
-      notification.error({
-        description: 'There has been an unhandled error while retrieving field options',
-        message: 'Error while retrieving options',
-        placement: 'bottomLeft',
-      })
-      catchError({ message: 'Unable to retrieve field data' })
-    } finally {
-      setIsLoading(false)
-    }
-  }, [catchError, form, notification, url, verb])
-
-  const debouncedGetOptions = useMemo(() => debounce((text: string) => getOptions(text), 1000), [getOptions])
+  const debouncedUpdate = useMemo(() => debounce((val: string) => setDebouncedValue(val), 500), [])
 
   useEffect(() => {
-    return () => { debouncedGetOptions.cancel() }
-  }, [debouncedGetOptions])
+    debouncedUpdate(searchValue)
+    return () => debouncedUpdate.cancel()
+  }, [searchValue, debouncedUpdate])
 
-  const handleSearch = (text: string) => {
-    setIsLoading(true)
-    void debouncedGetOptions(text)
+  const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
+    enabled: !!(debouncedValue && resourceRefId && config && extra),
+    queryFn: () =>
+      getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, extra?.key, notification, config),
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ['autocomplete-options', resourceRefId, debouncedValue, extra?.key],
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  if (!options && (!resourceRefId || !extra)) {
+    notification.error({
+      description: `Missing "resourceRefId" or "extra" for field "${name}". The component cannot load options.`,
+      message: 'Autocomplete configuration error',
+    })
+    return null
   }
 
   return (
     <AntDAutoComplete
       filterOption={(inputValue, option) => {
         if (option && typeof option.value === 'string') {
-          return option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+          return option.value.toUpperCase().includes(inputValue.toUpperCase())
         }
         return false
       }}
-      onSearch={(text) => handleSearch(text)}
-      options={options}
+      onChange={(value) => form.setFieldsValue({ [name]: value })}
+      onSearch={setSearchValue}
+      options={options ?? queriedOptions}
+      placeholder='Start typing...'
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
+      value={form.getFieldValue(name) as string | undefined}
     />
   )
 }

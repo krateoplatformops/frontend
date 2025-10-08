@@ -2,12 +2,14 @@
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
+import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 import ListObjectFields from '../../components/ListObjectFields'
+import type { ResourcesRefs } from '../../types/Widget'
 
 import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
@@ -16,13 +18,14 @@ import styles from './Form.module.css'
 
 type FormGeneratorType = {
   descriptionTooltip: boolean
-  showFormStructure?: boolean
-  schema: JSONSchema4
   formId: string
   onSubmit: (values: Record<string, unknown>) => Promise<void>
+  resourcesRefs: ResourcesRefs
+  schema: JSONSchema4
+  autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
-  autocomplete?: FormWidgetData['autocomplete']
+  showFormStructure?: boolean
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
@@ -55,6 +58,7 @@ const FormGenerator = ({
   formId,
   objectFields,
   onSubmit,
+  resourcesRefs,
   schema,
   showFormStructure = false,
 }: FormGeneratorType) => {
@@ -183,47 +187,41 @@ const FormGenerator = ({
     switch (node.type) {
       case 'string': {
         const formItemContent = (() => {
+          // AsyncSelect
+          if (dependencies) {
+            const data = dependencies.find(field => field.name === name)
+
+            if (data) {
+              return <AsyncSelect data={data} form={form} resourcesRefs={resourcesRefs} />
+            }
+          }
+
+          const options = Array.isArray(node.enum)
+            ? node.enum
+              .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
+              .map((optionValue) => ({ label: String(optionValue), value: optionValue } as DefaultOptionType))
+            : undefined
+
           // Autocomplete
           if (autocomplete) {
-            const fetchOptions = autocomplete.find(({ path }) => path === name)
+            const data = autocomplete.find(field => field.name === name)
 
-            if (fetchOptions) {
-              return <AutoComplete fetchOptions={fetchOptions} form={form} />
+            if (data) {
+              return <AutoComplete data={data} form={form} options={options} resourcesRefs={resourcesRefs} />
             }
           }
 
           // Enum
-          if (typeof node === 'object' && node !== null && 'enum' in node && Array.isArray(node.enum)) {
-            const enumArr = node.enum as (string | number)[]
-
-            // AsyncSelect
-            if (dependencies) {
-              const dependency = dependencies.find(({ path }) => path === name)
-
-              if (dependency) {
-                return (
-                  <AsyncSelect
-                    dependency={dependency}
-                    form={form}
-                    name={name}
-                  />
-                )
-              }
+          if (options) {
+            if (options.length > 4) {
+              return <Select allowClear options={options} />
             }
 
-            if (enumArr.length > 4) {
-              return (
-                <Select
-                  allowClear
-                  options={enumArr.map((opt) => ({ label: opt, value: opt }))}
-                />
-              )
-            }
             return (
               <Radio.Group>
-                {enumArr.map((el) => (
-                  <Radio key={`radio_${el}`} value={el}>
-                    {el}
+                {options.map(({ label, value }) => (
+                  <Radio key={`radio_${value}`} value={value}>
+                    {label}
                   </Radio>
                 ))}
               </Radio.Group>

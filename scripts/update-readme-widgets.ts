@@ -85,7 +85,12 @@ async function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): Pro
     }
   }
 
-  return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n${exampleSection}`
+  // 🧩 Aggiunge il link alla doc di autocomplete/dependencies se il widget è Form
+  const extraInfo = title.toLowerCase() === 'form'
+    ? `\n\n> For additional information about the \`autocomplete\` and \`dependencies\` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).\n`
+    : ''
+
+  return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n${exampleSection}${extraInfo}`
 }
 
 async function generateWidgetsSection(): Promise<string> {

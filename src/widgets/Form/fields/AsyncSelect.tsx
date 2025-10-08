@@ -1,23 +1,29 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Form, type FormInstance, Select } from 'antd'
+import { Form, type FormInstance, Select, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
+import type { DefaultOptionType } from 'antd/es/select'
 import { useEffect } from 'react'
 
+import { useConfigContext } from '../../../context/ConfigContext'
+import type { ResourcesRefs } from '../../../types/Widget'
 import type { FormWidgetData } from '../Form'
-import { interpolateFormUrl } from '../utils'
+
+import { getOptionsFromResourceRefId } from './utils'
 
 type AsyncSelectProps = {
-  dependency: NonNullable<FormWidgetData['dependencies']>[number]
+  data: NonNullable<FormWidgetData['dependencies']>[number]
   form: FormInstance
-  name: string
+  resourcesRefs: ResourcesRefs
 }
 
-const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
-  const { dependsField: { field }, fetch: { url, verb } } = dependency
-
+const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
   const { notification } = useApp()
+  const { config } = useConfigContext()
 
-  const dependField = Form.useWatch<string | undefined>(field, form)
+  const { dependsOn, extra: { key }, name, resourceRefId } = data
+
+  const dependField = Form.useWatch<string | undefined>(dependsOn.name, form)
 
   useEffect(() => {
     const currentValue = form.getFieldValue(name) as string
@@ -26,46 +32,16 @@ const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
     }
   }, [dependField, form, name])
 
-  const fetchDependField = async (): Promise<string[]> => {
-    try {
-      let response: Response
-
-      const interpolatedUrl = interpolateFormUrl(url, form, { query: dependField })
-
-      if (verb === 'GET') {
-        response = await fetch(interpolatedUrl)
-      } else if (verb === 'POST') {
-        response = await fetch(interpolatedUrl, {
-          body: JSON.stringify(dependField),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        })
-      } else {
-        return []
-      }
-
-      const data = await response.json() as string[]
-      return data
-    } catch (error) {
-      notification.error({
-        description: 'There has been an unhandled error while retrieving field options',
-        message: 'Error while retrieving options',
-        placement: 'bottomLeft',
-      })
-      console.error('fetchDependField error:', error)
-      return []
-    }
-  }
-
-  const { data: options } = useQuery<string[]>({
-    enabled: dependField !== undefined,
-    queryFn: async (): Promise<string[]> => fetchDependField(),
-    queryKey: ['dependField', dependField, name, url],
+  const { data: options = [], isLoading } = useQuery<DefaultOptionType[]>({
+    enabled: !!(dependField && config),
+    queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, key, notification, config),
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ['async-select-options', resourceRefId, dependField, key],
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
   })
 
-  if (dependField === undefined) {
+  if (!dependField) {
     return <Select disabled options={[]} />
   }
 
@@ -73,7 +49,8 @@ const AsyncSelect = ({ dependency, form, name }: AsyncSelectProps) => {
     <Select
       allowClear
       onChange={value => form.setFieldsValue({ [name]: value })}
-      options={options?.map(item => ({ label: item, value: item }))}
+      options={options}
+      suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
       value={form.getFieldValue(name) as string | undefined}
     />
   )

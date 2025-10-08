@@ -29,15 +29,32 @@ spec:
             "type": "boolean",
             "title": "Enable Metrics",
             "default": false
-          }
+          },
+          "city": {
+            "type": "string",
+            "title": "City",
+            "description": "Your city"
+          },
+          "zipCode": {
+            "type": "string",
+            "title": "Zip code",
+            "description": "Your ZIP code"
+          },
         },
         "required": ["name", "image"]
       }
     autocomplete:
-      - path: name
-        fetch:
-          url: https://loremipsum.io/api/1
-          method: GET
+      - name: city
+        resourceRefId: getCities
+        extra:
+          key: cityName
+    dependencies:
+      - name: zipCode
+        dependsOn:
+          name: city
+        resourceRefId: getZipCodes
+        extra:
+          key: cityName
     actions:
       rest:
         - id: firework-submit-action
@@ -56,3 +73,15 @@ spec:
         namespace: test-namespace
         resource: fireworksapps
         verb: POST
+      - id: getCities
+        apiVersion: composition.krateo.io/v2-0-0
+        name: getCities
+        namespace: test-namespace
+        resource: restactions
+        verb: GET
+      - id: getZipCodes
+        apiVersion: composition.krateo.io/v2-0-0
+        name: getZipCodes
+        namespace: test-namespace
+        resource: restactions
+        verb: GET

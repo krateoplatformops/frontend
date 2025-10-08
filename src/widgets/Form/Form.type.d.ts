@@ -243,51 +243,57 @@ export interface Form {
       submitActionId: string
       fieldDescription?: 'tooltip' | 'inline'
       /**
-       * autocomplete configuration for the form fields
+       * Configuration for the Autocomplete form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.
        */
       autocomplete?: {
         /**
-         * the path of the field to apply autocomplete
+         * parameter to be added to the RESTAction call
          */
-        path: string
-        /**
-         * remote data source configuration for autocomplete
-         */
-        fetch: {
+        extra?: {
           /**
-           * the URL to fetch autocomplete options from
+           * the key of the additional parameter
            */
-          url: string
-          /**
-           * HTTP method to use for fetching options
-           */
-          verb: 'GET' | 'POST'
+          key: string
         }
+        /**
+         * the name of the autocomplete field
+         */
+        name: string
+        /**
+         * the identifier of the RESTAction that should be called to retrieve autocomplete data
+         */
+        resourceRefId?: string
       }[]
       /**
-       * list of dependencies for the form fields
+       * Configuration for the form fields who are dependent from other form fields. The field options are set via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.
        */
       dependencies?: {
         /**
-         * the path of the field
+         * the field on which this field depends on
          */
-        path: string
-        dependsField: {
+        dependsOn: {
           /**
-           * the field that this field depends on
+           * the name of the field on which this field depends on
            */
-          field?: string
+          name: string
         }
-        fetch: {
+        /**
+         * parameter to be added to the RESTAction call
+         */
+        extra: {
           /**
-           * the URL to fetch options
+           * the key of the additional parameter
            */
-          url: string
-          /**
-           * HTTP method to use for fetching options
-           */
-          verb: 'GET' | 'POST'
+          key: string
         }
+        /**
+         * the name of the autocomplete field
+         */
+        name: string
+        /**
+         * the identifier of the RESTAction that should be called to retrieve dependency data
+         */
+        resourceRefId: string
       }[]
       /**
        * configuration for object fields in the form

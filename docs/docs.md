@@ -105,7 +105,7 @@ spec:
 In the example above, we declared a table with a single column `name` to display all namespaces of the cluster.
 The data is loaded directly from the k8s api server
 
-### Hoes does it work?
+### How does it work?
 
 ```
 widgetDataTemplate:
