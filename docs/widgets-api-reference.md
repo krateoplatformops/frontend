@@ -669,6 +669,9 @@ spec:
 ```
 </details>
 
+
+> For additional information about the `autocomplete` and `dependencies` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).
+
 ---
 
 ### LineChart
