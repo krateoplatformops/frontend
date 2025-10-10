@@ -5,7 +5,7 @@ import type { Rule } from 'antd/es/form'
 import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 import ListObjectFields from '../../components/ListObjectFields'
@@ -67,6 +67,8 @@ const FormGenerator = ({
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
   const { optionalCount, totalCount } = getOptionalCount(schema, requiredFields)
+
+  const hasOptionalFields = useMemo(() => optionalCount > 0 && optionalCount < totalCount, [optionalCount, totalCount])
 
   type Field = ReturnType<typeof renderField>
 
@@ -426,10 +428,13 @@ const FormGenerator = ({
     <div className={styles.formGenerator}>
       <div className={styles.anchorWrapper}>
         <Row className={styles.anchorRow}>
-          <Col className={styles.formWrapper} span={showFormStructure ? 12 : 24}>
+          <Col
+            className={`${styles.formWrapper} ${hasOptionalFields ? styles.hasOptionalFields : ''}`}
+            span={showFormStructure ? 12 : 24}
+          >
             <div className={styles.form} id='anchor-content'>
               {
-                optionalCount > 0 && optionalCount < totalCount && (
+                hasOptionalFields && (
                   <div className={styles.optionalFieldsSwitchWrapper}>
                     <Space className={styles.optionalFieldsSwitch} direction='horizontal' size='small'>
                       <Switch onChange={(value) => setOptionalHidden(value) } value={optionalHidden} />
