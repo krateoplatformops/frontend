@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "lint:css": "stylelint \"src/**/*.module.css\" --fix",
     "generate-types": "tsx scripts/generate-types.ts",
+    "generate-crds": "tsx scripts/gen-crds.ts",
     "apply-all": "tsx scripts/apply-k8s-yamls.ts",
     "send-schemas": "tsx scripts/send-schemas-to-smithery.ts",
     "validate-schemas": "tsx scripts/validate-schemas.ts",
