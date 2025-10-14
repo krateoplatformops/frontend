@@ -34,7 +34,7 @@ scripts/credentials*.json
 
 scratchpad.md
 
-scripts/smithery-output/*.yaml
+scripts/krateoctl-output/*.yaml
 
 .env
 .env.local
