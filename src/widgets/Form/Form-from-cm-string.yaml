@@ -70,21 +70,9 @@ spec:
         },
         "required": ["name", "image"]
       }
-    autocomplete:
-      - path: name
-        fetch:
-          url: https://loremipsum.io/api/1
-          verb: GET
     objectFields:
       - path: users
         displayField: name
-    dependencies:
-      - path: select2
-        dependsField: 
-          field: select1
-        fetch:
-          url: https://mocki.io/v1/64b17021-c9bd-45c6-bc79-f5bd126add5c
-          verb: GET
     submitActionId: firework-submit-action-from-string-schema
     actions:
       rest:

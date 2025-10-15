@@ -164,24 +164,6 @@ spec:
         },
         "required": ["name", "image", "enableMetrics"]
       }
-    autocomplete:
-      - path: name
-        fetch:
-          url: https://mocki.io/v1/a9209c26-f49d-4df7-8c4e-4ec11eae35ee
-          verb: GET
-    dependencies:
-      - path: select2
-        dependsField: 
-          field: select1
-        fetch:
-          url: https://mocki.io/v1/8c6edbbd-3a40-4a69-92c8-943957f24e7b
-          verb: GET
-      - path: select3
-        dependsField: 
-          field: select2
-        fetch:
-          url: https://mocki.io/v1/b23f6de1-90f5-4fb5-8224-348f349a2e12
-          verb: GET
     actions:
       rest:
         - id: firework-submit-action

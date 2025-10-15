@@ -639,15 +639,32 @@ spec:
             "type": "boolean",
             "title": "Enable Metrics",
             "default": false
-          }
+          },
+          "city": {
+            "type": "string",
+            "title": "City",
+            "description": "Your city"
+          },
+          "zipCode": {
+            "type": "string",
+            "title": "Zip code",
+            "description": "Your ZIP code"
+          },
         },
         "required": ["name", "image"]
       }
     autocomplete:
-      - path: name
-        fetch:
-          url: https://loremipsum.io/api/1
-          method: GET
+      - name: city
+        resourceRefId: getCities
+        extra:
+          key: cityName
+    dependencies:
+      - name: zipCode
+        dependsOn:
+          name: city
+        resourceRefId: getZipCodes
+        extra:
+          key: cityName
     actions:
       rest:
         - id: firework-submit-action
@@ -666,11 +683,87 @@ spec:
         namespace: test-namespace
         resource: fireworksapps
         verb: POST
+      - id: getCities
+        apiVersion: composition.krateo.io/v2-0-0
+        name: getCities
+        namespace: test-namespace
+        resource: restactions
+        verb: GET
+      - id: getZipCodes
+        apiVersion: composition.krateo.io/v2-0-0
+        name: getZipCodes
+        namespace: test-namespace
+        resource: restactions
+        verb: GET
 ```
 </details>
 
 
 > For additional information about the `autocomplete` and `dependencies` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).
+
+---
+
+### InlineGroup
+
+name of the k8s Custom Resource
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| alignment | no | the alignment of the element inside the InlineGroup. Default is 'left' | `center` \| `left` \| `right` |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
+| gap | no | the spacing between the items of the InlineGroup. Default is 'small' | `extra-small` \| `small` \| `medium` \| `large` |
+| items | yes | the items of the InlineGroup | array |
+| items[].resourceRefId | yes |  | string |
+
+<details>
+<summary>Example</summary>
+
+```yaml
+kind: InlineGroup
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: test-inline-group
+  namespace: test-namespace
+spec:
+  widgetData:
+    alignment: center
+    allowedResources:
+      - barcharts
+      - buttons
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - tables
+      - tablists
+      - yamlviewers
+    gap: medium
+    items:
+      - resourceRefId: button-1
+      - resourceRefId: button-2
+  resourcesRefs:
+    items:
+      - id: button-1
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-1
+        namespace: test-namespace
+        resource: buttons
+        verb: GET
+      - id: button-2
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: button-2
+        namespace: test-namespace
+        resource: buttons
+        verb: GET
+```
+</details>
 
 ---
 
