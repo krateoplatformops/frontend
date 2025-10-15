@@ -24,6 +24,7 @@ spec:
       - tablists
       - yamlviewers
     items:
+      - resourceRefId: test-inline-group
       - resourceRefId: test-alignment-row
       - resourceRefId: test-alignment-row-in-panel
       - resourceRefId: panel-backend-endpoint-id
@@ -38,6 +39,12 @@ spec:
       - resourceRefId: button-with-drawer-backend-endpoint-id
   resourcesRefs:
     items:
+      - id: test-inline-group
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: test-inline-group
+        namespace: krateo-system
+        resource: inlinegroups
+        verb: GET  
       - id: test-alignment-row
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: test-alignment-row

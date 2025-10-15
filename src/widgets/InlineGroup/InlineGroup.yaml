@@ -5,7 +5,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    alignment: center
+    alignment: right
     allowedResources:
       - barcharts
       - buttons
@@ -21,10 +21,10 @@ spec:
       - tables
       - tablists
       - yamlviewers
-    gap: medium
+    gap: small
     items:
       - resourceRefId: button-1
-      - resourceRefId: button-2
+      - resourceRefId: composition-test-button
   resourcesRefs:
     items:
       - id: button-1
@@ -33,9 +33,9 @@ spec:
         namespace: krateo-system
         resource: buttons
         verb: GET
-      - id: button-2
+      - id: composition-test-button
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: button-2
+        name: composition-test-button
         namespace: krateo-system
         resource: buttons
         verb: GET
