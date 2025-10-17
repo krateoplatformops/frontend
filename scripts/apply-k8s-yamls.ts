@@ -8,6 +8,7 @@ import chalk from 'chalk'
 import { glob } from 'glob'
 
 const WIDGETS_DIR = join(process.cwd(), 'src', 'widgets')
+const EXAMPLES_DIR = join(process.cwd(), 'src', 'examples')
 const CRD_OUTPUT_DIR = join(process.cwd(), 'scripts', 'krateoctl-output')
 
 function getCurrentKubeContext(): string {
@@ -112,21 +113,29 @@ async function main() {
     // 1️⃣ Apply CRDs
     const crdStats = await applyYamlDirectory('CRDs', CRD_OUTPUT_DIR)
 
-    // 2️⃣ Apply Custom Resources
+    // 2️⃣ Apply Custom Resources (widgets)
     const crStats = await applyYamlDirectory(
       'Custom Resources',
       WIDGETS_DIR,
       '**/!(*.example).@(yaml|yml)'
     )
 
+    // 3️⃣ Apply Example Resources (examples)
+    const exampleStats = await applyYamlDirectory(
+      'Example Resources',
+      EXAMPLES_DIR,
+      '**/**/*.@(yaml|yml)'
+    )
+
     // 📊 Unified summary
-    const totalApplied = crdStats.total + crStats.total
-    const totalSuccess = crdStats.success + crStats.success
-    const totalFailed = crdStats.failed + crStats.failed
+    const totalApplied = crdStats.total + crStats.total + exampleStats.total
+    const totalSuccess = crdStats.success + crStats.success + exampleStats.success
+    const totalFailed = crdStats.failed + crStats.failed + exampleStats.failed
 
     console.log(chalk.bold('\n📊 Overall Summary:'))
     console.log(`🧩 CRDs: ${crdStats.success}/${crdStats.total} applied successfully`)
     console.log(`📦 Custom Resources: ${crStats.success}/${crStats.total} applied successfully`)
+    console.log(`🧪 Example Resources: ${exampleStats.success}/${exampleStats.total} applied successfully`)
     console.log('—'.repeat(40))
     console.log(`✅ Total Successful: ${totalSuccess}`)
     console.log(`❌ Total Failed: ${totalFailed}`)

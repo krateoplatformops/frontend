@@ -11,7 +11,7 @@ export type BarChartWidgetData = WidgetType['spec']['widgetData']
 const BarChart = ({ uid, widgetData }: WidgetProps<BarChartWidgetData>) => {
   const { data } = widgetData
 
-  if (!data) {
+  if (!data.length) {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   }
 
