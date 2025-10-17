@@ -52,6 +52,8 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
     <>
       {filteredEventList.map(
         ({
+          eventTime,
+          firstTimestamp,
           icon,
           involvedObject: { apiVersion, kind, name, namespace },
           lastTimestamp,
@@ -59,27 +61,31 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
           metadata: { uid: rowUid },
           reason,
           type,
-        }) => (
-          <RichRow
-            color={type === 'Normal' ? 'blue' : 'orange'}
-            icon={icon || 'fa-ellipsis-h'}
-            key={`${uid}-${rowUid}`}
-            primaryText={
-              <>
-                <Typography.Text type='secondary'>name:</Typography.Text> <Typography.Text>{name}</Typography.Text>
-                <Divider type='vertical' />
-                <Typography.Text type='secondary'>namespace:</Typography.Text> <Typography.Text>{namespace}</Typography.Text>
-                <Divider type='vertical' />
-                <Typography.Text type='secondary'>kind:</Typography.Text> <Typography.Text>{kind}</Typography.Text>
-                <Divider type='vertical' />
-                <Typography.Text type='secondary'>apiVersion:</Typography.Text> <Typography.Text>{apiVersion}</Typography.Text>
-              </>
-            }
-            secondaryText={lastTimestamp && formatISODate(lastTimestamp, true)}
-            subPrimaryText={message}
-            subSecondaryText={reason}
-          />
-        )
+        }) => {
+          const timestamp = lastTimestamp || firstTimestamp || eventTime
+
+          return (
+            <RichRow
+              color={type === 'Normal' ? 'blue' : 'orange'}
+              icon={icon || 'fa-ellipsis-h'}
+              key={`${uid}-${rowUid}`}
+              primaryText={
+                <>
+                  <Typography.Text type='secondary'>name:</Typography.Text> <Typography.Text>{name}</Typography.Text>
+                  <Divider type='vertical' />
+                  <Typography.Text type='secondary'>namespace:</Typography.Text> <Typography.Text>{namespace}</Typography.Text>
+                  <Divider type='vertical' />
+                  <Typography.Text type='secondary'>kind:</Typography.Text> <Typography.Text>{kind}</Typography.Text>
+                  <Divider type='vertical' />
+                  <Typography.Text type='secondary'>apiVersion:</Typography.Text> <Typography.Text>{apiVersion}</Typography.Text>
+                </>
+              }
+              secondaryText={timestamp && formatISODate(timestamp, true)}
+              subPrimaryText={message}
+              subSecondaryText={reason}
+            />
+          )
+        }
       )}
     </>
   )
