@@ -153,7 +153,7 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
             if (!cell) { return false }
             value = getTableValue(cell)
           } else {
-            value = row[fieldName]
+            value = getValueByPath(row, fieldName)
           }
 
           return matchesFilter(value, filter)
