@@ -42,9 +42,8 @@ const renderFilterField = ({ options, type }: FieldType) => {
     case 'boolean':
       return (
         <Select>
-          <Select.Option value=''> </Select.Option>
-          <Select.Option value='true'>True</Select.Option>
-          <Select.Option value='false'>False</Select.Option>
+          <Select.Option value='true'>true</Select.Option>
+          <Select.Option value='false'>false</Select.Option>
         </Select>
       )
 
