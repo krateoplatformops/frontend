@@ -13,7 +13,7 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
   const { lines, prefix, xAxisName, yAxisName } = widgetData
   const { getFilteredData } = useFilter()
 
-  if (!lines) {
+  if (!lines.length) {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   }
 
