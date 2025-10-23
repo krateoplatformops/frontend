@@ -62,7 +62,7 @@ const FlowChart = ({ uid, widgetData }: WidgetProps<FlowChartWidgetData>) => {
   const [nodes, , onNodesChange] = useNodesState(layoutedNodes)
   const [edges, , onEdgesChange] = useEdgesState(layoutedEdges)
 
-  if (!data || parsedNodes.length === 0 || parsedEdges.length === 0) {
+  if (!data || parsedNodes.length === 0) {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   }
 
