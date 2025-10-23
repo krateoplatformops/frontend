@@ -50,7 +50,6 @@ spec:
       - resourceRefId: example-linechart-single-panel
       - resourceRefId: example-linechart-multi-panel
       - resourceRefId: example-linechart-missing-coords-panel
-      - resourceRefId: example-linechart-filtered-panel
       - resourceRefId: example-linechart-invalid-values-panel
   resourcesRefs:
     items:
@@ -78,12 +77,6 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET       
-      - id: example-linechart-filtered-panel
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-linechart-filtered-panel
-        namespace: krateo-system
-        resource: panels
-        verb: GET  
       - id: example-linechart-invalid-values-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-linechart-invalid-values-panel
@@ -174,39 +167,12 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-linechart-filtered-panel
-  namespace: krateo-system
-spec:
-  widgetData:
-    actions: {}
-    title: 'Case 5: Filtered data'
-    items:
-      - resourceRefId: example-linechart-filtered-filter
-      - resourceRefId: example-linechart-filtered
-  resourcesRefs:
-    items:
-      - id: example-linechart-filtered
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-linechart-filtered
-        namespace: krateo-system
-        resource: linecharts
-        verb: GET  
-      - id: example-linechart-filtered-filter
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-linechart-filtered-filter
-        namespace: krateo-system
-        resource: filters
-        verb: GET  
----
-kind: Panel
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
   name: example-linechart-invalid-values-panel
   namespace: krateo-system
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Non-numeric values'
+    title: 'Case 5: Non-numeric values'
     items:
       - resourceRefId: example-linechart-invalid-values
   resourcesRefs:

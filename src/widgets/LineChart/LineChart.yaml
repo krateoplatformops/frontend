@@ -39,7 +39,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    prefix: filters-pods
     lines:
       - name: blue line
         color: blue
@@ -63,7 +62,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    prefix: filters-pods
     lines:
       - name: blue line
         color: blue

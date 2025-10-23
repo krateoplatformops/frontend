@@ -775,7 +775,6 @@ LineChart displays a customizable line chart based on time series or numerical d
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| prefix | no | it's the filters prefix to get right values | string |
 | lines | yes | list of data series to be rendered as individual lines | array |
 | lines[].name | no | label of the line displayed in the legend | string |
 | lines[].color | no | color used to render the line | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
