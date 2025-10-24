@@ -1,0 +1,140 @@
+# Case 1: Empty markdown
+# Target: rendering fallback UI when no markdown content is provided.
+# Expected behavior: renders an empty block — no text or actions shown.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-empty
+  namespace: krateo-system
+spec:
+  widgetData:
+    markdown: ""
+---
+# Case 2: Basic markdown formatting
+# Target: verify rendering of headings, lists, links, and code blocks.
+# Expected behavior: correctly styles H1, bold/italic, lists, and inline code.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-basic
+  namespace: krateo-system
+spec:
+  widgetData:
+    markdown: |
+      # Titolo H1
+      ## Sottotitolo
+      Testo **in grassetto**, _in corsivo_ e `codice inline`.
+
+      - Lista 1
+      - Lista 2
+
+      1. Primo
+      2. Secondo
+
+      > Questo è un blockquote.
+
+      [Link a Google](https://google.com)
+
+      ```js
+      console.log('Ciao mondo');
+      ```
+---
+# Case 3: Allow copy enabled
+# Target: verify clipboard functionality.
+# Expected behavior: displays a copy button; clicking it copies the markdown text.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-copy
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowCopy: true
+    markdown: |
+      ## Copy example
+      Questo testo può essere copiato negli appunti.
+---
+# Case 4: Allow download enabled
+# Target: verify download button functionality.
+# Expected behavior: displays a download button; clicking it downloads the markdown as a `.txt` file.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-download
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowDownload: true
+    markdown: |
+      ## Download example
+      Questo testo sarà scaricato in un file di testo.
+---
+# Case 5: Custom file extension for download
+# Target: verify correct handling of custom download extensions.
+# Expected behavior: clicking the download button saves the file as `file.md`.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-download-md
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowDownload: true
+    downloadFileExtension: md
+    markdown: |
+      ## Custom extension example
+      File scaricato come `file.md`
+---
+# Case 6: Combined actions (copy + download)
+# Target: verify rendering of both buttons together.
+# Expected behavior: shows both copy and download icons; both actions functional.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-combined
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowCopy: true
+    allowDownload: true
+    downloadFileExtension: md
+    markdown: |
+      ## Markdown completo
+      Questo è un esempio con **entrambe** le azioni abilitate:
+      - Copia negli appunti
+      - Scarica file `.md`
+
+      ```bash
+      echo "Krateo Markdown Widget"
+      ```
+---
+# Case 7: Long content markdown
+# Target: test rendering performance and scroll handling.
+# Expected behavior: correctly scrolls long content and maintains styles.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-long
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowCopy: true
+    allowDownload: true
+    markdown: |
+      # Documentazione di esempio
+      Questo è un testo lungo per verificare la gestione dello scroll nel componente.
+
+      ## Sezione 1
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
+
+      ## Sezione 2
+      Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.
+
+      ## Sezione 3
+      Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.
+
+      ## Sezione 4
+      Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra.
+
+      ---
+      Fine documento.
