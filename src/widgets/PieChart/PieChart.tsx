@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getColorCode } from '../../theme/palette'
 import type { WidgetProps } from '../../types/Widget'
 
+import styles from './PieChart.module.css'
 import type { PieChart as WidgetType } from './PieChart.type'
 
 export type PieChartWidgetData = WidgetType['spec']['widgetData']
@@ -117,7 +118,7 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
   }
 
   return (
-    <div ref={chartRef} style={{ height: '400px', width: '100%' }}>
+    <div className={styles.pieChart} ref={chartRef}>
       <ReactECharts key={uid} option={options} style={{ height: '100%' }} />
     </div>
   )

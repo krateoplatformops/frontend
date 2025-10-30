@@ -4,6 +4,7 @@ import ReactECharts from 'echarts-for-react'
 import { getColorCode } from '../../theme/palette'
 import type { WidgetProps } from '../../types/Widget'
 
+import styles from './LineChart.module.css'
 import type { LineChart as WidgetType } from './LineChart.type'
 
 export type LineChartWidgetData = WidgetType['spec']['widgetData']
@@ -47,7 +48,11 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
     },
   }
 
-  return <ReactECharts key={uid} option={optionLine} style={{ height: '400px' }} />
+  return (
+    <div className={styles.lineChart}>
+      <ReactECharts key={uid} option={optionLine} style={{ height: '400px' }} />
+    </div>
+  )
 }
 
 export default LineChart

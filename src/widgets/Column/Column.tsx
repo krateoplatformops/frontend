@@ -12,6 +12,10 @@ export type ColumnWidgetData = WidgetType['spec']['widgetData']
 const Column = ({ resourcesRefs, uid, widgetData }: WidgetProps<ColumnWidgetData>) => {
   const { items, size } = widgetData
 
+  if (size === 0) {
+    return null
+  }
+
   return (
     <AntdColumn className={styles.column} key={uid} span={size}>
       {items
