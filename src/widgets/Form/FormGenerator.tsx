@@ -293,12 +293,12 @@ const FormGenerator = ({
                 >
                   <ListObjectFields
                     container={document.body}
-                    data={[]}
+                    data={form.getFieldValue(name.split('.')) as unknown[] || []}
                     displayField={objFields.displayField}
                     fields={parseData(node.items)}
                     onSubmit={(values) => {
                       form.setFieldValue(name.split('.'), values)
-                    } }
+                    }}
                   />
                 </Form.Item>
               </div>
@@ -318,6 +318,7 @@ const FormGenerator = ({
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
             >
               <ListEditor
+                data={form.getFieldValue(name.split('.')) as string[] || []}
                 onChange={(values) => {
                   form.setFieldValue(name.split('.'), values)
                 }}

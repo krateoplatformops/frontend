@@ -1,7 +1,7 @@
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Drawer, Flex, Form, List, Popover, Tag, Typography } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type ListObjectFieldsType = {
   container: HTMLElement
@@ -15,6 +15,10 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
   const [open, setOpen] = useState<boolean>(false)
   const [list, setList] = useState<unknown[]>(data)
   const [form] = Form.useForm()
+
+  useEffect(() => {
+    setList(data)
+  }, [data])
 
   const onRemove = (index: number) => {
     const newList = list.filter((_, i) => i !== index)
