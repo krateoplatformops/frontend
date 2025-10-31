@@ -257,7 +257,7 @@ jobs:
       - name: Send schemas
         run: |
           cd $GITHUB_WORKSPACE
-          npm run send-schemas
+          npm run generate-crds
 
       - name: List files in /scripts/smithery-output
         run: |
