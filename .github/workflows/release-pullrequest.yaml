@@ -60,16 +60,16 @@ jobs:
         run: |
           npm install tsx chalk
 
-      - name: Send schemas
+      - name: Generate crds
         run: |
           npm run generate-crds
 
-      - name: List new files
+      - name: List files in /scripts/krateoctl-output
         run: |
-          ls -la
+          ls -la ./scripts/krateoctl-output
 
-      # - name: Upload .yaml files from /scripts/smithery-output
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: smithery-yaml-files
-      #     path: ${{ github.workspace }}/scripts/smithery-output/*.yaml
+      - name: Upload .yaml files from /scripts/krateoctl-output
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-crds-yaml-files
+          path: ${{ github.workspace }}/scripts/krateoctl-output/*.yaml
