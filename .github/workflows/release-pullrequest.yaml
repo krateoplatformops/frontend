@@ -53,11 +53,15 @@ jobs:
         run: |
           curl -sL https://raw.githubusercontent.com/krateoplatformops/krateoctl/main/install.sh | bash
 
+      - name: List existing files
+        run: |
+          ls -la
+
       - name: Send schemas
         run: |
           npm run generate-crds
 
-      - name: List crd files
+      - name: List new files
         run: |
           ls -la
 
