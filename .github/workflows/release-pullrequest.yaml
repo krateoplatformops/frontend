@@ -56,9 +56,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install tsx
+      - name: Install tsx, chalk
         run: |
-          npm install -g tsx
+          npm install tsx chalk
 
       - name: Send schemas
         run: |
