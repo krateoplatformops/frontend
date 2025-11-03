@@ -56,9 +56,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: List existing files
+      - name: Install tsx
         run: |
-          ls -la
+          npm install -g tsx
 
       - name: Send schemas
         run: |
