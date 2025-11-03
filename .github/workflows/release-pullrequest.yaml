@@ -53,6 +53,9 @@ jobs:
         run: |
           curl -sL https://raw.githubusercontent.com/krateoplatformops/krateoctl/main/install.sh | bash
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: List existing files
         run: |
           ls -la
