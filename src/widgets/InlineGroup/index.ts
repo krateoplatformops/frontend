@@ -1,3 +1,3 @@
-import InlineGroup from './InlineGroup'
+import ButtonGroup from './ButtonGroup'
 
-export default InlineGroup
+export default ButtonGroup

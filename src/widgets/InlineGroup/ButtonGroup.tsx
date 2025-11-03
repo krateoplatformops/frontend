@@ -2,25 +2,25 @@ import WidgetRenderer from '../../components/WidgetRenderer'
 import type { WidgetProps } from '../../types/Widget'
 import { getEndpointUrl } from '../../utils/utils'
 
-import styles from './InlineGroup.module.css'
-import type { InlineGroup as WidgetType } from './InlineGroup.type'
+import styles from './ButtonGroup.module.css'
+import type { ButtonGroup as WidgetType } from './ButtonGroup.type'
 
-export type InlineGroupWidgetData = WidgetType['spec']['widgetData']
+export type ButtonGroupWidgetData = WidgetType['spec']['widgetData']
 
-const gapMap: Record<NonNullable<InlineGroupWidgetData['gap']>, React.CSSProperties['gap']> = {
+const gapMap: Record<NonNullable<ButtonGroupWidgetData['gap']>, React.CSSProperties['gap']> = {
   'extra-small': 'var(--spacing-xs)',
   large: 'var(--spacing-lg)',
   medium: 'var(--spacing-md)',
   small: 'var(--spacing-sm)',
 }
 
-const justifyContentMap: Record< NonNullable<InlineGroupWidgetData['alignment']>, React.CSSProperties['justifyContent']> = {
+const justifyContentMap: Record< NonNullable<ButtonGroupWidgetData['alignment']>, React.CSSProperties['justifyContent']> = {
   center: 'center',
   left: 'flex-start',
   right: 'flex-end',
 }
 
-const InlineGroup = ({ resourcesRefs, uid, widgetData }: WidgetProps<InlineGroupWidgetData>) => {
+const ButtonGroup = ({ resourcesRefs, uid, widgetData }: WidgetProps<ButtonGroupWidgetData>) => {
   const { alignment, gap, items } = widgetData
 
   return (
@@ -46,4 +46,4 @@ const InlineGroup = ({ resourcesRefs, uid, widgetData }: WidgetProps<InlineGroup
   )
 }
 
-export default InlineGroup
+export default ButtonGroup

@@ -10,7 +10,7 @@
     "kind": {
       "type": "string",
       "description": "name of the k8s Custom Resource",
-      "default": "InlineGroup"
+      "default": "ButtonGroup"
     },
     "spec": {
       "type": "object",
@@ -22,7 +22,7 @@
           "properties": {
             "alignment": {
               "type": "string",
-              "description": "the alignment of the element inside the InlineGroup. Default is 'left'",
+              "description": "the alignment of the element inside the ButtonGroup. Default is 'left'",
               "enum": ["center", "left", "right"]
             },
             "allowedResources": {
@@ -49,12 +49,12 @@
               }
             },
             "gap": {
-              "description": "the spacing between the items of the InlineGroup. Default is 'small'",
+              "description": "the spacing between the items of the ButtonGroup. Default is 'small'",
               "enum": ["extra-small", "small", "medium", "large"],
               "type": "string"
             },
             "items": {
-              "description": "the items of the InlineGroup",
+              "description": "the items of the ButtonGroup",
               "type": "array",
               "items": {
                 "type": "object",

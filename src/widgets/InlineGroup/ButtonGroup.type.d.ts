@@ -1,4 +1,4 @@
-export interface InlineGroup {
+export interface ButtonGroup {
   /**
    * widget version
    */
@@ -13,7 +13,7 @@ export interface InlineGroup {
      */
     widgetData: {
       /**
-       * the alignment of the element inside the InlineGroup. Default is 'left'
+       * the alignment of the element inside the ButtonGroup. Default is 'left'
        */
       alignment?: 'center' | 'left' | 'right'
       /**
@@ -36,11 +36,11 @@ export interface InlineGroup {
         | 'yamlviewers'
       )[]
       /**
-       * the spacing between the items of the InlineGroup. Default is 'small'
+       * the spacing between the items of the ButtonGroup. Default is 'small'
        */
       gap?: 'extra-small' | 'small' | 'medium' | 'large'
       /**
-       * the items of the InlineGroup
+       * the items of the ButtonGroup
        */
       items: {
         resourceRefId: string

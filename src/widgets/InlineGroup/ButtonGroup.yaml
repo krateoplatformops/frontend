@@ -1,41 +1,28 @@
-kind: InlineGroup
+kind: ButtonGroup
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: test-inline-group
-  namespace: test-namespace
+  namespace: krateo-system
 spec:
   widgetData:
-    alignment: center
+    alignment: right
     allowedResources:
-      - barcharts
       - buttons
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - tables
-      - tablists
-      - yamlviewers
-    gap: medium
+    gap: small
     items:
       - resourceRefId: button-1
-      - resourceRefId: button-2
+      - resourceRefId: composition-test-button
   resourcesRefs:
     items:
       - id: button-1
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: button-1
-        namespace: test-namespace
+        namespace: krateo-system
         resource: buttons
         verb: GET
-      - id: button-2
+      - id: composition-test-button
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: button-2
-        namespace: test-namespace
+        name: composition-test-button
+        namespace: krateo-system
         resource: buttons
         verb: GET
