@@ -50,7 +50,7 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
 
   return (
     <div className={styles.lineChart}>
-      <ReactECharts key={uid} option={optionLine} style={{ height: '400px' }} />
+      <ReactECharts key={uid} option={optionLine} />
     </div>
   )
 }

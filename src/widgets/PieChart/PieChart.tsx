@@ -119,7 +119,7 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
 
   return (
     <div className={styles.pieChart} ref={chartRef}>
-      <ReactECharts key={uid} option={options} style={{ height: '100%' }} />
+      <ReactECharts key={uid} option={options} />
     </div>
   )
 }
