@@ -1,6 +1,6 @@
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Input, List, Space, Typography } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type ListEditorType = {
   data?: string[]
@@ -10,6 +10,10 @@ type ListEditorType = {
 const ListEditor = ({ data = [], onChange }: ListEditorType) => {
   const [currentString, setCurrentString] = useState<string>()
   const [list, setList] = useState<string[]>(data)
+
+  useEffect(() => {
+    setList(data)
+  }, [data])
 
   const onAdd = () => {
     if (currentString && currentString !== '') {

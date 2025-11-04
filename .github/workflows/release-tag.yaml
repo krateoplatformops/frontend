@@ -10,32 +10,18 @@ env:
 jobs:
   build:
     name: Build and Push
-    strategy:
-      fail-fast: false
-      matrix:
-        runner: [buildjet-2vcpu-ubuntu-2204-arm, buildjet-2vcpu-ubuntu-2204]
-        include:
-          - runner: buildjet-2vcpu-ubuntu-2204-arm
-            platform: linux/arm64
-          - runner: buildjet-2vcpu-ubuntu-2204
-            platform: linux/amd64
-    runs-on: ${{ matrix.runner }}
+    runs-on: ubuntu-latest
     
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.GHCR_REPO }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GHCR
         uses: docker/login-action@v3
@@ -44,231 +30,124 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.GHCR_REPO }}
+          tags: |
+            type=semver,pattern={{version}}
 
-      - name: Build and push by digest
-        id: build
+      - name: Build and push multi-arch image
         uses: docker/build-push-action@v5
         with:
-          platforms: ${{ matrix.platform }}
+          context: .
           push: true
-          labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
-
-      - name: Export digest
-        run: |
-          mkdir -p /tmp/digests
-          digest="${{ steps.build.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"
-
-      - name: Upload digest
-        uses: actions/upload-artifact@v4
-        with:
-          name: digests-${{ env.PLATFORM_PAIR }}
-          path: /tmp/digests/*
-          if-no-files-found: error
-          retention-days: 1
-
-  merge:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Download digests
-        uses: actions/download-artifact@v4
-        with:
-          path: /tmp/digests
-          pattern: digests-*
-          merge-multiple: true
-
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.GHCR_REPO }}
-
-      - name: Create manifest list and push
-        working-directory: /tmp/digests
-        run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.GHCR_REPO }}@sha256:%s ' *)
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          provenance: false # Optional: disables SBOMs if not needed
+          cache-from: type=registry,ref=${{ env.GHCR_REPO }}:buildcache
+          cache-to: type=registry,ref=${{ env.GHCR_REPO }}:buildcache,mode=max
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ env.GHCR_REPO }}:${{ steps.meta.outputs.version }}
+          FIRST_TAG=$(echo '${{ steps.meta.outputs.json }}' | jq -r '.tags[0]')
+          docker buildx imagetools inspect "$FIRST_TAG"
 
 
   crds:
     name: Generate crds
     runs-on: ubuntu-latest
     needs:
-      - merge
+      - build
     permissions:
       contents: write
       pull-requests: write
 
     steps:
-      - name: Set up Helm
-        uses: azure/setup-helm@v4.1.0
-
-      - name: Generate KinD config with hostPort
+      - name: Install krateoctl v0.6.3
         run: |
-          cat <<EOF > kind-config.yaml
-          kind: Cluster
-          apiVersion: kind.x-k8s.io/v1alpha4
-          nodes:
-            - role: control-plane
-              extraPortMappings:
-                - containerPort: 30082   # Port inside container
-                  hostPort: 30082        # Port accessible on runner
-                - containerPort: 30088   # Port inside container
-                  hostPort: 30088        # Port accessible on runner
-                  protocol: TCP
-          EOF
+          set -e
 
-      - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1
-        with:
-          node_image: kindest/node:v1.33.1
-          config: kind-config.yaml
+          REPO="krateoplatformops/krateoctl"
+          BINARY="krateoctl"
+          FIXED_TAG="v0.6.3"
+          VERSION="${FIXED_TAG#v}"
 
-      - name: Generate and apply JWT signing secret
+          # Detect OS
+          OS="$(uname | tr '[:upper:]' '[:lower:]')"
+          case "$OS" in
+            linux) OS="linux" ;;
+            darwin) OS="darwin" ;;
+            msys*|cygwin*|mingw*) OS="windows" ;;
+            *) echo "❌ Unsupported OS: $OS" && exit 1 ;;
+          esac
+
+          # Detect architecture
+          ARCH="$(uname -m)"
+          case "$ARCH" in
+            x86_64) ARCH="amd64" ;;
+            aarch64|arm64) ARCH="arm64" ;;
+            *) echo "❌ Unsupported architecture: $ARCH" && exit 1 ;;
+          esac
+
+          # Compose artifact name and URL
+          EXT="tar.gz"
+          [[ "$OS" == "windows" ]] && EXT="zip"
+          ASSET="${BINARY}_${VERSION}_${OS}_${ARCH}.${EXT}"
+          URL="https://github.com/${REPO}/releases/download/${FIXED_TAG}/${ASSET}"
+
+          echo "📦 Downloading $ASSET from tag ${FIXED_TAG}..."
+          curl -sL "$URL" -o "$ASSET"
+
+          TMP_DIR=$(mktemp -d)
+          echo "📂 Extracting to $TMP_DIR..."
+          if [[ "$EXT" == "zip" ]]; then
+            unzip -o "$ASSET" -d "$TMP_DIR"
+          else
+            tar -xzf "$ASSET" -C "$TMP_DIR"
+          fi
+
+          INSTALL_DIR="/usr/local/bin"
+          if [ ! -w "$INSTALL_DIR" ]; then
+            echo "⚠️  No write permission to $INSTALL_DIR. Falling back to \$HOME/.local/bin"
+            INSTALL_DIR="$HOME/.local/bin"
+            mkdir -p "$INSTALL_DIR"
+            echo "👉 Make sure $INSTALL_DIR is in your PATH"
+          fi
+
+          BIN_PATH=$(find "$TMP_DIR" -type f -name "$BINARY" -perm -111 | head -n 1)
+          if [[ -z "$BIN_PATH" ]]; then
+            echo "❌ Could not find the '$BINARY' binary after extraction." && exit 1
+          fi
+
+          echo "🚀 Installing $BINARY to $INSTALL_DIR..."
+          chmod +x "$BIN_PATH"
+          mv "$BIN_PATH" "$INSTALL_DIR/$BINARY"
+
+          rm -rf "$ASSET" "$TMP_DIR"
+          echo "✅ Installed $BINARY version $VERSION successfully!"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install tsx, chalk
         run: |
-          JWT_SIGN_KEY=$(openssl rand -base64 32)
-          cat <<EOF | kubectl apply -f -
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: jwt-sign-key
-          type: Opaque
-          stringData:
-            JWT_SIGN_KEY: ${JWT_SIGN_KEY}
-          EOF
+          npm install tsx chalk
 
-      - name: Add Krateo Helm repository
-        run: helm repo add krateo https://charts.krateo.io
-
-      - name: Update Krateo Helm repository
-        run: helm repo update krateo
-
-      - name: Install Krateo PlatformOps authn
-        run: helm install authn krateo/authn --version=0.20.1 --wait --set service.type=NodePort  --set service.nodePort=30082
-
-      - name: Install Krateo PlatformOps authn
-        run: helm install smithery krateo/smithery --version=0.10.0 --wait --set service.type=NodePort  --set service.nodePort=30088
-
-      - name: Generate random password
-        id: genpass
-        run: echo "password=$(openssl rand -base64 12)" >> $GITHUB_OUTPUT
-
-      - name: Apply admin Secret and User
+      - name: Generate crds
         run: |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: v1
-          kind: Secret
-          type: kubernetes.io/basic-auth
-          metadata:
-            name: admin-password
-            namespace: default
-          stringData:
-            password: "${{ steps.genpass.outputs.password }}"
-          ---
-          apiVersion: basic.authn.krateo.io/v1alpha1
-          kind: User
-          metadata:
-            name: admin
-            namespace: default
-          spec:
-            displayName: Admin
-            avatarURL: https://i.pravatar.cc/256?img=69
-            groups:
-              - admins
-            passwordRef:
-              namespace: default
-              name: admin-password
-              key: password
-          EOF
+          npm run generate-crds
 
-      - name: Apply ClusterRoleBinding
+      - name: List files in /scripts/krateoctl-output
         run: |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: rbac.authorization.k8s.io/v1
-          kind: ClusterRoleBinding
-          metadata:
-            name: cluster-admin-binding
-          subjects:
-          - kind: Group
-            name: admins
-            apiGroup: rbac.authorization.k8s.io
-          roleRef:
-            kind: ClusterRole
-            name: cluster-admin
-            apiGroup: rbac.authorization.k8s.io
-          EOF
+          ls -la ./scripts/krateoctl-output
 
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Override /public/config/config.json
-        run: |
-          cat <<EOF > $GITHUB_WORKSPACE/public/config/config.json
-          {
-            "api": {
-              "AUTHN_API_BASE_URL": "http://127.0.0.1:30082",
-              "SNOWPLOW_API_BASE_URL": "http://127.0.0.1:30081",
-              "EVENTS_API_BASE_URL": "http://127.0.0.1:30083",
-              "EVENTS_PUSH_API_BASE_URL": "http://127.0.0.1:30083",
-              "SMITHERY_API_BASE_URL": "http://127.0.0.1:30088",
-              "INIT": "/call?resource=navmenus&apiVersion=widgets.templates.krateo.io/v1beta1&name=sidebar-nav-menu&namespace=krateo-system",
-              "TERMINAL_SOCKET_URL": "http://localhost:8084"
-            },
-            "params": {
-              "FRONTEND_NAMESPACE": "krateo-system",
-              "DELAY_SAVE_NOTIFICATION": "10000"
-            }
-          }
-          EOF
-
-      - name: Install tsx
-        run: npm install tsx
-
-      - name: Get access token
-        env:
-          ADMIN_USERNAME: admin
-          ADMIN_PASSWORD: ${{ steps.genpass.outputs.password }}
-        run: |
-          cd $GITHUB_WORKSPACE
-          npm run get-access-token
-
-      - name: Send schemas
-        run: |
-          cd $GITHUB_WORKSPACE
-          npm run send-schemas
-
-      - name: List files in /scripts/smithery-output
-        run: |
-          cd $GITHUB_WORKSPACE
-          ls -la ./scripts/smithery-output
-
-      - name: Upload .yaml files from /scripts/smithery-output
+      - name: Upload .yaml files from /scripts/krateoctl-output
         uses: actions/upload-artifact@v4
         with:
-          name: smithery-yaml-files
-          path: ${{ github.workspace }}/scripts/smithery-output/*.yaml
+          name: frontend-crds-yaml-files
+          path: ${{ github.workspace }}/scripts/krateoctl-output/*.yaml
 
       - name: Authenticate with GitHub App
         id: authenticate
@@ -288,7 +167,7 @@ jobs:
           # Get the latest tag from the local repository
           cd $GITHUB_WORKSPACE
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "main")
-          BRANCH="smithery-${LATEST_TAG}"
+          BRANCH="krateoctl-${LATEST_TAG}"
           
           echo "Latest local tag: $LATEST_TAG"
           echo "Branch name: $BRANCH"
@@ -314,8 +193,8 @@ jobs:
           echo "Files in remote crd-chart/templates:"
           ls -la crd-chart/templates/ || echo "No files in crd-chart/templates"
           
-          echo "Files in local smithery-output:"
-          ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" || echo "No files in smithery-output"
+          echo "Files in local krateoctl-output:"
+          ls -la "$GITHUB_WORKSPACE/scripts/krateoctl-output/" || echo "No files in krateoctl-output"
           
           TEMP_DIR=$(mktemp -d)
           mkdir -p "$TEMP_DIR/remote" "$TEMP_DIR/local"
@@ -330,12 +209,12 @@ jobs:
           fi
           
           # Copy local files
-          if ls "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml >/dev/null 2>&1; then
-            cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml "$TEMP_DIR/local/"
+          if ls "$GITHUB_WORKSPACE/scripts/krateoctl-output/"*.yaml >/dev/null 2>&1; then
+            cp "$GITHUB_WORKSPACE/scripts/krateoctl-output/"*.yaml "$TEMP_DIR/local/"
             echo "Copied local .yaml files:"
             ls -la "$TEMP_DIR/local/"
           else
-            echo "ERROR: No .yaml files found in local smithery-output directory"
+            echo "ERROR: No .yaml files found in local krateoctl-output directory"
             exit 1
           fi
 
@@ -397,9 +276,9 @@ jobs:
           echo "Current git branch: $(git branch --show-current)"
           
           echo "Source directory check:"
-          echo "  Path: $GITHUB_WORKSPACE/scripts/smithery-output/"
-          echo "  Exists: $([ -d "$GITHUB_WORKSPACE/scripts/smithery-output/" ] && echo "YES" || echo "NO")"
-          echo "  Files: $(ls -la "$GITHUB_WORKSPACE/scripts/smithery-output/" 2>/dev/null || echo "Directory not accessible")"
+          echo "  Path: $GITHUB_WORKSPACE/scripts/krateoctl-output/"
+          echo "  Exists: $([ -d "$GITHUB_WORKSPACE/scripts/krateoctl-output/" ] && echo "YES" || echo "NO")"
+          echo "  Files: $(ls -la "$GITHUB_WORKSPACE/scripts/krateoctl-output/" 2>/dev/null || echo "Directory not accessible")"
           
           echo "Destination directory check:"
           echo "  Path: $(pwd)/crd-chart/templates"
@@ -417,7 +296,7 @@ jobs:
           rm -f crd-chart/templates/*.yaml 2>/dev/null || true
           
           echo "Copying files..."
-          if cp "$GITHUB_WORKSPACE/scripts/smithery-output/"*.yaml crd-chart/templates/ 2>&1; then
+          if cp "$GITHUB_WORKSPACE/scripts/krateoctl-output/"*.yaml crd-chart/templates/ 2>&1; then
             echo "Copy command succeeded"
           else
             echo "Copy command failed with exit code: $?"
@@ -477,9 +356,9 @@ jobs:
 
           # Stage and commit changes
           git add crd-chart/templates
-          git commit -m "Update Smithery YAML files from tag ${LATEST_TAG}
+          git commit -m "Update krateoctl YAML files from tag ${LATEST_TAG}
 
-          Updated YAML files in crd-chart/templates directory to align with local smithery output.
+          Updated YAML files in crd-chart/templates directory to align with local krateoctl output.
           Source tag: ${LATEST_TAG}
           Workflow run: ${GITHUB_RUN_ID}"
 
@@ -514,10 +393,10 @@ jobs:
                   
                   # Create a new PR with reference to the old one
                   gh pr create \
-                    --title "Update Smithery YAML files (${LATEST_TAG})" \
-                    --body "## Smithery YAML Update
+                    --title "Update krateoctl YAML files (${LATEST_TAG})" \
+                    --body "## krateoctl YAML Update
 
-          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local krateoctl output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
@@ -529,7 +408,7 @@ jobs:
 
           **Note:** This replaces closed PR #${PR_NUMBER} which could not be reopened.
 
-          This PR was automatically generated by the smithery workflow." \
+          This PR was automatically generated by the krateoctl workflow." \
                     --head "$BRANCH" \
                     --base main \
                     --repo krateoplatformops/frontend-chart
@@ -540,10 +419,10 @@ jobs:
                 echo "ℹ️ PR #$PR_NUMBER was already merged - creating a new PR"
                 # Create a new PR since the old one was merged
                 gh pr create \
-                  --title "Update Smithery YAML files (${LATEST_TAG})" \
-                  --body "## Smithery YAML Update
+                  --title "Update krateoctl YAML files (${LATEST_TAG})" \
+                  --body "## krateoctl YAML Update
 
-          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local krateoctl output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
@@ -555,7 +434,7 @@ jobs:
 
           **Note:** Previous PR #${PR_NUMBER} was already merged.
 
-          This PR was automatically generated by the smithery workflow." \
+          This PR was automatically generated by the krateoctl workflow." \
                   --head "$BRANCH" \
                   --base main \
                   --repo krateoplatformops/frontend-chart
@@ -565,10 +444,10 @@ jobs:
                 echo "⚠️ PR #$PR_NUMBER has unexpected state: $PR_STATE"
                 echo "Creating a new PR"
                 gh pr create \
-                  --title "Update Smithery YAML files (${LATEST_TAG})" \
-                  --body "## Smithery YAML Update
+                  --title "Update krateoctl YAML files (${LATEST_TAG})" \
+                  --body "## krateoctl YAML Update
 
-          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local krateoctl output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
@@ -580,7 +459,7 @@ jobs:
 
           **Note:** Previous PR #${PR_NUMBER} had unexpected state: ${PR_STATE}
 
-          This PR was automatically generated by the smithery workflow." \
+          This PR was automatically generated by the krateoctl workflow." \
                   --head "$BRANCH" \
                   --base main \
                   --repo krateoplatformops/frontend-chart
@@ -590,10 +469,10 @@ jobs:
           else
             echo "📝 No existing PR found for branch '$BRANCH' - creating new PR"
             gh pr create \
-              --title "Update Smithery YAML files (${LATEST_TAG})" \
-              --body "## Smithery YAML Update
+              --title "Update krateoctl YAML files (${LATEST_TAG})" \
+              --body "## krateoctl YAML Update
 
-          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local smithery output.
+          This PR updates the YAML files in \`crd-chart/templates/\` directory to align with the local krateoctl output.
 
           **Source Information:**
           - Local repository tag: \`${LATEST_TAG}\`
@@ -603,7 +482,7 @@ jobs:
           - Updated YAML files in \`crd-chart/templates/\` directory
           - Files were not aligned between local and remote repositories
 
-          This PR was automatically generated by the smithery workflow." \
+          This PR was automatically generated by the krateoctl workflow." \
               --head "$BRANCH" \
               --base main \
               --repo krateoplatformops/frontend-chart

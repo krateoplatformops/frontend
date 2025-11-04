@@ -1,6 +1,162 @@
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: default-array-form-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: Array of objects form
+    items:
+      - resourceRefId: default-array-form
+  resourcesRefs:
+    items:
+      - id: default-array-form
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: default-array-form
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: default-array-form
+  namespace: krateo-system
+spec:
+  widgetData:
+    buttonConfig:
+      primary: 
+        label: Custom submit
+        icon: fa-rocket
+      secondary:
+        label: Go back
+    submitActionId: firework-submit-action
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "stringArray": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": ["pippo", "pluto"]
+          },
+          "frontend": {
+            "type": "array",
+            "description": "List of frontend components.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "image": {
+                  "type": "string",
+                  "description": "Container image to use for the frontend service."
+                },
+                "port": {
+                  "type": "integer",
+                  "description": "Port number exposed by the frontend container."
+                },
+                "replicas": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Number of replicas for the frontend deployment."
+                }
+              },
+              "required": ["image", "port", "replicas"],
+              "additionalProperties": false
+            },
+            "default": [
+              {
+                "image": "nginx:latest",
+                "port": 80,
+                "replicas": 1
+              }
+            ]
+          },
+          "backend": {
+            "type": "array",
+            "description": "List of backend modules.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "image": {
+                  "type": "string",
+                  "description": "Container image to use for the backend service."
+                },
+                "port": {
+                  "type": "integer",
+                  "description": "Port number exposed by the backend container."
+                },
+                "replicas": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Number of replicas for the backend deployment."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Unique name for the backend module."
+                }
+              },
+              "required": ["image", "port", "replicas", "name"],
+              "additionalProperties": false
+            },
+            "default": [
+              {
+                "image": "springcommunity/spring-boot-mongo-jwt-auth:latest",
+                "port": 8080,
+                "replicas": 1,
+                "name": "module1"
+              },
+              {
+                "image": "springcommunity/spring-boot-mongo-jwt-auth:latest",
+                "port": 8080,
+                "replicas": 1,
+                "name": "module2"
+              },
+              {
+                "image": "springcommunity/spring-boot-mongo-jwt-auth:latest",
+                "port": 8080,
+                "replicas": 1,
+                "name": "module3"
+              }
+            ]
+          }
+        },
+        "required": ["frontend", "backend"],
+        "additionalProperties": false
+      }
+    objectFields:
+      - path: frontend
+        displayField: image
+      - path: backend
+        displayField: name
+    actions:
+      rest:
+        - id: firework-submit-action
+          resourceRefId: resource-ref-1
+          type: rest
+          payloadKey: spec
+          onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
+          payloadToOverride:
+            - name: metadata.name
+              value: ${ git.toRepo.name }
+          loading:
+            display: true
+          headers:
+            - 'Accept: application/json'
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v2-0-0
+        name: new-app
+        namespace: fireworksapp-system
+        resource: fireworksapps
+        verb: POST
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: firework-form-panel
   namespace: krateo-system
 spec:

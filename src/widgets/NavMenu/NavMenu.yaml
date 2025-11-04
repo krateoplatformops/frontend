@@ -236,6 +236,7 @@ spec:
       - tablists
       - yamlviewers
     items:
+      - resourceRefId: default-array-form-panel
       - resourceRefId: firework-form-panel
       - resourceRefId: button-with-drawer-form
       - resourceRefId: button-with-modal-form
@@ -245,6 +246,12 @@ spec:
       - resourceRefId: test-panel
   resourcesRefs:
     items:
+      - id: default-array-form-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: default-array-form-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
       - id: firework-form-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: firework-form-panel
