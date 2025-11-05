@@ -1,0 +1,247 @@
+# Case 1: Action not found
+# Target: ensure the widget correctly handles missing action definition within "actions".
+# Expected behavior: clicking the button triggers an error notification ("The widget definition does not include an action ...").
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-no-action
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Click
+    icon: fa-trash
+    type: primary
+    clickActionId: click
+    actions: {}
+  resourcesRefs:
+    items: []
+---
+# Case 2: Default button with label only
+# Target: verify correct rendering of text label with default shape and size.
+# Expected behavior: displays a standard button labeled “Run”.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-basic
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Run
+    type: default
+    shape: default
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 3: Primary button with icon and label
+# Target: confirm correct layout of icon + label combination.
+# Expected behavior: icon appears to the left of the text with correct spacing.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-with-icon
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Deploy
+    icon: fa-rocket
+    type: primary
+    shape: default
+    size: middle
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 4: Circle-shaped button with icon only
+# Target: verify proper sizing and centering of circular icon-only button.
+# Expected behavior: renders compact circle button showing only the icon.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-icon-circle
+  namespace: krateo-system
+spec:
+  widgetData:
+    icon: fa-trash
+    shape: circle
+    type: default
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 5: Default rounded button with custom color
+# Target: ensure color token and rounded shape are correctly applied.
+# Expected behavior: button has smooth rounded corners and red color variant.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rounded-red
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Restart
+    backgroundColor: red
+    type: default
+    shape: round
+    size: middle
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 6: Large primary button
+# Target: verify consistent scaling for “large” size.
+# Expected behavior: increased padding and text size; alignment preserved.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-large-primary
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Approve
+    type: primary
+    size: large
+    shape: default
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 7: Small dashed button
+# Target: confirm rendering of alternative visual “dashed” style.
+# Expected behavior: smaller text and dotted outline.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-small-dashed
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Details
+    type: dashed
+    size: small
+    shape: default
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 8: Link-style button
+# Target: verify inline link appearance (no background or border).
+# Expected behavior: visually rendered as a text hyperlink.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-link
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: View Logs
+    type: link
+    size: middle
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 9: Text-only button
+# Target: confirm flat minimal variant without border or background.
+# Expected behavior: renders as simple text element, aligned with other inline elements.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-text
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Edit
+    type: text
+    shape: default
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET

@@ -112,7 +112,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal[].loading.display | yes |  | boolean |
 | actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
 | actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
-| color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
+| color | no | the color of the button | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | label | no | the label of the button | string |
 | icon | no | the icon of the button (font awesome icon name eg: `fa-inbox`) | string |
 | shape | no | the shape of the button | `default` \| `circle` \| `round` |

@@ -1,0 +1,293 @@
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navmenuitem
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - pages
+    resourceRefId: example-button-page
+    label: Button
+    icon: fa-toggle-on
+    path: /button
+  resourcesRefs:
+    items:
+      - id: example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - buttons
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
+    items:
+      - resourceRefId: example-button-no-action-panel
+      - resourceRefId: example-button-basic-panel
+      - resourceRefId: example-button-with-icon-panel
+      - resourceRefId: example-button-icon-circle-panel
+      - resourceRefId: example-button-rounded-red-panel
+      - resourceRefId: example-button-large-primary-panel
+      - resourceRefId: example-button-small-dashed-panel
+      - resourceRefId: example-button-link-panel
+      - resourceRefId: example-button-text-panel
+  resourcesRefs:
+    items:
+      - id: example-button-no-action-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-no-action-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-basic-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-basic-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-with-icon-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-with-icon-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-icon-circle-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-icon-circle-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET  
+      - id: example-button-rounded-red-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rounded-red-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET  
+      - id: example-button-large-primary-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-large-primary-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET    
+      - id: example-button-small-dashed-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-small-dashed-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-button-link-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-link-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-button-text-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-text-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-no-action-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 1: Action not found'
+    items:
+      - resourceRefId: example-button-no-action
+  resourcesRefs:
+    items:
+      - id: example-button-no-action
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-no-action
+        namespace: krateo-system
+        resource: buttons
+        verb: GET  
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-basic-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 2: Default button with label only'
+    items:
+      - resourceRefId: example-button-basic
+  resourcesRefs:
+    items:
+      - id: example-button-basic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-basic
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-with-icon-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 3: Primary button with icon and label'
+    items:
+      - resourceRefId: example-button-with-icon
+  resourcesRefs:
+    items:
+      - id: example-button-with-icon
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-with-icon
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-icon-circle-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 4: Circle-shaped button with icon only'
+    items:
+      - resourceRefId: example-button-icon-circle
+  resourcesRefs:
+    items:
+      - id: example-button-icon-circle
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-icon-circle
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rounded-red-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 5: Default rounded button with custom color'
+    items:
+      - resourceRefId: example-button-rounded-red
+  resourcesRefs:
+    items:
+      - id: example-button-rounded-red
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rounded-red
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-large-primary-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 6: Large primary button'
+    items:
+      - resourceRefId: example-button-large-primary
+  resourcesRefs:
+    items:
+      - id: example-button-large-primary
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-large-primary
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-small-dashed-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 7: Small dashed button'
+    items:
+      - resourceRefId: example-button-small-dashed
+  resourcesRefs:
+    items:
+      - id: example-button-small-dashed
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-small-dashed
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-link-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 8: Link-style button'
+    items:
+      - resourceRefId: example-button-link
+  resourcesRefs:
+    items:
+      - id: example-button-link
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-link
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-text-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 9: Text-only button'
+    items:
+      - resourceRefId: example-button-text
+  resourcesRefs:
+    items:
+      - id: example-button-text
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-text
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 

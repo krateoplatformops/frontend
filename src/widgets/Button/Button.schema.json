@@ -279,8 +279,21 @@
               },
               "additionalProperties": false
             },
+            "backgroundColor": {
+              "description": "the background color of the button",
+              "type": "string",
+              "enum": [
+                "blue",
+                "darkBlue",
+                "orange",
+                "gray",
+                "red",
+                "green",
+                "violet"
+              ]
+            },
             "color": {
-              "description": "the color of the button",
+              "description": "***DEPRECATED*** the color of the button",
               "type": "string",
               "enum": [
                 "default",
