@@ -20,7 +20,7 @@ export interface LineChart {
         /**
          * color used to render the line
          */
-        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green' | 'violet'
         /**
          * data points that define the line
          */

@@ -37,7 +37,8 @@
                       "orange",
                       "gray",
                       "red",
-                      "green"
+                      "green",
+                      "violet"
                     ],
                     "description": "color used to render the line"
                   },

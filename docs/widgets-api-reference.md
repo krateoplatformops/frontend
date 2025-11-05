@@ -17,7 +17,7 @@ BarChart express quantities through a bar's length, using a common baseline. Bar
 | data[].bars | yes | Bars within the group, each representing a value | array |
 | data[].bars[].value | yes | Label or identifier for the bar | string |
 | data[].bars[].percentage | yes | Height of the bar as a percentage (0–100) | integer |
-| data[].bars[].color | no | Color of the bar | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
+| data[].bars[].color | no | Color of the bar | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 
 <details>
 <summary>Example</summary>
@@ -181,20 +181,7 @@ spec:
   widgetData:
     alignment: center
     allowedResources:
-      - barcharts
       - buttons
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - tables
-      - tablists
-      - yamlviewers
     gap: medium
     items:
       - resourceRefId: button-1
@@ -777,7 +764,7 @@ LineChart displays a customizable line chart based on time series or numerical d
 |----------|----------|-------------|------|
 | lines | yes | list of data series to be rendered as individual lines | array |
 | lines[].name | no | label of the line displayed in the legend | string |
-| lines[].color | no | color used to render the line | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
+| lines[].color | no | color used to render the line | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | lines[].coords | no | data points that define the line | array |
 | lines[].coords[].xAxis | yes | value on the x axis | string |
 | lines[].coords[].yAxis | yes | value on the y axis | string |
@@ -1289,7 +1276,7 @@ Table displays structured data with customizable columns and pagination
 |----------|----------|-------------|------|
 | allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | columns | yes | configuration of the table's columns | array |
-| columns[].color | no | the color of the value (or the icon) to be represented | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
+| columns[].color | no | the color of the value (or the icon) to be represented | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | columns[].title | yes | column header label | string |
 | columns[].valueKey | yes | key used to extract the value from row data | string |
 | data | yes | Array of table rows | array |

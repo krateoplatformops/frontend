@@ -29,7 +29,7 @@ export interface BarChart {
           /**
            * Color of the bar
            */
-          color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+          color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green' | 'violet'
         }[]
       }[]
     }
