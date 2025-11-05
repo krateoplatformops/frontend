@@ -282,6 +282,8 @@ spec:
         title: Name
       - valueKey: role
         title: Role
+      - valueKey: users
+        title: Users
     data:
       - 
         - valueKey: name
@@ -292,6 +294,10 @@ spec:
           kind: jsonSchemaType
           type: string
           stringValue: "frontend"
+        - valueKey: users
+          kind: jsonSchemaType
+          type: array
+          arrayValue: ["matteo", "marco", "luca", "giovanni"]
       - 
         - valueKey: name
           kind: jsonSchemaType
@@ -301,6 +307,10 @@ spec:
           kind: jsonSchemaType
           type: string
           stringValue: "backend"
+        - valueKey: users
+          kind: jsonSchemaType
+          type: array
+          arrayValue: ["pippo", "pluto", "paperino"]
 ---
 kind: Filters
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -314,6 +324,10 @@ spec:
       - label: Pod Name
         name:
           - name
+        type: string
+      - label: Users
+        name:
+          - users
         type: string
 ---
 # Case 9: Table with pagination

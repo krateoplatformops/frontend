@@ -84,7 +84,7 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
                 case 'boolean':
                   return <span style={{ color }}>{booleanValue !== undefined ? String(booleanValue) : '-'}</span>
                 case 'array':
-                  return <span style={{ color }}>{arrayValue ? JSON.stringify(arrayValue) : '-'}</span>
+                  return <span style={{ color }}>{arrayValue ? arrayValue.join(', ') : '-'}</span>
                 case 'null':
                   return <span>-</span>
                 default:
