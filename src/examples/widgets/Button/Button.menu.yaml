@@ -55,6 +55,10 @@ spec:
       - resourceRefId: example-button-small-dashed-panel
       - resourceRefId: example-button-link-panel
       - resourceRefId: example-button-text-panel
+      - resourceRefId: example-button-navigate-path-panel
+      - resourceRefId: example-button-navigate-resource-panel
+      - resourceRefId: example-button-navigate-confirm-panel
+      - resourceRefId: example-button-navigate-loading-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -108,6 +112,30 @@ spec:
       - id: example-button-text-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-text-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-button-navigate-path-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-navigate-path-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET    
+      - id: example-button-navigate-resource-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-navigate-resource-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-button-navigate-confirm-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-navigate-confirm-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-button-navigate-loading-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-navigate-loading-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -275,19 +303,79 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-button-text-panel
+  name: example-button-navigate-path-panel
   namespace: krateo-system
 spec:
   widgetData:
     actions: {}
-    title: 'Case 9: Text-only button'
+    title: 'Case 10: navigate action - Navigation to another page using `path`'
     items:
-      - resourceRefId: example-button-text
+      - resourceRefId: example-button-navigate-path
   resourcesRefs:
     items:
-      - id: example-button-text
+      - id: example-button-navigate-path
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-button-text
+        name: example-button-navigate-path
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navigate-resource-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 11: navigate action - Navigation to another resource using `resourceRefId`'
+    items:
+      - resourceRefId: example-button-navigate-resource
+  resourcesRefs:
+    items:
+      - id: example-button-navigate-resource
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-navigate-resource
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navigate-confirm-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 12: navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)'
+    items:
+      - resourceRefId: example-button-navigate-confirm
+  resourcesRefs:
+    items:
+      - id: example-button-navigate-confirm
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-navigate-confirm
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navigate-loading-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 13: navigate action - Navigation with loading indicator'
+    items:
+      - resourceRefId: example-button-navigate-loading
+  resourcesRefs:
+    items:
+      - id: example-button-navigate-loading
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-navigate-loading
         namespace: krateo-system
         resource: buttons
         verb: GET 

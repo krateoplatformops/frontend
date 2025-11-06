@@ -245,3 +245,102 @@ spec:
         namespace: krateo-system
         resource: pages
         verb: GET
+---
+# Case 10: navigate action - Navigation to another page using `path`
+# Target: trigger navigation to a static route (`/barchart`) when the button is clicked.
+# Expected behavior: clicking the button redirects the user to `/barchart`.
+# No confirmation or loading state are required.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navigate-path
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Navigate to Bar Chart
+    type: primary
+    shape: default
+    clickActionId: navigate-to-barchart
+    actions:
+      navigate:
+        - id: navigate-to-barchart
+          path: /barchart
+          type: navigate
+  resourcesRefs:
+    items: []
+---
+# Case 11: navigate action - Navigation to another resource using `resourceRefId`
+# Target: navigate to another dashboard resource (identified by its ref ID).
+# Expected behavior: clicking the button triggers navigation to the target resource page.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navigate-resource
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Navigate to Dashboard
+    type: default
+    clickActionId: navigate-to-dashboard
+    actions:
+      navigate:
+        - id: navigate-to-dashboard
+          type: navigate
+          resourceRefId: dashboard-page
+  resourcesRefs:
+    items:
+      - id: dashboard-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: dashboard-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+# Case 12: navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)
+# Target: prevent accidental navigation by requiring explicit user confirmation.
+# Expected behavior: before navigating, a confirmation dialog is shown.
+# Only if confirmed does the navigation occur.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navigate-confirm
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Navigate to Bar Chart
+    type: default
+    shape: round
+    size: middle
+    clickActionId: navigate-to-barchart
+    actions:
+      navigate:
+        - id: navigate-to-barchart
+          path: /barchart
+          type: navigate
+          requireConfirmation: true
+  resourcesRefs:
+    items: []
+---
+# Case 13: navigate action - Navigation with loading indicator
+# Target: provide visual feedback during navigation.
+# Expected behavior: the button shows a loading spinner while navigation is being processed.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-navigate-loading
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Navigate to Bar Chart
+    type: primary
+    size: middle
+    clickActionId: navigate-to-barchart
+    actions:
+      navigate:
+        - id: navigate-to-barchart
+          path: /barchart
+          type: navigate
+          loading:
+            display: true
+  resourcesRefs:
+    items: []
