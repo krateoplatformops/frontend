@@ -59,6 +59,11 @@ spec:
       - resourceRefId: example-button-navigate-resource-panel
       - resourceRefId: example-button-navigate-confirm-panel
       - resourceRefId: example-button-navigate-loading-panel
+      - resourceRefId: example-button-open-drawer-default-panel
+      - resourceRefId: example-button-open-drawer-large-panel
+      - resourceRefId: example-button-open-modal-default-panel
+      - resourceRefId: example-button-open-modal-custom-panel
+      - resourceRefId: example-button-open-modal-fullscreen-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -139,6 +144,36 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET 
+      - id: example-button-open-drawer-default-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-drawer-default-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-button-open-drawer-large-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-drawer-large-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-button-open-modal-default-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-modal-default-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-open-modal-custom-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-modal-custom-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-open-modal-fullscreen-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-modal-fullscreen-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -378,4 +413,104 @@ spec:
         name: example-button-navigate-loading
         namespace: krateo-system
         resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-drawer-default-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 14: openDrawer - default size'
+    items:
+      - resourceRefId: example-button-open-drawer-default
+  resourcesRefs:
+    items:
+      - id: example-button-open-drawer-default
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-drawer-default
+        namespace: krateo-system
+        resource: buttons
         verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-drawer-large-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 15: openDrawer - large size'
+    items:
+      - resourceRefId: example-button-open-drawer-large
+  resourcesRefs:
+    items:
+      - id: example-button-open-drawer-large
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-drawer-large
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-modal-default-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 16: openModal - default size'
+    items:
+      - resourceRefId: example-button-open-modal-default
+  resourcesRefs:
+    items:
+      - id: example-button-open-modal-default
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-modal-default
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-modal-custom-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 17: openModal - custom width'
+    items:
+      - resourceRefId: example-button-open-modal-custom
+  resourcesRefs:
+    items:
+      - id: example-button-open-modal-custom
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-modal-custom
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-modal-fullscreen-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 18: openModal - fullscreen mode'
+    items:
+      - resourceRefId: example-button-open-modal-fullscreen
+  resourcesRefs:
+    items:
+      - id: example-button-open-modal-fullscreen
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-open-modal-fullscreen
+        namespace: krateo-system
+        resource: buttons
+        verb: GET

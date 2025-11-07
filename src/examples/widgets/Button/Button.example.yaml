@@ -344,3 +344,173 @@ spec:
             display: true
   resourcesRefs:
     items: []
+---
+# Case 14: openDrawer - default size
+# Target: verify that a drawer can be opened using a defined resource reference
+  # Expected behavior: when triggered, no confirmation is required;
+# the drawer opens at the default width and displays the resource contents once loaded.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-drawer-default
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Drawer Default
+    type: default
+    shape: round
+    size: middle
+    clickActionId: open-drawer-default
+    actions:
+      openDrawer:
+        - id: open-drawer-default
+          type: openDrawer
+          resourceRefId: example-markdown-basic
+          size: default
+          title: Default Drawer Example
+  resourcesRefs:
+    items:
+      - id: example-markdown-basic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-markdown-basic
+        namespace: krateo-system
+        resource: markdowns
+        verb: GET
+---
+# Case 15: openDrawer - large size
+# Target: verify that a drawer can be opened in large mode
+# Expected behavior: a large-size drawer opens with the defined title and resource content.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-drawer-large
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Drawer Large
+    type: default
+    shape: round
+    size: middle
+    clickActionId: open-drawer-large
+    actions:
+      openDrawer:
+        - id: open-drawer-large
+          type: openDrawer
+          resourceRefId: example-markdown-basic
+          size: large
+          title: Confirmed Large Drawer Example
+          loading:
+            display: false
+  resourcesRefs:
+    items:
+      - id: example-markdown-basic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-markdown-basic
+        namespace: krateo-system
+        resource: markdowns
+        verb: GET
+---
+# Case 16: openModal - default size
+# Target: ensure that a modal dialog can be opened,
+# displaying a standard modal layout with the given title and resource.
+# Expected behavior: the modal appears at the default width and loads the referenced resource.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-modal-default
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Modal Default
+    type: default
+    shape: round
+    size: middle
+    clickActionId: open-modal-default
+    actions:
+      openModal:
+        - id: open-modal-default
+          type: openModal
+          resourceRefId: example-yamlviewer-simple-json
+          title: Default Modal Example
+          loading:
+            display: true
+          size: default
+  resourcesRefs:
+    items:
+      - id: example-yamlviewer-simple-json
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-yamlviewer-simple-json
+        namespace: krateo-system
+        resource: yamlviewers
+        verb: GET
+---
+# Case 17: openModal - custom width
+# Target: confirm that a modal can be displayed with a custom width,
+# ensuring that custom sizing rules are correctly applied by the system.
+# Expected behavior: when triggered, no confirmation is required;
+# the modal expands to the defined custom width and shows the referenced resource.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-modal-custom
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Modal Custom Width
+    color: purple
+    type: default
+    shape: round
+    size: middle
+    clickActionId: open-modal-custom
+    actions:
+      openModal:
+        - id: open-modal-custom
+          type: openModal
+          resourceRefId: example-yamlviewer-simple-json
+          title: Custom Width Modal Example
+          size: custom
+          customWidth: 80%
+          loading:
+            display: false
+  resourcesRefs:
+    items:
+      - id: example-yamlviewer-simple-json
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-yamlviewer-simple-json
+        namespace: krateo-system
+        resource: yamlviewers
+        verb: GET
+---
+# Case 18: openModal - fullscreen mode
+# Target: verify that a modal can occupy the full viewport width when configured in fullscreen mode,
+# confirming proper rendering and interaction across the available space.
+# Expected behavior: the modal opens instantly and expands to fill the entire screen.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-open-modal-fullscreen
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Modal Fullscreen
+    type: default
+    shape: round
+    size: middle
+    clickActionId: open-modal-fullscreen
+    actions:
+      openModal:
+        - id: open-modal-fullscreen
+          type: openModal
+          resourceRefId: example-yamlviewer-simple-json
+          title: Fullscreen Modal Example
+          size: fullscreen
+          loading:
+            display: false
+  resourcesRefs:
+    items:
+      - id: example-yamlviewer-simple-json
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-yamlviewer-simple-json
+        namespace: krateo-system
+        resource: yamlviewers
+        verb: GET
