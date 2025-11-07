@@ -1,5 +1,5 @@
 import type { TabsProps } from 'antd'
-import { Tabs } from 'antd'
+import { Empty, Result, Tabs } from 'antd'
 import { useMemo } from 'react'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
@@ -17,13 +17,19 @@ const TabList = ({ resourcesRefs, uid, widgetData }: WidgetProps<TabListWidgetDa
   const tabItems = useMemo(() => {
     return items.reduce<NonNullable<TabsProps['items']>>((acc, { label, resourceRefId, title }, index) => {
       const endpoint = getEndpointUrl(resourceRefId, resourcesRefs)
-      if (!endpoint) { return acc }
 
       acc.push({
         children: (
           <div className={styles.container}>
             {title && <div className={styles.title}>{title}</div>}
-            <WidgetRenderer widgetEndpoint={endpoint} />
+            {endpoint
+              ? <WidgetRenderer widgetEndpoint={endpoint} />
+              : <Result
+                status='error'
+                subTitle={`The tab references an invalid resource with resourceRefId: ${resourceRefId}`}
+                title={'Error while rendering tab'}
+              />
+            }
           </div>
         ),
         key: `${uid}-${index}`,
@@ -33,6 +39,10 @@ const TabList = ({ resourcesRefs, uid, widgetData }: WidgetProps<TabListWidgetDa
       return acc
     }, [])
   }, [items, resourcesRefs, uid])
+
+  if (!items.length) {
+    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+  }
 
   return <Tabs items={tabItems} key={uid} />
 }
