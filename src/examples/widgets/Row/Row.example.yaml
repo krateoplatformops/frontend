@@ -130,7 +130,7 @@ spec:
 kind: Row
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-row-alignment
+  name: example-row-cells-alignment
   namespace: krateo-system
 spec:
   widgetData:
@@ -168,7 +168,6 @@ spec:
     clickActionId: action-1
   resourcesRefs:
     items: []
-
 ---
 # Case 7: Nested composition
 # Target: confirm that a row can contain a more complex child layout, such as a panel or another layout widget.
@@ -210,6 +209,7 @@ spec:
         size: 12
       - resourceRefId: example-piechart-full-fill
         size: 6
+        alignment: center
       - resourceRefId: example-row-responsive-button
         size: 6
         alignment: center
@@ -226,6 +226,37 @@ spec:
         name: example-piechart-full-fill
         namespace: krateo-system
         resource: piecharts
+        verb: GET
+      - id: example-row-responsive-button
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-row-responsive-button
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+# Case 9: Alignment within row
+# Target: verify horizontal alignment when alignment is specified for the entire row.
+# Expected behavior: elements are positioned accordinly to the 'top' specified alignment.
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-row-alignment
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources: [tables, buttons]
+    alignment: top
+    items:
+      - resourceRefId: example-table-basic
+      - resourceRefId: example-row-responsive-button
+        alignment: center
+  resourcesRefs:
+    items:
+      - id: example-table-basic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-basic
+        namespace: krateo-system
+        resource: tables
         verb: GET
       - id: example-row-responsive-button
         apiVersion: widgets.templates.krateo.io/v1beta1

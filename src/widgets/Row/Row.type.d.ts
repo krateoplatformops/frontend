@@ -35,6 +35,10 @@ export interface Row {
         | 'yamlviewers'
       )[]
       /**
+       * the alignment of the element inside the row. Default is 'center'
+       */
+      alignment?: 'bottom' | 'center' | 'top'
+      /**
        * the items of the row
        */
       items: {

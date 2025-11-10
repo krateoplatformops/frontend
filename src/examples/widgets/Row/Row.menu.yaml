@@ -51,9 +51,10 @@ spec:
       - resourceRefId: example-row-single-panel
       - resourceRefId: example-row-even-split-panel
       - resourceRefId: example-row-custom-sizes-panel
-      - resourceRefId: example-row-alignment-panel
+      - resourceRefId: example-row-cells-alignment-panel
       - resourceRefId: example-row-nested-panel
       - resourceRefId: example-row-responsive-panel
+      - resourceRefId: example-row-alignment-panel
   resourcesRefs:
     items:
       - id: example-row-empty-panel
@@ -86,9 +87,9 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET  
-      - id: example-row-alignment-panel
+      - id: example-row-cells-alignment-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-row-alignment-panel
+        name: example-row-cells-alignment-panel
         namespace: krateo-system
         resource: panels
         verb: GET    
@@ -101,6 +102,12 @@ spec:
       - id: example-row-responsive-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-row-responsive-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-row-alignment-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-row-alignment-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -208,19 +215,19 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-row-alignment-panel
+  name: example-row-cells-alignment-panel
   namespace: krateo-system
 spec:
   widgetData:
     actions: {}
     title: 'Case 6: Alignment within cells'
     items:
-      - resourceRefId: example-row-alignment
+      - resourceRefId: example-row-cells-alignment
   resourcesRefs:
     items:
-      - id: example-row-alignment
+      - id: example-row-cells-alignment
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-row-alignment
+        name: example-row-cells-alignment
         namespace: krateo-system
         resource: rows
         verb: GET 
@@ -261,6 +268,26 @@ spec:
       - id: example-row-responsive
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-row-responsive
+        namespace: krateo-system
+        resource: rows
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-row-alignment-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 9: Alignment within row'
+    items:
+      - resourceRefId: example-row-alignment
+  resourcesRefs:
+    items:
+      - id: example-row-alignment
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-row-alignment
         namespace: krateo-system
         resource: rows
         verb: GET 
