@@ -46,6 +46,11 @@
                 ]
               }
             },
+            "alignment": {
+              "type": "string",
+              "description": "the alignment of the element inside the row. Default is 'center'",
+              "enum": ["bottom", "center", "top"]
+            },
             "items": {
               "description": "the items of the row",
               "type": "array",
