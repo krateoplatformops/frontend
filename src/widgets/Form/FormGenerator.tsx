@@ -344,7 +344,7 @@ const FormGenerator = ({
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
             >
               {min && max && max - min < 100 ? (
-                <Slider max={max} min={min} step={1} />
+                <Slider className={styles.slider} max={max} min={min} step={1} />
               ) : (
                 <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
               )}

@@ -1,0 +1,487 @@
+# Case 1: Missing schema / stringSchema
+# Target: verify behaviour when neither `schema` nor `stringSchema` are provided.
+# Expected behavior: the form surface cannot be rendered and an error state is produced
+# explaining that a schema is required to build the fields.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-missing-schema
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-minimal
+    actions:
+      rest:
+        - id: submit-minimal
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: dummy-submit
+        namespace: krateo-system
+        resource: dummy
+        verb: POST
+---
+# Case 2: Basic string fields (required)
+# Target: validate simple string inputs and required field enforcement.
+# Expected behavior: form exposes text inputs for "name" and "image"; submission blocked until required fields are filled.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-basic-strings
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          },
+          "image": {
+            "type": "string",
+            "title": "Container Image",
+            "description": "Full image path (e.g., ghcr.io/org/image:tag)"
+          }
+        },
+        "required": ["name"]
+      }
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-basic
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 3: String field with enum (4 values or less) (renders as radio group)
+# Target: ensure enum with few options renders compact controls (radios).
+# Expected behavior: a small set of choices is rendered as radio buttons and is selectable.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-enum-small
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-enum
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "title": "Strategy",
+            "enum": ["rolling", "recreate", "blue-green"],
+            "description": "Deployment strategy"
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-enum
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-enum
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 4: String field with enum (more than 4 values) (multi-option select)
+# Target: verify that string fields with multiple enum options are rendered as dropdown selectors.
+# Expected behavior: the form displays a select input with exactly three or more available options;
+# selecting one updates the underlying field value.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-string-enum
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-string-enum
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "enum": ["us-east-1", "eu-central-1", "ap-south-1", "sa-east-1", "eu-east-1"]
+          }
+        },
+        "required": ["region"]
+      }
+    actions:
+      rest:
+        - id: submit-string-enum
+          type: rest
+          resourceRefId: resource-string-enum
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-string-enum
+        apiVersion: composition.krateo.io/v1
+        name: resource-string-enum
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 5: Boolean field default value
+# Target: ensure boolean fields initialize correctly and render as toggles.
+# Expected behavior: "enableMetrics" shows a switch, defaulting to the provided boolean.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-boolean
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-boolean
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "enableMetrics": {
+            "type": "boolean",
+            "title": "Enable Metrics",
+            "default": true
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-boolean
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-boolean
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 6: Integer field (basic number input)
+# Target: validate integer-type fields that are rendered as numeric input controls (not sliders).
+# Expected behavior: renders an input box restricted to numeric characters; no slider or range widget.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-integer-basic
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-integer-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "replicas": {
+            "type": "integer",
+            "title": "Number of Replicas",
+            "default": 3
+          }
+        },
+        "required": ["replicas"]
+      }
+    actions:
+      rest:
+        - id: submit-integer-basic
+          type: rest
+          resourceRefId: resource-integer-basic
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-integer-basic
+        apiVersion: composition.krateo.io/v1
+        name: resource-integer-basic
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+
+---
+# Case 7: Integer field with small range (renders slider)
+# Target: confirm integer fields with small bounded ranges become slider controls.
+# Expected behavior: "replicas" shows a slider when (max - min) < 100; otherwise numeric input.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-integer-slider
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-integer
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "replicas": {
+            "type": "integer",
+            "title": "Number of Replicas",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 1
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-integer
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-integer
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 8: Array of strings (editable list)
+# Target: validate list-of-strings fields (tags, labels) are editable as an array editor.
+# Expected behavior: field accepts multiple string entries and serializes them to array.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-array-strings
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-tags
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "title": "Tags",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-tags
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-tags
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 9: Array of objects (object list editor)
+# Target: validate object-list fields that expose sub-fields for each array item.
+# Expected behavior: editor allows adding/removing objects with configured display field and nested inputs.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-array-object
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-objects
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "env": {
+            "type": "array",
+            "title": "Environment Variables",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "title": "Key" },
+                "value": { "type": "string", "title": "Value" }
+              },
+              "required": ["name","value"]
+            }
+          }
+        }
+      }
+    objectFields:
+      - path: env
+        displayField: name
+    actions:
+      rest:
+        - id: submit-objects
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-objects
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 10: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)
+# Target: full integration smoke-test: multiple field types, defaults and optional fields.
+# Expected behavior: form renders a combination of controls, initializes defaults, and exposes optional-field toggle if present.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-complex-mix
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-complex
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "title": "Name" },
+          "image": { "type": "string", "title": "Image" },
+          "strategy": { "type": "string", "title": "Strategy", "enum": ["rolling","recreate","blue-green"] },
+          "enableMetrics": { "type": "boolean", "title": "Enable Metrics", "default": false },
+          "replicas": { "type": "integer", "title": "Replicas", "minimum": 1, "maximum": 200, "default": 3 },
+          "tags": { "type": "array", "title": "Tags", "items": { "type": "string" } },
+          "env": {
+            "type": "array",
+            "title": "Environment Variables",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        },
+        "required": ["name","image"]
+      }
+    autocomplete:
+      - name: strategy
+        resourceRefId: getStrategies
+        extra:
+          key: strategyKey
+    objectFields:
+      - path: env
+        displayField: name
+    actions:
+      rest:
+        - id: submit-complex
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-complex
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+      - id: getStrategies
+        apiVersion: composition.krateo.io/v1
+        name: getStrategies
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+---
+# Case 11: Schema object (alphabetically ordered fields)
+# Target: validate rendering from a raw JSON object (`schema` instead of `stringSchema`).
+# Expected behavior: field order will be alphabetically ordered.
+# This case contrasts with `stringSchema`, which preserves field order as declared in the serialized string.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-ordered-schema
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-ordered
+    schema:
+      type: object
+      properties:
+        replicas:
+          type: integer
+          title: Number of Replicas
+          minimum: 1
+          maximum: 10
+          default: 2
+        enableMetrics:
+          type: boolean
+          title: Enable Metrics
+          default: true
+        image:
+          type: string
+          title: Container Image
+        name:
+          type: string
+          title: Application Name
+      required:
+        - name
+        - image
+    actions:
+      rest:
+        - id: submit-ordered
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-ordered
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 12: Form displayed inside Drawer (triggered by Button)
+# Target: validate integration of a Form inside a Drawer opened through a Button action.
+# Expected behavior: clicking the button opens a Drawer containing the Form; the Form renders correctly, with the submit button and required validations available within the Drawer context.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-button-open-drawer
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Drawer with Form
+    type: primary
+    clickActionId: open-drawer-form
+    actions:
+      openDrawer:
+        - id: open-drawer-form
+          type: openDrawer
+          resourceRefId: example-form-complex-mix
+          size: large
+          title: Drawer Form Example
+  resourcesRefs:
+    items:
+      - id: example-form-complex-mix
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-complex-mix
+        namespace: krateo-system
+        resource: forms
+        verb: GET

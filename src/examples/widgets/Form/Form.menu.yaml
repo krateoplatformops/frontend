@@ -1,0 +1,578 @@
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-navmenuitem
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - pages
+    resourceRefId: example-form-page
+    label: Form
+    icon: fa-rectangle-list
+    path: /form
+  resourcesRefs:
+    items:
+      - id: example-form-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - barcharts
+      - buttons
+      - buttons
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
+    items:
+      - resourceRefId: example-form-missing-schema-panel
+      - resourceRefId: example-form-basic-strings-panel
+      - resourceRefId: example-form-enum-small-panel
+      - resourceRefId: example-form-enum-string-panel
+      - resourceRefId: example-form-boolean-panel
+      - resourceRefId: example-form-integer-basic-panel
+      - resourceRefId: example-form-integer-slider-panel
+      - resourceRefId: example-form-array-strings-panel
+      - resourceRefId: example-form-array-object-panel
+      - resourceRefId: example-form-complex-mix-panel
+      - resourceRefId: example-form-ordered-schema-panel
+      - resourceRefId: example-form-button-open-drawer-panel
+      # - resourceRefId: example-form-navigate-confirm-panel
+      # - resourceRefId: example-form-navigate-loading-panel
+      # - resourceRefId: example-form-open-drawer-default-panel
+      # - resourceRefId: example-form-open-drawer-large-panel
+      # - resourceRefId: example-form-open-modal-default-panel
+      # - resourceRefId: example-form-open-modal-large-panel
+      # - resourceRefId: example-form-open-modal-custom-panel
+      # - resourceRefId: example-form-open-modal-fullscreen-panel
+  resourcesRefs:
+    items:
+      - id: example-form-missing-schema-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-missing-schema-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-basic-strings-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-basic-strings-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-enum-small-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-enum-small-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-enum-string-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-enum-string-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-boolean-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-boolean-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-integer-basic-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-integer-basic-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET    
+      - id: example-form-integer-slider-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-integer-slider-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET  
+      - id: example-form-array-strings-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-array-strings-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET    
+      - id: example-form-array-object-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-array-object-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-complex-mix-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-complex-mix-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-ordered-schema-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-ordered-schema-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-button-open-drawer-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-button-open-drawer-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      # - id: example-form-open-drawer-default-panel
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: example-form-open-drawer-default-panel
+      #   namespace: krateo-system
+      #   resource: panels
+      #   verb: GET 
+      # - id: example-form-open-drawer-large-panel
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: example-form-open-drawer-large-panel
+      #   namespace: krateo-system
+      #   resource: panels
+      #   verb: GET 
+      # - id: example-form-open-modal-default-panel
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: example-form-open-modal-default-panel
+      #   namespace: krateo-system
+      #   resource: panels
+      #   verb: GET
+      # - id: example-form-open-modal-large-panel
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: example-form-open-modal-large-panel
+      #   namespace: krateo-system
+      #   resource: panels
+      #   verb: GET
+      # - id: example-form-open-modal-custom-panel
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: example-form-open-modal-custom-panel
+      #   namespace: krateo-system
+      #   resource: panels
+      #   verb: GET
+      # - id: example-form-open-modal-fullscreen-panel
+      #   apiVersion: widgets.templates.krateo.io/v1beta1
+      #   name: example-form-open-modal-fullscreen-panel
+      #   namespace: krateo-system
+      #   resource: panels
+      #   verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-missing-schema-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 1: Missing schema / stringSchema'
+    items:
+      - resourceRefId: example-form-missing-schema
+  resourcesRefs:
+    items:
+      - id: example-form-missing-schema
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-missing-schema
+        namespace: krateo-system
+        resource: forms
+        verb: GET  
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-basic-strings-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 2: Basic string fields (required)'
+    items:
+      - resourceRefId: example-form-basic-strings
+  resourcesRefs:
+    items:
+      - id: example-form-basic-strings
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-basic-strings
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-enum-small-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 3: String field with enum (4 values or less) (renders as radio group)'
+    items:
+      - resourceRefId: example-form-enum-small
+  resourcesRefs:
+    items:
+      - id: example-form-enum-small
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-enum-small
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-enum-string-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 4: String field with enum (more than 4 values) (multi-option select)'
+    items:
+      - resourceRefId: example-form-string-enum
+  resourcesRefs:
+    items:
+      - id: example-form-string-enum
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-string-enum
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-boolean-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 5: Boolean field default value'
+    items:
+      - resourceRefId: example-form-boolean
+  resourcesRefs:
+    items:
+      - id: example-form-boolean
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-boolean
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-integer-basic-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 6: Integer field (basic number input)'
+    items:
+      - resourceRefId: example-form-integer-basic
+  resourcesRefs:
+    items:
+      - id: example-form-integer-basic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-integer-basic
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-integer-slider-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 7: Integer field with small range (renders slider)'
+    items:
+      - resourceRefId: example-form-integer-slider
+  resourcesRefs:
+    items:
+      - id: example-form-integer-slider
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-integer-slider
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-array-strings-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 8: Array of strings (editable list)'
+    items:
+      - resourceRefId: example-form-array-strings
+  resourcesRefs:
+    items:
+      - id: example-form-array-strings
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-array-strings
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-array-object-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 9: Array of objects (object list editor)'
+    items:
+      - resourceRefId: example-form-array-object
+  resourcesRefs:
+    items:
+      - id: example-form-array-object
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-array-object
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-complex-mix-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 10: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)'
+    items:
+      - resourceRefId: example-form-complex-mix
+  resourcesRefs:
+    items:
+      - id: example-form-complex-mix
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-complex-mix
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-ordered-schema-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 11: Schema object (alphabetically ordered fields)'
+    items:
+      - resourceRefId: example-form-ordered-schema
+  resourcesRefs:
+    items:
+      - id: example-form-ordered-schema
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-ordered-schema
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-button-open-drawer-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 12: Form displayed inside Drawer (triggered by Button)'
+    items:
+      - resourceRefId: example-form-button-open-drawer
+  resourcesRefs:
+    items:
+      - id: example-form-button-open-drawer
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-button-open-drawer
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-navigate-confirm-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 12: navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)'
+#     items:
+#       - resourceRefId: example-form-navigate-confirm
+#   resourcesRefs:
+#     items:
+#       - id: example-form-navigate-confirm
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-navigate-confirm
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET 
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-navigate-loading-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 13: navigate action - Navigation with loading indicator'
+#     items:
+#       - resourceRefId: example-form-navigate-loading
+#   resourcesRefs:
+#     items:
+#       - id: example-form-navigate-loading
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-navigate-loading
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-open-drawer-default-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 14: openDrawer - default size'
+#     items:
+#       - resourceRefId: example-form-open-drawer-default
+#   resourcesRefs:
+#     items:
+#       - id: example-form-open-drawer-default
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-open-drawer-default
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET 
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-open-drawer-large-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 15: openDrawer - large size'
+#     items:
+#       - resourceRefId: example-form-open-drawer-large
+#   resourcesRefs:
+#     items:
+#       - id: example-form-open-drawer-large
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-open-drawer-large
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET 
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-open-modal-default-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 16: openModal - default size'
+#     items:
+#       - resourceRefId: example-form-open-modal-default
+#   resourcesRefs:
+#     items:
+#       - id: example-form-open-modal-default
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-open-modal-default
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-open-modal-large-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 17: openModal - large size'
+#     items:
+#       - resourceRefId: example-form-open-modal-large
+#   resourcesRefs:
+#     items:
+#       - id: example-form-open-modal-large
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-open-modal-large
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-open-modal-custom-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 18: openModal - custom width'
+#     items:
+#       - resourceRefId: example-form-open-modal-custom
+#   resourcesRefs:
+#     items:
+#       - id: example-form-open-modal-custom
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-open-modal-custom
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET
+# ---
+# kind: Panel
+# apiVersion: widgets.templates.krateo.io/v1beta1
+# metadata:
+#   name: example-form-open-modal-fullscreen-panel
+#   namespace: krateo-system
+# spec:
+#   widgetData:
+#     actions: {}
+#     title: 'Case 19: openModal - fullscreen mode'
+#     items:
+#       - resourceRefId: example-form-open-modal-fullscreen
+#   resourcesRefs:
+#     items:
+#       - id: example-form-open-modal-fullscreen
+#         apiVersion: widgets.templates.krateo.io/v1beta1
+#         name: example-form-open-modal-fullscreen
+#         namespace: krateo-system
+#         resource: forms
+#         verb: GET

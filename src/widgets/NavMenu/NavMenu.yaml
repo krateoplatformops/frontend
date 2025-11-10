@@ -374,7 +374,7 @@ spec:
     resourceRefId: form-page
     label: Form
     icon: fa-rectangle-list
-    path: /form
+    path: /form-test
     order: 50
 
   resourcesRefs:
