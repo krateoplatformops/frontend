@@ -1,4 +1,4 @@
-import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Drawer, Flex, Form, List, Popover, Tag, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -14,11 +14,21 @@ type ListObjectFieldsType = {
 const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit }: ListObjectFieldsType) => {
   const [open, setOpen] = useState<boolean>(false)
   const [list, setList] = useState<unknown[]>(data)
+  const [editIndex, setEditIndex] = useState<number | null>(null)
   const [form] = Form.useForm()
 
   useEffect(() => {
     setList(data)
   }, [data])
+
+  const onEdit = (index: number) => {
+    const item = list[index]
+    if (item && typeof item === 'object') {
+      form.setFieldsValue(item)
+      setEditIndex(index)
+      setOpen(true)
+    }
+  }
 
   const onRemove = (index: number) => {
     const newList = list.filter((_, i) => i !== index)
@@ -28,7 +38,6 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
 
   const getValue = (item: unknown, index: number): React.ReactNode => {
     if (!displayField || displayField === '') {
-      // show default label
       return `object item #${index + 1}`
     }
 
@@ -36,8 +45,13 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
       if (acc && typeof acc === 'object' && key in acc) {
         const label = (acc as Record<string, unknown>)[key]
         if (label !== undefined && label !== null) { return label }
-        // warning: label is not found
-        return <Flex align='center' gap={5}><FontAwesomeIcon color='orange' icon='triangle-exclamation' /><Typography.Text>object item #{index + 1}</Typography.Text></Flex>
+
+        return (
+          <Flex align='center' gap={5}>
+            <FontAwesomeIcon color='orange' icon='triangle-exclamation' />
+            <Typography.Text>object item #{index + 1}</Typography.Text>
+          </Flex>
+        )
       }
       return undefined
     }, item) as React.ReactNode
@@ -49,7 +63,7 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
         getPopoverContent(value, path ? `${path}.${key}` : key)
       )
     }
-    return [<div><strong>{path}</strong>: { typeof obj === 'string' ? obj : String(obj) }</div>]
+    return [<div key={path}><strong>{path}</strong>: { typeof obj === 'string' ? obj : String(obj) }</div>]
   }
 
   return (
@@ -57,30 +71,39 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
       <List
         dataSource={list}
         footer={
-          <Button onClick={() => setOpen(true)} type='primary'>
-            <PlusCircleOutlined /> add element
+          <Button
+            onClick={() => {
+              setEditIndex(null)
+              form.resetFields()
+              setOpen(true)
+            }}
+            type='primary'
+          >
+            <PlusCircleOutlined /> Add element
           </Button>
         }
         renderItem={(item, index) => (
-          <List.Item actions={[<Button icon={<DeleteOutlined />} onClick={() => onRemove(index)} shape='circle' type='text' />]} key={index}>
+          <List.Item
+            actions={[
+              <Button icon={<EditOutlined />} key='edit' onClick={() => onEdit(index)} shape='circle' type='text' />,
+              <Button icon={<DeleteOutlined />} key='delete' onClick={() => onRemove(index)} shape='circle' type='text' />,
+            ]}
+            key={index}
+          >
             {(typeof item === 'object' && item !== null)
               ? (
-                <Popover content={
-                  <div>
-                    {getPopoverContent(item)}
-                  </div>
-                }>
-                  <Tag>{ getValue(item, index) }</Tag>
+                <Popover content={<div>{getPopoverContent(item)}</div>}>
+                  <Tag>{getValue(item, index)}</Tag>
                 </Popover>
               )
-              : null}
+              : null
+            }
           </List.Item>
         )}
       />
 
       <Drawer
         closable={false}
-        destroyOnHidden
         extra={
           <Button onClick={() => form.submit()} type='primary'>
             Submit
@@ -90,7 +113,7 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
         onClose={() => setOpen(false)}
         open={open}
         style={{ position: 'absolute' }}
-        title='Add element'
+        title={editIndex !== null ? 'Edit element' : 'Add element'}
       >
         <Form
           autoComplete='off'
@@ -98,10 +121,17 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
           layout='vertical'
           name='formObjects'
           onFinish={(values) => {
-            const newList = [...list, values]
-            onSubmit(newList)
-            setList(newList)
+            let newList
+            if (editIndex !== null) {
+              newList = list.map((item, index) => (index === editIndex ? values as unknown[] : item))
+            } else {
+              newList = [...list, values]
+            }
+
+            onSubmit(newList as unknown[])
+            setList(newList as unknown[])
             setOpen(false)
+            setEditIndex(null)
             form.resetFields()
           }}
         >
