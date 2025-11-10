@@ -121,15 +121,12 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
           layout='vertical'
           name='formObjects'
           onFinish={(values) => {
-            let newList
-            if (editIndex !== null) {
-              newList = list.map((item, index) => (index === editIndex ? values as unknown[] : item))
-            } else {
-              newList = [...list, values]
-            }
+            const newList: unknown[] = editIndex !== null
+              ? list.map((item, index) => (index === editIndex ? values as unknown[] : item))
+              : [...list, values]
 
-            onSubmit(newList as unknown[])
-            setList(newList as unknown[])
+            onSubmit(newList)
+            setList(newList)
             setOpen(false)
             setEditIndex(null)
             form.resetFields()
