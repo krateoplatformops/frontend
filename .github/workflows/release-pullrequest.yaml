@@ -49,13 +49,13 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Install krateoctl v0.6.3
+      - name: Install krateoctl v0.8.5
         run: |
           set -e
 
           REPO="krateoplatformops/krateoctl"
           BINARY="krateoctl"
-          FIXED_TAG="v0.6.3"
+          FIXED_TAG="v0.8.5"
           VERSION="${FIXED_TAG#v}"
 
           # Detect OS
