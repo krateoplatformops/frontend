@@ -299,6 +299,7 @@ const FormGenerator = ({
                     onSubmit={(values) => {
                       form.setFieldValue(name.split('.'), values)
                     }}
+                    schema={node.items}
                   />
                 </Form.Item>
               </div>
