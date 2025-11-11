@@ -1,7 +1,12 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Drawer, Flex, Form, List, Popover, Tag, Typography } from 'antd'
+import type { JSONSchema4 } from 'json-schema'
 import React, { useEffect, useState } from 'react'
+
+import { getDefaultsFromSchema } from '../../widgets/Form/utils'
+
+import styles from './ListObjectFields.module.css'
 
 type ListObjectFieldsType = {
   container: HTMLElement
@@ -9,9 +14,10 @@ type ListObjectFieldsType = {
   fields: React.ReactNode[]
   displayField: string
   onSubmit: (data: unknown[]) => void
+  schema: JSONSchema4
 }
 
-const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit }: ListObjectFieldsType) => {
+const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit, schema }: ListObjectFieldsType) => {
   const [open, setOpen] = useState<boolean>(false)
   const [list, setList] = useState<unknown[]>(data)
   const [editIndex, setEditIndex] = useState<number | null>(null)
@@ -20,6 +26,16 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
   useEffect(() => {
     setList(data)
   }, [data])
+
+  const onAdd = () => {
+    setEditIndex(null)
+    form.resetFields()
+
+    const defaultValues = getDefaultsFromSchema(schema)
+    form.setFieldsValue(defaultValues)
+
+    setOpen(true)
+  }
 
   const onEdit = (index: number) => {
     const item = list[index]
@@ -67,21 +83,15 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
   }
 
   return (
-    <div>
+    <div className={styles.listObjectFields}>
       <List
         dataSource={list}
         footer={
-          <Button
-            onClick={() => {
-              setEditIndex(null)
-              form.resetFields()
-              setOpen(true)
-            }}
-            type='primary'
-          >
+          <Button onClick={onAdd} type='primary'>
             <PlusCircleOutlined /> Add element
           </Button>
         }
+        locale={{ emptyText: <></> }}
         renderItem={(item, index) => (
           <List.Item
             actions={[
