@@ -58,10 +58,8 @@ spec:
       - resourceRefId: example-form-complex-mix-panel
       - resourceRefId: example-form-ordered-schema-panel
       - resourceRefId: example-form-button-open-drawer-panel
-      # - resourceRefId: example-form-navigate-confirm-panel
-      # - resourceRefId: example-form-navigate-loading-panel
-      # - resourceRefId: example-form-open-drawer-default-panel
-      # - resourceRefId: example-form-open-drawer-large-panel
+      - resourceRefId: example-form-autocomplete-static-panel
+      - resourceRefId: example-form-autocomplete-panel
       # - resourceRefId: example-form-open-modal-default-panel
       # - resourceRefId: example-form-open-modal-large-panel
       # - resourceRefId: example-form-open-modal-custom-panel
@@ -140,18 +138,18 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET 
-      # - id: example-form-open-drawer-default-panel
-      #   apiVersion: widgets.templates.krateo.io/v1beta1
-      #   name: example-form-open-drawer-default-panel
-      #   namespace: krateo-system
-      #   resource: panels
-      #   verb: GET 
-      # - id: example-form-open-drawer-large-panel
-      #   apiVersion: widgets.templates.krateo.io/v1beta1
-      #   name: example-form-open-drawer-large-panel
-      #   namespace: krateo-system
-      #   resource: panels
-      #   verb: GET 
+      - id: example-form-autocomplete-static-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete-static-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-autocomplete-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
       # - id: example-form-open-modal-default-panel
       #   apiVersion: widgets.templates.krateo.io/v1beta1
       #   name: example-form-open-modal-default-panel
@@ -416,86 +414,46 @@ spec:
         namespace: krateo-system
         resource: buttons
         verb: GET 
-# ---
-# kind: Panel
-# apiVersion: widgets.templates.krateo.io/v1beta1
-# metadata:
-#   name: example-form-navigate-confirm-panel
-#   namespace: krateo-system
-# spec:
-#   widgetData:
-#     actions: {}
-#     title: 'Case 12: navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)'
-#     items:
-#       - resourceRefId: example-form-navigate-confirm
-#   resourcesRefs:
-#     items:
-#       - id: example-form-navigate-confirm
-#         apiVersion: widgets.templates.krateo.io/v1beta1
-#         name: example-form-navigate-confirm
-#         namespace: krateo-system
-#         resource: forms
-#         verb: GET 
-# ---
-# kind: Panel
-# apiVersion: widgets.templates.krateo.io/v1beta1
-# metadata:
-#   name: example-form-navigate-loading-panel
-#   namespace: krateo-system
-# spec:
-#   widgetData:
-#     actions: {}
-#     title: 'Case 13: navigate action - Navigation with loading indicator'
-#     items:
-#       - resourceRefId: example-form-navigate-loading
-#   resourcesRefs:
-#     items:
-#       - id: example-form-navigate-loading
-#         apiVersion: widgets.templates.krateo.io/v1beta1
-#         name: example-form-navigate-loading
-#         namespace: krateo-system
-#         resource: forms
-#         verb: GET
-# ---
-# kind: Panel
-# apiVersion: widgets.templates.krateo.io/v1beta1
-# metadata:
-#   name: example-form-open-drawer-default-panel
-#   namespace: krateo-system
-# spec:
-#   widgetData:
-#     actions: {}
-#     title: 'Case 14: openDrawer - default size'
-#     items:
-#       - resourceRefId: example-form-open-drawer-default
-#   resourcesRefs:
-#     items:
-#       - id: example-form-open-drawer-default
-#         apiVersion: widgets.templates.krateo.io/v1beta1
-#         name: example-form-open-drawer-default
-#         namespace: krateo-system
-#         resource: forms
-#         verb: GET 
-# ---
-# kind: Panel
-# apiVersion: widgets.templates.krateo.io/v1beta1
-# metadata:
-#   name: example-form-open-drawer-large-panel
-#   namespace: krateo-system
-# spec:
-#   widgetData:
-#     actions: {}
-#     title: 'Case 15: openDrawer - large size'
-#     items:
-#       - resourceRefId: example-form-open-drawer-large
-#   resourcesRefs:
-#     items:
-#       - id: example-form-open-drawer-large
-#         apiVersion: widgets.templates.krateo.io/v1beta1
-#         name: example-form-open-drawer-large
-#         namespace: krateo-system
-#         resource: forms
-#         verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-static-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 13: Autocomplete field (static values)'
+    items:
+      - resourceRefId: example-form-autocomplete-static
+  resourcesRefs:
+    items:
+      - id: example-form-autocomplete-static
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete-static
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 14: Autocomplete field (values retrieved from RESTACtion)'
+    items:
+      - resourceRefId: example-form-autocomplete
+  resourcesRefs:
+    items:
+      - id: example-form-autocomplete
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
 # ---
 # kind: Panel
 # apiVersion: widgets.templates.krateo.io/v1beta1

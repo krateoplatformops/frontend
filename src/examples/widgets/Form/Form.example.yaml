@@ -381,9 +381,6 @@ spec:
       }
     autocomplete:
       - name: strategy
-        resourceRefId: getStrategies
-        extra:
-          key: strategyKey
     objectFields:
       - path: env
         displayField: name
@@ -485,3 +482,114 @@ spec:
         namespace: krateo-system
         resource: forms
         verb: GET
+---
+# Case 13: Autocomplete field (static values)
+# Target: validate autocomplete fields that display a list of static values
+# Expected behavior: a 'Start typing...' message is displayed on a select
+# and typing triggers the displaying of values
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-static
+  namespace: krateo-system
+spec:
+  widgetData:
+    autocomplete:
+      - name: strategy
+    submitActionId: submit-autocomplete-static
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "strategy": { "type": "string", "title": "Strategy", "enum": ["rolling","recreate","blue-green"] }
+        },
+        "required": ["strategy"]
+      }
+    actions:
+      rest:
+        - id: submit-autocomplete-static
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-autocomplete-static
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 14: Autocomplete field (values retrieved from RESTAction)
+# Target: validate autocomplete fields that display a list of static values
+# Expected behavior: a 'Start typing...' message is displayed on a select
+# and typing triggers a call to a RESTACtion that retrieves the values
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete
+  namespace: krateo-system
+spec:
+  widgetData:
+    autocomplete:
+      - name: city
+        extra:
+          key: cityName
+        resourceRefId: get-cities
+    submitActionId: submit-autocomplete
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "city": { "type": "string", "title": "City" }
+        },
+        "required": ["city"]
+      }
+    actions:
+      rest:
+        - id: submit-autocomplete
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-autocomplete
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+      - id: get-cities
+        apiVersion: composition.krateo.io/v1
+        name: get-cities
+        namespace: krateo-system
+        resource: restactions
+        verb: POST
+
+---
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: RESTAction
+metadata:
+  name: get-cities
+  namespace: krateo-system
+spec:
+  api:
+  - headers:
+    - 'Accept: application/json'
+    name: getCities
+    path: ${ "/cities?name=" + (.cityName) }
+    verb: GET
+    filter: "[ .getCities[] | { label: .name, value: .name } ]"
+    endpointRef:
+      name: get-cities-endpoint
+      namespace: krateo-system
+  filter: .getCities
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: get-cities-endpoint
+  namespace: krateo-system
+stringData:
+  server-url: https://test.com
