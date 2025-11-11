@@ -429,10 +429,7 @@ const FormGenerator = ({
     <div className={styles.formGenerator}>
       <div className={styles.anchorWrapper}>
         <Row className={styles.anchorRow}>
-          <Col
-            className={`${styles.formWrapper} ${hasOptionalFields ? styles.hasOptionalFields : ''}`}
-            span={showFormStructure ? 12 : 24}
-          >
+          <Col className={styles.formWrapper} span={showFormStructure ? 16 : 24}>
             <div className={styles.form} id='anchor-content'>
               {
                 hasOptionalFields && (
@@ -469,7 +466,7 @@ const FormGenerator = ({
           </Col>
 
           {showFormStructure && (
-            <Col className={styles.anchorLabelWrapper} span={12}>
+            <Col className={styles.anchorLabelWrapper} span={8}>
               <Anchor
                 affix={false}
                 getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
