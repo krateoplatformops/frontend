@@ -9,7 +9,7 @@
     max-width: 100%;
     min-width: 0;
     overflow: hidden;
-    padding: 0 !important; 
+    padding: 0;
   }
 
   /* Sets same height to Row children */

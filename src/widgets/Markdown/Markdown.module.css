@@ -1,7 +1,10 @@
 .markdown {
   overflow-wrap: break-word;    
   overflow-x: hidden;
-  white-space: pre-wrap;   
+
+  > *:first-child {
+    margin-top: 0;
+  }
   
   .actions {
     display: flex;
