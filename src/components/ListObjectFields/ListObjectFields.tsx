@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Drawer, Flex, Form, List, Popover, Tag, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 
+import styles from './ListObjectFields.module.css'
+
 type ListObjectFieldsType = {
   container: HTMLElement
   data?: unknown[]
@@ -67,7 +69,7 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
   }
 
   return (
-    <div>
+    <div className={styles.listObjectFields}>
       <List
         dataSource={list}
         footer={
@@ -82,6 +84,7 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
             <PlusCircleOutlined /> Add element
           </Button>
         }
+        locale={{ emptyText: <></> }}
         renderItem={(item, index) => (
           <List.Item
             actions={[
