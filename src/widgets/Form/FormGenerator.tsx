@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
+import type { FormInstance } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
 import type { DefaultOptionType } from 'antd/es/select'
@@ -69,8 +70,6 @@ const FormGenerator = ({
   const { optionalCount, totalCount } = getOptionalCount(schema, requiredFields)
 
   const hasOptionalFields = useMemo(() => optionalCount > 0 && optionalCount < totalCount, [optionalCount, totalCount])
-
-  type Field = ReturnType<typeof renderField>
 
   const setInitialValues = useCallback(() => {
     const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
@@ -149,28 +148,33 @@ const FormGenerator = ({
     )
   }
 
-  const parseData = ({ properties, required }: JSONSchema4, name: string[] = [], parentIsRequired: boolean = true): Field[] => {
+  const parseData = (
+    { properties, required }: JSONSchema4,
+    name: string[] = [],
+    parentIsRequired: boolean = true,
+    formInstance?: FormInstance,
+  ): React.ReactNode[] => {
+    const currentForm = formInstance ?? form
     if (properties) {
       const requiredFields = Array.isArray(required) ? required : []
-
       return Object.keys(properties).flatMap((key) => {
         const prop = properties[key]
         const currentPath = [...name, key]
-
         const isRequired = requiredFields.includes(key) && parentIsRequired
-
         if (prop.type === 'object' && prop.properties) {
-          return parseData(prop, currentPath, isRequired)
+          return parseData(prop, currentPath, isRequired, currentForm)
         }
 
-        return [renderField(prop.title || key, currentPath.join('.'), prop, isRequired)]
+        return [renderField(prop.title || key, currentPath.join('.'), prop, isRequired, currentForm)]
       })
     }
 
     return []
   }
 
-  const renderField = (label: string, name: string, node: JSONSchema4, required: boolean) => {
+  const renderField = (label: string, name: string, node: JSONSchema4, required: boolean, formInstance?: FormInstance) => {
+    const currentForm = formInstance ?? form
+
     if (Array.isArray(node.type)) {
       console.error(`type as array is not supported: ${node.type.join(',')} for field ${name}`)
       return null
@@ -194,7 +198,7 @@ const FormGenerator = ({
             const data = dependencies.find(field => field.name === name)
 
             if (data) {
-              return <AsyncSelect data={data} form={form} resourcesRefs={resourcesRefs} />
+              return <AsyncSelect data={data} form={currentForm} resourcesRefs={resourcesRefs} />
             }
           }
 
@@ -209,7 +213,7 @@ const FormGenerator = ({
             const data = autocomplete.find(field => field.name === name)
 
             if (data) {
-              return <AutoComplete data={data} form={form} options={options} resourcesRefs={resourcesRefs} />
+              return <AutoComplete data={data} form={currentForm} options={options} resourcesRefs={resourcesRefs} />
             }
           }
 
@@ -293,19 +297,18 @@ const FormGenerator = ({
                 >
                   <ListObjectFields
                     container={document.body}
-                    data={form.getFieldValue(name.split('.')) as unknown[] || []}
                     displayField={objFields.displayField}
-                    fields={parseData(node.items)}
-                    onSubmit={(values) => {
-                      form.setFieldValue(name.split('.'), values)
-                    }}
-                    schema={node.items}
+                    fields={(drawerForm: FormInstance) => parseData(node.items as JSONSchema4, [], true, drawerForm)}
+                    onChange={(values) => form.setFieldValue(name.split('.'), values)}
+                    schema={node.items as JSONSchema4}
+                    value={(form.getFieldValue(name.split('.')) as unknown[]) || []}
                   />
                 </Form.Item>
               </div>
             )
           }
         }
+
         // strings
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>

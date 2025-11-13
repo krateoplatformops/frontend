@@ -1,33 +1,43 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Button, Drawer, Flex, Form, List, Popover, Tag, Typography } from 'antd'
+import type { FormInstance } from 'antd'
+import { Button, Drawer, List, Popover, Tag, Typography, Form, Flex } from 'antd'
 import type { JSONSchema4 } from 'json-schema'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 
 import { getDefaultsFromSchema } from '../../widgets/Form/utils'
 
 import styles from './ListObjectFields.module.css'
 
-type ListObjectFieldsType = {
+type ListObjectFieldsProps = {
   container: HTMLElement
-  data?: unknown[]
-  fields: React.ReactNode[]
+  value?: unknown[]
+  onChange?: (values: unknown[]) => void
+  fields: React.ReactNode[] | ((formInstance: FormInstance) => React.ReactNode[])
   displayField: string
-  onSubmit: (data: unknown[]) => void
   schema: JSONSchema4
 }
 
-const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit, schema }: ListObjectFieldsType) => {
+const ListObjectFields = ({
+  container,
+  displayField,
+  fields,
+  onChange,
+  schema,
+  value = [],
+}: ListObjectFieldsProps) => {
   const [open, setOpen] = useState<boolean>(false)
-  const [list, setList] = useState<unknown[]>(data)
+  const [list, setList] = useState<unknown[]>(value)
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [form] = Form.useForm()
 
   useEffect(() => {
-    setList(data)
-  }, [data])
+    if (JSON.stringify(value) !== JSON.stringify(list)) {
+      setList(value)
+    }
+  }, [value, list])
 
-  const onAdd = () => {
+  const onAdd = useCallback(() => {
     setEditIndex(null)
     form.resetFields()
 
@@ -35,27 +45,37 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
     form.setFieldsValue(defaultValues)
 
     setOpen(true)
-  }
+  }, [form, schema])
 
-  const onEdit = (index: number) => {
+  const onEdit = useCallback((index: number) => {
     const item = list[index]
     if (item && typeof item === 'object') {
       form.setFieldsValue(item)
       setEditIndex(index)
       setOpen(true)
     }
-  }
+  }, [list, form])
 
-  const onRemove = (index: number) => {
+  const onRemove = useCallback((index: number) => {
     const newList = list.filter((_, i) => i !== index)
-    onSubmit(newList)
     setList(newList)
-  }
+    onChange?.(newList)
+  }, [list, onChange])
 
-  const getValue = (item: unknown, index: number): React.ReactNode => {
-    if (!displayField || displayField === '') {
-      return `object item #${index + 1}`
-    }
+  const onSubmit = useCallback((values: unknown) => {
+    const newList: unknown[] = editIndex !== null
+      ? list.map((item, index) => (index === editIndex ? values : item))
+      : [...list, values]
+
+    setList(newList)
+    onChange?.(newList)
+    setOpen(false)
+    setEditIndex(null)
+    form.resetFields()
+  }, [editIndex, list, onChange, form])
+
+  const getValue = useCallback((item: unknown, index: number): React.ReactNode => {
+    if (!displayField) { return `object item #${index + 1}` }
 
     return displayField.split('.').reduce<unknown>((acc, key) => {
       if (acc && typeof acc === 'object' && key in acc) {
@@ -71,16 +91,18 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
       }
       return undefined
     }, item) as React.ReactNode
-  }
+  }, [displayField])
 
-  const getPopoverContent = (obj: unknown, path: string = ''): React.ReactNode[] => {
+  const getPopoverContent = useCallback((obj: unknown, path: string = ''): React.ReactNode[] => {
     if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
       return Object.entries(obj as Record<string, unknown>).flatMap(([key, value]) =>
         getPopoverContent(value, path ? `${path}.${key}` : key)
       )
     }
-    return [<div key={path}><strong>{path}</strong>: { typeof obj === 'string' ? obj : String(obj) }</div>]
-  }
+    return [<div key={path}><strong>{path}</strong>: {typeof obj === 'string' ? obj : String(obj)}</div>]
+  }, [])
+
+  const fieldsMemo = useMemo(() => fields, [fields])
 
   return (
     <div className={styles.listObjectFields}>
@@ -130,19 +152,9 @@ const ListObjectFields = ({ container, data = [], displayField, fields, onSubmit
           form={form}
           layout='vertical'
           name='formObjects'
-          onFinish={(values) => {
-            const newList: unknown[] = editIndex !== null
-              ? list.map((item, index) => (index === editIndex ? values as unknown[] : item))
-              : [...list, values]
-
-            onSubmit(newList)
-            setList(newList)
-            setOpen(false)
-            setEditIndex(null)
-            form.resetFields()
-          }}
+          onFinish={onSubmit}
         >
-          {fields}
+          {typeof fieldsMemo === 'function' ? fieldsMemo(form) : fieldsMemo}
         </Form>
       </Drawer>
     </div>
