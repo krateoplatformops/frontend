@@ -54,6 +54,7 @@ spec:
       - resourceRefId: example-form-integer-basic-panel
       - resourceRefId: example-form-integer-slider-panel
       - resourceRefId: example-form-array-strings-panel
+      - resourceRefId: example-form-array-strings-enum-panel
       - resourceRefId: example-form-array-object-panel
       - resourceRefId: example-form-complex-mix-panel
       - resourceRefId: example-form-ordered-schema-panel
@@ -113,7 +114,13 @@ spec:
         name: example-form-array-strings-panel
         namespace: krateo-system
         resource: panels
-        verb: GET    
+        verb: GET  
+      - id: example-form-array-strings-enum-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-array-strings-enum-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET  
       - id: example-form-array-object-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-array-object-panel
@@ -338,12 +345,32 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: example-form-array-strings-enum-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 9: Array of strings (with enum)'
+    items:
+      - resourceRefId: example-form-array-strings-enum
+  resourcesRefs:
+    items:
+      - id: example-form-array-strings-enum
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-array-strings-enum
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: example-form-array-object-panel
   namespace: krateo-system
 spec:
   widgetData:
     actions: {}
-    title: 'Case 9: Array of objects (object list editor)'
+    title: 'Case 10: Array of objects (object list editor)'
     items:
       - resourceRefId: example-form-array-object
   resourcesRefs:
@@ -363,7 +390,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 10: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)'
+    title: 'Case 11: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)'
     items:
       - resourceRefId: example-form-complex-mix
   resourcesRefs:
@@ -383,7 +410,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 11: Schema object (alphabetically ordered fields)'
+    title: 'Case 12: Schema object (alphabetically ordered fields)'
     items:
       - resourceRefId: example-form-ordered-schema
   resourcesRefs:
@@ -403,7 +430,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 12: Form displayed inside Drawer (triggered by Button)'
+    title: 'Case 13: Form displayed inside Drawer (triggered by Button)'
     items:
       - resourceRefId: example-form-button-open-drawer
   resourcesRefs:
@@ -423,7 +450,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 13: Autocomplete field (static values)'
+    title: 'Case 14: Autocomplete field (static values)'
     items:
       - resourceRefId: example-form-autocomplete-static
   resourcesRefs:
@@ -443,7 +470,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 14: Autocomplete field (values retrieved from RESTACtion)'
+    title: 'Case 15: Autocomplete field (values retrieved from RESTACtion)'
     items:
       - resourceRefId: example-form-autocomplete
   resourcesRefs:

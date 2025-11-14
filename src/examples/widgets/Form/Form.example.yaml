@@ -297,7 +297,47 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 9: Array of objects (object list editor)
+---
+# Case 9: Array of strings (with enum)
+# Target: validate list-of-strings fields (tags, labels) with options specified as enum.
+# Expected behavior: a set of options is displayed, multiple selection is enabled and values are serialized into an array.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-array-strings-enum
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-tags
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "title": "Tags",
+            "items": { "type": "string" },
+            "enum": ["portal", "composable", "krateo"],
+            "default": ["krateo"]
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-tags
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-tags
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Case 10: Array of objects (object list editor)
 # Target: validate object-list fields that expose sub-fields for each array item.
 # Expected behavior: editor allows adding/removing objects with configured display field and nested inputs.
 kind: Form
@@ -344,7 +384,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 10: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)
+# Case 11: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)
 # Target: full integration smoke-test: multiple field types, defaults and optional fields.
 # Expected behavior: form renders a combination of controls, initializes defaults, and exposes optional-field toggle if present.
 kind: Form
@@ -405,7 +445,7 @@ spec:
         resource: restactions
         verb: GET
 ---
-# Case 11: Schema object (alphabetically ordered fields)
+# Case 12: Schema object (alphabetically ordered fields)
 # Target: validate rendering from a raw JSON object (`schema` instead of `stringSchema`).
 # Expected behavior: field order will be alphabetically ordered.
 # This case contrasts with `stringSchema`, which preserves field order as declared in the serialized string.
@@ -454,7 +494,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 12: Form displayed inside Drawer (triggered by Button)
+# Case 13: Form displayed inside Drawer (triggered by Button)
 # Target: validate integration of a Form inside a Drawer opened through a Button action.
 # Expected behavior: clicking the button opens a Drawer containing the Form; the Form renders correctly, with the submit button and required validations available within the Drawer context.
 kind: Button
@@ -483,7 +523,7 @@ spec:
         resource: forms
         verb: GET
 ---
-# Case 13: Autocomplete field (static values)
+# Case 14: Autocomplete field (static values)
 # Target: validate autocomplete fields that display a list of static values
 # Expected behavior: a 'Start typing...' message is displayed on a select
 # and typing triggers the displaying of values
@@ -520,7 +560,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 14: Autocomplete field (values retrieved from RESTAction)
+# Case 15: Autocomplete field (values retrieved from RESTAction)
 # Target: validate autocomplete fields that display a list of static values
 # Expected behavior: a 'Start typing...' message is displayed on a select
 # and typing triggers a call to a RESTACtion that retrieves the values
