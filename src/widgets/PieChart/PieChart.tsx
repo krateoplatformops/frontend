@@ -1,4 +1,5 @@
 import { Empty } from 'antd'
+import type { EChartsCoreOption } from 'echarts'
 import ReactECharts from 'echarts-for-react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -8,50 +9,70 @@ import type { WidgetProps } from '../../types/Widget'
 import styles from './PieChart.module.css'
 import type { PieChart as WidgetType } from './PieChart.type'
 
-export type PieChartWidgetData = WidgetType['spec']['widgetData']
+export type PieChartWidgetData = WidgetType['spec']['widgetData'];
 
 const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
   const { description, series, title } = widgetData
-  const chartRef = useRef<HTMLDivElement>(null)
-  const [fontSizes, setFontSizes] = useState({ sub: 16, title: 24 })
-  const [titleOffsetTop, setTitleOffsetTop] = useState('50%')
+  const chartRef = useRef<HTMLDivElement | null>(null)
+
+  const [fontSizes, setFontSizes] = useState({
+    subtitle: 16,
+    title: 24,
+  })
+
+  const [offsets, setOffsets] = useState({
+    subtitleY: 0,
+    titleY: 0,
+  })
 
   useEffect(() => {
-    const updateFontSizes = () => {
+    function updateLayout() {
       if (!chartRef.current || !series) { return }
+
       const { clientHeight: height, clientWidth: width } = chartRef.current
-
-      // Calcolo del raggio interno della torta
       const radius = Math.min(width, height) / 2
-      const innerRadiusPx = (65 / 100) * radius
-      const padding = 0.8
+      const innerRadiusPx = radius * 0.60
 
-      // Spazio disponibile per blocco titolo+sottotitolo
-      const availableHeight = innerRadiusPx * 2 * padding
-      const availableWidth = innerRadiusPx * 2 * 0.9
+      const availableHeight = innerRadiusPx * 2 * 0.85
+      const availableWidth = innerRadiusPx * 2 * 0.85
 
-      // Font stimati proporzionali all’altezza
-      let titleFont = availableHeight * 0.6
-      let subFont = availableHeight * 0.35
+      let titleFont = availableHeight * 0.45
+      let subtitleFont = availableHeight * 0.24
 
-      // Limit font massimo in base alla larghezza
-      titleFont = Math.min(titleFont, availableWidth / (title.length * 0.6))
-      if (description) {
-        subFont = Math.min(subFont, availableWidth / (description.length * 0.6))
-      }
+      const titleLen = title?.length ?? 1
+      const descLen = description?.length ?? 1
 
-      // Calcolo offset verticale per centrare il blocco (title + gap + subtitle)
-      const gap = subFont * 0.5
-      const blockHeight = titleFont + (description ? gap + subFont : 0)
-      const offset = 50 - (blockHeight / 2 / height) * 100
-      setTitleOffsetTop(`${offset}%`)
+      titleFont = Math.min(titleFont, availableWidth / (titleLen * 0.55))
+      subtitleFont = description
+        ? Math.min(subtitleFont, availableWidth / (descLen * 0.55))
+        : 0
 
-      setFontSizes({ sub: subFont, title: titleFont })
+      titleFont = Math.max(12, Math.min(48, titleFont))
+      subtitleFont = Math.max(10, Math.min(24, subtitleFont))
+
+      const baseGap = subtitleFont * 0.35
+      const compactFactor = Math.max(0.4, Math.min(1, 40 / (titleLen + descLen)))
+      const gap = Math.max(4, Math.min(18, baseGap * compactFactor))
+
+      const blockHeight = titleFont + (description ? subtitleFont + gap : 0)
+
+      const titleY = -blockHeight / 2 + titleFont * 0.15
+      const subtitleY = description ? titleY + titleFont + gap : 0
+
+      setFontSizes({
+        subtitle: Math.round(subtitleFont),
+        title: Math.round(titleFont),
+      })
+
+      setOffsets({
+        subtitleY: Math.round(subtitleY),
+        titleY: Math.round(titleY),
+      })
     }
 
-    updateFontSizes()
-    window.addEventListener('resize', updateFontSizes)
-    return () => window.removeEventListener('resize', updateFontSizes)
+    updateLayout()
+    window.addEventListener('resize', updateLayout)
+    return () => window.removeEventListener('resize', updateLayout)
   }, [series, title, description])
 
   if (!series) {
@@ -59,11 +80,11 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
   }
 
   const { data, total } = series
-  const filledValue = data.reduce((sum, item) => sum + (item.value || 0), 0)
-  const emptyValue = Math.max(total - filledValue, 0)
+  const filledValue = (data || []).reduce((sum, item) => sum + (item.value ?? 0), 0)
+  const emptyValue = Math.max((total ?? 0) - filledValue, 0)
 
   const chartData = [
-    ...data.map((item) => ({
+    ...(data || []).map((item) => ({
       itemStyle: { color: getColorCode(item.color || 'gray') },
       name: item.label ?? '',
       value: item.value ?? 0,
@@ -78,7 +99,45 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
     },
   ]
 
-  const options = {
+  const graphicTextElements = [
+    {
+      style: {
+        fill: '#000',
+        fontSize: fontSizes.title,
+        fontWeight: 500,
+        text: title ?? '',
+        textAlign: 'center',
+        textVerticalAlign: 'middle',
+        x: 0,
+        y: offsets.titleY,
+      },
+      type: 'text',
+    },
+  ]
+
+  if (description) {
+    graphicTextElements.push({
+      style: {
+        fill: '#666',
+        fontSize: fontSizes.subtitle,
+        fontWeight: 400,
+        text: description,
+        textAlign: 'center',
+        textVerticalAlign: 'middle',
+        x: 0,
+        y: offsets.subtitleY,
+      },
+      type: 'text',
+    })
+  }
+
+  const options: EChartsCoreOption = {
+    graphic: {
+      children: graphicTextElements,
+      left: 'center',
+      top: 'middle',
+      type: 'group',
+    },
     series: [
       {
         avoidLabelOverlap: false,
@@ -94,23 +153,6 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
         type: 'pie',
       },
     ],
-    title: {
-      left: '50%',
-      subtext: description,
-      subtextStyle: {
-        color: '#666',
-        fontSize: fontSizes.sub,
-      },
-      text: title,
-      textAlign: 'center',
-      textStyle: {
-        fontSize: fontSizes.title,
-        fontWeight: 500,
-        lineHeight: 1.2,
-      },
-      textVerticalAlign: 'middle',
-      top: titleOffsetTop,
-    },
     tooltip: {
       confine: true,
       trigger: 'item',
