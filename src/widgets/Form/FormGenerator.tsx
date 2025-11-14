@@ -190,6 +190,12 @@ const FormGenerator = ({
       rules.push({ message: 'Insert right value', pattern: new RegExp(node.pattern) })
     }
 
+    const options = Array.isArray(node.enum)
+      ? node.enum
+        .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
+        .map((optionValue) => ({ label: String(optionValue), value: optionValue } as DefaultOptionType))
+      : undefined
+
     switch (node.type) {
       case 'string': {
         const formItemContent = (() => {
@@ -201,12 +207,6 @@ const FormGenerator = ({
               return <AsyncSelect data={data} form={currentForm} resourcesRefs={resourcesRefs} />
             }
           }
-
-          const options = Array.isArray(node.enum)
-            ? node.enum
-              .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
-              .map((optionValue) => ({ label: String(optionValue), value: optionValue } as DefaultOptionType))
-            : undefined
 
           // Autocomplete
           if (autocomplete) {
@@ -279,37 +279,40 @@ const FormGenerator = ({
           </div>
         )
 
-      case 'array':
-        if (objectFields && node.items) {
-          const objFields = objectFields.find(({ path }) => path === name)
-          if (objFields) {
-            // objects
-            return (
-              <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-                <Form.Item
-                  extra={!descriptionTooltip && node.description ? node.description : undefined}
-                  hidden={optionalHidden && !required}
-                  key={name}
-                  label={renderLabel(name, label)}
-                  name={name.split('.')}
-                  rules={rules}
-                  tooltip={descriptionTooltip && node.description ? node.description : undefined}
-                >
-                  <ListObjectFields
-                    container={document.body}
-                    displayField={objFields.displayField}
-                    fields={(drawerForm: FormInstance) => parseData(node.items as JSONSchema4, [], true, drawerForm)}
-                    onChange={(values) => form.setFieldValue(name.split('.'), values)}
-                    schema={node.items as JSONSchema4}
-                    value={(form.getFieldValue(name.split('.')) as unknown[]) || []}
-                  />
-                </Form.Item>
-              </div>
-            )
+      case 'array': {
+        const formItemContent = (() => {
+          // objects
+          if (objectFields && node.items) {
+            const objFields = objectFields.find(({ path }) => path === name)
+            if (objFields) {
+              return (
+                <ListObjectFields
+                  container={document.body}
+                  displayField={objFields.displayField}
+                  fields={(drawerForm: FormInstance) => parseData(node.items as JSONSchema4, [], true, drawerForm)}
+                  onChange={(values) => form.setFieldValue(name.split('.'), values)}
+                  schema={node.items as JSONSchema4}
+                  value={(form.getFieldValue(name.split('.')) as unknown[]) || []}
+                />
+              )
+            }
           }
-        }
 
-        // strings
+          // strings
+          if (options) {
+            return <Select allowClear mode='multiple' options={options} />
+          }
+
+          return (
+            <ListEditor
+              data={form.getFieldValue(name.split('.')) as string[] || []}
+              onChange={(values) => {
+                form.setFieldValue(name.split('.'), values)
+              }}
+            />
+          )
+        })()
+
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Form.Item
@@ -321,15 +324,11 @@ const FormGenerator = ({
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
             >
-              <ListEditor
-                data={form.getFieldValue(name.split('.')) as string[] || []}
-                onChange={(values) => {
-                  form.setFieldValue(name.split('.'), values)
-                }}
-              />
+              {formItemContent}
             </Form.Item>
           </div>
         )
+      }
 
       case 'integer': {
         if (node.minimum) { form.setFieldValue(name.split('.'), node.minimum) }
