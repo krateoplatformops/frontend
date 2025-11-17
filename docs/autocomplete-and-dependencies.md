@@ -18,7 +18,7 @@ Each item in the `autocomplete` array describes a single field that will use thi
 
 When configured, the form engine automatically renders an autocomplete input that:
 - Uses **static enum values** from the schema, if available, or
-- Calls a **RESTAction** defined via `resourceRefId` when the user starts typing.
+- Calls a **RESTAction** defined via `resourceRefId` when the user starts typing. An `extra` parameter can be configured to set an additional key which will be used as query parameter.
 
 ### Example (YAML)
 

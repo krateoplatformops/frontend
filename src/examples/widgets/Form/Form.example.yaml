@@ -567,23 +567,21 @@ spec:
 kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-form-autocomplete
+  name: example-form-autocomplete-restaction
   namespace: krateo-system
 spec:
   widgetData:
     autocomplete:
-      - name: city
-        extra:
-          key: cityName
-        resourceRefId: get-cities
+      - name: pod
+        resourceRefId: get-pods-for-autocomplete
     submitActionId: submit-autocomplete
     stringSchema: |
       {
         "type": "object",
         "properties": {
-          "city": { "type": "string", "title": "City" }
+          "pod": { "type": "string", "title": "Pod name" }
         },
-        "required": ["city"]
+        "required": ["pod"]
       }
     actions:
       rest:
@@ -599,37 +597,102 @@ spec:
         namespace: krateo-system
         resource: fireworksapps
         verb: POST
-      - id: get-cities
-        apiVersion: composition.krateo.io/v1
-        name: get-cities
+      - id: get-pods-for-autocomplete
+        apiVersion: templates.krateo.io/v1
+        name: get-pods-for-autocomplete
         namespace: krateo-system
         resource: restactions
-        verb: POST
-
+        verb: GET
 ---
-apiVersion: widgets.templates.krateo.io/v1beta1
+apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  name: get-cities
+  name: get-pods-for-autocomplete
   namespace: krateo-system
 spec:
   api:
-  - headers:
-    - 'Accept: application/json'
-    name: getCities
-    path: ${ "/cities?name=" + (.cityName) }
-    verb: GET
-    filter: "[ .getCities[] | { label: .name, value: .name } ]"
+  - name: pods
+    path: "/api/v1/pods"
+  filter: >
+    .pods.items | map(
+      {
+        "label": .metadata.name,
+        "value": .metadata.name
+      }
+    )
+---
+# Case 16: Autocomplete field (values retrieved from RESTAction with extra parameter)
+# Target: validate autocomplete fields that display a list of static values
+# Expected behavior: a 'Start typing...' message is displayed on a select
+# and typing triggers a call to a RESTACtion that calls an external API with an additional
+# query parameter and retrieves the values
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-restaction-parameter
+  namespace: krateo-system
+spec:
+  widgetData:
+    autocomplete:
+      - name: users
+        extra:
+          key: name_like
+        resourceRefId: get-users-for-autocomplete
+    submitActionId: submit-autocomplete
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "users": { "type": "string", "title": "Users" }
+        },
+        "required": ["users"]
+      }
+    actions:
+      rest:
+        - id: submit-autocomplete
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-autocomplete
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+      - id: get-users-for-autocomplete
+        apiVersion: templates.krateo.io/v1
+        name: get-users-for-autocomplete
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: get-users-for-autocomplete
+  namespace: krateo-system
+spec:
+  api:
+  - name: users
+    path: "/users"
     endpointRef:
-      name: get-cities-endpoint
+      name: jsonplaceholder-endpoint
       namespace: krateo-system
-  filter: .getCities
+  filter: >
+    .users | map(
+      {
+        "label": .name,
+        "value": .username
+      }
+    )
 ---
 apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: get-cities-endpoint
+  name: jsonplaceholder-endpoint
   namespace: krateo-system
 stringData:
-  server-url: https://test.com
+  server-url: https://jsonplaceholder.typicode.com

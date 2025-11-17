@@ -60,7 +60,8 @@ spec:
       - resourceRefId: example-form-ordered-schema-panel
       - resourceRefId: example-form-button-open-drawer-panel
       - resourceRefId: example-form-autocomplete-static-panel
-      - resourceRefId: example-form-autocomplete-panel
+      - resourceRefId: example-form-autocomplete-restaction-panel
+      - resourceRefId: example-form-autocomplete-restaction-parameter-panel
       # - resourceRefId: example-form-open-modal-default-panel
       # - resourceRefId: example-form-open-modal-large-panel
       # - resourceRefId: example-form-open-modal-custom-panel
@@ -151,9 +152,15 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET 
-      - id: example-form-autocomplete-panel
+      - id: example-form-autocomplete-restaction-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-form-autocomplete-panel
+        name: example-form-autocomplete-restaction-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-autocomplete-restaction-parameter-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete-restaction-parameter-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -465,19 +472,39 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-form-autocomplete-panel
+  name: example-form-autocomplete-restaction-panel
   namespace: krateo-system
 spec:
   widgetData:
     actions: {}
     title: 'Case 15: Autocomplete field (values retrieved from RESTACtion)'
     items:
-      - resourceRefId: example-form-autocomplete
+      - resourceRefId: example-form-autocomplete-restaction
   resourcesRefs:
     items:
-      - id: example-form-autocomplete
+      - id: example-form-autocomplete-restaction
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-form-autocomplete
+        name: example-form-autocomplete-restaction
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-restaction-parameter-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Case 16: Autocomplete field (values retrieved from RESTAction with extra parameter)'
+    items:
+      - resourceRefId: example-form-autocomplete-restaction-parameter
+  resourcesRefs:
+    items:
+      - id: example-form-autocomplete-restaction-parameter
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete-restaction-parameter
         namespace: krateo-system
         resource: forms
         verb: GET 

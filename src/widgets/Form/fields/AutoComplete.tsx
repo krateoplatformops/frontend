@@ -53,6 +53,8 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
     return null
   }
 
+  // TODO: handle correctly label vs value displaying when they are different
+
   return (
     <AntDAutoComplete
       filterOption={(inputValue, option) => {
