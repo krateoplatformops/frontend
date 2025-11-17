@@ -13,7 +13,7 @@ const Notifications = () => {
 
   const [drawerVisible, setDrawerVisible] = useState(false)
 
-  const { data: notifications, isLoading } = useGetEvents({ registerToSSE: true, topic: 'krateo' })
+  const { data: notifications, isLoading } = useGetEvents({ registerToSSE: drawerVisible, topic: 'krateo' })
 
   const onClickNotification = useCallback(
     (url: string | undefined) => {
