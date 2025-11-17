@@ -36,7 +36,7 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
   }, [searchValue, debouncedUpdate])
 
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
-    enabled: !!(debouncedValue && resourceRefId && config && extra),
+    enabled: !!(debouncedValue && resourceRefId && config),
     queryFn: () =>
       getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, extra?.key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -45,7 +45,7 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
     staleTime: 5 * 60 * 1000,
   })
 
-  if (!options && (!resourceRefId || !extra)) {
+  if (!options && !resourceRefId) {
     notification.error({
       description: `Missing "resourceRefId" or "extra" for field "${name}". The component cannot load options.`,
       message: 'Autocomplete configuration error',
