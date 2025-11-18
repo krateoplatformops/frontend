@@ -357,37 +357,42 @@ const FormGenerator = ({
   }
 
   const getAnchorList = (): AnchorLinkItemProps[] => {
-    const parseData = (node: JSONSchema4, name = ''): AnchorLinkItemProps[] => {
+    const parseData = (
+      node: JSONSchema4,
+      name = '',
+      parentIsRequired = true
+    ): AnchorLinkItemProps[] => {
       const currentProperties = node.properties
-      const requiredFields = node.required ?? []
+      const requiredFields = Array.isArray(node.required) ? node.required : []
 
       if (!currentProperties) { return [] }
 
       return Object.keys(currentProperties).flatMap((key) => {
         const schemaItem = currentProperties[key]
         const currentName = name ? `${name}.${key}` : key
-        const isRequired = Array.isArray(requiredFields) && requiredFields.includes(key)
+
+        const isRequired = requiredFields.includes(key) && parentIsRequired
 
         const children = schemaItem.type === 'object'
-          ? parseData(schemaItem, currentName)
+          ? parseData(schemaItem, currentName, isRequired)
           : []
 
         const shouldShow = isRequired || children.length > 0 || !optionalHidden
         if (!shouldShow) { return [] }
 
-        const nodeItem: AnchorLinkItemProps = {
-          href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
-          key: currentName,
-          title:
+        return [
+          {
+            href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
+            key: currentName,
+            title:
             schemaItem.type === 'object' ? (
               <span className={styles.anchorObjectLabel}>{key}</span>
             ) : (
               key
             ),
-          ...(children.length > 0 ? { children } : {}),
-        }
-
-        return [nodeItem]
+            ...(children.length > 0 ? { children } : {}),
+          },
+        ]
       })
     }
 
