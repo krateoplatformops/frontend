@@ -3,6 +3,10 @@
   min-height: 500px;
 }
 
+.flowChart :global(.react-flow) {
+  min-height: 500px;
+}
+
 :global(.ant-tabs) {
   height: 100%;
 }
