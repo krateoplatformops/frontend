@@ -26,7 +26,6 @@ type FormGeneratorType = {
   autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
-  showFormStructure?: boolean
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
@@ -61,7 +60,6 @@ const FormGenerator = ({
   onSubmit,
   resourcesRefs,
   schema,
-  showFormStructure = false,
 }: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
@@ -432,7 +430,7 @@ const FormGenerator = ({
     <div className={styles.formGenerator}>
       <div className={styles.anchorWrapper}>
         <Row className={styles.anchorRow}>
-          <Col className={styles.formWrapper} span={showFormStructure ? 16 : 24}>
+          <Col className={styles.formWrapper} flex='2 1 0'>
             <div className={styles.form} id='anchor-content'>
               {
                 hasOptionalFields && (
@@ -468,16 +466,14 @@ const FormGenerator = ({
             </div>
           </Col>
 
-          {showFormStructure && (
-            <Col className={styles.anchorLabelWrapper} span={8}>
-              <Anchor
-                affix={false}
-                getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
-                items={getAnchorList()}
-                onClick={handleAnchorClick}
-              />
-            </Col>
-          )}
+          <Col className={styles.anchorLabelWrapper} flex={'1 1 0'}>
+            <Anchor
+              affix={false}
+              getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
+              items={getAnchorList()}
+              onClick={handleAnchorClick}
+            />
+          </Col>
         </Row>
       </div>
     </div>
