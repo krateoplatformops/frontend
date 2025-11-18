@@ -173,6 +173,11 @@ const FormGenerator = ({
   const renderField = (label: string, name: string, node: JSONSchema4, required: boolean, formInstance?: FormInstance) => {
     const currentForm = formInstance ?? form
 
+    if (!node.type) {
+      console.error(`Field ${name} does not have a type in the schema or stringSchema`)
+      return null
+    }
+
     if (Array.isArray(node.type)) {
       console.error(`type as array is not supported: ${node.type.join(',')} for field ${name}`)
       return null
