@@ -333,6 +333,7 @@
               "type": "string"
             },
             "fieldDescription": {
+              "description": "the displaying mode of the field description, default is inline but it could also be displayed as a tooltip",
               "type": "string",
               "enum": ["tooltip", "inline"],
               "default": "inline"
