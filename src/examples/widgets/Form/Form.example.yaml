@@ -697,3 +697,78 @@ metadata:
   namespace: krateo-system
 stringData:
   server-url: https://jsonplaceholder.typicode.com
+---
+# Case 17: Dependencies field
+# Target: validate fields whose available options depend on the value of another field
+# Expected behavior: three fields are rendered, each field values depend on the previous field
+# value being set, otherwise the field is disabled
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-dependencies
+  namespace: krateo-system
+spec:
+  widgetData:
+    # dependencies:
+    #   - name: users
+    #     extra:
+    #       key: name_like
+    #     resourceRefId: get-users-for-autocomplete
+    submitActionId: submit-autocomplete
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "regions": { "type": "string", "title": "Region" }
+        },
+        "required": ["regions"]
+      }
+    actions:
+      rest:
+        - id: submit-autocomplete
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-autocomplete
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+      - id: get-users-for-autocomplete
+        apiVersion: templates.krateo.io/v1
+        name: get-users-for-autocomplete
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: get-users-for-autocomplete
+  namespace: krateo-system
+spec:
+  api:
+  - name: users
+    path: "/users"
+    endpointRef:
+      name: jsonplaceholder-endpoint
+      namespace: krateo-system
+  filter: >
+    .users | map(
+      {
+        "label": .name,
+        "value": .username
+      }
+    )
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: jsonplaceholder-endpoint
+  namespace: krateo-system
+stringData:
+  server-url: https://jsonplaceholder.typicode.com
