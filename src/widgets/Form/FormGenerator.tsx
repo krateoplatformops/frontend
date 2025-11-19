@@ -26,7 +26,6 @@ type FormGeneratorType = {
   autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
-  showFormStructure?: boolean
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
@@ -61,7 +60,6 @@ const FormGenerator = ({
   onSubmit,
   resourcesRefs,
   schema,
-  showFormStructure = false,
 }: FormGeneratorType) => {
   const [form] = Form.useForm()
   const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
@@ -174,6 +172,11 @@ const FormGenerator = ({
 
   const renderField = (label: string, name: string, node: JSONSchema4, required: boolean, formInstance?: FormInstance) => {
     const currentForm = formInstance ?? form
+
+    if (!node.type) {
+      console.error(`Field ${name} does not have a type in the schema or stringSchema`)
+      return null
+    }
 
     if (Array.isArray(node.type)) {
       console.error(`type as array is not supported: ${node.type.join(',')} for field ${name}`)
@@ -359,37 +362,42 @@ const FormGenerator = ({
   }
 
   const getAnchorList = (): AnchorLinkItemProps[] => {
-    const parseData = (node: JSONSchema4, name = ''): AnchorLinkItemProps[] => {
+    const parseData = (
+      node: JSONSchema4,
+      name = '',
+      parentIsRequired = true
+    ): AnchorLinkItemProps[] => {
       const currentProperties = node.properties
-      const requiredFields = node.required ?? []
+      const requiredFields = Array.isArray(node.required) ? node.required : []
 
       if (!currentProperties) { return [] }
 
       return Object.keys(currentProperties).flatMap((key) => {
         const schemaItem = currentProperties[key]
         const currentName = name ? `${name}.${key}` : key
-        const isRequired = Array.isArray(requiredFields) && requiredFields.includes(key)
+
+        const isRequired = requiredFields.includes(key) && parentIsRequired
 
         const children = schemaItem.type === 'object'
-          ? parseData(schemaItem, currentName)
+          ? parseData(schemaItem, currentName, isRequired)
           : []
 
         const shouldShow = isRequired || children.length > 0 || !optionalHidden
         if (!shouldShow) { return [] }
 
-        const nodeItem: AnchorLinkItemProps = {
-          href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
-          key: currentName,
-          title:
+        return [
+          {
+            href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
+            key: currentName,
+            title:
             schemaItem.type === 'object' ? (
               <span className={styles.anchorObjectLabel}>{key}</span>
             ) : (
               key
             ),
-          ...(children.length > 0 ? { children } : {}),
-        }
-
-        return [nodeItem]
+            ...(children.length > 0 ? { children } : {}),
+          },
+        ]
       })
     }
 
@@ -432,7 +440,7 @@ const FormGenerator = ({
     <div className={styles.formGenerator}>
       <div className={styles.anchorWrapper}>
         <Row className={styles.anchorRow}>
-          <Col className={styles.formWrapper} span={showFormStructure ? 16 : 24}>
+          <Col className={styles.formWrapper} flex='2 1 0'>
             <div className={styles.form} id='anchor-content'>
               {
                 hasOptionalFields && (
@@ -468,16 +476,14 @@ const FormGenerator = ({
             </div>
           </Col>
 
-          {showFormStructure && (
-            <Col className={styles.anchorLabelWrapper} span={8}>
-              <Anchor
-                affix={false}
-                getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
-                items={getAnchorList()}
-                onClick={handleAnchorClick}
-              />
-            </Col>
-          )}
+          <Col className={styles.anchorLabelWrapper} flex={'1 1 0'}>
+            <Anchor
+              affix={false}
+              getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
+              items={getAnchorList()}
+              onClick={handleAnchorClick}
+            />
+          </Col>
         </Row>
       </div>
     </div>

@@ -164,7 +164,6 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
         onSubmit={values => onSubmit(values)}
         resourcesRefs={resourcesRefs}
         schema={formSchema}
-        showFormStructure={true}
       />
 
       <div className={styles.extra}>
