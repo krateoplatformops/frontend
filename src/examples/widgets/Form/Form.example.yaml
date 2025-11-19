@@ -709,19 +709,32 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    # dependencies:
-    #   - name: users
-    #     extra:
-    #       key: name_like
-    #     resourceRefId: get-users-for-autocomplete
+    autocomplete:
+      - name: regions
+        resourceRefId: get-italian-regions
+    dependencies:
+      - name: provinces
+        dependsOn:
+          name: regions
+        resourceRefId: get-italian-provinces
+        extra:
+          key: region_code
+      - name: cities
+        dependsOn:
+          name: provinces
+        resourceRefId: get-italian-cities
+        extra:
+          key: province_code
     submitActionId: submit-autocomplete
     stringSchema: |
       {
         "type": "object",
         "properties": {
-          "regions": { "type": "string", "title": "Region" }
+          "regions": { "type": "string", "title": "Region" },
+          "provinces": { "type": "string", "title": "Province" },
+          "cities": { "type": "string", "title": "City" }
         },
-        "required": ["regions"]
+        "required": ["regions", "provinces", "cities"]
       }
     actions:
       rest:
@@ -737,9 +750,21 @@ spec:
         namespace: krateo-system
         resource: fireworksapps
         verb: POST
-      - id: get-users-for-autocomplete
+      - id: get-italian-regions
         apiVersion: templates.krateo.io/v1
-        name: get-users-for-autocomplete
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-cities
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-cities
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-provinces
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-provinces
         namespace: krateo-system
         resource: restactions
         verb: GET
@@ -747,28 +772,62 @@ spec:
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
 metadata:
-  name: get-users-for-autocomplete
+  name: get-italian-regions
   namespace: krateo-system
 spec:
   api:
-  - name: users
-    path: "/users"
+  - name: regions
+    path: "/api/explore/v2.1/catalog/datasets/georef-italy-regione/records"
     endpointRef:
-      name: jsonplaceholder-endpoint
+      name: opendatasoft-endpoint
       namespace: krateo-system
   filter: >
-    .users | map(
-      {
-        "label": .name,
-        "value": .username
-      }
-    )
+    .regions.results | map({
+      "label": .reg_name,
+      "value": .reg_code
+    })
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: get-italian-provinces
+  namespace: krateo-system
+spec:
+  api:
+  - name: provinces
+    path: ${ "/api/explore/v2.1/catalog/datasets/georef-italy-provincia/records?refine=reg_code:" + (.region_code) }
+    endpointRef:
+      name: opendatasoft-endpoint
+      namespace: krateo-system
+  filter: >
+    .provinces.results | map({
+      "label": .prov_name,
+      "value": .prov_code
+    })
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: get-italian-cities
+  namespace: krateo-system
+spec:
+  api:
+  - name: cities
+    path: ${ "/api/explore/v2.1/catalog/datasets/georef-italy-comune/records?refine=prov_code:" + (.province_code) }
+    endpointRef:
+      name: opendatasoft-endpoint
+      namespace: krateo-system
+  filter: >
+    .cities.results | map({
+      "label": .com_name,
+      "value": .com_code
+    })
 ---
 apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: jsonplaceholder-endpoint
+  name: opendatasoft-endpoint
   namespace: krateo-system
 stringData:
-  server-url: https://jsonplaceholder.typicode.com
+  server-url: https://public.opendatasoft.com
