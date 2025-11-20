@@ -592,18 +592,18 @@ spec:
       rest:
         - id: rest-bad-headers
           type: rest
-          resourceRefId: example-config
+          resourceRefId: create-pod
           headers:
             - "Authorization Bearer token"
             - "x-custom: valid"
   resourcesRefs:
     items:
-      - id: example-config
+      - id: create-pod
         apiVersion: v1
-        name: example-config
+        resource: pods
+        name: create-pod
         namespace: krateo-system
-        resource: configs
-        verb: GET
+        verb: POST
 ---
 # rest - Both onSuccessNavigateTo and onEventNavigateTo defined
 # Target: mutually exclusive navigation modes are used simultaneously.
@@ -621,7 +621,7 @@ spec:
       rest:
         - id: rest-conflict
           type: rest
-          resourceRefId: example-config
+          resourceRefId: create-pod
           headers: []
           onSuccessNavigateTo: "/ok"
           onEventNavigateTo:
@@ -629,10 +629,10 @@ spec:
             url: "/event"
   resourcesRefs:
     items:
-      - id: example-config
+      - id: create-pod
         apiVersion: v1
-        name: example-config
+        resource: pods
+        name: create-pod
         namespace: krateo-system
-        resource: configs
         verb: POST
 

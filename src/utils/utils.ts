@@ -49,15 +49,26 @@ export const formatISODate = (value: string, showTime: boolean = false) => {
     : new Date(value).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-export const getHeadersObject = (headers: string[]) => {
-  return headers.reduce(
-    (acc, header) => {
-      const [key, value] = header.split(':')
-      acc[key.trim()] = value.trim()
-      return acc
-    },
-    {} as Record<string, string>
-  )
+export const getHeadersObject = (headers: string[]): Record<string, string> | undefined => {
+  const result: Record<string, string> = {}
+
+  for (const header of headers) {
+    const parts = header.split(':')
+    if (parts.length !== 2) {
+      return undefined
+    }
+
+    const key = parts[0].trim()
+    const value = parts[1].trim()
+
+    if (!key || !value) {
+      return undefined
+    }
+
+    result[key] = value
+  }
+
+  return result
 }
 
 export const parseNumberOrNull = (value: unknown): number | null => {

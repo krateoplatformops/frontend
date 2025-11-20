@@ -346,8 +346,19 @@ export const useHandleAction = () => {
               ? updateNameNamespace(url, payload?.metadata?.name, payload?.metadata?.namespace)
               : url
 
+            const headersObject = getHeadersObject(headers)
+            if (!headersObject) {
+              message.destroy()
+              notification.error({
+                description: 'Headers are not in the key: value format',
+                message: 'Error while executing the action',
+                placement: 'bottomLeft',
+              })
+              break
+            }
+
             const requestHeaders = {
-              ...getHeadersObject(headers),
+              ...headersObject,
               Accept: 'application/json',
               Authorization: `Bearer ${getAccessToken()}`,
             }
