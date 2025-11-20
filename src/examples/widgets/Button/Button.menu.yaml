@@ -28,23 +28,56 @@ metadata:
 spec:
   widgetData:
     allowedResources:
-      - barcharts
-      - buttons
-      - buttons
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - rows
-      - tables
       - tablists
-      - yamlviewers
+    items:
+      - resourceRefId: example-button-tablist
+  resourcesRefs:
+    items:
+      - id: example-button-tablist
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-tablist
+        namespace: krateo-system
+        resource: tablists
+        verb: GET
+---
+kind: TabList
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-tablist
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - pages
+    items:
+      - label: Examples
+        resourceRefId: example-button-examples-page
+      - label: Actions
+        resourceRefId: example-button-actions-page
+  resourcesRefs:
+    items:
+      - id: example-button-examples-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-examples-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+      - id: example-button-actions-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-actions-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-examples-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
     items:
       - resourceRefId: example-button-no-action-panel
       - resourceRefId: example-button-basic-panel
@@ -55,16 +88,6 @@ spec:
       - resourceRefId: example-button-small-dashed-panel
       - resourceRefId: example-button-link-panel
       - resourceRefId: example-button-text-panel
-      - resourceRefId: example-button-navigate-path-panel
-      - resourceRefId: example-button-navigate-resource-panel
-      - resourceRefId: example-button-navigate-confirm-panel
-      - resourceRefId: example-button-navigate-loading-panel
-      - resourceRefId: example-button-open-drawer-default-panel
-      - resourceRefId: example-button-open-drawer-large-panel
-      - resourceRefId: example-button-open-modal-default-panel
-      - resourceRefId: example-button-open-modal-large-panel
-      - resourceRefId: example-button-open-modal-custom-panel
-      - resourceRefId: example-button-open-modal-fullscreen-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -121,6 +144,32 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET 
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-actions-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
+    items:
+      - resourceRefId: example-button-navigate-path-panel
+      - resourceRefId: example-button-navigate-resource-panel
+      - resourceRefId: example-button-navigate-confirm-panel
+      - resourceRefId: example-button-navigate-loading-panel
+      - resourceRefId: example-button-open-drawer-default-panel
+      - resourceRefId: example-button-open-drawer-large-panel
+      - resourceRefId: example-button-open-modal-default-panel
+      - resourceRefId: example-button-open-modal-large-panel
+      - resourceRefId: example-button-open-modal-custom-panel
+      - resourceRefId: example-button-open-modal-fullscreen-panel
+      - resourceRefId: example-button-rest-invalid-resource-ref-panel
+      - resourceRefId: example-button-rest-malformed-headers-panel
+      - resourceRefId: example-button-rest-conflicting-navigations-panel
+  resourcesRefs:
+    items:
       - id: example-button-navigate-path-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-navigate-path-panel
@@ -181,6 +230,24 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET
+      - id: example-button-rest-invalid-resource-ref-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-invalid-resource-ref-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-malformed-headers-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-malformed-headers-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-conflicting-navigations-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-conflicting-navigations-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -190,7 +257,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Action not found'
+    title: 'Action not found'
     items:
       - resourceRefId: example-button-no-action
   resourcesRefs:
@@ -210,7 +277,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Default button with label only'
+    title: 'Default button with label only'
     items:
       - resourceRefId: example-button-basic
   resourcesRefs:
@@ -230,7 +297,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Primary button with icon and label'
+    title: 'Primary button with icon and label'
     items:
       - resourceRefId: example-button-with-icon
   resourcesRefs:
@@ -250,7 +317,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Circle-shaped button with icon only'
+    title: 'Circle-shaped button with icon only'
     items:
       - resourceRefId: example-button-icon-circle
   resourcesRefs:
@@ -270,7 +337,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Default rounded button with custom color'
+    title: 'Default rounded button with custom color'
     items:
       - resourceRefId: example-button-rounded-red
   resourcesRefs:
@@ -290,7 +357,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Large primary button'
+    title: 'Large primary button'
     items:
       - resourceRefId: example-button-large-primary
   resourcesRefs:
@@ -310,7 +377,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: Small dashed button'
+    title: 'Small dashed button'
     items:
       - resourceRefId: example-button-small-dashed
   resourcesRefs:
@@ -330,7 +397,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 8: Link-style button'
+    title: 'Link-style button'
     items:
       - resourceRefId: example-button-link
   resourcesRefs:
@@ -350,7 +417,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 10: navigate action - Navigation to another page using `path`'
+    title: 'navigate action - Navigation to another page using `path`'
     items:
       - resourceRefId: example-button-navigate-path
   resourcesRefs:
@@ -370,7 +437,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 11: navigate action - Navigation to another resource using `resourceRefId`'
+    title: 'navigate action - Navigation to another resource using `resourceRefId`'
     items:
       - resourceRefId: example-button-navigate-resource
   resourcesRefs:
@@ -390,7 +457,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 12: navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)'
+    title: 'navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)'
     items:
       - resourceRefId: example-button-navigate-confirm
   resourcesRefs:
@@ -410,7 +477,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 13: navigate action - Navigation with loading indicator'
+    title: 'navigate action - Navigation with loading indicator'
     items:
       - resourceRefId: example-button-navigate-loading
   resourcesRefs:
@@ -430,7 +497,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 14: openDrawer - default size'
+    title: 'openDrawer - default size'
     items:
       - resourceRefId: example-button-open-drawer-default
   resourcesRefs:
@@ -450,7 +517,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 15: openDrawer - large size'
+    title: 'openDrawer - large size'
     items:
       - resourceRefId: example-button-open-drawer-large
   resourcesRefs:
@@ -470,7 +537,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 16: openModal - default size'
+    title: 'openModal - default size'
     items:
       - resourceRefId: example-button-open-modal-default
   resourcesRefs:
@@ -490,7 +557,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 17: openModal - large size'
+    title: 'openModal - large size'
     items:
       - resourceRefId: example-button-open-modal-large
   resourcesRefs:
@@ -510,7 +577,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 18: openModal - custom width'
+    title: 'openModal - custom width'
     items:
       - resourceRefId: example-button-open-modal-custom
   resourcesRefs:
@@ -530,7 +597,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 19: openModal - fullscreen mode'
+    title: 'openModal - fullscreen mode'
     items:
       - resourceRefId: example-button-open-modal-fullscreen
   resourcesRefs:
@@ -538,6 +605,66 @@ spec:
       - id: example-button-open-modal-fullscreen
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-open-modal-fullscreen
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-invalid-resource-ref-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Invalid resourceRefId (reference does not exist in resourcesRefs)'
+    items:
+      - resourceRefId: example-button-rest-invalid-resource-ref
+  resourcesRefs:
+    items:
+      - id: example-button-rest-invalid-resource-ref
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-invalid-resource-ref
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-malformed-headers-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Headers malformed (not a "key: value" structure)'
+    items:
+      - resourceRefId: example-button-rest-malformed-headers
+  resourcesRefs:
+    items:
+      - id: example-button-rest-malformed-headers
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-malformed-headers
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-conflicting-navigations-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Both onSuccessNavigateTo and onEventNavigateTo defined'
+    items:
+      - resourceRefId: example-button-rest-conflicting-navigations
+  resourcesRefs:
+    items:
+      - id: example-button-rest-conflicting-navigations
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-conflicting-navigations
         namespace: krateo-system
         resource: buttons
         verb: GET

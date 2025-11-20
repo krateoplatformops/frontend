@@ -1,4 +1,4 @@
-# Case 1: Action not found
+# Action not found
 # Target: ensure the widget correctly handles missing action definition within "actions".
 # Expected behavior: clicking the button triggers an error notification ("The widget definition does not include an action ...").
 kind: Button
@@ -16,7 +16,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 2: Default button with label only
+# Default button with label only
 # Target: verify correct rendering of text label with default shape and size.
 # Expected behavior: displays a standard button labeled “Run”.
 kind: Button
@@ -44,7 +44,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 3: Primary button with icon and label
+# Primary button with icon and label
 # Target: confirm correct layout of icon + label combination.
 # Expected behavior: icon appears to the left of the text with correct spacing.
 kind: Button
@@ -74,7 +74,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 4: Circle-shaped button with icon only
+# Circle-shaped button with icon only
 # Target: verify proper sizing and centering of circular icon-only button.
 # Expected behavior: renders compact circle button showing only the icon.
 kind: Button
@@ -102,7 +102,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 5: Default rounded button with custom color
+# Default rounded button with custom color
 # Target: ensure color token and rounded shape are correctly applied.
 # Expected behavior: button has smooth rounded corners and red color variant.
 kind: Button
@@ -132,7 +132,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 6: Large primary button
+# Large primary button
 # Target: verify consistent scaling for “large” size.
 # Expected behavior: increased padding and text size; alignment preserved.
 kind: Button
@@ -161,7 +161,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 7: Small dashed button
+# Small dashed button
 # Target: confirm rendering of alternative visual “dashed” style.
 # Expected behavior: smaller text and dotted outline.
 kind: Button
@@ -190,7 +190,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 8: Link-style button
+# Link-style button
 # Target: verify inline link appearance (no background or border).
 # Expected behavior: visually rendered as a text hyperlink.
 kind: Button
@@ -218,7 +218,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 9: Text-only button
+# Text-only button
 # Target: confirm flat minimal variant without border or background.
 # Expected behavior: renders as simple text element, aligned with other inline elements.
 kind: Button
@@ -246,7 +246,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 10: navigate action - Navigation to another page using `path`
+# navigate - Navigation to another page using `path`
 # Target: trigger navigation to a static route (`/barchart`) when the button is clicked.
 # Expected behavior: clicking the button redirects the user to `/barchart`.
 # No confirmation or loading state are required.
@@ -269,7 +269,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 11: navigate action - Navigation to another resource using `resourceRefId`
+# navigate - Navigation to another resource using `resourceRefId`
 # Target: navigate to another dashboard resource (identified by its ref ID).
 # Expected behavior: clicking the button triggers navigation to the target resource page.
 kind: Button
@@ -296,7 +296,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 12: navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)
+# navigate - Navigation with confirmation prompt (`requireConfirmation: true`)
 # Target: prevent accidental navigation by requiring explicit user confirmation.
 # Expected behavior: before navigating, a confirmation dialog is shown.
 # Only if confirmed does the navigation occur.
@@ -321,7 +321,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 13: navigate action - Navigation with loading indicator
+# navigate - Navigation with loading indicator
 # Target: provide visual feedback during navigation.
 # Expected behavior: the button shows a loading spinner while navigation is being processed.
 kind: Button
@@ -345,7 +345,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 14: openDrawer - default size
+# openDrawer - default size
 # Target: verify that a drawer can be opened using a defined resource reference
   # Expected behavior: when triggered, no confirmation is required;
 # the drawer opens at the default width and displays the resource contents once loaded.
@@ -377,7 +377,7 @@ spec:
         resource: markdowns
         verb: GET
 ---
-# Case 15: openDrawer - large size
+# openDrawer - large size
 # Target: verify that a drawer can be opened in large mode
 # Expected behavior: a large-size drawer opens with the defined title and resource content.
 kind: Button
@@ -410,7 +410,7 @@ spec:
         resource: markdowns
         verb: GET
 ---
-# Case 16: openModal - default size
+# openModal - default size
 # Target: ensure that a modal dialog can be opened,
 # displaying a standard modal layout with the given title and resource.
 # Expected behavior: the modal appears at the default width and loads the referenced resource.
@@ -444,7 +444,7 @@ spec:
         resource: yamlviewers
         verb: GET
 ---
-# Case 17: openModal - large size
+# openModal - large size
 # Target: ensure that a modal dialog can be opened,
 # displaying a large modal layout with the given title and resource.
 # Expected behavior: the modal appears at the large width and loads the referenced resource.
@@ -478,7 +478,7 @@ spec:
         resource: yamlviewers
         verb: GET
 ---
-# Case 18: openModal - custom width
+# openModal - custom width
 # Target: confirm that a modal can be displayed with a custom width,
 # ensuring that custom sizing rules are correctly applied by the system.
 # Expected behavior: when triggered, no confirmation is required;
@@ -515,7 +515,7 @@ spec:
         resource: yamlviewers
         verb: GET
 ---
-# Case 19: openModal - fullscreen mode
+# openModal - fullscreen mode
 # Target: verify that a modal can occupy the full viewport width when configured in fullscreen mode,
 # confirming proper rendering and interaction across the available space.
 # Expected behavior: the modal opens instantly and expands to fill the entire screen.
@@ -548,3 +548,91 @@ spec:
         namespace: krateo-system
         resource: yamlviewers
         verb: GET
+---
+# rest - Invalid resourceRefId (reference does not exist in resourcesRefs)
+# Target: action includes resourceRefId but the reference is not provided in resourcesRefs.
+# Expected behavior: error toast indicating that the resource reference is not found; no API call is performed.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-invalid-resource-ref
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Run
+    clickActionId: rest-invalid-ref
+    actions:
+      rest:
+        - id: rest-invalid-ref
+          type: rest
+          resourceRefId: missing-ref
+          headers: []
+  resourcesRefs:
+    items:
+      - id: some-other-ref
+        apiVersion: v1
+        name: whatever
+        namespace: krateo-system
+        resource: configs
+        verb: GET
+---
+# rest - Headers malformed (not a "key: value" structure)
+# Target: one of the headers does not follow the expected textual format.
+# Expected behavior: the header is ignored or causes server-side rejection depending on backend behavior; button still tries to execute.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-malformed-headers
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Execute
+    clickActionId: rest-bad-headers
+    actions:
+      rest:
+        - id: rest-bad-headers
+          type: rest
+          resourceRefId: example-config
+          headers:
+            - "Authorization Bearer token"
+            - "x-custom: valid"
+  resourcesRefs:
+    items:
+      - id: example-config
+        apiVersion: v1
+        name: example-config
+        namespace: krateo-system
+        resource: configs
+        verb: GET
+---
+# rest - Both onSuccessNavigateTo and onEventNavigateTo defined
+# Target: mutually exclusive navigation modes are used simultaneously.
+# Expected behavior: execution stops immediately with an error toast indicating the conflict; no API call is sent.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-conflicting-navigations
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Run Action
+    clickActionId: rest-conflict
+    actions:
+      rest:
+        - id: rest-conflict
+          type: rest
+          resourceRefId: example-config
+          headers: []
+          onSuccessNavigateTo: "/ok"
+          onEventNavigateTo:
+            eventReason: Completed
+            url: "/event"
+  resourcesRefs:
+    items:
+      - id: example-config
+        apiVersion: v1
+        name: example-config
+        namespace: krateo-system
+        resource: configs
+        verb: POST
+
