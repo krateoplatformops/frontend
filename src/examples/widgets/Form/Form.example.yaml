@@ -298,7 +298,6 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
----
 # Case 9: Array of strings (with enum)
 # Target: validate list-of-strings fields (tags, labels) with options specified as enum.
 # Expected behavior: a set of options is displayed, multiple selection is enabled and values are serialized into an array.
@@ -317,8 +316,10 @@ spec:
           "tags": {
             "type": "array",
             "title": "Tags",
-            "items": { "type": "string" },
-            "enum": ["portal", "composable", "krateo"],
+            "items": {
+              "type": "string",
+              "enum": ["portal", "composable", "krateo"]
+            },
             "default": ["krateo"]
           }
         }
