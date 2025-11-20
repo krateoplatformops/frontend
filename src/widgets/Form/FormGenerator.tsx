@@ -3,7 +3,6 @@ import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Spac
 import type { FormInstance } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
-import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -16,6 +15,7 @@ import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
 import type { FormWidgetData } from './Form'
 import styles from './Form.module.css'
+import { getOptionsFromEnum } from './utils'
 
 type FormGeneratorType = {
   descriptionTooltip: boolean
@@ -193,12 +193,6 @@ const FormGenerator = ({
       rules.push({ message: 'Insert right value', pattern: new RegExp(node.pattern) })
     }
 
-    const options = Array.isArray(node.enum)
-      ? node.enum
-        .filter((optionValue): optionValue is string | number => typeof optionValue === 'string' || typeof optionValue === 'number')
-        .map((optionValue) => ({ label: String(optionValue), value: optionValue } as DefaultOptionType))
-      : undefined
-
     switch (node.type) {
       case 'string': {
         const formItemContent = (() => {
@@ -210,6 +204,8 @@ const FormGenerator = ({
               return <AsyncSelect data={data} form={currentForm} resourcesRefs={resourcesRefs} />
             }
           }
+
+          const options = getOptionsFromEnum(node.enum)
 
           // Autocomplete
           if (autocomplete) {
@@ -302,6 +298,7 @@ const FormGenerator = ({
           }
 
           // strings
+          const options = node.items && !Array.isArray(node.items) ? getOptionsFromEnum(node.items.enum) : undefined
           if (options) {
             return <Select allowClear mode='multiple' options={options} />
           }

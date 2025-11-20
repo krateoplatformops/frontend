@@ -1,4 +1,5 @@
-import type { JSONSchema4 } from 'json-schema'
+import type { DefaultOptionType } from 'antd/es/select'
+import type { JSONSchema4, JSONSchema4Type } from 'json-schema'
 
 export const getDefaultsFromSchema = (schema: JSONSchema4): Record<string, unknown> => {
   const defaults: Record<string, unknown> = {}
@@ -15,4 +16,12 @@ export const getDefaultsFromSchema = (schema: JSONSchema4): Record<string, unkno
   }
 
   return defaults
+}
+
+export const getOptionsFromEnum = (enumValues: JSONSchema4Type[] | undefined): DefaultOptionType[] | undefined => {
+  if (!Array.isArray(enumValues)) { return undefined }
+
+  return enumValues
+    .filter((value): value is string | number => typeof value === 'string' || typeof value === 'number')
+    .map((value) => ({ label: String(value), value }))
 }
