@@ -79,7 +79,6 @@ spec:
     allowedResources:
       - panels
     items:
-      - resourceRefId: example-button-no-action-panel
       - resourceRefId: example-button-basic-panel
       - resourceRefId: example-button-with-icon-panel
       - resourceRefId: example-button-icon-circle-panel
@@ -90,12 +89,6 @@ spec:
       - resourceRefId: example-button-text-panel
   resourcesRefs:
     items:
-      - id: example-button-no-action-panel
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-button-no-action-panel
-        namespace: krateo-system
-        resource: panels
-        verb: GET
       - id: example-button-basic-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-basic-panel
@@ -155,6 +148,7 @@ spec:
     allowedResources:
       - panels
     items:
+      - resourceRefId: example-button-no-action-panel
       - resourceRefId: example-button-navigate-path-panel
       - resourceRefId: example-button-navigate-resource-panel
       - resourceRefId: example-button-navigate-confirm-panel
@@ -168,8 +162,19 @@ spec:
       - resourceRefId: example-button-rest-invalid-resource-ref-panel
       - resourceRefId: example-button-rest-malformed-headers-panel
       - resourceRefId: example-button-rest-conflicting-navigations-panel
+      - resourceRefId: example-button-rest-empty-payload-panel
+      - resourceRefId: example-button-rest-static-payload-panel
+      - resourceRefId: example-button-rest-merged-payload-panel
+      - resourceRefId: example-button-rest-payload-overrides-static-panel
+      - resourceRefId: example-button-rest-payload-overrides-jq-panel
   resourcesRefs:
     items:
+      - id: example-button-no-action-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-no-action-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
       - id: example-button-navigate-path-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-navigate-path-panel
@@ -245,6 +250,36 @@ spec:
       - id: example-button-rest-conflicting-navigations-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-conflicting-navigations-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-empty-payload-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-empty-payload-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-static-payload-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-static-payload-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-merged-payload-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-merged-payload-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-payload-overrides-static-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-payload-overrides-static-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-payload-overrides-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-payload-overrides-jq-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -665,6 +700,106 @@ spec:
       - id: example-button-rest-conflicting-navigations
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-conflicting-navigations
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-empty-payload-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Empty payload'
+    items:
+      - resourceRefId: example-button-rest-empty-payload
+  resourcesRefs:
+    items:
+      - id: example-button-rest-empty-payload
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-empty-payload
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-static-payload-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Static payload'
+    items:
+      - resourceRefId: example-button-rest-static-payload
+  resourcesRefs:
+    items:
+      - id: example-button-rest-static-payload
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-static-payload
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-merged-payload-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Merged payload with resource payload'
+    items:
+      - resourceRefId: example-button-rest-merged-payload
+  resourcesRefs:
+    items:
+      - id: example-button-rest-merged-payload
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-merged-payload
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-payload-overrides-static-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Payload overrides with static values'
+    items:
+      - resourceRefId: example-button-rest-payload-overrides-static
+  resourcesRefs:
+    items:
+      - id: example-button-rest-payload-overrides-static
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-payload-overrides-static
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-payload-overrides-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Payload overrides with JQ expression'
+    items:
+      - resourceRefId: example-button-rest-payload-overrides-jq
+  resourcesRefs:
+    items:
+      - id: example-button-rest-payload-overrides-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-payload-overrides-jq
         namespace: krateo-system
         resource: buttons
         verb: GET

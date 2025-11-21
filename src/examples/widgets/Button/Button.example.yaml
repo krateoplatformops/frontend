@@ -635,4 +635,205 @@ spec:
         name: create-pod
         namespace: krateo-system
         verb: POST
+---
+# rest - No payload
+# Target: action has an no payload object; resourceRef provides no additional data.
+# Expected behavior: API request body is empty JSON; action executes successfully.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-empty-payload
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-empty-payload
+    actions:
+      rest:
+      - id: rest-empty-payload
+        type: rest
+        resourceRefId: get-default-ns
+        headers:
+        - 'Accept: application/json'  
+  resourcesRefs:
+    items:
+      - id: get-default-ns
+        apiVersion: v1
+        resource: namespaces
+        name: default
+        verb: GET
+---
+# rest - Static payload
+# Target: action payload contains static fields with primitive values.
+# Expected behavior: payload is sent as-is; values are not modified or merged.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-static-payload
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-static-payload
+    actions:
+      rest:
+        - id: rest-static-payload
+          type: rest
+          resourceRefId: create-pod
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: my-sample-nginx-pod
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Merged payload with resource payload
+# Target: action payload is merged with the referenced resource payload.
+# Expected behavior: resulting payload contains all fields from both action and resource; action payload values override resource payload in case of conflict.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-merged-payload
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-merged-payload
+    actions:
+      rest:
+        - id: rest-merged-payload
+          type: rest
+          resourceRefId: create-pod
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: v1
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: different-name
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Payload overrides with static values (not applied)
+# Target: payloadToOverride specifies fields and static values to replace in the merged payload.
+# Expected behavior: specified fields in payloadToOverride are not applied after merge since
+# it does not make sense for Button to define a custom payload as a Form would do
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-payload-overrides-static
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-overrides-static
+    actions:
+      rest:
+        - id: rest-overrides-static
+          type: rest
+          resourceRefId: create-pod
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+          payloadToOverride:
+            - name: apiVersion
+              value: v2
+            - name: metadata.name
+              value: overriden-name
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: create-pod
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Payload overrides with JQ expression (not applied)
+# Target: payloadToOverride values are JQ expressions referencing the customPayload.
+# Expected behavior: specified fields in payloadToOverride are not applied after merge since
+# it does not make sense for Button to define a custom payload as a Form would do
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-payload-overrides-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-overrides-jq
+    actions:
+      rest:
+        - id: rest-overrides-jq
+          type: rest
+          resourceRefId: create-pod
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+          payloadToOverride:
+            - name: apiVersion
+              value: ${ .json.apiVersion }
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: create-pod
+        namespace: krateo-system
+        verb: POST
 
