@@ -170,6 +170,8 @@ spec:
       - resourceRefId: example-button-rest-success-message-jq-panel
       - resourceRefId: example-button-rest-error-message-panel
       - resourceRefId: example-button-rest-error-message-jq-panel
+      - resourceRefId: example-button-rest-success-redirect-panel
+      - resourceRefId: example-button-rest-success-redirect-jq-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -301,6 +303,18 @@ spec:
       - id: example-button-rest-error-message-jq-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-error-message-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-success-redirect-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-redirect-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-success-redirect-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-redirect-jq-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -881,6 +895,46 @@ spec:
       - id: example-button-rest-error-message-jq
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-error-message-jq
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-redirect-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on success'
+    items:
+      - resourceRefId: example-button-rest-success-redirect
+  resourcesRefs:
+    items:
+      - id: example-button-rest-success-redirect
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-redirect
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-redirect-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on success with dynamic URL via JQ expression'
+    items:
+      - resourceRefId: example-button-rest-success-redirect-jq
+  resourcesRefs:
+    items:
+      - id: example-button-rest-success-redirect-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-redirect-jq
         namespace: krateo-system
         resource: buttons
         verb: GET

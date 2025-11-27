@@ -951,3 +951,89 @@ spec:
         resource: namespaces
         name: default
         verb: GET
+---
+### rest - Navigation on success
+### Target: correct request -> redirect to another page (onSuccessNavigateTo)
+### Expected behaviour: after the request is successfully executed, there is a redirect to a specified page
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-redirect
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Execute and navigate
+    clickActionId: rest-success-redirect
+    actions:
+      rest:
+        - id: rest-success-redirect
+          type: rest
+          resourceRefId: create-pod
+          onSuccessNavigateTo: /barchart
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod-redirect"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: my-sample-nginx-pod-redirect
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Navigation on success with dynamic URL via JQ expression
+### Target: correct request -> redirect to another page (onSuccessNavigateTo) -> URL is specified by JQ expression
+### Expected behaviour: after the request is successfully executed, there is a redirect to a specified page
+### THe URL is fetched by interpolating a JQ expression.
+### In this case we expect 404 since we are redirecting to a non existent page.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-redirect-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Execute and navigate
+    clickActionId: rest-success-redirect-jq
+    actions:
+      rest:
+        - id: rest-success-redirect-jq
+          type: rest
+          resourceRefId: create-pod
+          onSuccessNavigateTo: ${ .json.metadata.name }
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod-redirect-jq"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: my-sample-nginx-pod-redirect-jq
+        namespace: krateo-system
+        verb: POST
