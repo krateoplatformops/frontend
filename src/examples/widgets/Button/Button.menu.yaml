@@ -162,11 +162,14 @@ spec:
       - resourceRefId: example-button-rest-invalid-resource-ref-panel
       - resourceRefId: example-button-rest-malformed-headers-panel
       - resourceRefId: example-button-rest-conflicting-navigations-panel
-      - resourceRefId: example-button-rest-empty-payload-panel
       - resourceRefId: example-button-rest-static-payload-panel
       - resourceRefId: example-button-rest-merged-payload-panel
       - resourceRefId: example-button-rest-payload-overrides-static-panel
       - resourceRefId: example-button-rest-payload-overrides-jq-panel
+      - resourceRefId: example-button-rest-success-message-panel
+      - resourceRefId: example-button-rest-success-message-jq-panel
+      - resourceRefId: example-button-rest-error-message-panel
+      - resourceRefId: example-button-rest-error-message-jq-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -253,12 +256,6 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET
-      - id: example-button-rest-empty-payload-panel
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-button-rest-empty-payload-panel
-        namespace: krateo-system
-        resource: panels
-        verb: GET
       - id: example-button-rest-static-payload-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-static-payload-panel
@@ -280,6 +277,30 @@ spec:
       - id: example-button-rest-payload-overrides-jq-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-payload-overrides-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-success-message-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-message-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-success-message-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-message-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-error-message-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-error-message-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-error-message-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-error-message-jq-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -707,26 +728,6 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-button-rest-empty-payload-panel
-  namespace: krateo-system
-spec:
-  widgetData:
-    actions: {}
-    title: 'rest - Empty payload'
-    items:
-      - resourceRefId: example-button-rest-empty-payload
-  resourcesRefs:
-    items:
-      - id: example-button-rest-empty-payload
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-button-rest-empty-payload
-        namespace: krateo-system
-        resource: buttons
-        verb: GET
----
-kind: Panel
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
   name: example-button-rest-static-payload-panel
   namespace: krateo-system
 spec:
@@ -800,6 +801,86 @@ spec:
       - id: example-button-rest-payload-overrides-jq
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-payload-overrides-jq
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-message-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized success message'
+    items:
+      - resourceRefId: example-button-rest-success-message
+  resourcesRefs:
+    items:
+      - id: example-button-rest-success-message
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-message
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-message-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized success message with JQ'
+    items:
+      - resourceRefId: example-button-rest-success-message-jq
+  resourcesRefs:
+    items:
+      - id: example-button-rest-success-message-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-success-message-jq
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-error-message-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized error message'
+    items:
+      - resourceRefId: example-button-rest-error-message
+  resourcesRefs:
+    items:
+      - id: example-button-rest-error-message
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-error-message
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-error-message-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized error message with JQ'
+    items:
+      - resourceRefId: example-button-rest-error-message-jq
+  resourcesRefs:
+    items:
+      - id: example-button-rest-error-message-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-error-message-jq
         namespace: krateo-system
         resource: buttons
         verb: GET

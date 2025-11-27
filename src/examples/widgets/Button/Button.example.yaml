@@ -636,33 +636,6 @@ spec:
         namespace: krateo-system
         verb: POST
 ---
-# rest - No payload
-# Target: action has an no payload object; resourceRef provides no additional data.
-# Expected behavior: API request body is empty JSON; action executes successfully.
-kind: Button
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: example-button-rest-empty-payload
-  namespace: krateo-system
-spec:
-  widgetData:
-    label: Submit
-    clickActionId: rest-empty-payload
-    actions:
-      rest:
-      - id: rest-empty-payload
-        type: rest
-        resourceRefId: get-default-ns
-        headers:
-        - 'Accept: application/json'  
-  resourcesRefs:
-    items:
-      - id: get-default-ns
-        apiVersion: v1
-        resource: namespaces
-        name: default
-        verb: GET
----
 # rest - Static payload
 # Target: action payload contains static fields with primitive values.
 # Expected behavior: payload is sent as-is; values are not modified or merged.
@@ -836,4 +809,145 @@ spec:
         name: create-pod
         namespace: krateo-system
         verb: POST
-
+---
+# rest - Customized success message
+# Target: correct request -> successMessage is displayed
+# Expected behavior: after the request succeeds a customized success message is displayed
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-message
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-success-message
+    actions:
+      rest:
+        - id: rest-success-message
+          type: rest
+          resourceRefId: create-pod
+          successMessage: 'This is a customized message: successful request!'
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "success-message-pod"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: success-message-pod
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Customized success message with JQ expression
+# Target: correct request -> successMessage with JQ expression is displayed
+# Expected behavior: after the request succeeds a customized success message is displayed
+# The message interpolates a variable using JQ
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-success-message-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-success-message-jq
+    actions:
+      rest:
+        - id: rest-success-message-jq
+          type: rest
+          resourceRefId: create-pod
+          successMessage: '${ "Success on resource: " + .json.metadata.name }'
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "success-message-jq-pod"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: success-message-jq-pod
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Customized error message
+# Target: malformed request -> errorMessage is displayed
+# Expected behavior: after the request fails a customized error message is displayed
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-error-message
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-error-message
+    actions:
+      rest:
+      - id: rest-error-message
+        type: rest
+        resourceRefId: get-default-ns
+        errorMessage: 'This is a customized message: malformed request'
+        headers:
+        - 'Accept: application/json'  
+  resourcesRefs:
+    items:
+      - id: get-default-ns
+        apiVersion: v1
+        resource: namespaces
+        name: default
+        verb: GET
+---
+### rest - Customized error message with JQ expression
+# Target: malformed request -> errorMessage with JQ expression is displayed
+# Expected behavior: after the request fails a customized error message is displayed
+# The message interpolates a variable using JQ
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-error-message-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Submit
+    clickActionId: rest-error-message-jq
+    actions:
+      rest:
+      - id: rest-error-message-jq
+        type: rest
+        resourceRefId: get-default-ns
+        errorMessage: '${"Error while executing action on resource: " + .response.message }'
+        headers:
+        - 'Accept: application/json'  
+  resourcesRefs:
+    items:
+      - id: get-default-ns
+        apiVersion: v1
+        resource: namespaces
+        name: default
+        verb: GET
