@@ -1,4 +1,4 @@
-# Case 1: Empty JSON string
+# Empty JSON string
 # Target: intentionally empty JSON input.
 # Expected behavior: displays parsing error indicating invalid JSON.
 kind: YamlViewer
@@ -10,7 +10,7 @@ spec:
   widgetData:
     json: ''
 ---
-# Case 2: Invalid JSON format
+# Invalid JSON format
 # Target: verify error handling when JSON is malformed.
 # Expected behavior: displays parsing error with details of the syntax issue.
 kind: YamlViewer
@@ -22,7 +22,7 @@ spec:
   widgetData:
     json: '{invalidJson:true,'
 ---
-# Case 3: Valid simple JSON
+# Valid simple JSON
 # Target: basic conversion from JSON to YAML.
 # Expected behavior: renders YAML equivalent of the JSON object.
 kind: YamlViewer
@@ -34,7 +34,7 @@ spec:
   widgetData:
     json: '{"type":"object","additionalProperties":false,"properties":{"kind":{"type":"string","default":"YamlViewer"}}}'
 ---
-# Case 4: JSON with nested structure
+# JSON with nested structure
 # Target: ensure YAML conversion handles nested objects and arrays.
 # Expected behavior: nested JSON structures are properly represented in YAML.
 kind: YamlViewer
@@ -46,7 +46,7 @@ spec:
   widgetData:
     json: '{"user":{"id":123,"name":"Alice"},"roles":["admin","editor"]}'
 ---
-# Case 5: JSON with special characters
+# JSON with special characters
 # Target: verify correct handling of escape characters and quotes.
 # Expected behavior: special characters are preserved in YAML output.
 kind: YamlViewer

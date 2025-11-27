@@ -1,4 +1,4 @@
-# Case 1: Missing schema / stringSchema
+# Missing schema / stringSchema
 # Target: verify behaviour when neither `schema` nor `stringSchema` are provided.
 # Expected behavior: the form surface cannot be rendered and an error state is produced
 # explaining that a schema is required to build the fields.
@@ -25,7 +25,7 @@ spec:
         resource: dummy
         verb: POST
 ---
-# Case 2: Basic string fields (required)
+# Basic string fields (required)
 # Target: validate simple string inputs and required field enforcement.
 # Expected behavior: form exposes text inputs for "name" and "image"; submission blocked until required fields are filled.
 kind: Form
@@ -69,7 +69,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 3: String field with enum (4 values or less) (renders as radio group)
+# String field with enum (4 values or less) (renders as radio group)
 # Target: ensure enum with few options renders compact controls (radios).
 # Expected behavior: a small set of choices is rendered as radio buttons and is selectable.
 kind: Form
@@ -107,7 +107,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 4: String field with enum (more than 4 values) (multi-option select)
+# String field with enum (more than 4 values) (multi-option select)
 # Target: verify that string fields with multiple enum options are rendered as dropdown selectors.
 # Expected behavior: the form displays a select input with exactly three or more available options;
 # selecting one updates the underlying field value.
@@ -146,7 +146,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 5: Boolean field default value
+# Boolean field default value
 # Target: ensure boolean fields initialize correctly and render as toggles.
 # Expected behavior: "enableMetrics" shows a switch, defaulting to the provided boolean.
 kind: Form
@@ -183,7 +183,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 6: Integer field (basic number input)
+# Integer field (basic number input)
 # Target: validate integer-type fields that are rendered as numeric input controls (not sliders).
 # Expected behavior: renders an input box restricted to numeric characters; no slider or range widget.
 kind: Form
@@ -222,7 +222,7 @@ spec:
         verb: POST
 
 ---
-# Case 7: Integer field with small range (renders slider)
+# Integer field with small range (renders slider)
 # Target: confirm integer fields with small bounded ranges become slider controls.
 # Expected behavior: "replicas" shows a slider when (max - min) < 100; otherwise numeric input.
 kind: Form
@@ -261,7 +261,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 8: Array of strings (editable list)
+# Array of strings (editable list)
 # Target: validate list-of-strings fields (tags, labels) are editable as an array editor.
 # Expected behavior: field accepts multiple string entries and serializes them to array.
 kind: Form
@@ -298,7 +298,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 9: Array of strings (with enum)
+# Array of strings (with enum)
 # Target: validate list-of-strings fields (tags, labels) with options specified as enum.
 # Expected behavior: a set of options is displayed, multiple selection is enabled and values are serialized into an array.
 kind: Form
@@ -339,7 +339,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 10: Array of objects (object list editor)
+# Array of objects (object list editor)
 # Target: validate object-list fields that expose sub-fields for each array item.
 # Expected behavior: editor allows adding/removing objects with configured display field and nested inputs.
 kind: Form
@@ -386,7 +386,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 11: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)
+# Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)
 # Target: full integration smoke-test: multiple field types, defaults and optional fields.
 # Expected behavior: form renders a combination of controls, initializes defaults, and exposes optional-field toggle if present.
 kind: Form
@@ -447,7 +447,7 @@ spec:
         resource: restactions
         verb: GET
 ---
-# Case 12: Schema object (alphabetically ordered fields)
+# Schema object (alphabetically ordered fields)
 # Target: validate rendering from a raw JSON object (`schema` instead of `stringSchema`).
 # Expected behavior: field order will be alphabetically ordered.
 # This case contrasts with `stringSchema`, which preserves field order as declared in the serialized string.
@@ -496,7 +496,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 13: Form displayed inside Drawer (triggered by Button)
+# Form displayed inside Drawer (triggered by Button)
 # Target: validate integration of a Form inside a Drawer opened through a Button action.
 # Expected behavior: clicking the button opens a Drawer containing the Form; the Form renders correctly, with the submit button and required validations available within the Drawer context.
 kind: Button
@@ -525,7 +525,7 @@ spec:
         resource: forms
         verb: GET
 ---
-# Case 14: Autocomplete field (static values)
+# Autocomplete field (static values)
 # Target: validate autocomplete fields that display a list of static values
 # Expected behavior: a 'Start typing...' message is displayed on a select
 # and typing triggers the displaying of values
@@ -562,7 +562,7 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
-# Case 15: Autocomplete field (values retrieved from RESTAction)
+# Autocomplete field (values retrieved from RESTAction)
 # Target: validate autocomplete fields that display a list of static values
 # Expected behavior: a 'Start typing...' message is displayed on a select
 # and typing triggers a call to a RESTACtion that retrieves the values
@@ -623,7 +623,7 @@ spec:
       }
     )
 ---
-# Case 16: Autocomplete field (values retrieved from RESTAction with extra parameter)
+# Autocomplete field (values retrieved from RESTAction with extra parameter)
 # Target: validate autocomplete fields that display a list of static values
 # Expected behavior: a 'Start typing...' message is displayed on a select
 # and typing triggers a call to a RESTACtion that calls an external API with an additional
@@ -699,7 +699,7 @@ metadata:
 stringData:
   server-url: https://jsonplaceholder.typicode.com
 ---
-# Case 17: Dependencies field
+# Dependencies field
 # Target: validate fields whose available options depend on the value of another field
 # Expected behavior: three fields are rendered, each field values depend on the previous field
 # value being set, otherwise the field is disabled

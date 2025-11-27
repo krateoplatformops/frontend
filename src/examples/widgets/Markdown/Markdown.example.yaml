@@ -1,4 +1,4 @@
-# Case 1: Empty markdown
+# Empty markdown
 # Target: rendering fallback UI when no markdown content is provided.
 # Expected behavior: renders an empty block — no text or actions shown.
 kind: Markdown
@@ -10,7 +10,7 @@ spec:
   widgetData:
     markdown: ""
 ---
-# Case 2: Basic markdown formatting
+# Basic markdown formatting
 # Target: verify rendering of headings, lists, links, and code blocks.
 # Expected behavior: correctly styles H1, bold/italic, lists, and inline code.
 kind: Markdown
@@ -57,7 +57,7 @@ spec:
          - **Purpose:** Manages the full lifecycle of a PostgreSQL cluster.
          - **Installation Guide:** [CloudNative-PG Installation](https://cloudnative-pg.io/documentation/1.27/)
 ---
-# Case 3: Allow copy enabled
+# Allow copy enabled
 # Target: verify clipboard functionality.
 # Expected behavior: displays a copy button; clicking it copies the markdown text.
 kind: Markdown
@@ -72,7 +72,7 @@ spec:
       ## Copy example
       Questo testo può essere copiato negli appunti.
 ---
-# Case 4: Allow download enabled
+# Allow download enabled
 # Target: verify download button functionality.
 # Expected behavior: displays a download button; clicking it downloads the markdown as a `.txt` file.
 kind: Markdown
@@ -87,7 +87,7 @@ spec:
       ## Download example
       Questo testo sarà scaricato in un file di testo.
 ---
-# Case 5: Custom file extension for download
+# Custom file extension for download
 # Target: verify correct handling of custom download extensions.
 # Expected behavior: clicking the download button saves the file as `file.md`.
 kind: Markdown
@@ -103,7 +103,7 @@ spec:
       ## Custom extension example
       File scaricato come `file.md`
 ---
-# Case 6: Combined actions (copy + download)
+# Combined actions (copy + download)
 # Target: verify rendering of both buttons together.
 # Expected behavior: shows both copy and download icons; both actions functional.
 kind: Markdown
@@ -126,7 +126,7 @@ spec:
       echo "Krateo Markdown Widget"
       ```
 ---
-# Case 7: Long content markdown
+# Long content markdown
 # Target: test rendering performance and scroll handling.
 # Expected behavior: correctly scrolls long content and maintains styles.
 kind: Markdown

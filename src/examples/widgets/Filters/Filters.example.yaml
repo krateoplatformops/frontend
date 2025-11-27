@@ -1,4 +1,4 @@
-# Case 1: String filter
+# String filter
 # Target: text-based filtering on a single string field.
 # Expected behavior: matches rows containing the substring (case-insensitive).
 kind: Filters
@@ -15,7 +15,7 @@ spec:
           - metadata.name
         type: string
 ---
-# Case 2: Number filter
+# Number filter
 # Target: numeric filtering for integer or float fields.
 # Expected behavior: matches rows with exact numeric value.
 kind: Filters
@@ -32,7 +32,7 @@ spec:
           - spec.resources.cpu
         type: number
 ---
-# Case 3: Boolean filter
+# Boolean filter
 # Target: true/false filtering for logical properties.
 # Expected behavior: filters resources by boolean state.
 kind: Filters
@@ -49,7 +49,7 @@ spec:
           - spec.resources.active
         type: boolean
 ---
-# Case 4: Date filter
+# Date filter
 # Target: time-based filtering on a single date field.
 # Expected behavior: matches resources created on the selected date.
 kind: Filters
@@ -66,7 +66,7 @@ spec:
           - metadata.creationTimestamp
         type: date
 ---
-# Case 5: Date range filter
+# Date range filter
 # Target: time-window filtering between two selected dates.
 # Expected behavior: shows resources with timestamps inside the selected range.
 kind: Filters
@@ -83,7 +83,7 @@ spec:
           - metadata.creationTimestamp
         type: daterange
 ---
-# Case 6: Combined filters
+# Combined filters
 # Target: mixed configuration to test multiple field types.
 # Expected behavior: combines string, number, boolean, and date filters in the same form.
 kind: Filters

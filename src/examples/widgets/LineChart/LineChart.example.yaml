@@ -1,4 +1,4 @@
-# Case 1: Empty lines
+# Empty lines
 # Target: rendering fallback UI when no data is provided.
 # Expected behavior: displays <Empty /> placeholder since "lines" is null.
 kind: LineChart
@@ -10,7 +10,7 @@ spec:
   widgetData:
     lines: []
 ---
-# Case 2: Single line
+# Single line
 # Target: rendering a single smooth line with valid coords.
 # Expected behavior: one line appears with correct color and legend entry.
 kind: LineChart
@@ -35,7 +35,7 @@ spec:
     xAxisName: "Time"
     yAxisName: "CPU (%)"
 ---
-# Case 3: Multiple lines
+# Multiple lines
 # Target: rendering multiple data series in a single chart.
 # Expected behavior: all lines appear together with distinct colors and shared x-axis.
 kind: LineChart
@@ -71,7 +71,7 @@ spec:
     xAxisName: "Time"
     yAxisName: "Value"
 ---
-# Case 4: Missing coords
+# Missing coords
 # Target: handling lines with empty or missing coordinate arrays.
 # Expected behavior: line with no coords is skipped; chart renders remaining valid lines.
 kind: LineChart
@@ -97,7 +97,7 @@ spec:
     xAxisName: "Index"
     yAxisName: "Value"
 ---
-# Case 5: Non-numeric values
+# Non-numeric values
 # Target: ensuring chart stability when encountering string or malformed yAxis values.
 # Expected behavior: invalid values are treated as NaN; chart shows disconnected points (no connecting line) for valid ones, no crash occurs.
 kind: LineChart

@@ -28,47 +28,64 @@ metadata:
 spec:
   widgetData:
     allowedResources:
-      - barcharts
-      - buttons
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - rows
-      - tables
       - tablists
-      - yamlviewers
     items:
-      - resourceRefId: example-panel-no-action-panel
+      - resourceRefId: example-panel-tablist
+  resourcesRefs:
+    items:
+      - id: example-panel-tablist
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-tablist
+        namespace: krateo-system
+        resource: tablists
+        verb: GET
+---
+kind: TabList
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-tablist
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - pages
+    items:
+      - label: Examples
+        resourceRefId: example-panel-examples-page
+      - label: Actions
+        resourceRefId: example-panel-actions-page
+  resourcesRefs:
+    items:
+      - id: example-panel-examples-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-examples-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+      - id: example-panel-actions-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-actions-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-examples-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
+    items:
       - resourceRefId: example-panel-basic-panel
       - resourceRefId: example-panel-with-icon-panel
       - resourceRefId: example-panel-with-header-panel
       - resourceRefId: example-panel-footer-tags-panel
       - resourceRefId: example-panel-multiple-items-panel
-      - resourceRefId: example-panel-navigate-path-panel
-      - resourceRefId: example-panel-navigate-resource-panel
-      - resourceRefId: example-panel-navigate-confirm-panel
-      - resourceRefId: example-panel-navigate-loading-panel
-      - resourceRefId: example-panel-open-drawer-default-panel
-      - resourceRefId: example-panel-open-drawer-large-panel
-      - resourceRefId: example-panel-open-modal-default-panel
-      - resourceRefId: example-panel-open-modal-large-panel
-      - resourceRefId: example-panel-open-modal-custom-panel
-      - resourceRefId: example-panel-open-modal-fullscreen-panel
   resourcesRefs:
     items:
-      - id: example-panel-no-action-panel
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-panel-no-action-panel
-        namespace: krateo-system
-        resource: panels
-        verb: GET
       - id: example-panel-basic-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-panel-basic-panel
@@ -99,6 +116,36 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET    
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-actions-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
+    items:
+      - resourceRefId: example-panel-no-action-panel
+      - resourceRefId: example-panel-navigate-path-panel
+      - resourceRefId: example-panel-navigate-resource-panel
+      - resourceRefId: example-panel-navigate-confirm-panel
+      - resourceRefId: example-panel-navigate-loading-panel
+      - resourceRefId: example-panel-open-drawer-default-panel
+      - resourceRefId: example-panel-open-drawer-large-panel
+      - resourceRefId: example-panel-open-modal-default-panel
+      - resourceRefId: example-panel-open-modal-large-panel
+      - resourceRefId: example-panel-open-modal-custom-panel
+      - resourceRefId: example-panel-open-modal-fullscreen-panel
+  resourcesRefs:
+    items:
+      - id: example-panel-no-action-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-no-action-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
       - id: example-panel-navigate-path-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-panel-navigate-path-panel
@@ -168,7 +215,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Action not found'
+    title: 'Action not found'
     items:
       - resourceRefId: example-panel-no-action
   resourcesRefs:
@@ -188,7 +235,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Basic panel with title only'
+    title: 'Basic panel with title only'
     items:
       - resourceRefId: example-panel-basic
   resourcesRefs:
@@ -208,7 +255,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Panel with icon and title'
+    title: 'Panel with icon and title'
     items:
       - resourceRefId: example-panel-with-icon
   resourcesRefs:
@@ -228,7 +275,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Panel with header sections'
+    title: 'Panel with header sections'
     items:
       - resourceRefId: example-panel-with-header
   resourcesRefs:
@@ -248,7 +295,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Panel with tags and footer items'
+    title: 'Panel with tags and footer items'
     items:
       - resourceRefId: example-panel-footer-tags
   resourcesRefs:
@@ -268,7 +315,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Panel with multiple child widgets'
+    title: 'Panel with multiple child widgets'
     items:
       - resourceRefId: example-panel-multiple-items
   resourcesRefs:
@@ -288,7 +335,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: navigate action - Navigation to another page using `path`'
+    title: 'navigate - Navigation to another page using `path`'
     items:
       - resourceRefId: example-panel-navigate-path
   resourcesRefs:
@@ -308,7 +355,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 8: navigate action - Navigation to another resource using `resourceRefId`'
+    title: 'navigate - Navigation to another resource using `resourceRefId`'
     items:
       - resourceRefId: example-panel-navigate-resource
   resourcesRefs:
@@ -328,7 +375,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 9: navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)'
+    title: 'navigate - Navigation with confirmation prompt (`requireConfirmation: true`)'
     items:
       - resourceRefId: example-panel-navigate-confirm
   resourcesRefs:
@@ -348,7 +395,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 10: navigate action - Navigation with loading indicator'
+    title: 'navigate - Navigation with loading indicator'
     items:
       - resourceRefId: example-panel-navigate-loading
   resourcesRefs:
@@ -368,7 +415,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 11: openDrawer - default size'
+    title: 'openDrawer - default size'
     items:
       - resourceRefId: example-panel-open-drawer-default
   resourcesRefs:
@@ -388,7 +435,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 12: openDrawer - large size'
+    title: 'openDrawer - large size'
     items:
       - resourceRefId: example-panel-open-drawer-large
   resourcesRefs:
@@ -408,7 +455,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 13: openModal - default size'
+    title: 'openModal - default size'
     items:
       - resourceRefId: example-panel-open-modal-default
   resourcesRefs:
@@ -428,7 +475,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 14: openModal - large size'
+    title: 'openModal - large size'
     items:
       - resourceRefId: example-panel-open-modal-large
   resourcesRefs:
@@ -448,7 +495,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 15: openModal - custom width'
+    title: 'openModal - custom width'
     items:
       - resourceRefId: example-panel-open-modal-custom
   resourcesRefs:
@@ -468,7 +515,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 16: openModal - fullscreen mode'
+    title: 'openModal - fullscreen mode'
     items:
       - resourceRefId: example-panel-open-modal-fullscreen
   resourcesRefs:

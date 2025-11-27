@@ -92,7 +92,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty lines'
+    title: 'Empty lines'
     items:
       - resourceRefId: example-linechart-empty
   resourcesRefs:
@@ -112,7 +112,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Single line'
+    title: 'Single line'
     items:
       - resourceRefId: example-linechart-single
   resourcesRefs:
@@ -132,7 +132,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Multiple lines'
+    title: 'Multiple lines'
     items:
       - resourceRefId: example-linechart-multi
   resourcesRefs:
@@ -152,7 +152,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Missing coords'
+    title: 'Missing coords'
     items:
       - resourceRefId: example-linechart-missing-coords
   resourcesRefs:
@@ -172,7 +172,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Non-numeric values'
+    title: 'Non-numeric values'
     items:
       - resourceRefId: example-linechart-invalid-values
   resourcesRefs:

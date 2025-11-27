@@ -99,7 +99,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty paragraph string'
+    title: 'Empty paragraph string'
     items:
       - resourceRefId: example-paragraph-empty
   resourcesRefs:
@@ -119,7 +119,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Basic text'
+    title: 'Basic text'
     items:
       - resourceRefId: example-paragraph-basic
   resourcesRefs:
@@ -139,7 +139,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Text with single link'
+    title: 'Text with single link'
     items:
       - resourceRefId: example-paragraph-link
   resourcesRefs:
@@ -159,7 +159,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Multiline text'
+    title: 'Multiline text'
     items:
       - resourceRefId: example-paragraph-multiline
   resourcesRefs:
@@ -179,7 +179,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Text containing special characters and pseudo-markdown'
+    title: 'Text containing special characters and pseudo-markdown'
     items:
       - resourceRefId: example-paragraph-special-chars
   resourcesRefs:
@@ -199,7 +199,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Long paragraph text'
+    title: 'Long paragraph text'
     items:
       - resourceRefId: example-paragraph-long
   resourcesRefs:

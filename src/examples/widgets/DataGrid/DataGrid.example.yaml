@@ -1,4 +1,4 @@
-# Case 1: Empty items array
+# Empty items array
 # Target: simulate a configuration where the data grid has no defined child items.
 # Expected behavior: since there are no referenced widgets, the grid displays an empty layout area 
 # without elements. This ensures that the layout handles absence of children gracefully, 
@@ -14,7 +14,7 @@ spec:
     asGrid: true
     items: []
 ---
-# Case 2: Missing resource references
+# Missing resource references
 # Target: test what happens when item identifiers do not correspond to any known resource reference.
 # Expected behavior: since there are no referenced widgets, the grid displays an empty layout area 
 # without elements. The unresolved references are ignored during layout rendering.
@@ -33,7 +33,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 3: Single child widget (list mode)
+# Single child widget (list mode)
 # Target: confirm that when the grid layout is disabled, 
 # the widget behaves as a simple list displaying its single child vertically.
 # Expected behavior: a single element is rendered, filling the available horizontal space 
@@ -58,7 +58,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 4: Multiple widgets in list mode
+# Multiple widgets in list mode
 # Target: confirm that when the grid layout is disabled, 
 # the widget behaves as a simple list displaying its children vertically.
 # Expected behavior: multiple elements are rendered, filling the available horizontal space 
@@ -97,7 +97,7 @@ spec:
         resource: piecharts
         verb: GET
 ---
-# Case 5: Multiple widgets in grid mode (default settings)
+# Multiple widgets in grid mode (default settings)
 # Target: verify the grid layout when several widgets are placed together 
 # and no explicit grid configuration is provided.
 # Expected behavior: widgets are distributed evenly using default spacing and responsive behavior, 
@@ -136,7 +136,7 @@ spec:
         resource: piecharts
         verb: GET
 ---
-# Case 6: Custom grid configuration
+# Custom grid configuration
 # Target: validate how explicit layout parameters redefine spacing and column distribution
 # across screen sizes.
 # Expected behavior: widgets are displayed in a dense grid,
@@ -183,7 +183,7 @@ spec:
         resource: piecharts
         verb: GET
 ---
-# Case 7: Grid using prefix for contextual filtering
+# Grid using prefix for contextual filtering
 # Target: test how the prefix parameter allows child widgets 
 # to access shared contextual data such as applied filters.
 # Expected behavior: all child widgets use the same prefix to retrieve and display 
@@ -288,7 +288,7 @@ spec:
         resource: markdowns
         verb: GET
 ---
-# Case 8: Nested data grid
+# Nested data grid
 # Target: verify hierarchical layout composition by including a grid within another grid.
 # Expected behavior: both grids render correctly, with the inner one maintaining its own spacing 
 # and alignment rules, confirming isolation between parent and child grid configurations.

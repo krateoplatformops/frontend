@@ -120,7 +120,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty columns array'
+    title: 'Empty columns array'
     items:
       - resourceRefId: example-table-empty-columns
   resourcesRefs:
@@ -140,7 +140,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Empty data array'
+    title: 'Empty data array'
     items:
       - resourceRefId: example-table-empty-data
   resourcesRefs:
@@ -160,7 +160,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Basic table with strings and numbers'
+    title: 'Basic table with strings and numbers'
     items:
       - resourceRefId: example-table-basic
   resourcesRefs:
@@ -180,7 +180,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Mixed data types (string, boolean, decimal, array)'
+    title: 'Mixed data types (string, boolean, decimal, array)'
     items:
       - resourceRefId: example-table-mixed-types
   resourcesRefs:
@@ -200,7 +200,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Table including icons'
+    title: 'Table including icons'
     items:
       - resourceRefId: example-table-icons
   resourcesRefs:
@@ -220,7 +220,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Table with widget reference'
+    title: 'Table with widget reference'
     items:
       - resourceRefId: example-table-nested-widget
   resourcesRefs:
@@ -240,7 +240,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: Table with null and missing values'
+    title: 'Table with null and missing values'
     items:
       - resourceRefId: example-table-null-values
   resourcesRefs:
@@ -260,7 +260,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 8: Table with filter'
+    title: 'Table with filter'
     items:
       - resourceRefId: example-table-with-filter-filter
       - resourceRefId: example-table-with-filter
@@ -287,7 +287,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 9: Table with pagination'
+    title: 'Table with pagination'
     items:
       - resourceRefId: example-table-with-pagination
   resourcesRefs:

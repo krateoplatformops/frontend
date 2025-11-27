@@ -1,4 +1,4 @@
-# Case 1: Empty items array
+# Empty items array
 # Target: simulate a row with no defined children.
 # Expected behavior: the layout remains empty without any spacing or placeholders,
 # confirming that an empty configuration produces no visible output.
@@ -14,7 +14,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 2: Invalid resource reference
+# Invalid resource reference
 # Target: verify the behavior when an item references a non-existent resource.
 # Expected behavior: the row renders only valid children,
 # ignoring the invalid reference without affecting the rest of the layout.
@@ -38,7 +38,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 3: Single full-width child
+# Single full-width child
 # Target: verify that a single item spans the full available width when no size is provided.
 # Expected behavior: the single widget expands to fill the entire row width, 
 # confirming that default sizing logic (24 columns) applies correctly.
@@ -61,7 +61,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 4: Two proportional children
+# Two proportional children
 # Target: confirm that multiple items share the row width proportionally when sizes are not defined.
 # Expected behavior: both children are automatically distributed evenly (12 columns each),
 # maintaining consistent spacing and alignment.
@@ -91,7 +91,7 @@ spec:
         resource: piecharts
         verb: GET
 ---
-# Case 5: Custom column sizes
+# Custom column sizes
 # Target: verify that explicit size values influence the horizontal distribution.
 # Expected behavior: the row adapts so that each widget occupies the defined proportion
 # of the total 24-column grid (e.g., 18/6 split in this case).
@@ -123,7 +123,7 @@ spec:
         resource: piecharts
         verb: GET
 ---
-# Case 6: Alignment within cells
+# Alignment within cells
 # Target: verify horizontal alignment when some items specify alignment attributes.
 # Expected behavior: elements with alignment 'right' or 'center' are positioned accordingly 
 # within their own column, while others remain left-aligned by default.
@@ -169,7 +169,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 7: Nested composition
+# Nested composition
 # Target: confirm that a row can contain a more complex child layout, such as a panel or another layout widget.
 # Expected behavior: nested layouts render within the available cell space,
 # maintaining correct padding and height inheritance without overflow.
@@ -192,7 +192,7 @@ spec:
         resource: columns
         verb: GET
 ---
-# Case 8: Responsive layout stress test
+# Responsive layout stress test
 # Target: validate the layout's adaptability on different screen sizes.
 # Expected behavior: as the viewport shrinks, the row wraps correctly
 # without cutting off children or causing overlap, ensuring full visibility at all breakpoints.
@@ -234,7 +234,7 @@ spec:
         resource: buttons
         verb: GET
 ---
-# Case 9: Alignment within row
+# Alignment within row
 # Target: verify horizontal alignment when alignment is specified for the entire row.
 # Expected behavior: elements are positioned accordinly to the 'top' specified alignment.
 kind: Row

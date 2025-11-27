@@ -106,7 +106,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty markdown'
+    title: 'Empty markdown'
     items:
       - resourceRefId: example-markdown-empty
   resourcesRefs:
@@ -126,7 +126,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Basic markdown formatting'
+    title: 'Basic markdown formatting'
     items:
       - resourceRefId: example-markdown-basic
   resourcesRefs:
@@ -146,7 +146,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Allow copy enabled'
+    title: 'Allow copy enabled'
     items:
       - resourceRefId: example-markdown-copy
   resourcesRefs:
@@ -166,7 +166,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Allow download enabled'
+    title: 'Allow download enabled'
     items:
       - resourceRefId: example-markdown-download
   resourcesRefs:
@@ -186,7 +186,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Custom file extension for download (.md)'
+    title: 'Custom file extension for download (.md)'
     items:
       - resourceRefId: example-markdown-download-md
   resourcesRefs:
@@ -206,7 +206,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Combined actions (copy + download)'
+    title: 'Combined actions (copy + download)'
     items:
       - resourceRefId: example-markdown-combined
   resourcesRefs:
@@ -226,7 +226,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: Long content markdown'
+    title: 'Long content markdown'
     items:
       - resourceRefId: example-markdown-long
   resourcesRefs:

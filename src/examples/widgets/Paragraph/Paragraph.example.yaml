@@ -1,4 +1,4 @@
-# Case 1: Empty paragraph string
+# Empty paragraph string
 # Target: intentionally empty paragraph content.
 # Expected behavior: renders nothing (no placeholder), since empty string is a valid explicit input.
 kind: Paragraph
@@ -10,7 +10,7 @@ spec:
   widgetData:
     text: ""
 ---
-# Case 2: Basic text
+# Basic text
 # Target: rendering simple text content without links or formatting.
 # Expected behavior: displays plain paragraph inside <Typography.Paragraph>.
 kind: Paragraph
@@ -22,7 +22,7 @@ spec:
   widgetData:
     text: "This is a simple paragraph rendered using the Paragraph widget."
 ---
-# Case 3: Text with single link
+# Text with single link
 # Target: validate automatic link detection using Linkify.
 # Expected behavior: URL is converted into clickable link opening in a new tab.
 kind: Paragraph
@@ -34,7 +34,7 @@ spec:
   widgetData:
     text: "Visit https://krateo.io to learn more about Krateo PlatformOps."
 ---
-# Case 4: Multiline text
+# Multiline text
 # Target: check that line breaks are preserved and rendered correctly.
 # Expected behavior: each line appears as a separate visual line in the paragraph.
 kind: Paragraph
@@ -49,7 +49,7 @@ spec:
       Here is the second line with more details.
       And finally, the third line — all within one Paragraph widget.
 ---
-# Case 5: Text containing special characters and pseudo-markdown
+# Text containing special characters and pseudo-markdown
 # Target: verify raw text handling with markdown-like syntax and symbols.
 # Expected behavior: markdown-like symbols (*, _, #) are shown as plain text (no formatting).
 kind: Paragraph
@@ -61,7 +61,7 @@ spec:
   widgetData:
     text: "This text includes special characters: *stars*, _underscores_, #hash, and emoji 🚀 — all should render as plain text."
 ---
-# Case 6: Long paragraph text
+# Long paragraph text
 # Target: test overflow handling and wrapping behavior for large text blocks.
 # Expected behavior: long content wraps properly within the container and remains scrollable if needed.
 kind: Paragraph

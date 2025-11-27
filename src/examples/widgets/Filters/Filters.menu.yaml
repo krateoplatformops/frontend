@@ -99,7 +99,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: String filter'
+    title: 'String filter'
     items:
       - resourceRefId: example-filters-string
       - resourceRefId: example-filters-string-table
@@ -258,7 +258,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Number filter'
+    title: 'Number filter'
     items:
       - resourceRefId: example-filters-number
       - resourceRefId: example-filters-number-table
@@ -417,7 +417,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Boolean filter'
+    title: 'Boolean filter'
     items:
       - resourceRefId: example-filters-boolean
       - resourceRefId: example-filters-boolean-table
@@ -576,7 +576,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Date filter'
+    title: 'Date filter'
     items:
       - resourceRefId: example-filters-date
       - resourceRefId: example-filters-date-table
@@ -735,7 +735,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Daterange filter'
+    title: 'Daterange filter'
     items:
       - resourceRefId: example-filters-daterange
       - resourceRefId: example-filters-daterange-table
@@ -894,7 +894,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: combined filters'
+    title: 'combined filters'
     items:
       - resourceRefId: example-filters-combined
       - resourceRefId: example-filters-combined-table

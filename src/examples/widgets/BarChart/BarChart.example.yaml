@@ -1,4 +1,4 @@
-# Case 1: Empty dataset
+# Empty dataset
 # Expected behavior: The chart will not display any bars and will instead show an empty state.
 # This case is useful when the data source may not provide values yet, or when a monitored service has no metrics available.
 kind: BarChart
@@ -10,7 +10,7 @@ spec:
   widgetData:
     data: []
 ---
-# Case 2: Single bar
+# Single bar
 # Expected behavior: Displays a single bar representing one metric (e.g., disk usage) with its value and percentage.
 # Useful for simple widgets that monitor a single resource or KPI.
 kind: BarChart
@@ -27,7 +27,7 @@ spec:
             percentage: 42
             color: green
 ---
-# Case 3: Multiple bars in a single group
+# Multiple bars in a single group
 # Expected behavior: Shows multiple bars under the same label, allowing comparison between related metrics (e.g., inbound vs outbound traffic).
 # Useful for grouped or comparative metrics that share a common label or category.
 kind: BarChart
@@ -50,7 +50,7 @@ spec:
             percentage: 70
             color: orange
 ---
-# Case 4: Multiple groups with single bars
+# Multiple groups with single bars
 # Expected behavior: Displays several independent metrics, each represented by a single bar and label.
 # Useful for dashboards summarizing multiple entities such as pods, nodes, or services.
 kind: BarChart
@@ -77,7 +77,7 @@ spec:
             percentage: 88
             color: green
 ---
-# Case 5: Extreme percentage values
+# Extreme percentage values
 # Expected behavior: Includes both 0% and 100% values to visualize minimum and maximum utilization scenarios.
 # Useful for validating the visual range of metrics (e.g., fully utilized vs idle resources).
 kind: BarChart
@@ -97,7 +97,7 @@ spec:
             percentage: 100
             color: blue
 ---
-# Case 6: Missing color field
+# Missing color field
 # Expected behavior: The bar will render using a default or fallback color if the color field is not defined.
 # Useful for testing robustness of configuration when some optional fields are omitted.
 kind: BarChart

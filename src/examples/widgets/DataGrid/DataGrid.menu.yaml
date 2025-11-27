@@ -119,7 +119,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty items array'
+    title: 'Empty items array'
     items:
       - resourceRefId: example-datagrid-empty
   resourcesRefs:
@@ -139,7 +139,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Missing resource references'
+    title: 'Missing resource references'
     items:
       - resourceRefId: example-datagrid-missing-resources
   resourcesRefs:
@@ -159,7 +159,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Single child widget (list mode)'
+    title: 'Single child widget (list mode)'
     items:
       - resourceRefId: example-datagrid-single-list
   resourcesRefs:
@@ -179,7 +179,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Multiple widgets in list mode'
+    title: 'Multiple widgets in list mode'
     items:
       - resourceRefId: example-datagrid-multiple-list
   resourcesRefs:
@@ -199,7 +199,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Multiple widgets in grid mode (default settings)'
+    title: 'Multiple widgets in grid mode (default settings)'
     items:
       - resourceRefId: example-datagrid-multiple-default
   resourcesRefs:
@@ -219,7 +219,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Custom grid configuration'
+    title: 'Custom grid configuration'
     items:
       - resourceRefId: example-datagrid-custom-grid
   resourcesRefs:
@@ -239,7 +239,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: Grid using prefix for contextual filtering'
+    title: 'Grid using prefix for contextual filtering'
     items:
       - resourceRefId: example-datagrid-with-prefix-filter
       - resourceRefId: example-datagrid-with-prefix
@@ -266,7 +266,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 8: Nested data grid'
+    title: 'Nested data grid'
     items:
       - resourceRefId: example-datagrid-nested
   resourcesRefs:

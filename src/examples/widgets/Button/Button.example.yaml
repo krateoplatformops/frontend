@@ -27,7 +27,7 @@ metadata:
 spec:
   widgetData:
     label: Run
-    type: default
+    type: primary
     shape: default
     clickActionId: navigate-example-button-page
     actions:
@@ -86,7 +86,7 @@ spec:
   widgetData:
     icon: fa-trash
     shape: circle
-    type: default
+    type: primary
     clickActionId: navigate-example-button-page
     actions:
       navigate:
@@ -114,8 +114,8 @@ spec:
   widgetData:
     label: Restart
     backgroundColor: red
-    type: default
-    shape: round
+    type: primary
+    
     size: middle
     clickActionId: navigate-example-button-page
     actions:
@@ -280,7 +280,7 @@ metadata:
 spec:
   widgetData:
     label: Navigate to Dashboard
-    type: default
+    type: primary
     clickActionId: navigate-to-dashboard
     actions:
       navigate:
@@ -308,8 +308,7 @@ metadata:
 spec:
   widgetData:
     label: Navigate to Bar Chart
-    type: default
-    shape: round
+    type: primary
     size: middle
     clickActionId: navigate-to-barchart
     actions:
@@ -357,8 +356,8 @@ metadata:
 spec:
   widgetData:
     label: Open Drawer Default
-    type: default
-    shape: round
+    type: primary
+    
     size: middle
     clickActionId: open-drawer-default
     actions:
@@ -388,8 +387,8 @@ metadata:
 spec:
   widgetData:
     label: Open Drawer Large
-    type: default
-    shape: round
+    type: primary
+    
     size: middle
     clickActionId: open-drawer-large
     actions:
@@ -422,8 +421,8 @@ metadata:
 spec:
   widgetData:
     label: Open Modal Default
-    type: default
-    shape: round
+    type: primary
+    
     size: middle
     clickActionId: open-modal-default
     actions:
@@ -456,8 +455,8 @@ metadata:
 spec:
   widgetData:
     label: Open Modal Large
-    type: default
-    shape: round
+    type: primary
+    
     size: middle
     clickActionId: open-modal-large
     actions:
@@ -492,8 +491,8 @@ spec:
   widgetData:
     label: Open Modal Custom Width
     color: purple
-    type: default
-    shape: round
+    type: primary
+    
     size: middle
     clickActionId: open-modal-custom
     actions:
@@ -527,8 +526,8 @@ metadata:
 spec:
   widgetData:
     label: Open Modal Fullscreen
-    type: default
-    shape: round
+    type: primary
+    
     size: middle
     clickActionId: open-modal-fullscreen
     actions:

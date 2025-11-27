@@ -1,4 +1,4 @@
-# Case 1: Empty nodes and edges
+# Empty nodes and edges
 # Target: rendering fallback UI when no data is provided.
 # Expected behavior: displays <Empty /> component with simple placeholder.
 kind: FlowChart
@@ -10,7 +10,7 @@ spec:
   widgetData:
     data: []
 ---
-# Case 2: Node with missing parent reference
+# Node with missing parent reference
 # Target: ensure component safely handles edges pointing to non-existent parents.
 # Expected behavior: since the child node exists in data, it is rendered as a standalone (disconnected) node.
 # Notes: <Empty /> is NOT shown because parsedNodes.length > 0; only invalid edges are ignored.
@@ -33,7 +33,7 @@ spec:
         date: "2025-07-10T10:00:00Z"
         version: "v1"
 ---
-# Case 3: Nodes without edges
+# Nodes without edges
 # Target: isolated nodes with no relationships.
 # Expected behavior: nodes render in a grid layout, no connecting lines shown.
 kind: FlowChart
@@ -73,7 +73,7 @@ spec:
         version: "v1"
         resourceVersion: "1"
 ---
-# Case 4: Basic flow
+# Basic flow
 # Target: simple graph with one parent and two children.
 # Expected behavior: renders three nodes with correct directional layout and status colors.
 kind: FlowChart
@@ -131,7 +131,7 @@ spec:
         version: "v1"
         resourceVersion: "1"
 ---
-# Case 5: Deep hierarchy
+# Deep hierarchy
 # Target: multi-level parent-child relationships with 4 depth levels.
 # Expected behavior: graph auto-layouts vertically, all edges rendered correctly.
 kind: FlowChart
@@ -205,7 +205,7 @@ spec:
         version: "v1"
         resourceVersion: "1"
 ---
-# Case 6: Cross-namespace links
+# Cross-namespace links
 # Target: parent-child relationships across namespaces.
 # Expected behavior: node labels show namespaces correctly and edges still connect.
 kind: FlowChart
@@ -247,7 +247,7 @@ spec:
         version: "v1"
         resourceVersion: "1"
 ---
-# Case 7: Mixed statuses
+# Mixed statuses
 # Target: testing all status colors and tooltip messages.
 # Expected behavior: icons show proper colors and tooltips display correctly.
 kind: FlowChart
@@ -305,7 +305,7 @@ spec:
         version: "v1"
         resourceVersion: "1"
 ---
-# Case 8: Missing parents
+# Missing parents
 # Target: nodes without valid parentRefs.
 # Expected behavior: orphans should render independently at top-level.
 kind: FlowChart
@@ -345,7 +345,7 @@ spec:
         version: "v1"
         resourceVersion: "1"
 ---
-# Case 9: Multiple roots
+# Multiple roots
 # Target: rendering two independent graphs in one chart.
 # Expected behavior: both trees appear disconnected with correct auto-layout.
 kind: FlowChart

@@ -1,4 +1,4 @@
-# Case 1: Empty events list
+# Empty events list
 # Expected behavior: The widget will render an empty area (no events shown).
 # Useful to verify how the dashboard behaves when no events are returned by the data source.
 kind: EventList
@@ -10,7 +10,7 @@ spec:
   widgetData:
     events: []
 ---
-# Case 2: Basic static event list
+# Basic static event list
 # Expected behavior: Displays a predefined list of Kubernetes events without live updates.
 # This configuration is suitable when events are fetched once and not updated via SSE.
 kind: EventList
@@ -61,7 +61,7 @@ spec:
           component: "kubelet"
           host: "worker-node-1"
 ---
-# Case 3: Events filtered by prefix
+# Events filtered by prefix
 # Expected behavior: The widget displays only events whose name or message starts with the defined prefix.
 # Useful when using the global FiltersProvider to narrow down the list dynamically.
 kind: EventList
@@ -126,7 +126,7 @@ spec:
         - metadata.name
         type: string
 ---
-# Case 4: Live updates via SSE
+# Live updates via SSE
 # Expected behavior: The widget connects to the provided SSE endpoint and updates in real time as new events are received.
 # Use this configuration to test streaming behavior from a live backend.
 kind: EventList

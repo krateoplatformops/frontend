@@ -120,7 +120,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty nodes and edges'
+    title: 'Empty nodes and edges'
     items:
       - resourceRefId: example-flowchart-empty
   resourcesRefs:
@@ -140,7 +140,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Node with missing parent reference'
+    title: 'Node with missing parent reference'
     items:
       - resourceRefId: example-flowchart-empty-nodes
   resourcesRefs:
@@ -160,7 +160,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Nodes without edges'
+    title: 'Nodes without edges'
     items:
       - resourceRefId: example-flowchart-no-edges
   resourcesRefs:
@@ -180,7 +180,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Basic flow'
+    title: 'Basic flow'
     items:
       - resourceRefId: example-flowchart-basic
   resourcesRefs:
@@ -200,7 +200,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Deep hierarchy'
+    title: 'Deep hierarchy'
     items:
       - resourceRefId: example-flowchart-hierarchy
   resourcesRefs:
@@ -220,7 +220,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Cross-namespace links'
+    title: 'Cross-namespace links'
     items:
       - resourceRefId: example-flowchart-cross-ns
   resourcesRefs:
@@ -240,7 +240,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: Mixed statuses'
+    title: 'Mixed statuses'
     items:
       - resourceRefId: example-flowchart-status-mix
   resourcesRefs:
@@ -260,7 +260,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 8: Missing parents'
+    title: 'Missing parents'
     items:
       - resourceRefId: example-flowchart-orphans
   resourcesRefs:
@@ -280,7 +280,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 9: Multiple roots'
+    title: 'Multiple roots'
     items:
       - resourceRefId: example-flowchart-multi-root
   resourcesRefs:

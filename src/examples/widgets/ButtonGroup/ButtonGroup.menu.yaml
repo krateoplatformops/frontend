@@ -105,7 +105,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty items array'
+    title: 'Empty items array'
     items:
       - resourceRefId: example-buttongroup-empty
   resourcesRefs:
@@ -125,7 +125,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Missing resource reference'
+    title: 'Missing resource reference'
     items:
       - resourceRefId: example-buttongroup-missing-ref
   resourcesRefs:
@@ -145,7 +145,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Single item alignment check'
+    title: 'Single item alignment check'
     items:
       - resourceRefId: example-buttongroup-single-center
   resourcesRefs:
@@ -165,7 +165,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Multiple items with default spacing'
+    title: 'Multiple items with default spacing'
     items:
       - resourceRefId: example-buttongroup-multiple-default
   resourcesRefs:
@@ -185,7 +185,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Large gap configuration'
+    title: 'Large gap configuration'
     items:
       - resourceRefId: example-buttongroup-large-gap
   resourcesRefs:
@@ -205,7 +205,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Alignment to the right'
+    title: 'Alignment to the right'
     items:
       - resourceRefId: example-buttongroup-right-aligned
   resourcesRefs:

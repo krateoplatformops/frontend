@@ -99,7 +99,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty dataset'
+    title: 'Empty dataset'
     items:
       - resourceRefId: example-barchart-empty-array
   resourcesRefs:
@@ -119,7 +119,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Single bar'
+    title: 'Single bar'
     items:
       - resourceRefId: example-barchart-single-bar
   resourcesRefs:
@@ -139,7 +139,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Multiple bars in a single group'
+    title: 'Multiple bars in a single group'
     items:
       - resourceRefId: example-barchart-multiple-bars-same-group
   resourcesRefs:
@@ -159,7 +159,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Multiple groups with single bars'
+    title: 'Multiple groups with single bars'
     items:
       - resourceRefId: example-barchart-multiple-groups-single-bar
   resourcesRefs:
@@ -179,7 +179,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Extreme percentage values'
+    title: 'Extreme percentage values'
     items:
       - resourceRefId: example-barchart-extreme-percentages
   resourcesRefs:
@@ -199,7 +199,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Missing color field'
+    title: 'Missing color field'
     items:
       - resourceRefId: example-barchart-missing-color
   resourcesRefs:

@@ -176,7 +176,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Missing schema / stringSchema'
+    title: 'Missing schema / stringSchema'
     items:
       - resourceRefId: example-form-missing-schema
   resourcesRefs:
@@ -196,7 +196,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Basic string fields (required)'
+    title: 'Basic string fields (required)'
     items:
       - resourceRefId: example-form-basic-strings
   resourcesRefs:
@@ -216,7 +216,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: String field with enum (4 values or less) (renders as radio group)'
+    title: 'String field with enum (4 values or less) (renders as radio group)'
     items:
       - resourceRefId: example-form-enum-small
   resourcesRefs:
@@ -236,7 +236,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: String field with enum (more than 4 values) (multi-option select)'
+    title: 'String field with enum (more than 4 values) (multi-option select)'
     items:
       - resourceRefId: example-form-string-enum
   resourcesRefs:
@@ -256,7 +256,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Boolean field default value'
+    title: 'Boolean field default value'
     items:
       - resourceRefId: example-form-boolean
   resourcesRefs:
@@ -276,7 +276,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Integer field (basic number input)'
+    title: 'Integer field (basic number input)'
     items:
       - resourceRefId: example-form-integer-basic
   resourcesRefs:
@@ -296,7 +296,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: Integer field with small range (renders slider)'
+    title: 'Integer field with small range (renders slider)'
     items:
       - resourceRefId: example-form-integer-slider
   resourcesRefs:
@@ -316,7 +316,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 8: Array of strings (editable list)'
+    title: 'Array of strings (editable list)'
     items:
       - resourceRefId: example-form-array-strings
   resourcesRefs:
@@ -336,7 +336,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 9: Array of strings (with enum)'
+    title: 'Array of strings (with enum)'
     items:
       - resourceRefId: example-form-array-strings-enum
   resourcesRefs:
@@ -356,7 +356,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 10: Array of objects (object list editor)'
+    title: 'Array of objects (object list editor)'
     items:
       - resourceRefId: example-form-array-object
   resourcesRefs:
@@ -376,7 +376,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 11: Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)'
+    title: 'Complex mixed schema (strings, enums, boolean, arrays, integers, defaults)'
     items:
       - resourceRefId: example-form-complex-mix
   resourcesRefs:
@@ -396,7 +396,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 12: Schema object (alphabetically ordered fields)'
+    title: 'Schema object (alphabetically ordered fields)'
     items:
       - resourceRefId: example-form-ordered-schema
   resourcesRefs:
@@ -416,7 +416,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 13: Form displayed inside Drawer (triggered by Button)'
+    title: 'Form displayed inside Drawer (triggered by Button)'
     items:
       - resourceRefId: example-form-button-open-drawer
   resourcesRefs:
@@ -436,7 +436,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 14: Autocomplete field (static values)'
+    title: 'Autocomplete field (static values)'
     items:
       - resourceRefId: example-form-autocomplete-static
   resourcesRefs:
@@ -456,7 +456,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 15: Autocomplete field (values retrieved from RESTACtion)'
+    title: 'Autocomplete field (values retrieved from RESTACtion)'
     items:
       - resourceRefId: example-form-autocomplete-restaction
   resourcesRefs:
@@ -476,7 +476,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 16: Autocomplete field (values retrieved from RESTAction with extra parameter)'
+    title: 'Autocomplete field (values retrieved from RESTAction with extra parameter)'
     items:
       - resourceRefId: example-form-autocomplete-restaction-parameter
   resourcesRefs:
@@ -496,7 +496,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 16: Autocomplete field (values retrieved from RESTAction with extra parameter)'
+    title: 'Autocomplete field (values retrieved from RESTAction with extra parameter)'
     items:
       - resourceRefId: example-form-autocomplete-restaction-parameter
   resourcesRefs:
@@ -516,7 +516,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 17: Dependencies field'
+    title: 'Dependencies field'
     items:
       - resourceRefId: example-form-dependencies
   resourcesRefs:

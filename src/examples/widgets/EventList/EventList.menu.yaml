@@ -85,7 +85,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty events list'
+    title: 'Empty events list'
     items:
       - resourceRefId: example-eventlist-empty
   resourcesRefs:
@@ -105,7 +105,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Basic static event list'
+    title: 'Basic static event list'
     items:
       - resourceRefId: example-eventlist-basic
   resourcesRefs:
@@ -125,7 +125,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Events filtered by prefix'
+    title: 'Events filtered by prefix'
     items:
       - resourceRefId: example-eventlist-with-prefix-filter
       - resourceRefId: example-eventlist-with-prefix
@@ -152,7 +152,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Live updates via SSE (5 events mock)'
+    title: 'Live updates via SSE (5 events mock)'
     items:
       - resourceRefId: example-eventlist-sse
   resourcesRefs:

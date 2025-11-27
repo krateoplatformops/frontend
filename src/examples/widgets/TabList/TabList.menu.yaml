@@ -92,7 +92,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty items array'
+    title: 'Empty items array'
     items:
       - resourceRefId: example-tablist-empty-items
   resourcesRefs:
@@ -112,7 +112,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Invalid resource reference'
+    title: 'Invalid resource reference'
     items:
       - resourceRefId: example-tablist-invalid-resource
   resourcesRefs:
@@ -132,7 +132,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Basic tab list with single valid tab'
+    title: 'Basic tab list with single valid tab'
     items:
       - resourceRefId: example-tablist-single-tab
   resourcesRefs:
@@ -152,7 +152,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Multiple tabs with mixed content types'
+    title: 'Multiple tabs with mixed content types'
     items:
       - resourceRefId: example-tablist-mixed-resources
   resourcesRefs:
@@ -172,7 +172,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Tab list with titles for all tabs'
+    title: 'Tab list with titles for all tabs'
     items:
       - resourceRefId: example-tablist-titled-tabs
   resourcesRefs:

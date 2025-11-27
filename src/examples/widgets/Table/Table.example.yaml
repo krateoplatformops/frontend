@@ -1,4 +1,4 @@
-# Case 1: Empty columns array
+# Empty columns array
 # Target: simulate a configuration where the table structure is defined but contains no columns.
 # Expected behavior: displays a message explaining that the table cannot be displayed without columns, 
 # helping the user understand that at least one column definition is required for proper rendering.
@@ -17,7 +17,7 @@ spec:
           type: string
           stringValue: "Alice"
 ---
-# Case 2: Empty data array
+# Empty data array
 # Target: simulate the absence of table rows.
 # Expected behavior: renders table headers only (no data rows shown). 
 # This checks that the component handles an explicitly empty dataset gracefully.
@@ -36,7 +36,7 @@ spec:
         title: Age
     data: []
 ---
-# Case 3: Basic table with strings and numbers
+# Basic table with strings and numbers
 # Target: confirm that basic JSON schema types render correctly as text cells.
 # Expected behavior: table shows string and integer values with plain styling.
 kind: Table
@@ -71,7 +71,7 @@ spec:
           type: integer
           numberValue: 42
 ---
-# Case 4: Mixed data types (string, boolean, decimal, array)
+# Mixed data types (string, boolean, decimal, array)
 # Target: test rendering for all jsonSchemaType variations.
 # Expected behavior: each data type is displayed as text, array values are stringified.
 kind: Table
@@ -110,7 +110,7 @@ spec:
           type: array
           arrayValue: ["admin", "tester"]
 ---
-# Case 5: Table including icons
+# Table including icons
 # Target: verify that cells of kind=icon are rendered as FontAwesome icons.
 # Expected behavior: each row shows the corresponding icon in the last column.
 kind: Table
@@ -145,7 +145,7 @@ spec:
           kind: icon
           stringValue: fa-exclamation-triangle
 ---
-# Case 6: Table with widget reference
+# Table with widget reference
 # Target: illustrate how widget references would be handled.
 # Expected behavior: component attempts to render nested widget using resourceRefId.
 # (This will fail here without a valid referenced widget endpoint, but demonstrates intent.)
@@ -229,7 +229,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# Case 7: Table with null and missing values
+# Table with null and missing values
 # Target: ensure that null or undefined cells render gracefully.
 # Expected behavior: table displays '-' placeholders in cells without valid content.
 kind: Table
@@ -263,7 +263,7 @@ spec:
           kind: jsonSchemaType
           type: null
 ---
-# Case 8: Table with filter
+# Table with filter
 # Target: demonstrate interaction between table and filter components using a common prefix.
 # Expected behavior: the table automatically applies filter values shared via the same prefix,
 # showing only the rows that match the current filter criteria. This validates that the widget
@@ -330,7 +330,7 @@ spec:
           - users
         type: string
 ---
-# Case 9: Table with pagination
+# Table with pagination
 # Target: verify that pagination is correctly activated when the number of rows exceeds the configured pageSize.
 # Expected behavior: the table displays only the first set of rows according to pageSize, 
 # with navigation controls available to move through the remaining pages. 

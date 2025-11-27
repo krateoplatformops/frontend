@@ -1,4 +1,4 @@
-# Case 1: Empty items array
+# Empty items array
 # Target: TabList definition with no items provided.
 # Expected behavior: The widget renders no tabs and no content. This is an intentional empty state.
 # It should not throw validation errors, as `items` can be empty.
@@ -16,7 +16,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 2: Invalid resource reference
+# Invalid resource reference
 # Target: references a non-existing resourceRefId.
 # Expected behavior: The tab label is still rendered, but an error is displayed,
 # to inform that the referenced resource cannot be resolved from `resourcesRefs`.
@@ -36,7 +36,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 3: Basic tab list with single valid tab
+# Basic tab list with single valid tab
 # Target: one correctly resolved tab referencing a markdown resource.
 # Expected behavior: the widget displays a single tab with its label and the resolved child content.
 kind: TabList
@@ -60,7 +60,7 @@ spec:
         resource: markdowns
         verb: GET
 ---
-# Case 4: Multiple tabs with mixed content types
+# Multiple tabs with mixed content types
 # Target: demonstrates rendering multiple tabs where each tab references a different type of resource.
 # Expected behavior: each tab loads its corresponding widget; switching between tabs should change the visible content.
 kind: TabList
@@ -104,7 +104,7 @@ spec:
         resource: piecharts
         verb: GET
 ---
-# Case 5: Tab list with titles for all tabs
+# Tab list with titles for all tabs
 # Target: uses the `title` field for each item to provide contextual headers inside each tab.
 # Expected behavior: each tab displays its title above the tab content.
 kind: TabList

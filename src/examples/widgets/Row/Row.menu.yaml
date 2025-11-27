@@ -120,7 +120,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty items array'
+    title: 'Empty items array'
     items:
       - resourceRefId: example-row-empty
   resourcesRefs:
@@ -140,7 +140,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Invalid resource reference'
+    title: 'Invalid resource reference'
     items:
       - resourceRefId: example-row-invalid-ref
   resourcesRefs:
@@ -160,7 +160,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Single full-width child'
+    title: 'Single full-width child'
     items:
       - resourceRefId: example-row-single
   resourcesRefs:
@@ -180,7 +180,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Two proportional children'
+    title: 'Two proportional children'
     items:
       - resourceRefId: example-row-even-split
   resourcesRefs:
@@ -200,7 +200,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Custom column sizes'
+    title: 'Custom column sizes'
     items:
       - resourceRefId: example-row-custom-sizes
   resourcesRefs:
@@ -220,7 +220,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Alignment within cells'
+    title: 'Alignment within cells'
     items:
       - resourceRefId: example-row-cells-alignment
   resourcesRefs:
@@ -240,7 +240,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 7: Nested composition'
+    title: 'Nested composition'
     items:
       - resourceRefId: example-row-nested
   resourcesRefs:
@@ -260,7 +260,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 8: Responsive layout stress test'
+    title: 'Responsive layout stress test'
     items:
       - resourceRefId: example-row-responsive
   resourcesRefs:
@@ -280,7 +280,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 9: Alignment within row'
+    title: 'Alignment within row'
     items:
       - resourceRefId: example-row-alignment
   resourcesRefs:

@@ -92,7 +92,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Empty JSON string'
+    title: 'Empty JSON string'
     items:
       - resourceRefId: example-yamlviewer-empty-json
   resourcesRefs:
@@ -112,7 +112,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Malformed JSON string'
+    title: 'Malformed JSON string'
     items:
       - resourceRefId: example-yamlviewer-invalid-json
   resourcesRefs:
@@ -132,7 +132,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Valid JSON input'
+    title: 'Valid JSON input'
     items:
       - resourceRefId: example-yamlviewer-valid-json
   resourcesRefs:
@@ -152,7 +152,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: JSON with nested objects'
+    title: 'JSON with nested objects'
     items:
       - resourceRefId: example-yamlviewer-nested-json
   resourcesRefs:
@@ -172,7 +172,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: JSON with special characters'
+    title: 'JSON with special characters'
     items:
       - resourceRefId: example-yamlviewer-special-chars
   resourcesRefs:

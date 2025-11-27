@@ -1,4 +1,4 @@
-# Case 1: Empty items array
+# Empty items array
 # Target: simulate a column configuration that defines no child widgets.
 # Expected behavior: renders an empty column with no content, leaving the area visually blank. 
 # This helps validate that the layout system gracefully handles intentionally empty structures.
@@ -15,7 +15,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 2: Missing resource resolution
+# Missing resource resolution
 # Target: simulate a situation where an item references a child widget that cannot be resolved 
 # because the corresponding resourceRefId is not listed in resourcesRefs.
 # Expected behavior: skips rendering that specific child (returns null), 
@@ -34,7 +34,7 @@ spec:
   resourcesRefs:
     items: []
 ---
-# Case 3: Zero-sized column
+# Zero-sized column
 # Target: simulate a column with size=0.
 # Expected behavior: column is effectively hidden (occupies no visible horizontal space), 
 # ensuring layout calculations remain consistent in multi-column grids.
@@ -58,7 +58,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 4: Single child
+# Single child
 # Target: validate that a simple column with one valid child widget renders correctly.
 # Expected behavior: displays one resource inside a vertically stacked layout space.
 # This case confirms that a single resolved child is passed through the WidgetRenderer without issues.
@@ -82,7 +82,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 5: Single child full screen
+# Single child full screen
 # Target: validate that a simple column with one valid child widget renders correctly and occupies all available space.
 # Expected behavior: displays one resource inside a vertically stacked layout space full screen.
 # This case confirms that a single resolved child is passed through the WidgetRenderer without issues.
@@ -105,7 +105,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 6: Mixed valid and invalid children
+# Mixed valid and invalid children
 # Target: simulate a partially broken layout where one of the referenced widgets cannot be resolved.
 # Expected behavior: valid child widgets are rendered normally, 
 # while unresolved references are silently ignored without breaking layout continuity.
@@ -130,7 +130,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 7: Multiple child widgets
+# Multiple child widgets
 # Target: confirm that multiple widgets can be rendered inside the same column, 
 # preserving vertical stacking and consistent spacing.
 # Expected behavior: both child widgets appear in order, each occupying its logical vertical slot 
@@ -162,7 +162,7 @@ spec:
         resource: tables
         verb: GET
 ---
-# Case 8: Nested column (layout composition)
+# Nested column (layout composition)
 # Target: demonstrate that a column can include another column, 
 # confirming the recursive nature of layout widgets.
 # Expected behavior: outer column renders correctly and the nested column is properly 

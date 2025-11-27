@@ -99,7 +99,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 1: Missing series'
+    title: 'Missing series'
     items:
       - resourceRefId: example-piechart-empty-series
   resourcesRefs:
@@ -119,7 +119,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 2: Empty data array'
+    title: 'Empty data array'
     items:
       - resourceRefId: example-piechart-empty-data
   resourcesRefs:
@@ -139,7 +139,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 3: Partial total not fully filled'
+    title: 'Partial total not fully filled'
     items:
       - resourceRefId: example-piechart-partial-fill
   resourcesRefs:
@@ -159,7 +159,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 4: Fully filled total'
+    title: 'Fully filled total'
     items:
       - resourceRefId: example-piechart-full-fill
   resourcesRefs:
@@ -179,7 +179,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 5: Overfilled total'
+    title: 'Overfilled total'
     items:
       - resourceRefId: example-piechart-overfilled
   resourcesRefs:
@@ -199,7 +199,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Case 6: Missing description field'
+    title: 'Missing description field'
     items:
       - resourceRefId: example-piechart-no-description
   resourcesRefs:
