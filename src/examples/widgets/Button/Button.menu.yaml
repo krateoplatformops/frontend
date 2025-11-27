@@ -172,6 +172,8 @@ spec:
       - resourceRefId: example-button-rest-error-message-jq-panel
       - resourceRefId: example-button-rest-success-redirect-panel
       - resourceRefId: example-button-rest-success-redirect-jq-panel
+      - resourceRefId: example-button-rest-event-navigation-fail-panel
+      - resourceRefId: example-button-rest-event-navigation-success-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -315,6 +317,18 @@ spec:
       - id: example-button-rest-success-redirect-jq-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-success-redirect-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-event-navigation-fail-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-event-navigation-fail-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-rest-event-navigation-success-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-event-navigation-success-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -487,7 +501,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'navigate action - Navigation to another page using `path`'
+    title: 'navigate - Navigation to another page using `path`'
     items:
       - resourceRefId: example-button-navigate-path
   resourcesRefs:
@@ -507,7 +521,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'navigate action - Navigation to another resource using `resourceRefId`'
+    title: 'navigate - Navigation to another resource using `resourceRefId`'
     items:
       - resourceRefId: example-button-navigate-resource
   resourcesRefs:
@@ -527,7 +541,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)'
+    title: 'navigate - Navigation with confirmation prompt (`requireConfirmation: true`)'
     items:
       - resourceRefId: example-button-navigate-confirm
   resourcesRefs:
@@ -547,7 +561,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'navigate action - Navigation with loading indicator'
+    title: 'navigate - Navigation with loading indicator'
     items:
       - resourceRefId: example-button-navigate-loading
   resourcesRefs:
@@ -935,6 +949,46 @@ spec:
       - id: example-button-rest-success-redirect-jq
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-success-redirect-jq
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-event-navigation-fail-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on event received (fail)'
+    items:
+      - resourceRefId: example-button-rest-event-navigation-fail
+  resourcesRefs:
+    items:
+      - id: example-button-rest-event-navigation-fail
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-event-navigation-fail
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-event-navigation-success-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on event received (success)'
+    items:
+      - resourceRefId: example-button-rest-event-navigation-success
+  resourcesRefs:
+    items:
+      - id: example-button-rest-event-navigation-success
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-rest-event-navigation-success
         namespace: krateo-system
         resource: buttons
         verb: GET

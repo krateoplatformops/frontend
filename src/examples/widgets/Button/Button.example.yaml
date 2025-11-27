@@ -997,7 +997,7 @@ spec:
 ### rest - Navigation on success with dynamic URL via JQ expression
 ### Target: correct request -> redirect to another page (onSuccessNavigateTo) -> URL is specified by JQ expression
 ### Expected behaviour: after the request is successfully executed, there is a redirect to a specified page
-### THe URL is fetched by interpolating a JQ expression.
+### The URL is fetched by interpolating a JQ expression.
 ### In this case we expect 404 since we are redirecting to a non existent page.
 kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -1035,5 +1035,99 @@ spec:
         apiVersion: v1
         resource: pods
         name: my-sample-nginx-pod-redirect-jq
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Navigation on event received (fail)
+### Target: correct request -> loading message -> error after timeout
+### Expected behaviour: after the request is successfully executed, a loading message is displayed
+### Timeout occurs since the specific event will not arrive.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-event-navigation-fail
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Wait for event
+    clickActionId: rest-event-navigation-fail
+    actions:
+      rest:
+        - id: rest-event-navigation-fail
+          type: rest
+          resourceRefId: create-pod
+          onEventNavigateTo:
+            eventReason: ConfigUpdated
+            url: "/barcharts"
+            timeout: 30
+            loadingMessage: "Waiting for the update event to fail..."
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod-event-navigation-fail"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: my-sample-nginx-pod-event-navigation
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Navigation on event received (success)
+### Target: correct request -> redirect to another page after (onEventNavigateTo)
+### Expected behaviour: after the request is successfully executed, there is a redirect to a specified page
+### Navigation is executed once a specified event is received.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-rest-event-navigation-success
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Wait for event
+    clickActionId: rest-event-navigation-success
+    actions:
+      rest:
+        - id: rest-event-navigation-success
+          type: rest
+          resourceRefId: create-pod
+          onEventNavigateTo:
+            eventReason: Started
+            url: "/barcharts"
+            timeout: 30
+            loadingMessage: "Waiting for the update event..."
+          headers:
+            - "Content-Type: application/json"
+          payload:
+            apiVersion: "v1"
+            kind: "Pod"
+            metadata:
+              name: "my-sample-nginx-pod-event-navigation-success"
+              labels:
+                app: "my-sample-nginx"
+            spec:
+              containers:
+                - name: "nginx"
+                  image: "nginx:latest"
+                  ports:
+                    - containerPort: 80
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: my-sample-nginx-pod-event-navigation-success
         namespace: krateo-system
         verb: POST
