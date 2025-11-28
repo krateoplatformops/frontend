@@ -28,23 +28,56 @@ metadata:
 spec:
   widgetData:
     allowedResources:
-      - barcharts
-      - buttons
-      - buttons
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - rows
-      - tables
       - tablists
-      - yamlviewers
+    items:
+      - resourceRefId: example-form-tablist
+  resourcesRefs:
+    items:
+      - id: example-form-tablist
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-tablist
+        namespace: krateo-system
+        resource: tablists
+        verb: GET
+---
+kind: TabList
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-tablist
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - pages
+    items:
+      - label: Examples
+        resourceRefId: example-form-examples-page
+      - label: Actions
+        resourceRefId: example-form-actions-page
+  resourcesRefs:
+    items:
+      - id: example-form-examples-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-examples-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+      - id: example-form-actions-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-actions-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-examples-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
     items:
       - resourceRefId: example-form-missing-schema-panel
       - resourceRefId: example-form-basic-strings-panel
@@ -164,6 +197,131 @@ spec:
       - id: example-form-dependencies-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-dependencies-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-actions-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
+    items:
+      - resourceRefId: example-form-missing-action-panel
+      - resourceRefId: example-form-invalid-action-panel
+      - resourceRefId: example-form-rest-malformed-headers-panel
+      - resourceRefId: example-form-rest-no-payload-panel
+      - resourceRefId: example-form-rest-static-payload-panel
+      - resourceRefId: example-form-rest-merged-payload-panel
+      - resourceRefId: example-form-rest-payload-override-panel
+      - resourceRefId: example-form-rest-payload-override-dynamic-panel
+      - resourceRefId: example-form-rest-success-message-panel
+      - resourceRefId: example-form-rest-success-message-jq-panel
+      - resourceRefId: example-form-rest-error-message-panel
+      - resourceRefId: example-form-rest-error-message-jq-panel
+      - resourceRefId: example-form-rest-navigate-success-panel
+      - resourceRefId: example-form-rest-navigate-success-jq-panel
+      - resourceRefId: example-form-rest-event-navigation-fail-panel
+      - resourceRefId: example-form-rest-event-navigation-success-panel
+  resourcesRefs:
+    items:
+      - id: example-form-missing-action-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-missing-action-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-invalid-action-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-invalid-action-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-malformed-headers-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-malformed-headers-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-no-payload-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-no-payload-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-static-payload-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-static-payload-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-merged-payload-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-merged-payload-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-payload-override-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-payload-override-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-rest-payload-override-dynamic-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-payload-override-dynamic-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-success-message-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-success-message-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-success-message-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-success-message-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-error-message-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-error-message-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-error-message-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-error-message-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-navigate-success-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-navigate-success-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-navigate-success-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-navigate-success-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-event-navigation-fail-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-event-navigation-fail-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-rest-event-navigation-success-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-event-navigation-success-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -524,6 +682,326 @@ spec:
       - id: example-form-dependencies
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-dependencies
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-missing-action-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Incorrect or missing action'
+    items:
+      - resourceRefId: example-form-missing-action
+  resourcesRefs:
+    items:
+      - id: example-form-missing-action
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-missing-action
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-invalid-action-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Invalid action type'
+    items:
+      - resourceRefId: example-form-invalid-action
+  resourcesRefs:
+    items:
+      - id: example-form-invalid-action
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-invalid-action
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-malformed-headers-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Headers rest-malformed (not a "key: value" structure)'
+    items:
+      - resourceRefId: example-form-rest-malformed-headers
+  resourcesRefs:
+    items:
+      - id: example-form-rest-malformed-headers
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-malformed-headers
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-no-payload-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - No payload'
+    items:
+      - resourceRefId: example-form-rest-no-payload
+  resourcesRefs:
+    items:
+      - id: example-form-rest-no-payload
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-no-payload
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-static-payload-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Static payload'
+    items:
+      - resourceRefId: example-form-rest-static-payload
+  resourcesRefs:
+    items:
+      - id: example-form-rest-static-payload
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-static-payload
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-merged-payload-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Merged payload'
+    items:
+      - resourceRefId: example-form-rest-merged-payload
+  resourcesRefs:
+    items:
+      - id: example-form-rest-merged-payload
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-merged-payload
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-payload-override-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Payload overrides with static values'
+    items:
+      - resourceRefId: example-form-rest-payload-override
+  resourcesRefs:
+    items:
+      - id: example-form-rest-payload-override
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-payload-override
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-payload-override-dynamic-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Payload overrides with dynamic values from Form'
+    items:
+      - resourceRefId: example-form-rest-payload-override-dynamic
+  resourcesRefs:
+    items:
+      - id: example-form-rest-payload-override-dynamic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-payload-override-dynamic
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-success-message-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized success message'
+    items:
+      - resourceRefId: example-form-rest-success-message
+  resourcesRefs:
+    items:
+      - id: example-form-rest-success-message
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-success-message
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-success-message-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized success message with JQ expression'
+    items:
+      - resourceRefId: example-form-rest-success-message-jq
+  resourcesRefs:
+    items:
+      - id: example-form-rest-success-message-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-success-message-jq
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-error-message-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized error message'
+    items:
+      - resourceRefId: example-form-rest-error-message
+  resourcesRefs:
+    items:
+      - id: example-form-rest-error-message
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-error-message
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-error-message-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Customized error message with JQ expression'
+    items:
+      - resourceRefId: example-form-rest-error-message-jq
+  resourcesRefs:
+    items:
+      - id: example-form-rest-error-message-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-error-message-jq
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-navigate-success-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on success'
+    items:
+      - resourceRefId: example-form-rest-navigate-success
+  resourcesRefs:
+    items:
+      - id: example-form-rest-navigate-success
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-navigate-success
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-navigate-success-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on success with JQ expression'
+    items:
+      - resourceRefId: example-form-rest-navigate-success-jq
+  resourcesRefs:
+    items:
+      - id: example-form-rest-navigate-success-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-navigate-success-jq
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-event-navigation-fail-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on event received (fail)'
+    items:
+      - resourceRefId: example-form-rest-event-navigation-fail
+  resourcesRefs:
+    items:
+      - id: example-form-rest-event-navigation-fail
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-event-navigation-fail
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-event-navigation-success-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'rest - Navigation on event received (success)'
+    items:
+      - resourceRefId: example-form-rest-event-navigation-success
+  resourcesRefs:
+    items:
+      - id: example-form-rest-event-navigation-success
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-rest-event-navigation-success
         namespace: krateo-system
         resource: forms
         verb: GET

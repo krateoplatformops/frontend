@@ -496,6 +496,26 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: example-button-text-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Text-only button'
+    items:
+      - resourceRefId: example-button-text
+  resourcesRefs:
+    items:
+      - id: example-button-text
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-text
+        namespace: krateo-system
+        resource: buttons
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: example-button-navigate-path-panel
   namespace: krateo-system
 spec:

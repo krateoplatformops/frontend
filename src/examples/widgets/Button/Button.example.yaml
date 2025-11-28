@@ -1057,7 +1057,7 @@ spec:
           resourceRefId: create-pod
           onEventNavigateTo:
             eventReason: ConfigUpdated
-            url: "/barcharts"
+            url: "/barchart"
             timeout: 30
             loadingMessage: "Waiting for the update event to fail..."
           headers:
@@ -1104,7 +1104,7 @@ spec:
           resourceRefId: create-pod
           onEventNavigateTo:
             eventReason: Started
-            url: "/barcharts"
+            url: "/barchart"
             timeout: 30
             loadingMessage: "Waiting for the update event..."
           headers:

@@ -832,3 +832,684 @@ metadata:
   namespace: krateo-system
 stringData:
   server-url: https://public.opendatasoft.com
+---
+# Missing action
+# Target: validate error handling when action is missing.
+# Expected behavior: an error is displayed on submit to inform that the action is not defined.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-missing-action
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: non-existent-action
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-basic
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
+# Invalid action type
+# Target: validate action type enforcement.
+# Expected behavior: an error is displayed on submit to inform that the action type is not correct
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-invalid-action
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: open-modal-default
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }
+    actions:
+      openModal:
+        - id: open-modal-default
+          type: openModal
+          resourceRefId: example-yamlviewer-simple-json
+          title: Default Modal Example
+          loading:
+            display: true
+          size: default
+  resourcesRefs:
+    items:
+      - id: example-yamlviewer-simple-json
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-yamlviewer-simple-json
+        namespace: krateo-system
+        resource: yamlviewers
+        verb: GET
+---
+# rest - Headers malformed (not a "key: value" structure)
+# Target: one of the headers does not follow the expected textual format.
+# Expected behavior: the header is ignored or causes server-side rejection depending on backend behavior; Form still tries to execute.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-malformed-headers
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: rest-bad-headers
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: rest-bad-headers
+          type: rest
+          resourceRefId: create-pod
+          headers:
+            - "Authorization Bearer token"
+            - "x-custom: valid"
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: create-pod
+        namespace: krateo-system
+        verb: POST
+---
+# rest - No payload
+# Target: action payload is empty and is not overridden by Form values.
+# Expected behavior: payload is sent as-is; values are not modified or merged.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-no-payload
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        resource: configmaps
+        name: create-configmap-from-form
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Static payload
+# Target: action payload contains static values.
+# Expected behavior: payload is sent as-is; values are not modified or merged.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-static-payload
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          payload:
+           name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: create-configmap-from-form
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Merged payload with resource payload
+# Target: action payload is merged with the referenced resource payload.
+# Expected behavior: resulting payload contains all fields from both action and resource; action payload values override resource payload in case of conflict.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-merged-payload
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: different-name
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Payload overrides with static values
+# Target: payloadToOverride specifies fields and static values to replace in the merged payload.
+# Expected behavior: specified fields in payloadToOverride are correctly replaced
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-payload-override
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          payloadToOverride:
+            - name: metadata.name
+              value: different-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: create-configmap-from-form
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Payload overrides with dynamic values from Form
+# Target: payloadToOverride specifies fields and values to replace in the merged payload.
+# Expected behavior: specified fields in payloadToOverride are correctly replaced by Form values.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-payload-override-dynamic
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          payloadToOverride:
+            - name: metadata.name
+              value: ${ .json.name }
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: create-configmap-from-form
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Customized success message
+# Target: correct request -> successMessage is displayed
+# Expected behavior: after the request succeeds a customized success message is displayed
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-success-message
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          successMessage: 'This is a customized message: successful request!'
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: config-map-success-message
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+# rest - Customized success message with JQ expression
+# Target: correct request -> successMessage with JQ expression is displayed
+# Expected behavior: after the request succeeds a customized success message is displayed
+# The message interpolates a variable using JQ
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-success-message-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          successMessage: '${ "Success after inserting name: " + .json.metadata.name }'
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: config-map-success-message-jq
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Customized error message
+# Target: malformed request -> errorMessage is displayed
+# Expected behavior: after the request fails a customized error message is displayed
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-error-message
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          errorMessage: 'This is a customized message: resource already existing'
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: snowplow
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Customized error message with JQ expression
+# Target: malformed request -> errorMessage with JQ expression is displayed
+# Expected behavior: after the request fails a customized error message is displayed
+# The message interpolates a variable using JQ
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-error-message-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          errorMessage: '${"Error while executing action on resource: " + .response.message }'
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: snowplow
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Navigation on success
+### Target: correct request -> redirect to another page (onSuccessNavigateTo)
+### Expected behaviour: after the request is successfully executed, there is a redirect to a specified page
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-navigate-success
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          onSuccessNavigateTo: /barchart
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: create-configmap-from-form-navigate-success
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Navigation on success with dynamic URL via JQ expression
+### Target: correct request -> redirect to another page (onSuccessNavigateTo) -> URL is specified by JQ expression
+### Expected behaviour: after the request is successfully executed, there is a redirect to a specified page
+### The URL is fetched by interpolating a JQ expression.
+### In this case we expect 404 since we are redirecting to a non existent page.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-navigate-success-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          onSuccessNavigateTo: ${ .json.metadata.name }
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: create-configmap-from-form-navigate-success-jq
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Navigation on event received (fail)
+### Target: correct request -> loading message -> error after timeout
+### Expected behaviour: after the request is successfully executed, a loading message is displayed
+### Timeout occurs since the specific event will not arrive.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-event-navigation-fail
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-basic
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: create-configmap-from-form
+          onEventNavigateTo:
+            eventReason: NotExistentEvent
+            url: "/barchart"
+            timeout: 30
+            loadingMessage: "Waiting for the update event to fail..."
+          payload:
+            metadata:
+              name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: create-configmap-from-form-navigate-event-fail
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
+---
+### rest - Navigation on event received (success)
+### Target: correct request -> redirect to another page after (onEventNavigateTo)
+### Expected behaviour: after the request is successfully executed, there is a redirect to a specified page
+### Navigation is executed once a specified event is received.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-rest-event-navigation-success
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: create-pod
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          }
+        }
+      }  
+    actions:
+      rest:
+        - id: create-pod
+          type: rest
+          resourceRefId: create-pod
+          onEventNavigateTo:
+            eventReason: Started
+            url: "/barchart"
+            timeout: 30
+            loadingMessage: "Waiting for the update event..."
+          payload:
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              name: event-demo-pod
+              labels:
+                app: event-demo
+            spec:
+              containers:
+                - name: demo
+                  image: nginx:latest
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: create-pod
+        apiVersion: v1
+        resource: pods
+        name: event-demo-pod
+        namespace: krateo-system
+        verb: POST
