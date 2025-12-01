@@ -10,6 +10,7 @@ export interface DataGrid {
         | 'barcharts'
         | 'buttons'
         | 'buttongroups'
+        | 'datagrids'
         | 'eventlists'
         | 'filters'
         | 'flowcharts'
