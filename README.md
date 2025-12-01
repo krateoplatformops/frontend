@@ -1,6 +1,6 @@
 # Frontend
 
-## 🚀 Running Locally
+## Running Locally
 
 Follow the steps below to run the frontend locally.
 
@@ -12,6 +12,10 @@ Follow [this guide](https://docs.krateo.io/how-to-guides/install-krateo/installi
 
 You’ll also need the latest version of [Snowplow](https://github.com/krateoplatformops/snowplow/).  
 To include it during installation, add this flag to the `helm upgrade` command shown in the Krateo guide:
+
+```bash
+  --set krateoplatformops.snowplow.chart.version={{LATEST_SNOWPLOW_VERSION}} \
+```
 
 The final command should look like this:
 ```bash
