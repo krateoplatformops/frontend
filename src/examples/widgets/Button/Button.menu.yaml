@@ -48,31 +48,31 @@ metadata:
 spec:
   widgetData:
     allowedResources:
-      - pages
+      - columns
     items:
       - label: Examples
-        resourceRefId: example-button-examples-page
+        resourceRefId: example-button-examples-column
       - label: Actions
-        resourceRefId: example-button-actions-page
+        resourceRefId: example-button-actions-column
   resourcesRefs:
     items:
-      - id: example-button-examples-page
+      - id: example-button-examples-column
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-button-examples-page
+        name: example-button-examples-column
         namespace: krateo-system
-        resource: pages
+        resource: columns
         verb: GET
-      - id: example-button-actions-page
+      - id: example-button-actions-column
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-button-actions-page
+        name: example-button-actions-column
         namespace: krateo-system
-        resource: pages
+        resource: columns
         verb: GET
 ---
-kind: Page
+kind: Column
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-button-examples-page
+  name: example-button-examples-column
   namespace: krateo-system
 spec:
   widgetData:
@@ -138,10 +138,10 @@ spec:
         resource: panels
         verb: GET 
 ---
-kind: Page
+kind: Column
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-button-actions-page
+  name: example-button-actions-column
   namespace: krateo-system
 spec:
   widgetData:
