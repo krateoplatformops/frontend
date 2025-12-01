@@ -71,26 +71,22 @@ async function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): Pro
 
   const table = toMarkdownTable(widgetData ?? {})
 
-  // 🔍 Cerca file .example.yaml nella stessa cartella del file .schema.json
+  // Cerca file .example.yaml nella stessa cartella del file .schema.json
   const schemaDir = path.dirname(filePath)
   const exampleFiles = await glob('*.example.yaml', { absolute: true, cwd: schemaDir })
-  let exampleSection = ''
+  let exampleLink = ''
 
   if (exampleFiles.length > 0) {
-    const exampleFile = exampleFiles.at(0)
-    const exampleContent = exampleFile && (await fs.readFile(exampleFile, 'utf-8'))
-
-    if (exampleContent) {
-      exampleSection = `\n<details>\n<summary>Example</summary>\n\n\`\`\`yaml\n${exampleContent.trim()}\n\`\`\`\n</details>\n`
-    }
+    const widgetName = path.basename(filePath).replace('.schema.json', '')
+    const exampleRelativePath = `../src/examples/widgets/${widgetName}/${widgetName}.example.yaml`
+    exampleLink = `\n\n[Examples](${exampleRelativePath})\n`
   }
 
-  // 🧩 Aggiunge il link alla doc di autocomplete/dependencies se il widget è Form
   const extraInfo = title.toLowerCase() === 'form'
     ? `\n\n> For additional information about the \`autocomplete\` and \`dependencies\` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).\n`
     : ''
 
-  return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n${exampleSection}${extraInfo}`
+  return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n${exampleLink}${extraInfo}`
 }
 
 async function generateWidgetsSection(): Promise<string> {
