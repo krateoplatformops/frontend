@@ -18,6 +18,7 @@ export interface TabList {
       allowedResources: (
         | 'barcharts'
         | 'buttons'
+        | 'buttongroups'
         | 'columns'
         | 'datagrids'
         | 'eventlists'

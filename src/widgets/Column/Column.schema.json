@@ -27,6 +27,7 @@
                 "enum": [
                   "barcharts",
                   "buttons",
+                  "buttongroups",
                   "columns",
                   "datagrids",
                   "eventlists",

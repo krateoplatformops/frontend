@@ -12,6 +12,7 @@ export interface Table {
       allowedResources: (
         | 'barcharts'
         | 'buttons'
+        | 'buttongroups'
         | 'filters'
         | 'flowcharts'
         | 'linecharts'

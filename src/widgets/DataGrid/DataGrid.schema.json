@@ -25,6 +25,7 @@
                 "enum": [
                   "barcharts",
                   "buttons",
+                  "buttongroups",
                   "eventlists",
                   "filters",
                   "flowcharts",

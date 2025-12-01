@@ -639,7 +639,7 @@ name of the k8s Custom Resource
 | schema | no | the schema of the form as an object | object |
 | stringSchema | no | the schema of the form as a string | string |
 | submitActionId | yes | the id of the action to be called when the form is submitted | string |
-| fieldDescription | no |  | `tooltip` \| `inline` |
+| fieldDescription | no | the displaying mode of the field description, default is inline but it could also be displayed as a tooltip | `tooltip` \| `inline` |
 | autocomplete | no | Configuration for the Autocomplete form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.  | array |
 | autocomplete[].extra | no | parameter to be added to the RESTAction call | object |
 | autocomplete[].extra.key | yes | the key of the additional parameter | string |

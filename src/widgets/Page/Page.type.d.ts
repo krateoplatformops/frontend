@@ -12,6 +12,7 @@ export interface Page {
       allowedResources: (
         | 'barcharts'
         | 'buttons'
+        | 'buttongroups'
         | 'columns'
         | 'datagrids'
         | 'eventlists'
