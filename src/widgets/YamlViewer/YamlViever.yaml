@@ -1,8 +1,0 @@
-kind: YamlViewer
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-yaml-viewer
-  namespace: krateo-system
-spec:
-  widgetData:
-    json: '{"type":"object","additionalProperties":false,"properties":{"kind":{"type":"string","default":"YamlViewer"}}}'
