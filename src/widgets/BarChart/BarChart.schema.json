@@ -52,7 +52,8 @@
                             "orange",
                             "gray",
                             "red",
-                            "green"
+                            "green",
+                            "violet"
                           ],
                           "description": "Color of the bar"
                         }

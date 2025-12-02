@@ -14,6 +14,9 @@
     "validate-schemas": "tsx scripts/validate-schemas.ts",
     "get-access-token": "tsx scripts/get-access-token.ts",
     "update-readme-widgets": "tsx scripts/update-readme-widgets.ts",
+    "apply-examples": "tsx scripts/apply-examples.ts",
+    "apply-crds": "tsx scripts/apply-crds.ts",
+    "examples": "tsx scripts/run-examples.ts",
     "test": "vitest"
   },
   "repository": {

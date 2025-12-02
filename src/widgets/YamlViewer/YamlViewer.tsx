@@ -1,5 +1,5 @@
 import { CopyOutlined } from '@ant-design/icons'
-import { Button, Result } from 'antd'
+import { Button, Empty, Result } from 'antd'
 import { dump } from 'js-yaml'
 import { useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
@@ -18,17 +18,28 @@ const YamlViewer = ({ uid, widgetData }: WidgetProps<YamlViewerWidgetData>) => {
 
   const [isCopied, setIsCopied] = useState(false)
 
-  const { error, yamlString } = useMemo(() => {
+  const { error, isEmpty, yamlString } = useMemo(() => {
+    if (!json?.trim()) { return { error: null, isEmpty: true, yamlString: '' } }
+
     try {
       const parsedJson = JSON.parse(json) as unknown
       return { error: null, yamlString: dump(parsedJson) }
     } catch (error) {
       return {
         error: `Error while parsing JSON data: ${error as string}`,
+        isEmpty: false,
         yamlString: '',
       }
     }
   }, [json])
+
+  if (isEmpty) {
+    return (
+      <div className={styles.container}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    )
+  }
 
   if (error) {
     return (

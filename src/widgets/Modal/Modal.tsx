@@ -79,6 +79,7 @@ const Modal = () => {
       open={isOpen}
       title={title}
       width={computedWidth}
+      wrapClassName={size === 'fullscreen' ? styles.modalFullscreenWrap : undefined}
     >
       <WidgetRenderer key={'modal'} widgetEndpoint={widgetEndpoint} />
     </AntDModal>

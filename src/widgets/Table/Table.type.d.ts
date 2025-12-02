@@ -12,6 +12,7 @@ export interface Table {
       allowedResources: (
         | 'barcharts'
         | 'buttons'
+        | 'buttongroups'
         | 'filters'
         | 'flowcharts'
         | 'linecharts'
@@ -27,7 +28,7 @@ export interface Table {
         /**
          * the color of the value (or the icon) to be represented
          */
-        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green' | 'violet'
         /**
          * column header label
          */

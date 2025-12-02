@@ -9,6 +9,8 @@ export interface DataGrid {
       allowedResources: (
         | 'barcharts'
         | 'buttons'
+        | 'buttongroups'
+        | 'datagrids'
         | 'eventlists'
         | 'filters'
         | 'flowcharts'

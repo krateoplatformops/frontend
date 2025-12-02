@@ -17,40 +17,10 @@ BarChart express quantities through a bar's length, using a common baseline. Bar
 | data[].bars | yes | Bars within the group, each representing a value | array |
 | data[].bars[].value | yes | Label or identifier for the bar | string |
 | data[].bars[].percentage | yes | Height of the bar as a percentage (0–100) | integer |
-| data[].bars[].color | no | Color of the bar | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
+| data[].bars[].color | no | Color of the bar | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: BarChart
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-bar-chart
-  namespace: test-namespace
-spec:
-  widgetData:
-    data:
-      - label: CPU usage
-        bars:
-          - value: "1982"
-            percentage: 75
-            color: blue
-          - value: "75"
-            percentage: 12
-            color: red
-      - label: RAM usage
-        bars:
-          - value: "72"
-            percentage: 12
-            color: orange
-      - label: Temperature
-        bars:
-          - value: "63"
-            percentage: 85
-            color: red
-```
-</details>
+[Examples](../src/examples/widgets/BarChart/BarChart.example.yaml)
 
 ---
 
@@ -112,7 +82,8 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal[].loading.display | yes |  | boolean |
 | actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
 | actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
-| color | no | the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
+| backgroundColor | no | the background color of the button | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
+| color | no | ***DEPRECATED*** the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
 | label | no | the label of the button | string |
 | icon | no | the icon of the button (font awesome icon name eg: `fa-inbox`) | string |
 | shape | no | the shape of the button | `default` \| `circle` \| `round` |
@@ -120,37 +91,27 @@ Button represents an interactive component which, when clicked, triggers a speci
 | type | no | the visual style of the button | `default` \| `text` \| `link` \| `primary` \| `dashed` |
 | clickActionId | yes | the id of the action to be executed when the button is clicked | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Button
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: button-delete-test-app
-  namespace: test-namespace
-spec:
-  widgetData:
-    icon: fa-trash
-    type: default
-    shape: circle
-    clickActionId: delete
-    actions:
-      rest:
-        - id: delete
-          resourceRefId: delete
-          type: rest
-          requireConfirmation: true
-  resourcesRefs:
-    items:
-      - id: delete
-        apiVersion: composition.krateo.io/v1-1-15
-        resource: testapps
-        name: hello-test-2
-        namespace: test-namespace
-        verb: DELETE
-```
-</details>
+[Examples](../src/examples/widgets/Button/Button.example.yaml)
+
+---
+
+### ButtonGroup
+
+name of the k8s Custom Resource
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| alignment | no | the alignment of the element inside the ButtonGroup. Default is 'left' | `center` \| `left` \| `right` |
+| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
+| gap | no | the spacing between the items of the ButtonGroup. Default is 'small' | `extra-small` \| `small` \| `medium` \| `large` |
+| items | yes | the items of the ButtonGroup | array |
+| items[].resourceRefId | yes |  | string |
+
+
+[Examples](../src/examples/widgets/ButtonGroup/ButtonGroup.example.yaml)
 
 ---
 
@@ -167,54 +128,8 @@ Column is a layout component that arranges its children in a vertical stack, ali
 | items[].resourceRefId | yes | the identifier of the k8s Custom Resource that should be represented, usually a widget | string |
 | size | no | the number of cells that the column will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Column
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: test-column
-  namespace: test-namespace
-spec:
-  widgetData:
-    allowedResources:
-      - barcharts
-      - buttons
-      - columns
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - rows
-      - tables
-      - tablists
-      - yamlviewers
-    items:
-      - resourceRefId: table-of-pods
-      - resourceRefId: pie-chart-inside-column
-  resourcesRefs:
-    items:
-      - id: table-of-pods
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: table-of-pods
-        namespace: test-namespace
-        resource: tables
-        verb: GET
-      - id: pie-chart-inside-column
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: pie-chart-inside-column
-        namespace: test-namespace
-        resource: piecharts
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/Column/Column.example.yaml)
 
 ---
 
@@ -281,60 +196,8 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 | sseEndpoint | no | endpoint url for server sent events connection | string |
 | sseTopic | no | subscription topic for server sent events | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: EventList
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-event-list
-  namespace: test-namespace
-spec:
-  widgetData:
-    events:
-      - icon: "fa-exclamation-circle"
-        reason: "FailedScheduling"
-        message: "0/1 nodes are available: 1 Insufficient memory."
-        type: "Warning"
-        count: 3
-        firstTimestamp: "2024-04-20T12:34:56Z"
-        lastTimestamp: "2024-04-20T12:45:00Z"
-        metadata:
-          name: "my-pod.17d90d9c8ab2b1e1"
-          namespace: "default"
-          uid: "d1234567-89ab-4def-8123-abcdef012345"
-          creationTimestamp: "2024-04-20T12:34:56Z"
-        involvedObject:
-          apiVersion: "v1"
-          kind: "Pod"
-          name: "my-pod"
-          namespace: "default"
-          uid: "abcd-1234"
-        source:
-          component: "scheduler"
-      - icon: "fa-rocket"
-        reason: "Started"
-        message: "Started container nginx"
-        type: "Normal"
-        metadata:
-          name: "nginx-pod.17d90d9c8ab2b1e2"
-          namespace: "default"
-          uid: "f1234567-89ab-4def-8123-abcdef012346"
-          creationTimestamp: "2024-04-21T08:20:00Z"
-        involvedObject:
-          apiVersion: "v1"
-          kind: "Pod"
-          name: "nginx-pod"
-          namespace: "default"
-          uid: "defg-5678"
-        source:
-          component: "kubelet"
-          host: "worker-node-1"
-    sseEndpoint: "/events/stream"
-    sseTopic: "k8s-event"
-```
-</details>
+[Examples](../src/examples/widgets/EventList/EventList.example.yaml)
 
 ---
 
@@ -398,124 +261,8 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | data[].uid | yes | unique identifier of the resource | string |
 | data[].version | yes | api version of the resource | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: FlowChart
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-flow-chart
-  namespace: test-namespace
-spec:
-  widgetData:
-    data:
-      - date: "2025-07-24T15:30:36Z"
-        icon:
-          name: "fa-cubes"
-          color: "blue"
-        statusIcon:
-          name: "fa-check"
-          color: "green"
-          message: "Available"
-        kind: "FrontendGithubScaffolding"
-        name: "test2"
-        namespace: "demo-system"
-        parentRefs:
-          - {}
-        resourceVersion: ""
-        uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
-        version: "composition.krateo.io/v0-0-1"
-
-      - date: "2024-07-31T15:30:39Z"
-        icon:
-          name: "fa-file-alt"
-          color: "orange"
-        statusIcon:
-          name: "fa-ellipsis"
-          color: "blue"
-          message: "Progressing"
-        kind: "ConfigMap"
-        name: "test2-replace-values"
-        namespace: "demo-system"
-        parentRefs:
-          - kind: "FrontendGithubScaffolding"
-            name: "test2"
-            namespace: "demo-system"
-            parentRefs: [{}]
-            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
-            version: "composition.krateo.io/v0-0-1"
-        resourceVersion: "77493"
-        uid: "e99a3efe-7461-4ffe-b956-55cb3882f0c5"
-        version: "v1"
-
-      - date: "2025-07-31T15:30:39Z"
-        icon:
-          name: "fa-cogs"
-          color: "gray"
-        statusIcon:
-          name: "fa-pause"
-          color: "orange"
-          message: "Suspended"
-        kind: "Application"
-        name: "test2"
-        namespace: "krateo-system"
-        parentRefs:
-          - kind: "FrontendGithubScaffolding"
-            name: "test2"
-            namespace: "demo-system"
-            parentRefs: [{}]
-            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
-            version: "composition.krateo.io/v0-0-1"
-        resourceVersion: "2769771"
-        uid: "10c62b82-8096-4f40-a991-8f1a420a7c42"
-        version: "argoproj.io/v1alpha1"
-
-      - date: "2025-07-31T15:30:39Z"
-        icon:
-          name: "fa-database"
-          color: "violet"
-        statusIcon:
-          name: "fa-xmark"
-          color: "red"
-          message: "Degraded"
-        kind: "Repo"
-        name: "test2-repo"
-        namespace: "demo-system"
-        parentRefs:
-          - kind: "FrontendGithubScaffolding"
-            name: "test2"
-            namespace: "demo-system"
-            parentRefs: [{}]
-            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
-            version: "composition.krateo.io/v0-0-1"
-        resourceVersion: "2771491"
-        uid: "36177476-08c3-42dd-a148-48d0b94bbf13"
-        version: "git.krateo.io/v1alpha1"
-
-      - date: "2025-07-31T15:30:39Z"
-        icon:
-          name: "fa-book"
-          color: "red"
-        statusIcon:
-          name: "fa-question"
-          color: "gray"
-          message: "Unknown"
-        kind: "Repo"
-        name: "test2-repo"
-        namespace: "demo-system"
-        parentRefs:
-          - kind: "FrontendGithubScaffolding"
-            name: "test2"
-            namespace: "demo-system"
-            parentRefs: [{}]
-            uid: "1eed3c65-90d2-4823-a85c-3430d4e41944"
-            version: "composition.krateo.io/v0-0-1"
-        resourceVersion: "77512"
-        uid: "cc1fb868-3ae9-435a-a748-aa54dcd1b26b"
-        version: "github.kog.krateo.io/v1alpha1"
-```
-</details>
+[Examples](../src/examples/widgets/FlowChart/FlowChart.example.yaml)
 
 ---
 
@@ -587,7 +334,7 @@ name of the k8s Custom Resource
 | schema | no | the schema of the form as an object | object |
 | stringSchema | no | the schema of the form as a string | string |
 | submitActionId | yes | the id of the action to be called when the form is submitted | string |
-| fieldDescription | no |  | `tooltip` \| `inline` |
+| fieldDescription | no | the displaying mode of the field description, default is inline but it could also be displayed as a tooltip | `tooltip` \| `inline` |
 | autocomplete | no | Configuration for the Autocomplete form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.  | array |
 | autocomplete[].extra | no | parameter to be added to the RESTAction call | object |
 | autocomplete[].extra.key | yes | the key of the additional parameter | string |
@@ -604,166 +351,11 @@ name of the k8s Custom Resource
 | objectFields[].path | yes | the path of the object field | string |
 | objectFields[].displayField | yes | the field to display in the objects list | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Form
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: form-example
-  namespace: test-namespace
-spec:
-  widgetData:
-    submitActionId: firework-submit-action
-    stringSchema: |
-      {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "title": "Application Name",
-            "description": "The name of your fireworks app"
-          },
-          "image": {
-            "type": "string",
-            "title": "Container Image",
-            "description": "Full image path (e.g., ghcr.io/org/image:tag)"
-          },
-          "replicas": {
-            "type": "integer",
-            "title": "Number of Replicas",
-            "default": 1
-          },
-          "enableMetrics": {
-            "type": "boolean",
-            "title": "Enable Metrics",
-            "default": false
-          },
-          "city": {
-            "type": "string",
-            "title": "City",
-            "description": "Your city"
-          },
-          "zipCode": {
-            "type": "string",
-            "title": "Zip code",
-            "description": "Your ZIP code"
-          },
-        },
-        "required": ["name", "image"]
-      }
-    autocomplete:
-      - name: city
-        resourceRefId: getCities
-        extra:
-          key: cityName
-    dependencies:
-      - name: zipCode
-        dependsOn:
-          name: city
-        resourceRefId: getZipCodes
-        extra:
-          key: cityName
-    actions:
-      rest:
-        - id: firework-submit-action
-          resourceRefId: resource-ref-1
-          type: rest
-          payloadKey: spec
-          onSuccessNavigateTo: /compositions/${metadata.namespace}/${metadata.name}
-          payloadToOverride:
-            - name: metadata.name
-              value: ${ git.toRepo.name }
-  resourcesRefs:
-    items:
-      - id: resource-ref-1
-        apiVersion: composition.krateo.io/v2-0-0
-        name: new-app
-        namespace: test-namespace
-        resource: fireworksapps
-        verb: POST
-      - id: getCities
-        apiVersion: composition.krateo.io/v2-0-0
-        name: getCities
-        namespace: test-namespace
-        resource: restactions
-        verb: GET
-      - id: getZipCodes
-        apiVersion: composition.krateo.io/v2-0-0
-        name: getZipCodes
-        namespace: test-namespace
-        resource: restactions
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/Form/Form.example.yaml)
 
 
 > For additional information about the `autocomplete` and `dependencies` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).
-
----
-
-### InlineGroup
-
-name of the k8s Custom Resource
-
-#### Props
-
-| Property | Required | Description | Type |
-|----------|----------|-------------|------|
-| alignment | no | the alignment of the element inside the InlineGroup. Default is 'left' | `center` \| `left` \| `right` |
-| allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
-| gap | no | the spacing between the items of the InlineGroup. Default is 'small' | `extra-small` \| `small` \| `medium` \| `large` |
-| items | yes | the items of the InlineGroup | array |
-| items[].resourceRefId | yes |  | string |
-
-<details>
-<summary>Example</summary>
-
-```yaml
-kind: InlineGroup
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: test-inline-group
-  namespace: test-namespace
-spec:
-  widgetData:
-    alignment: center
-    allowedResources:
-      - barcharts
-      - buttons
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - tables
-      - tablists
-      - yamlviewers
-    gap: medium
-    items:
-      - resourceRefId: button-1
-      - resourceRefId: button-2
-  resourcesRefs:
-    items:
-      - id: button-1
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: button-1
-        namespace: test-namespace
-        resource: buttons
-        verb: GET
-      - id: button-2
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: button-2
-        namespace: test-namespace
-        resource: buttons
-        verb: GET
-```
-</details>
 
 ---
 
@@ -775,54 +367,17 @@ LineChart displays a customizable line chart based on time series or numerical d
 
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
-| prefix | no | it's the filters prefix to get right values | string |
 | lines | yes | list of data series to be rendered as individual lines | array |
 | lines[].name | no | label of the line displayed in the legend | string |
-| lines[].color | no | color used to render the line | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
+| lines[].color | no | color used to render the line | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | lines[].coords | no | data points that define the line | array |
 | lines[].coords[].xAxis | yes | value on the x axis | string |
 | lines[].coords[].yAxis | yes | value on the y axis | string |
 | xAxisName | no | label for the x axis | string |
 | yAxisName | no | label for the y axis | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: LineChart
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-line-chart
-  namespace: test-namespace
-spec:
-  widgetData:
-    lines:
-      - name: blue line
-        color: blue
-        coords:
-          - xAxis: 0
-            yAxis: 15
-          - xAxis: 1
-            yAxis: 52
-          - xAxis: 2
-            yAxis: 15
-          - xAxis: 3
-            yAxis: 52
-      - name: red line
-        color: red
-        coords:
-          - xAxis: 0
-            yAxis: 4
-          - xAxis: 1
-            yAxis: 8
-          - xAxis: 2
-            yAxis: 12
-          - xAxis: 3
-            yAxis: 2
-    xAxisName: time
-    yAxisName: cost
-```
-</details>
+[Examples](../src/examples/widgets/LineChart/LineChart.example.yaml)
 
 ---
 
@@ -839,20 +394,8 @@ Markdown receives markdown in string format and renders it gracefully
 | downloadFileExtension | no | if 'allowDownload' is set, this property allows to set an extension for the downloaded file. Default is .txt | string |
 | markdown | yes | markdown string to be displayed | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Markdown
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: test-markdown
-  namespace: test-namespace
-spec:
-  widgetData:
-    markdown: "# Titolo H1\n## Sottotitolo\nTesto **in grassetto**, _in corsivo_ e `codice inline`.\n\n- Lista 1\n- Lista 2\n\n1. Primo\n2. Secondo\n\n> Questo è un blockquote.\n\n[Link a Google](https://google.com)\n\n```js\nconsole.log('Ciao mondo');\n```"
-```
-</details>
+[Examples](../src/examples/widgets/Markdown/Markdown.example.yaml)
 
 ---
 
@@ -868,31 +411,8 @@ NavMenu is a container for NavMenuItem widgets, which are used to setup navigati
 | items | yes | list of navigation entries each pointing to a k8s custom resource | array |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a NavMenuItem | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: NavMenu
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: sidebar-nav-menu
-  namespace: test-namespace
-spec:
-  widgetData:
-    allowedResources:
-      - navmenuitems
-    items:
-      - resourceRefId: nav-menu-item-templates
-  resourcesRefs:
-    items:
-      - id: nav-menu-item-templates
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: nav-menu-item-templates
-        namespace: test-namespace
-        resource: navmenuitems
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/NavMenu/NavMenu.example.yaml)
 
 ---
 
@@ -911,35 +431,8 @@ NavMenuItem represents a single item in the navigation menu and links to a speci
 | path | yes | route path to navigate to when the menu item is clicked | string |
 | resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: NavMenuItem
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: nav-menu-item-templates
-  namespace: test-namespace
-spec:
-  widgetData:
-    allowedResources:
-      - pages
-    resourceRefId: templates-page
-    label: Templates
-    icon: fa-rectangle-list
-    path: /templates
-    order: 20
-
-  resourcesRefs:
-    items:
-      - id: templates-page
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: templates-page
-        namespace: test-namespace
-        resource: pages
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/NavMenuItem/NavMenuItem.example.yaml)
 
 ---
 
@@ -956,47 +449,8 @@ Page is a wrapper component, placed at the top of the component tree, that wraps
 | items[].resourceRefId | yes | the identifier of the k8s custom resource that should be rendered, usually a widget | string |
 | title | no | title of the page shown in the browser tab | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Page
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: compositions-route
-  namespace: test-namespace
-spec:
-  widgetData:
-    allowedResources:
-      - barcharts
-      - buttons
-      - columns
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - rows
-      - tables
-      - tablists
-      - yamlviewers
-    items:
-      - resourceRefId: composition-test-item
-  resourcesRefs:
-    items:
-      - id: composition-test-item
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: composition-test-item
-        namespace: test-namespace
-        resource: nav
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/Page/Page.example.yaml)
 
 ---
 
@@ -1072,54 +526,8 @@ Panel is a container to display information
 | title | no | text to be displayed as the panel title | string |
 | tooltip | no | optional tooltip text shown on the top right side of the card to provide additional context | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Panel
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-panel
-  namespace: test-namespace
-spec:
-  widgetData:
-    actions: {}
-    title: My Panel
-    items:
-      - resourceRefId: my-pie-chart
-      - resourceRefId: my-table
-    tooltip: this is a tooltip!
-    footer:
-      - resourceRefId: button-1
-      - resourceRefId: button-2
-  resourcesRefs:
-    items:
-      - id: my-table
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: my-table
-        namespace: test-namespace
-        resource: tables
-        verb: GET
-      - id: my-pie-chart
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: my-pie-chart
-        namespace: test-namespace
-        resource: piecharts
-        verb: GET
-      - id: button-1
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: button-1
-        namespace: test-namespace
-        resource: buttons
-        verb: GET
-      - id: button-2
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: button-2
-        namespace: test-namespace
-        resource: buttons
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/Panel/Panel.example.yaml)
 
 ---
 
@@ -1133,20 +541,8 @@ Paragraph is a simple component used to display a block of text
 |----------|----------|-------------|------|
 | text | yes | the content of the paragraph to be displayed | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Paragraph
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-paragraph
-  namespace: test-namespace
-spec:
-  widgetData:
-    text: "This is a paragraph"
-```
-</details>
+[Examples](../src/examples/widgets/Paragraph/Paragraph.example.yaml)
 
 ---
 
@@ -1167,33 +563,8 @@ PieChart is a visual component used to display categorical data as segments of a
 | series.data[].value | yes | numeric value for the segment | integer |
 | series.data[].label | yes | label for the segment | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: PieChart
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-pie-chart
-  namespace: test-namespace
-spec:
-  widgetData:
-    title: Pie chart
-    description: This is a description
-    series:
-      total: 100
-      data:
-        - color: blue
-          value: 10
-          label: Blue
-        - color: darkBlue
-          value: 20
-          label: Dark Blue
-        - color: orange
-          value: 30
-          label: Orange
-```
-</details>
+[Examples](../src/examples/widgets/PieChart/PieChart.example.yaml)
 
 ---
 
@@ -1237,47 +608,8 @@ name of the k8s Custom Resource
 | items[].size | no | the number of cells that the item will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
 | items[].alignment | no | the alignment of the element inside the cell. Default is 'left' | `center` \| `left` \| `right` |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Row
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: composition-test-row
-  namespace: test-namespace
-spec:
-  widgetData:
-    allowedResources:
-      - barcharts
-      - buttons
-      - columns
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - piecharts
-      - rows
-      - tables
-      - tablists
-      - yamlviewers
-    items:
-      - resourceRefId: composition-test-panel
-  resourcesRefs:
-    items:
-      - id: composition-test-panel
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: composition-test-panel
-        namespace: test-namespace
-        resource: panels
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/Row/Row.example.yaml)
 
 ---
 
@@ -1291,73 +623,15 @@ Table displays structured data with customizable columns and pagination
 |----------|----------|-------------|------|
 | allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | columns | yes | configuration of the table's columns | array |
-| columns[].color | no | the color of the value (or the icon) to be represented | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` |
+| columns[].color | no | the color of the value (or the icon) to be represented | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | columns[].title | yes | column header label | string |
 | columns[].valueKey | yes | key used to extract the value from row data | string |
 | data | yes | Array of table rows | array |
 | pageSize | no | number of rows displayed per page | integer |
 | prefix | no | it's the filters prefix to get right values | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: Table
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-table
-  namespace: test-namespace
-spec:
-  widgetData:
-    allowedResources:
-      - barcharts
-      - buttons
-      - filters
-      - flowcharts
-      - linecharts
-      - markdowns
-      - paragraphs
-      - piecharts
-      - yamlviewers
-    pageSize: 10
-    data: 
-      - 
-        - valueKey: name
-          kind: jsonSchemaType
-          type: string
-          stringValue: Alice
-        - valueKey: age
-          kind: jsonSchemaType
-          type: integer
-          numberValue: 30
-        - valueKey: icon
-          kind: icon
-          stringValue: fa-rocket
-
-      - 
-        - valueKey: name
-          kind: jsonSchemaType
-          type: string
-          stringValue: Bob
-        - valueKey: age
-          kind: jsonSchemaType
-          type: integer
-          numberValue: 45
-        - valueKey: icon
-          kind: icon
-          stringValue: fa-exclamation-circle
-
-    columns:
-      - valueKey: name
-        title: Name
-      - valueKey: age
-        title: Age
-      - valueKey: icon
-        title: Icon
-        kind: icon
-        color: red
-```
-</details>
+[Examples](../src/examples/widgets/Table/Table.example.yaml)
 
 ---
 
@@ -1375,48 +649,8 @@ TabList display a set of tab items for navigation or content grouping
 | items[].resourceRefId | yes | the identifier of the k8s custom resource represented by the tab content | string |
 | items[].title | no | optional title to be displayed inside the tab | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: TabList
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-tab-list
-  namespace: test-namespace
-spec:
-  widgetData:
-    allowedResources:
-      - barcharts
-      - buttons
-      - filters
-      - flowcharts
-      - linecharts
-      - markdowns
-      - paragraphs
-      - piecharts
-      - yamlviewers
-    items:
-      - label: first tab
-        resourceRefId: first-column
-      - label: second tab
-        resourceRefId: second-column
-  resourcesRefs:
-    items:
-      - id: first-column
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: first-column
-        namespace: test-namespace
-        resource: columns
-        verb: GET
-      - id: second-column
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: second-column
-        namespace: test-namespace
-        resource: columns
-        verb: GET
-```
-</details>
+[Examples](../src/examples/widgets/TabList/TabList.example.yaml)
 
 ---
 
@@ -1430,17 +664,5 @@ YamlViewer receives a JSON string as input and renders its equivalent YAML repre
 |----------|----------|-------------|------|
 | json | yes | json string to be converted and displayed as yaml | string |
 
-<details>
-<summary>Example</summary>
 
-```yaml
-kind: YamlViewer
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: my-yaml-viewer
-  namespace: test-namespace
-spec:
-  widgetData:
-    json: '{"type":"object","additionalProperties":false,"properties":{"kind":{"type":"string","default":"YamlViewer"}}}'
-```
-</details>
+[Examples](../src/examples/widgets/YamlViewer/YamlViewer.example.yaml)

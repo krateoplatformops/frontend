@@ -247,11 +247,13 @@ export const useHandleAction = () => {
 
               let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
               // eslint-disable-next-line max-depth
-              if (errorMessage && errorMessage.startsWith('${')) {
-                description = await resolveJq(errorMessage, {
-                  json: payload,
-                  response: jsonResponse,
-                })
+              if (errorMessage) {
+                description = errorMessage.startsWith('${')
+                  ? await resolveJq(errorMessage, {
+                    json: payload,
+                    response: jsonResponse,
+                  })
+                  : errorMessage
               }
 
               const timeoutId = setTimeout(() => {
@@ -320,12 +322,14 @@ export const useHandleAction = () => {
                   }
 
                   let description = 'The action has been executed successfully'
-                  if (successMessage && successMessage.startsWith('${')) {
-                    description = await resolveJq(successMessage, {
-                      event: eventData as unknown as Record<string, unknown>,
-                      json: payload,
-                      response: jsonResponse,
-                    })
+                  if (successMessage) {
+                    description = successMessage.startsWith('${')
+                      ? await resolveJq(successMessage, {
+                        event: eventData as unknown as Record<string, unknown>,
+                        json: payload,
+                        response: jsonResponse,
+                      })
+                      : successMessage
                   }
 
                   message.destroy()
@@ -346,8 +350,19 @@ export const useHandleAction = () => {
               ? updateNameNamespace(url, payload?.metadata?.name, payload?.metadata?.namespace)
               : url
 
+            const headersObject = getHeadersObject(headers)
+            if (!headersObject) {
+              message.destroy()
+              notification.error({
+                description: 'Headers are not in the key: value format',
+                message: 'Error while executing the action',
+                placement: 'bottomLeft',
+              })
+              break
+            }
+
             const requestHeaders = {
-              ...getHeadersObject(headers),
+              ...headersObject,
               Accept: 'application/json',
               Authorization: `Bearer ${getAccessToken()}`,
             }
@@ -366,11 +381,21 @@ export const useHandleAction = () => {
             setIsActionLoading(false)
 
             if (!res.ok) {
+              let description = jsonResponse.message
+
+              // eslint-disable-next-line max-depth
+              if (errorMessage) {
+                description = errorMessage.startsWith('${')
+                  ? await resolveJq(errorMessage, {
+                    json: payload,
+                    response: jsonResponse,
+                  })
+                  : errorMessage
+              }
+
               message.destroy()
               notification.error({
-                description: errorMessage
-                  ? await resolveJq(errorMessage, { json: payload, response: jsonResponse })
-                  : jsonResponse.message,
+                description,
                 message: `${jsonResponse.status} - ${jsonResponse.reason}`,
                 placement: 'bottomLeft',
               })
@@ -401,8 +426,10 @@ export const useHandleAction = () => {
 
               let description = `Successfully ${actionName} ${jsonResponse.metadata?.name} in ${jsonResponse.metadata?.namespace}`
               // eslint-disable-next-line max-depth
-              if (successMessage && successMessage.startsWith('${')) {
-                description = await resolveJq(successMessage, { json: payload, response: jsonResponse })
+              if (successMessage) {
+                description = successMessage.startsWith('${')
+                  ? await resolveJq(successMessage, { json: payload, response: jsonResponse })
+                  : successMessage
               }
 
               notification.success({

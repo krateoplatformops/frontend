@@ -27,6 +27,7 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
 
   const [searchValue, setSearchValue] = useState<string>('')
   const [debouncedValue, setDebouncedValue] = useState<string>('')
+  const [inputValue, setInputValue] = useState<string>('')
 
   const debouncedUpdate = useMemo(() => debounce((val: string) => setDebouncedValue(val), 500), [])
 
@@ -36,7 +37,7 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
   }, [searchValue, debouncedUpdate])
 
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
-    enabled: !!(debouncedValue && resourceRefId && config && extra),
+    enabled: !!(debouncedValue && resourceRefId && config),
     queryFn: () =>
       getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, extra?.key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -45,28 +46,30 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
     staleTime: 5 * 60 * 1000,
   })
 
-  if (!options && (!resourceRefId || !extra)) {
-    notification.error({
-      description: `Missing "resourceRefId" or "extra" for field "${name}". The component cannot load options.`,
-      message: 'Autocomplete configuration error',
-    })
-    return null
+  const finalOptions = options ?? queriedOptions
+
+  const handleSelect = (value: string, option: DefaultOptionType) => {
+    form.setFieldsValue({ [name]: value })
+    setInputValue(option.label as string)
+  }
+
+  const handleChange = (val: string) => {
+    setInputValue(val)
+    setSearchValue(val)
   }
 
   return (
     <AntDAutoComplete
       filterOption={(inputValue, option) => {
-        if (option && typeof option.value === 'string') {
-          return option.value.toUpperCase().includes(inputValue.toUpperCase())
-        }
-        return false
+        if (!option || typeof option.label !== 'string') { return false }
+        return option.label.toUpperCase().includes(inputValue.toUpperCase())
       }}
-      onChange={(value) => form.setFieldsValue({ [name]: value })}
-      onSearch={setSearchValue}
-      options={options ?? queriedOptions}
+      onChange={handleChange}
+      onSelect={handleSelect}
+      options={finalOptions}
       placeholder='Start typing...'
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
-      value={form.getFieldValue(name) as string | undefined}
+      value={inputValue}
     />
   )
 }

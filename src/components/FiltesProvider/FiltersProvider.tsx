@@ -71,7 +71,7 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
   const setFilters = (prefix: string, filters: FilterType[]) => {
     setFilterMap((prev) => ({
       ...prev,
-      [prefix]: filters.filter(el => el.fieldValue !== undefined),
+      [prefix]: filters.filter(({ fieldValue }) => fieldValue !== undefined),
     }))
   }
 
@@ -97,7 +97,9 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
   const matchesFilter = (itemValue: unknown, filter: FilterType): boolean => {
     const { fieldType, fieldValue } = filter
 
-    if (!itemValue) { return false }
+    if (itemValue === null || itemValue === undefined) {
+      return false
+    }
 
     switch (fieldType) {
       case 'string':
@@ -107,9 +109,17 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
 
         return (itemValue as string).toLowerCase().includes((fieldValue as string).toLowerCase())
 
-      case 'number':
-      case 'boolean':
-        return itemValue === fieldValue
+      case 'number': {
+        return Number(itemValue) === Number(fieldValue)
+      }
+
+      case 'boolean': {
+        const normalizedFilterValue = typeof fieldValue === 'boolean'
+          ? fieldValue
+          : fieldValue === 'true'
+
+        return Boolean(itemValue) === normalizedFilterValue
+      }
 
       case 'date':
         if (typeof itemValue === 'string' && dayjs.isDayjs(fieldValue)) {
@@ -153,7 +163,7 @@ const FiltersProvider = ({ children }: { children: ReactNode }) => {
             if (!cell) { return false }
             value = getTableValue(cell)
           } else {
-            value = row[fieldName]
+            value = getValueByPath(row, fieldName)
           }
 
           return matchesFilter(value, filter)

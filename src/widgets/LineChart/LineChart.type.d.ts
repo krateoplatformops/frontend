@@ -10,10 +10,6 @@ export interface LineChart {
      */
     widgetData: {
       /**
-       * it's the filters prefix to get right values
-       */
-      prefix?: string
-      /**
        * list of data series to be rendered as individual lines
        */
       lines: {
@@ -24,7 +20,7 @@ export interface LineChart {
         /**
          * color used to render the line
          */
-        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green'
+        color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green' | 'violet'
         /**
          * data points that define the line
          */

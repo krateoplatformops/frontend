@@ -18,6 +18,7 @@ export interface Row {
       allowedResources: (
         | 'barcharts'
         | 'buttons'
+        | 'buttongroups'
         | 'columns'
         | 'datagrids'
         | 'eventlists'

@@ -8,6 +8,8 @@ import BarChart from '../../widgets/BarChart'
 import type { BarChartWidgetData } from '../../widgets/BarChart/BarChart'
 import Button from '../../widgets/Button'
 import type { ButtonWidgetData } from '../../widgets/Button/Button'
+import ButtonGroup from '../../widgets/ButtonGroup'
+import type { ButtonGroupWidgetData } from '../../widgets/ButtonGroup/ButtonGroup'
 import Column from '../../widgets/Column'
 import type { ColumnWidgetData } from '../../widgets/Column/Column'
 import type { DataGridWidgetData } from '../../widgets/DataGrid/DataGrid'
@@ -19,8 +21,6 @@ import type { FiltersWidgetData } from '../../widgets/Filters/Filters'
 import type { FlowChartWidgetData } from '../../widgets/FlowChart/FlowChart'
 import FlowChart from '../../widgets/FlowChart/FlowChart'
 import Form, { type FormWidgetData } from '../../widgets/Form/Form'
-import InlineGroup from '../../widgets/InlineGroup'
-import type { InlineGroupWidgetData } from '../../widgets/InlineGroup/InlineGroup'
 import LineChart from '../../widgets/LineChart'
 import type { LineChartWidgetData } from '../../widgets/LineChart/LineChart'
 import Markdown from '../../widgets/Markdown'
@@ -122,8 +122,8 @@ const parseWidget = (
       return <FlowChart {...props} widgetData={widgetData as FlowChartWidgetData} />
     case 'Form':
       return <Form {...props} widgetData={widgetData as FormWidgetData} />
-    case 'InlineGroup':
-      return <InlineGroup {...props} widgetData={widgetData as InlineGroupWidgetData} />
+    case 'ButtonGroup':
+      return <ButtonGroup {...props} widgetData={widgetData as ButtonGroupWidgetData} />
     case 'LineChart':
       return <LineChart {...props} widgetData={widgetData as LineChartWidgetData} />
     case 'Markdown':

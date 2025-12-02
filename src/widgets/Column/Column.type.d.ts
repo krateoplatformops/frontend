@@ -15,6 +15,7 @@ export interface Column {
       allowedResources: (
         | 'barcharts'
         | 'buttons'
+        | 'buttongroups'
         | 'columns'
         | 'datagrids'
         | 'eventlists'

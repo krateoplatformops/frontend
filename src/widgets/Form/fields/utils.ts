@@ -14,12 +14,11 @@ export const getOptionsFromResourceRefId = async (
   notification: NotificationInstance,
   config: Config | null
 ): Promise<DefaultOptionType[]> => {
-  if (!resourceRefId || !valueKey) {
+  if (!resourceRefId) {
     return []
   }
 
   const resourceRef = getResourceRef(resourceRefId, resourcesRefs)
-
   if (!resourceRef) {
     notification.error({
       description: `Cannot find resources refs for resource ref with ID ${resourceRefId}`,
@@ -32,7 +31,10 @@ export const getOptionsFromResourceRefId = async (
 
   try {
     const url = new URL(resourceRef.path, config!.api.SNOWPLOW_API_BASE_URL)
-    url.searchParams.set('extras', JSON.stringify({ [valueKey]: value }))
+
+    if (valueKey) {
+      url.searchParams.set('extras', JSON.stringify({ [valueKey]: value }))
+    }
 
     const response = await fetch(url.toString(), {
       headers: {

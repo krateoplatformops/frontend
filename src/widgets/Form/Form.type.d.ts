@@ -241,6 +241,9 @@ export interface Form {
        * the id of the action to be called when the form is submitted
        */
       submitActionId: string
+      /**
+       * the displaying mode of the field description, default is inline but it could also be displayed as a tooltip
+       */
       fieldDescription?: 'tooltip' | 'inline'
       /**
        * Configuration for the Autocomplete form fields. The field options could be configured using enum values coming from the schema or via an API call made using a RESTAction which sould be defined below. The RESTActions shuold contain a `status` field, which is an array of object with the `{ label, value }` format.

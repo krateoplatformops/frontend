@@ -1,6 +1,6 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Table as AntdTable, Typography } from 'antd'
+import { Table as AntdTable, Result, Typography } from 'antd'
 
 import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
 import WidgetRenderer from '../../components/WidgetRenderer'
@@ -15,6 +15,17 @@ export type TableWidgetData = WidgetType['spec']['widgetData']
 const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { columns, data, pageSize, prefix } = widgetData
   const { getFilteredData } = useFilter()
+
+  // TODO: check if this works with RESTAction, it should not be displayed
+  if (!columns.length) {
+    return (
+      <Result
+        status='error'
+        subTitle={'It is necessary to configure columns data in order to display Table data.'}
+        title={'Error while rendering widget'}
+      />
+    )
+  }
 
   let dataTable: TableWidgetData['data'] = data
   if (prefix && data?.length > 0) {
@@ -73,7 +84,7 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
                 case 'boolean':
                   return <span style={{ color }}>{booleanValue !== undefined ? String(booleanValue) : '-'}</span>
                 case 'array':
-                  return <span style={{ color }}>{arrayValue ? JSON.stringify(arrayValue) : '-'}</span>
+                  return <span style={{ color }}>{arrayValue ? arrayValue.join(', ') : '-'}</span>
                 case 'null':
                   return <span>-</span>
                 default:

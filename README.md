@@ -1,10 +1,68 @@
 # Frontend
 
-## 🚀 Running Locally
+## Widgets documentation and examples portal
+
+### Documentation and guides
+
+API reference for widgets is found at [docs/widgets-api-reference.md](docs/widgets-api-reference.md).
+
+Documentation and guides can be found in [docs/](docs/)
+
+### Examples portal
+
+In order to see Krateo frontend widgets displayed in a real environment, you can run our examples portal, which loads the [YAML example files](./src/examples/widgets/) referenced in the documentation into a local environment.
+
+To do that, clone this repository, then follow the steps below:
+
+#### **Step 1: Create a Kind Cluster with Krateo and Snowplow**
+
+Follow [this guide](https://docs.krateo.io/how-to-guides/install-krateo/installing-krateo-kind) to create a Kind cluster with the latest version of Krateo installed.
+
+You’ll also need the latest version of [Snowplow](https://github.com/krateoplatformops/snowplow/).  
+To include it during installation, add this flag to the `helm upgrade` command shown in the Krateo guide:
+
+```bash
+  --set krateoplatformops.snowplow.chart.version={{LATEST_SNOWPLOW_VERSION}} \
+```
+
+The final command should look like this:
+```bash
+helm upgrade installer-crd installer-crd \
+  --repo https://charts.krateo.io \
+  --namespace krateo-system \
+  --create-namespace \
+  --install \
+  --version 2.6.0 \
+  --set krateoplatformops.snowplow.chart.version=0.14.1 \
+  --wait 
+```
+
+### **Step 2: Start the examples portal**
+
+Run the following command to start the examples portal app locally:
+
+```bash
+npm run examples
+```
+
+It will be available at [http://localhost:4000/login](http://localhost:4000/login).
+
+Login with:
+
+- **Username:** `admin`  
+- **Password:** retrieve it with:
+  ```bash
+  kubectl get secret admin-password -n krateo-system -o jsonpath="{.data.password}" | base64 -d
+  ```
+
+You should now see a sidebar item for each widget, directing you to a dedicated page that contains several examples.
+
+---
+
+## Running Locally
 
 Follow the steps below to run the frontend locally.
 
----
 
 ### **Step 1: Create a Kind Cluster with Krateo and Snowplow**
 
@@ -12,6 +70,10 @@ Follow [this guide](https://docs.krateo.io/how-to-guides/install-krateo/installi
 
 You’ll also need the latest version of [Snowplow](https://github.com/krateoplatformops/snowplow/).  
 To include it during installation, add this flag to the `helm upgrade` command shown in the Krateo guide:
+
+```bash
+  --set krateoplatformops.snowplow.chart.version={{LATEST_SNOWPLOW_VERSION}} \
+```
 
 The final command should look like this:
 ```bash
@@ -36,8 +98,6 @@ npm run gen-crds
 ```
 
 All generated `.crd.yaml` files will be saved in `scripts/krateoctl-output/`.
-
----
 
 ### **Step 3: Apply Custom Resources**
 
@@ -92,8 +152,6 @@ Login with:
   kubectl get secret admin-password -n krateo-system -o jsonpath="{.data.password}" | base64 -d
   ```
 
----
-
 ## Running on an Existing Cluster
 
 You can also run the frontend locally while connected to an existing cluster.
@@ -117,13 +175,3 @@ VITE_CONFIG_NAME=remote npm run dev
 ```
 
 Finally, authenticate using the provided username and password.
-
----
-
-## Widgets
-
-Api reference for widgets is found at [docs/widgets-api-reference.md](docs/widgets-api-reference.md)
-
-## Documentation and guides
-
-Documentation and guides can be found in [docs/](docs/)

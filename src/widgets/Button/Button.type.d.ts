@@ -196,7 +196,11 @@ export interface Button {
         }[]
       }
       /**
-       * the color of the button
+       * the background color of the button
+       */
+      backgroundColor?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green' | 'violet'
+      /**
+       * ***DEPRECATED*** the color of the button
        */
       color?:
         | 'default'
