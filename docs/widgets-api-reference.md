@@ -19,6 +19,9 @@ BarChart express quantities through a bar's length, using a common baseline. Bar
 | data[].bars[].percentage | yes | Height of the bar as a percentage (0–100) | integer |
 | data[].bars[].color | no | Color of the bar | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 
+
+[Examples](../src/examples/widgets/BarChart/BarChart.example.yaml)
+
 ---
 
 ### Button
@@ -88,6 +91,9 @@ Button represents an interactive component which, when clicked, triggers a speci
 | type | no | the visual style of the button | `default` \| `text` \| `link` \| `primary` \| `dashed` |
 | clickActionId | yes | the id of the action to be executed when the button is clicked | string |
 
+
+[Examples](../src/examples/widgets/Button/Button.example.yaml)
+
 ---
 
 ### ButtonGroup
@@ -122,6 +128,9 @@ Column is a layout component that arranges its children in a vertical stack, ali
 | items[].resourceRefId | yes | the identifier of the k8s Custom Resource that should be represented, usually a widget | string |
 | size | no | the number of cells that the column will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
 
+
+[Examples](../src/examples/widgets/Column/Column.example.yaml)
+
 ---
 
 ### DataGrid
@@ -146,6 +155,9 @@ Column is a layout component that arranges its children in a vertical stack, ali
 | items | yes |  | array |
 | items[].resourceRefId | yes |  | string |
 | prefix | no | it's the filters prefix to get right values | string |
+
+
+[Examples](../src/examples/widgets/DataGrid/DataGrid.example.yaml)
 
 ---
 
@@ -187,6 +199,9 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 | sseEndpoint | no | endpoint url for server sent events connection | string |
 | sseTopic | no | subscription topic for server sent events | string |
 
+
+[Examples](../src/examples/widgets/EventList/EventList.example.yaml)
+
 ---
 
 ### Filters
@@ -204,6 +219,9 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 | fields[].description | no | text to show as tooltip | string |
 | fields[].type | yes | it's the filter field type, to render input, select, radio buttons, date picker or daterange picker | `string` \| `boolean` \| `number` \| `date` \| `daterange` |
 | fields[].options | no | they're the options for select or radio, the type must be 'string' | array |
+
+
+[Examples](../src/examples/widgets/Filters/Filters.example.yaml)
 
 ---
 
@@ -248,6 +266,9 @@ FlowChart represents a Kubernetes composition as a directed graph. Each node rep
 | data[].resourceVersion | yes | internal version string of the resource | string |
 | data[].uid | yes | unique identifier of the resource | string |
 | data[].version | yes | api version of the resource | string |
+
+
+[Examples](../src/examples/widgets/FlowChart/FlowChart.example.yaml)
 
 ---
 
@@ -337,6 +358,9 @@ name of the k8s Custom Resource
 | objectFields[].displayField | yes | the field to display in the objects list | string |
 
 
+[Examples](../src/examples/widgets/Form/Form.example.yaml)
+
+
 > For additional information about the `autocomplete` and `dependencies` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).
 
 ---
@@ -358,6 +382,9 @@ LineChart displays a customizable line chart based on time series or numerical d
 | xAxisName | no | label for the x axis | string |
 | yAxisName | no | label for the y axis | string |
 
+
+[Examples](../src/examples/widgets/LineChart/LineChart.example.yaml)
+
 ---
 
 ### Markdown
@@ -372,6 +399,9 @@ Markdown receives markdown in string format and renders it gracefully
 | allowDownload | no | displays a download button on top of the widget to allow download of the text | boolean |
 | downloadFileExtension | no | if 'allowDownload' is set, this property allows to set an extension for the downloaded file. Default is .txt | string |
 | markdown | yes | markdown string to be displayed | string |
+
+
+[Examples](../src/examples/widgets/Markdown/Markdown.example.yaml)
 
 ---
 
@@ -403,9 +433,6 @@ NavMenuItem represents a single item in the navigation menu and links to a speci
 | order | no | a weight to be used to sort the items in the menu | integer |
 | path | yes | route path to navigate to when the menu item is clicked | string |
 | resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
-
-
-[Examples](../src/examples/widgets/NavMenuItem/NavMenuItem.example.yaml)
 
 ---
 
@@ -496,6 +523,9 @@ Panel is a container to display information
 | title | no | text to be displayed as the panel title | string |
 | tooltip | no | optional tooltip text shown on the top right side of the card to provide additional context | string |
 
+
+[Examples](../src/examples/widgets/Panel/Panel.example.yaml)
+
 ---
 
 ### Paragraph
@@ -507,6 +537,9 @@ Paragraph is a simple component used to display a block of text
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
 | text | yes | the content of the paragraph to be displayed | string |
+
+
+[Examples](../src/examples/widgets/Paragraph/Paragraph.example.yaml)
 
 ---
 
@@ -526,6 +559,9 @@ PieChart is a visual component used to display categorical data as segments of a
 | series.data[].color | yes | color used to represent the segment | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | series.data[].value | yes | numeric value for the segment | integer |
 | series.data[].label | yes | label for the segment | string |
+
+
+[Examples](../src/examples/widgets/PieChart/PieChart.example.yaml)
 
 ---
 
@@ -569,6 +605,9 @@ name of the k8s Custom Resource
 | items[].size | no | the number of cells that the item will occupy, from 0 (not displayed) to 24 (occupies all space) | integer |
 | items[].alignment | no | the alignment of the element inside the cell. Default is 'left' | `center` \| `left` \| `right` |
 
+
+[Examples](../src/examples/widgets/Row/Row.example.yaml)
+
 ---
 
 ### Table
@@ -588,6 +627,9 @@ Table displays structured data with customizable columns and pagination
 | pageSize | no | number of rows displayed per page | integer |
 | prefix | no | it's the filters prefix to get right values | string |
 
+
+[Examples](../src/examples/widgets/Table/Table.example.yaml)
+
 ---
 
 ### TabList
@@ -604,6 +646,9 @@ TabList display a set of tab items for navigation or content grouping
 | items[].resourceRefId | yes | the identifier of the k8s custom resource represented by the tab content | string |
 | items[].title | no | optional title to be displayed inside the tab | string |
 
+
+[Examples](../src/examples/widgets/TabList/TabList.example.yaml)
+
 ---
 
 ### YamlViewer
@@ -615,3 +660,6 @@ YamlViewer receives a JSON string as input and renders its equivalent YAML repre
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
 | json | yes | json string to be converted and displayed as yaml | string |
+
+
+[Examples](../src/examples/widgets/YamlViewer/YamlViewer.example.yaml)
