@@ -1,5 +1,5 @@
 import type { UseQueryResult } from '@tanstack/react-query'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import React, { createContext, useContext } from 'react'
 export interface Config {
   api: {
@@ -21,7 +21,6 @@ interface ConfigContextType {
   config: Config | undefined
   isLoading: boolean
   refetch: UseQueryResult<Config, Error>['refetch']
-  setConfig: (value: Config) => void
 }
 
 const ConfigContext = createContext<ConfigContextType | null>(null)
@@ -46,22 +45,16 @@ async function fetchConfig(): Promise<Config> {
 }
 
 export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = useQueryClient()
-
   const { data: config, isLoading, refetch } = useQuery({
     queryFn: fetchConfig,
-    queryKey: ['config'],
-    refetchInterval: 600_000,
-    refetchOnWindowFocus: true,
+    queryKey: ['config', import.meta.env.VITE_CONFIG_NAME || 'default'] as const,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
     staleTime: 0,
   })
 
-  const setConfig = (value: Config) => {
-    queryClient.setQueryData(['config'], value)
-  }
-
   return (
-    <ConfigContext.Provider value={{ config, isLoading, refetch, setConfig }}>
+    <ConfigContext.Provider value={{ config, isLoading, refetch }}>
       {children}
     </ConfigContext.Provider>
   )
