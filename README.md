@@ -56,7 +56,7 @@ Install [`krateoctl`](https://github.com/krateoplatformops/krateoctl) if you hav
 Then run the script that uses `krateoctl` to generate CRDs for all `.schema.json` files in the repository:
 
 ```bash
-npm run gen-crds
+npm run generate-crds
 ```
 
 All generated `.crd.yaml` files will be saved in `scripts/krateoctl-output/`.
