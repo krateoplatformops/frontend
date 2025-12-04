@@ -18,25 +18,6 @@ To do that, clone this repository, then follow the steps below:
 
 Follow [this guide](https://docs.krateo.io/how-to-guides/install-krateo/installing-krateo-kind) to create a Kind cluster with the latest version of Krateo installed.
 
-You’ll also need the latest version of [Snowplow](https://github.com/krateoplatformops/snowplow/).  
-To include it during installation, add this flag to the `helm upgrade` command shown in the Krateo guide:
-
-```bash
-  --set krateoplatformops.snowplow.chart.version={{LATEST_SNOWPLOW_VERSION}} \
-```
-
-The final command should look like this:
-```bash
-helm upgrade installer-crd installer-crd \
-  --repo https://charts.krateo.io \
-  --namespace krateo-system \
-  --create-namespace \
-  --install \
-  --version 2.6.0 \
-  --set krateoplatformops.snowplow.chart.version=0.14.1 \
-  --wait 
-```
-
 ### **Step 2: Start the examples portal**
 
 Run the following command to start the examples portal app locally:
@@ -67,25 +48,6 @@ Follow the steps below to run the frontend locally.
 ### **Step 1: Create a Kind Cluster with Krateo and Snowplow**
 
 Follow [this guide](https://docs.krateo.io/how-to-guides/install-krateo/installing-krateo-kind) to create a Kind cluster with the latest version of Krateo installed.
-
-You’ll also need the latest version of [Snowplow](https://github.com/krateoplatformops/snowplow/).  
-To include it during installation, add this flag to the `helm upgrade` command shown in the Krateo guide:
-
-```bash
-  --set krateoplatformops.snowplow.chart.version={{LATEST_SNOWPLOW_VERSION}} \
-```
-
-The final command should look like this:
-```bash
-helm upgrade installer-crd installer-crd \
-  --repo https://charts.krateo.io \
-  --namespace krateo-system \
-  --create-namespace \
-  --install \
-  --version 2.6.0 \
-  --set krateoplatformops.snowplow.chart.version=0.14.1 \
-  --wait 
-```
 
 ### **Step 2: Generate CRDs from JSON Schemas**
 
