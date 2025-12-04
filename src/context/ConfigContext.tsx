@@ -1,6 +1,6 @@
-import { noop } from 'lodash'
-import React, { createContext, useContext, useEffect, useState } from 'react'
-
+import type { UseQueryResult } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import React, { createContext, useContext } from 'react'
 export interface Config {
   api: {
     AUTHN_API_BASE_URL: string
@@ -18,50 +18,53 @@ export interface Config {
 }
 
 interface ConfigContextType {
-  config: Config | null
+  config: Config | undefined
   isLoading: boolean
+  refetch: UseQueryResult<Config, Error>['refetch']
+  setConfig: (value: Config) => void
 }
 
-const ConfigContext = createContext<ConfigContextType>({
-  config: null,
-  isLoading: true,
-})
+const ConfigContext = createContext<ConfigContextType | null>(null)
 
-export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [config, setConfig] = useState<Config | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+async function fetchConfig(): Promise<Config> {
+  let configPath = '/config/config.json'
 
-  useEffect(() => {
-    const getConfig = async () => {
-      try {
-        // In development, use VITE_CONFIG_NAME if set, otherwise fallback to config.json
-        // e.g., VITE_CONFIG_NAME=local will load config.local.json
-        let configPath = '/config/config.json'
+  const configName = import.meta.env.VITE_CONFIG_NAME
+  if (import.meta.env.DEV && configName) {
+    configPath = `/config/config.${configName}.json`
+  }
 
-        const configName = import.meta.env.VITE_CONFIG_NAME
-        if (import.meta.env.DEV && configName) {
-          configPath = `/config/config.${configName}.json`
-        }
+  const configFile = await fetch(configPath, { cache: 'no-store' })
 
-        const configFile = await fetch(configPath)
+  if (!configFile.ok) {
+    throw new Error(`Failed to fetch config: ${configFile.statusText}`)
+  }
 
-        if (!configFile.ok) {
-          throw new Error(`Failed to fetch config: ${configFile.statusText}`)
-        }
+  const configJson = (await configFile.json()) as Config
 
-        const configJson = (await configFile.json()) as Config
-        setConfig(configJson)
-      } catch (error) {
-        console.error('Error fetching config:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
+  return configJson
+}
 
-    getConfig().catch(noop)
-  }, [])
+export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
+  const queryClient = useQueryClient()
 
-  return <ConfigContext.Provider value={{ config, isLoading }}>{children}</ConfigContext.Provider>
+  const { data: config, isLoading, refetch } = useQuery({
+    queryFn: fetchConfig,
+    queryKey: ['config'],
+    refetchInterval: 600_000,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+  })
+
+  const setConfig = (value: Config) => {
+    queryClient.setQueryData(['config'], value)
+  }
+
+  return (
+    <ConfigContext.Provider value={{ config, isLoading, refetch, setConfig }}>
+      {children}
+    </ConfigContext.Provider>
+  )
 }
 
 export const useConfigContext = () => {

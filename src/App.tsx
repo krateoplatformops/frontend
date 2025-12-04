@@ -47,8 +47,8 @@ const App: React.FC = () => {
   cssVariables()
 
   return (
-    <ConfigProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ConfigProvider>
         <RoutesProvider>
           <AntdApp className={styles.app}>
             <FiltersProvider>
@@ -57,8 +57,8 @@ const App: React.FC = () => {
           </AntdApp>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ConfigProvider>
+      </ConfigProvider>
+    </QueryClientProvider>
   )
 }
 
