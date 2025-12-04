@@ -31,7 +31,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | ***DEPRECATED*** key used to nest the payload in the request body | string |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -434,7 +434,7 @@ Panel is a container to display information
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | ***DEPRECATED*** key used to nest the payload in the request body | string |
 | actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |

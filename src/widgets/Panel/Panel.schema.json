@@ -30,7 +30,7 @@
                     "properties": {
                       "payloadKey": {
                         "type": "string",
-                        "description": "key used to nest the payload in the request body"
+                        "description": "***DEPRECATED*** key used to nest the payload in the request body"
                       },
                       "headers": {
                         "description": "array of headers as strings, format 'key: value'",
