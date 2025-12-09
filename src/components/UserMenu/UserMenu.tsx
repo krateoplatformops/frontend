@@ -2,11 +2,14 @@ import type { MenuProps } from 'antd'
 import { Avatar, Menu, Popover, Typography } from 'antd'
 import { Link } from 'react-router'
 
+import { useConfigContext } from '../../context/ConfigContext'
 import type { AuthResponseType } from '../../pages/Login/Login.types'
 
 import styles from './UserMenu.module.css'
 
 const UserMenu = () => {
+  const { refetch } = useConfigContext()
+
   const userData = JSON.parse(localStorage.getItem('K_user') || '{}') as AuthResponseType
   const { avatarURL, displayName, username } = userData.user || {}
 
@@ -21,9 +24,42 @@ const UserMenu = () => {
   // TODO: get role from user role
   const role = 'administrator'
 
-  const onLogout = () => {
-    localStorage.removeItem('K_user')
-    window.location.replace('/login')
+  const onLogout = async () => {
+    try {
+      // Clear local storage and session storage
+      localStorage.clear()
+      sessionStorage.clear()
+
+      // Clear cookies
+      document.cookie.split(';').forEach(cookie => {
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+      })
+
+      // Clear cache
+      if ('caches' in window) {
+        const cacheNames = await caches.keys()
+        await Promise.all(cacheNames.map(name => caches.delete(name)))
+      }
+
+      // Clear indexedDB
+      if (window.indexedDB && indexedDB.databases) {
+        const dbs = await indexedDB.databases()
+        dbs.forEach(db => {
+          if (db.name) { indexedDB.deleteDatabase(db.name) }
+        })
+      }
+
+      // Refetch config.json
+      await refetch()
+
+      // Redirect to login
+      window.location.replace('/login')
+    } catch (error) {
+      console.error('Logout cleanup error', error)
+      window.location.replace('/login')
+    }
   }
 
   const items: MenuProps['items'] = [
@@ -34,7 +70,7 @@ const UserMenu = () => {
     {
       key: '2',
       label: <Link to=''>Logout</Link>,
-      onClick: onLogout,
+      onClick: () => { void onLogout() },
     },
   ]
 
