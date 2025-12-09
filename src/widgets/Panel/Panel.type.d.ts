@@ -15,7 +15,7 @@ export interface Panel {
          */
         rest?: {
           /**
-           * key used to nest the payload in the request body
+           * ***DEPRECATED*** key used to nest the payload in the request body
            */
           payloadKey?: string
           /**

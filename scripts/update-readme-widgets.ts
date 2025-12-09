@@ -71,15 +71,16 @@ async function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): Pro
 
   const table = toMarkdownTable(widgetData ?? {})
 
-  // Cerca file .example.yaml nella stessa cartella del file .schema.json
-  const schemaDir = path.dirname(filePath)
-  const exampleFiles = await glob('*.example.yaml', { absolute: true, cwd: schemaDir })
-  let exampleLink = ''
+  const widgetName = path.basename(filePath).replace('.schema.json', '')
+  const exampleAbsolutePath = path.join(ROOT_DIR, 'src/examples/widgets', widgetName, `${widgetName}.example.yaml`)
 
-  if (exampleFiles.length > 0) {
-    const widgetName = path.basename(filePath).replace('.schema.json', '')
+  let exampleLink = ''
+  try {
+    await fs.access(exampleAbsolutePath)
     const exampleRelativePath = `../src/examples/widgets/${widgetName}/${widgetName}.example.yaml`
     exampleLink = `\n\n[Examples](${exampleRelativePath})\n`
+  } catch {
+    exampleLink = ''
   }
 
   const extraInfo = title.toLowerCase() === 'form'

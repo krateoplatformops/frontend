@@ -34,7 +34,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | ***DEPRECATED*** key used to nest the payload in the request body | string |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
 | actions.rest[].requireConfirmation | no | whether user confirmation is required before triggering the action | boolean |
@@ -156,6 +156,9 @@ Column is a layout component that arranges its children in a vertical stack, ali
 | items[].resourceRefId | yes |  | string |
 | prefix | no | it's the filters prefix to get right values | string |
 
+
+[Examples](../src/examples/widgets/DataGrid/DataGrid.example.yaml)
+
 ---
 
 ### EventList
@@ -217,6 +220,9 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 | fields[].type | yes | it's the filter field type, to render input, select, radio buttons, date picker or daterange picker | `string` \| `boolean` \| `number` \| `date` \| `daterange` |
 | fields[].options | no | they're the options for select or radio, the type must be 'string' | array |
 
+
+[Examples](../src/examples/widgets/Filters/Filters.example.yaml)
+
 ---
 
 ### FlowChart
@@ -276,7 +282,7 @@ name of the k8s Custom Resource
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | ***DEPRECATED*** key used to nest the payload in the request body | string |
 | actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
@@ -411,9 +417,6 @@ NavMenu is a container for NavMenuItem widgets, which are used to setup navigati
 | items | yes | list of navigation entries each pointing to a k8s custom resource | array |
 | items[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a NavMenuItem | string |
 
-
-[Examples](../src/examples/widgets/NavMenu/NavMenu.example.yaml)
-
 ---
 
 ### NavMenuItem
@@ -431,9 +434,6 @@ NavMenuItem represents a single item in the navigation menu and links to a speci
 | path | yes | route path to navigate to when the menu item is clicked | string |
 | resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
 
-
-[Examples](../src/examples/widgets/NavMenuItem/NavMenuItem.example.yaml)
-
 ---
 
 ### Page
@@ -449,9 +449,6 @@ Page is a wrapper component, placed at the top of the component tree, that wraps
 | items[].resourceRefId | yes | the identifier of the k8s custom resource that should be rendered, usually a widget | string |
 | title | no | title of the page shown in the browser tab | string |
 
-
-[Examples](../src/examples/widgets/Page/Page.example.yaml)
-
 ---
 
 ### Panel
@@ -464,7 +461,7 @@ Panel is a container to display information
 |----------|----------|-------------|------|
 | actions | yes | the actions of the widget | object |
 | actions.rest | no | rest api call actions triggered by the widget | array |
-| actions.rest[].payloadKey | no | key used to nest the payload in the request body | string |
+| actions.rest[].payloadKey | no | ***DEPRECATED*** key used to nest the payload in the request body | string |
 | actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].id | yes | unique identifier for the action | string |
 | actions.rest[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented | string |
