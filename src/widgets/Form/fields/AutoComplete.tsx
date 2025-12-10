@@ -17,10 +17,11 @@ interface AutoCompleteProps {
   data: NonNullable<FormWidgetData['autocomplete']>[number]
   form: FormInstance
   resourcesRefs: ResourcesRefs
+  initialValue?: string | undefined
   options?: DefaultOptionType[] | undefined
 }
 
-const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps) => {
+const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: AutoCompleteProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
   const { extra, name, resourceRefId } = data
@@ -30,6 +31,14 @@ const AutoComplete = ({ data, form, options, resourcesRefs }: AutoCompleteProps)
   const [inputValue, setInputValue] = useState<string>('')
 
   const debouncedUpdate = useMemo(() => debounce((val: string) => setDebouncedValue(val), 500), [])
+
+  useEffect(() => {
+    if (initialValue !== undefined) {
+      setInputValue(initialValue)
+      form.setFieldsValue({ [name]: initialValue })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     debouncedUpdate(searchValue)

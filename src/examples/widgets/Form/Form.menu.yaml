@@ -90,6 +90,7 @@ spec:
       - resourceRefId: example-form-array-strings-enum-panel
       - resourceRefId: example-form-array-object-panel
       - resourceRefId: example-form-complex-mix-panel
+      - resourceRefId: example-form-complex-initial-values-panel
       - resourceRefId: example-form-ordered-schema-panel
       - resourceRefId: example-form-button-open-drawer-panel
       - resourceRefId: example-form-autocomplete-static-panel
@@ -161,6 +162,12 @@ spec:
       - id: example-form-complex-mix-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-complex-mix-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-complex-initial-values-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-complex-initial-values-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -542,6 +549,26 @@ spec:
       - id: example-form-complex-mix
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-complex-mix
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-complex-initial-values-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Complex mixed schema with initial values set'
+    items:
+      - resourceRefId: example-form-complex-initial-values
+  resourcesRefs:
+    items:
+      - id: example-form-complex-initial-values
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-complex-initial-values
         namespace: krateo-system
         resource: forms
         verb: GET 

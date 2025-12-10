@@ -247,7 +247,15 @@ const FormGenerator = ({
             const data = autocomplete.find(field => field.name === name)
 
             if (data) {
-              return <AutoComplete data={data} form={currentForm} options={options} resourcesRefs={resourcesRefs} />
+              return (
+                <AutoComplete
+                  data={data}
+                  form={currentForm}
+                  initialValue={getInitialValue(initialValues, name) as string | undefined}
+                  options={options}
+                  resourcesRefs={resourcesRefs}
+                />
+              )
             }
           }
 

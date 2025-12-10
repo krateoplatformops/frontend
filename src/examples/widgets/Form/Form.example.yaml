@@ -447,6 +447,90 @@ spec:
         resource: restactions
         verb: GET
 ---
+# Complex mixed schema with initial values set
+# Target: full integration test to check if initial values are correctly set.
+# Expected behavior: form renders a combination of types with initial values.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-complex-initial-values
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-complex
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "title": "Name" },
+          "image": { "type": "string", "title": "Image" },
+          "strategy": { "type": "string", "title": "Strategy", "enum": ["rolling","recreate","blue-green"] },
+          "secondStrategy": {
+            "type": "string",
+            "title": "Second strategy",
+            "enum": ["rolling", "recreate", "blue-green"],
+            "description": "Second deployment strategy"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "enum": ["us-east-1", "eu-central-1", "ap-south-1", "sa-east-1", "eu-east-1"]
+          },
+          "enableMetrics": { "type": "boolean", "title": "Enable Metrics", "default": false },
+          "replicas": { "type": "integer", "title": "Replicas", "minimum": 1, "maximum": 200, "default": 3 },
+          "tags": { "type": "array", "title": "Tags", "items": { "type": "string" } },
+          "env": {
+            "type": "array",
+            "title": "Environment Variables",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        },
+        "required": ["name","image"]
+      }
+    initialValues:
+      name: ciao
+      image: v1
+      strategy: rolling
+      enableMetrics: true
+      replicas: 5
+      tags: ['krateo']
+      env:
+        - name: default
+          value: def val
+      secondStrategy: recreate
+      region: eu-central-1
+    autocomplete:
+      - name: strategy
+    objectFields:
+      - path: env
+        displayField: name
+    actions:
+      rest:
+        - id: submit-complex
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-complex
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+      - id: getStrategies
+        apiVersion: composition.krateo.io/v1
+        name: getStrategies
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+---
 # Schema object (alphabetically ordered fields)
 # Target: validate rendering from a raw JSON object (`schema` instead of `stringSchema`).
 # Expected behavior: field order will be alphabetically ordered.
