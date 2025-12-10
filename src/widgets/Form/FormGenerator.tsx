@@ -52,11 +52,34 @@ const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
   return { optionalCount, totalCount }
 }
 
+const isObjectSchema = (property: JSONSchema4) => {
+  return property.type === 'object' ||
+    (Array.isArray(property.type) && property.type.includes('object')) ||
+    (!!property.properties && typeof property.properties === 'object')
+}
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
+
+const getInitialValue = (object: unknown, path: string): unknown => {
+  const pathParts = path.split('.')
+
+  let value: unknown = object
+
+  for (const pathKey of pathParts) {
+    if (!isRecord(value)) { return undefined }
+    if (!(pathKey in value)) { return undefined }
+
+    value = value[pathKey]
+  }
+
+  return value
+}
+
 const FormGenerator = ({
   autocomplete,
   dependencies,
   descriptionTooltip = false,
   formId,
+  initialValues,
   objectFields,
   onSubmit,
   resourcesRefs,
@@ -71,41 +94,48 @@ const FormGenerator = ({
   const hasOptionalFields = useMemo(() => optionalCount > 0 && optionalCount < totalCount, [optionalCount, totalCount])
 
   const setInitialValues = useCallback(() => {
-    const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
-      if (properties) {
-        Object.keys(properties).forEach((key) => {
-          const currentName = name ? `${name}.${key}` : key
-          const property = properties[key]
+    const parseInitialValues = (schemaNode: JSONSchema4, path: string = ''): void => {
+      const { properties } = schemaNode
+      if (!properties) { return }
 
-          if (property.type === 'object') {
-            parseData(property, currentName)
-            return
+      for (const key of Object.keys(properties)) {
+        const property = properties[key]
+        const currentPath = path ? `${path}.${key}` : key
+
+        if (isObjectSchema(property)) {
+          parseInitialValues(property, currentPath)
+          continue
+        }
+
+        // Checks if initial value is present
+        const initialValue = getInitialValue(initialValues, currentPath)
+        let valueToSet: unknown = initialValue
+
+        // Checks if default value is present
+        if (valueToSet === undefined && property.default !== undefined) {
+          const { default: defaultValue } = property
+
+          if (property.type === 'boolean' && typeof defaultValue !== 'boolean') {
+            console.error(`Invalid boolean default for ${currentPath}`, defaultValue)
+          } else if ((property.type === 'integer' || property.type === 'number') && typeof defaultValue !== 'number') {
+            console.error(`Invalid number default for ${currentPath}`, defaultValue)
+          } else {
+            valueToSet = defaultValue
           }
+        }
 
-          if (property.default !== undefined) {
-            let defaultValue = property.default
+        if (property.type === 'boolean' && valueToSet === undefined) {
+          valueToSet = false
+        }
 
-            if (property.type === 'boolean' && typeof defaultValue !== 'boolean') {
-              console.error(
-                `boolean field ${currentName} has a default value that is not a boolean: defaulting to false. received value=${JSON.stringify(defaultValue)} type=${typeof JSON.stringify(defaultValue)}`
-              )
-              defaultValue = false
-            }
-
-            if ((property.type === 'integer' || property.type === 'number') && typeof defaultValue !== 'number') {
-              console.error(
-                `number field ${currentName} has a default value that is not a number. received value=${JSON.stringify(defaultValue)} type=${typeof defaultValue}`
-              )
-            }
-
-            form.setFieldValue(currentName.split('.'), defaultValue)
-          }
-        })
+        if (valueToSet !== undefined) {
+          form.setFieldValue(currentPath.split('.'), valueToSet)
+        }
       }
     }
 
-    parseData(schema)
-  }, [form, schema])
+    parseInitialValues(schema)
+  }, [form, schema, initialValues])
 
   useEffect(() => {
     setInitialValues()
@@ -154,17 +184,21 @@ const FormGenerator = ({
     formInstance?: FormInstance,
   ): React.ReactNode[] => {
     const currentForm = formInstance ?? form
+
     if (properties) {
       const requiredFields = Array.isArray(required) ? required : []
+
       return Object.keys(properties).flatMap((key) => {
-        const prop = properties[key]
         const currentPath = [...name, key]
+        const property = properties[key]
+
         const isRequired = requiredFields.includes(key) && parentIsRequired
-        if (prop.type === 'object' && prop.properties) {
-          return parseData(prop, currentPath, isRequired, currentForm)
+
+        if (isObjectSchema(property)) {
+          return parseData(property, currentPath, isRequired, currentForm)
         }
 
-        return [renderField(prop.title || key, currentPath.join('.'), prop, isRequired, currentForm)]
+        return [renderField(property.title || key, currentPath.join('.'), property, isRequired, currentForm)]
       })
     }
 
@@ -256,9 +290,6 @@ const FormGenerator = ({
       }
 
       case 'boolean':
-        if (form.getFieldValue(name.split('.')) === undefined) {
-          form.setFieldValue(name.split('.'), false)
-        }
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Space direction='vertical' style={{ width: '100%' }}>
@@ -332,9 +363,13 @@ const FormGenerator = ({
       }
 
       case 'integer': {
-        if (node.minimum) { form.setFieldValue(name.split('.'), node.minimum) }
         const min = node.minimum
         const max = node.maximum
+
+        const existing = form.getFieldValue(name.split('.')) as number | undefined
+        if (existing === undefined && min !== undefined) {
+          form.setFieldValue(name.split('.'), min)
+        }
 
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
