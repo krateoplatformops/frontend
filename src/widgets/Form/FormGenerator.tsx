@@ -26,6 +26,7 @@ type FormGeneratorType = {
   autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
+  initialValues?: FormWidgetData['initialValues']
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {

@@ -337,6 +337,7 @@ name of the k8s Custom Resource
 | buttonConfig.secondary | no | secondary button configuration | object |
 | buttonConfig.secondary.label | no | text label for secondary button | string |
 | buttonConfig.secondary.icon | no | icon name for secondary button | string |
+| initialValues | no | optional object with initial values for form fields. Keys should match form field names (supports nested objects). These values override schema defaults. | object |
 | schema | no | the schema of the form as an object | object |
 | stringSchema | no | the schema of the form as a string | string |
 | submitActionId | yes | the id of the action to be called when the form is submitted | string |
