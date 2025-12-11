@@ -345,7 +345,7 @@ const FormGenerator = ({
 
           return (
             <ListEditor
-              data={form.getFieldValue(name.split('.')) as string[] || []}
+              data={getInitialValue(initialValues, name) as string[] || []}
               onChange={(values) => {
                 form.setFieldValue(name.split('.'), values)
               }}
