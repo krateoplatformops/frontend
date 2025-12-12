@@ -3,6 +3,7 @@ import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Spac
 import type { FormInstance } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
+import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -57,6 +58,7 @@ const isObjectSchema = (property: JSONSchema4) => {
     (Array.isArray(property.type) && property.type.includes('object')) ||
     (!!property.properties && typeof property.properties === 'object')
 }
+
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
 
 const getInitialValue = (object: unknown, path: string): unknown => {
@@ -89,11 +91,21 @@ const FormGenerator = ({
   const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
+  const [transformedInitialValues, setTransformedInitialValues] = useState<FormWidgetData['initialValues'] | undefined>(undefined)
+
   const { optionalCount, totalCount } = getOptionalCount(schema, requiredFields)
 
   const hasOptionalFields = useMemo(() => optionalCount > 0 && optionalCount < totalCount, [optionalCount, totalCount])
 
   const setInitialValues = useCallback(() => {
+    const isOptionField = (fieldName: string) => {
+      const autocompleteNames = (autocomplete ?? []).map(({ name }) => name)
+      const dependenciesNames = (dependencies ?? []).map(({ name }) => name)
+      return autocompleteNames.includes(fieldName) || dependenciesNames.includes(fieldName)
+    }
+
+    const newInitialValues: Record<string, unknown> = {}
+
     const parseInitialValues = (schemaNode: JSONSchema4, path: string = ''): void => {
       const { properties } = schemaNode
       if (!properties) { return }
@@ -108,8 +120,7 @@ const FormGenerator = ({
         }
 
         // Checks if initial value is present
-        const initialValue = getInitialValue(initialValues, currentPath)
-        let valueToSet: unknown = initialValue
+        let valueToSet = getInitialValue(initialValues, currentPath)
 
         // Checks if default value is present
         if (valueToSet === undefined && property.default !== undefined) {
@@ -124,19 +135,26 @@ const FormGenerator = ({
           }
         }
 
+        // Sets correct format for boolean fields
         if (property.type === 'boolean' && valueToSet === undefined) {
           valueToSet = false
         }
 
+        // Sets correct format for Autocomplete and Dependencies fields
+        if (typeof valueToSet === 'string' && isOptionField(currentPath)) {
+          valueToSet = { label: valueToSet, value: valueToSet } as DefaultOptionType
+        }
+
         if (valueToSet !== undefined) {
           form.setFieldValue(currentPath.split('.'), valueToSet)
+          newInitialValues[currentPath] = valueToSet
         }
       }
     }
 
     parseInitialValues(schema)
-  }, [form, schema, initialValues])
-
+    setTransformedInitialValues(newInitialValues)
+  }, [schema, autocomplete, dependencies, initialValues, form])
   useEffect(() => {
     setInitialValues()
   }, [setInitialValues])
@@ -236,7 +254,14 @@ const FormGenerator = ({
             const data = dependencies.find(field => field.name === name)
 
             if (data) {
-              return <AsyncSelect data={data} form={currentForm} resourcesRefs={resourcesRefs} />
+              return (
+                <AsyncSelect
+                  data={data}
+                  form={currentForm}
+                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
+                  resourcesRefs={resourcesRefs}
+                />
+              )
             }
           }
 
@@ -251,7 +276,7 @@ const FormGenerator = ({
                 <AutoComplete
                   data={data}
                   form={currentForm}
-                  initialValue={getInitialValue(initialValues, name) as string | undefined}
+                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
                   options={options}
                   resourcesRefs={resourcesRefs}
                 />
@@ -288,6 +313,7 @@ const FormGenerator = ({
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
+              preserve={false}
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
             >
@@ -345,7 +371,7 @@ const FormGenerator = ({
 
           return (
             <ListEditor
-              data={getInitialValue(initialValues, name) as string[] || []}
+              data={getInitialValue(transformedInitialValues, name) as string[] || []}
               onChange={(values) => {
                 form.setFieldValue(name.split('.'), values)
               }}

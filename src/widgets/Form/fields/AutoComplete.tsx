@@ -17,7 +17,7 @@ interface AutoCompleteProps {
   data: NonNullable<FormWidgetData['autocomplete']>[number]
   form: FormInstance
   resourcesRefs: ResourcesRefs
-  initialValue?: string | undefined
+  initialValue?: DefaultOptionType | undefined
   options?: DefaultOptionType[] | undefined
 }
 
@@ -31,14 +31,6 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const [inputValue, setInputValue] = useState<string>('')
 
   const debouncedUpdate = useMemo(() => debounce((val: string) => setDebouncedValue(val), 500), [])
-
-  useEffect(() => {
-    if (initialValue !== undefined) {
-      setInputValue(initialValue)
-      form.setFieldsValue({ [name]: initialValue })
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   useEffect(() => {
     debouncedUpdate(searchValue)
@@ -57,9 +49,16 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
 
   const finalOptions = options ?? queriedOptions
 
-  const handleSelect = (value: string, option: DefaultOptionType) => {
-    form.setFieldsValue({ [name]: value })
-    setInputValue(option.label as string)
+  useEffect(() => {
+    if (initialValue) {
+      form.setFieldsValue({ [name]: initialValue })
+      setInputValue(initialValue.label as string)
+    }
+  }, [form, initialValue, name])
+
+  const handleSelect = (_: string, { label, value }: DefaultOptionType) => {
+    form.setFieldsValue({ [name]: { label: label as string, value } })
+    setInputValue(label as string)
   }
 
   const handleChange = (val: string) => {

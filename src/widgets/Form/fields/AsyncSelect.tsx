@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Form, type FormInstance, Select, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
-import { useEffect } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
@@ -15,43 +15,84 @@ type AsyncSelectProps = {
   data: NonNullable<FormWidgetData['dependencies']>[number]
   form: FormInstance
   resourcesRefs: ResourcesRefs
+  initialValue?: DefaultOptionType | undefined
 }
 
-const AsyncSelect = ({ data, form, resourcesRefs }: AsyncSelectProps) => {
+const AsyncSelect = ({ data, form, initialValue, resourcesRefs }: AsyncSelectProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
 
   const { dependsOn, extra: { key }, name, resourceRefId } = data
 
-  const dependField = Form.useWatch<string | undefined>(dependsOn.name, form)
+  const dependFieldValue = Form.useWatch<string | DefaultOptionType | undefined>(dependsOn.name, form)
+  const prevDependRef = useRef<typeof dependFieldValue | undefined>(undefined)
 
-  useEffect(() => {
-    const currentValue = form.getFieldValue(name) as string
-    if (currentValue !== undefined) {
-      form.setFieldsValue({ [name]: undefined })
+  const queryValue = useMemo(() => {
+    if (dependFieldValue) {
+      return typeof dependFieldValue === 'object' ? dependFieldValue.value : dependFieldValue
     }
-  }, [dependField, form, name])
+
+    if (initialValue) {
+      return initialValue.value
+    }
+
+    return undefined
+  }, [dependFieldValue, initialValue])
+
+  // Reset when dependency changes — but do not clear initialValue that matches current value
+  useEffect(() => {
+    const currentValue = form.getFieldValue(name) as DefaultOptionType | undefined
+
+    const prev = prevDependRef.current
+    prevDependRef.current = dependFieldValue
+
+    const prevValComparable = prev && (typeof prev === 'object' ? prev.value : prev)
+    const currValComparable = dependFieldValue && (typeof dependFieldValue === 'object' ? dependFieldValue.value : dependFieldValue)
+
+    if (prevValComparable !== undefined && prevValComparable !== currValComparable) {
+      if (currentValue !== undefined) {
+        form.setFieldValue(name, undefined)
+      }
+    }
+  }, [dependFieldValue, form, name])
 
   const { data: options = [], isLoading } = useQuery<DefaultOptionType[]>({
-    enabled: !!(dependField && config),
-    queryFn: () => getOptionsFromResourceRefId(dependField, resourceRefId, resourcesRefs, key, notification, config),
+    enabled: !!(queryValue && config),
+    queryFn: () => getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ['async-select-options', resourceRefId, dependField, key],
+    queryKey: ['async-select-options', resourceRefId, dependFieldValue, key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })
 
-  if (!dependField) {
+  // Sets initial value if present
+  useEffect(() => {
+    if (!initialValue) { return }
+    form.setFieldsValue({ [name]: initialValue })
+  }, [initialValue, form, name])
+
+  const handleChange = (_: string | undefined, option?: DefaultOptionType) => {
+    if (!option) {
+      form.setFieldsValue({ [name]: undefined })
+      return
+    }
+
+    form.setFieldsValue({ [name]: { label: option.label as string, value: option.value } })
+  }
+
+  if (!dependFieldValue) {
     return <Select disabled options={[]} />
   }
 
   return (
     <Select
       allowClear
-      onChange={value => form.setFieldsValue({ [name]: value })}
+      onChange={handleChange}
       options={options}
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
-      value={form.getFieldValue(name) as string | undefined}
+      value={form.getFieldValue(name)
+        ? String((form.getFieldValue(name) as DefaultOptionType).value)
+        : undefined}
     />
   )
 }

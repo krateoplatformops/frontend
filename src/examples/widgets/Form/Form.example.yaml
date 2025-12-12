@@ -478,6 +478,9 @@ spec:
           },
           "enableMetrics": { "type": "boolean", "title": "Enable Metrics", "default": false },
           "replicas": { "type": "integer", "title": "Replicas", "minimum": 1, "maximum": 200, "default": 3 },
+          "regions": { "type": "string", "title": "Region" },
+          "provinces": { "type": "string", "title": "Province" },
+          "cities": { "type": "string", "title": "City" },
           "tags": { "type": "array", "title": "Tags", "items": { "type": "string" } },
           "env": {
             "type": "array",
@@ -505,8 +508,32 @@ spec:
           value: def val
       secondStrategy: recreate
       region: eu-central-1
+      regions:
+        label: Liguria
+        value: "7"
+      provinces:
+        label: Genova
+        value: "210"
+      cities:
+        label: Sestri Levante
+        value: "010059"
     autocomplete:
       - name: strategy
+      - name: regions
+        resourceRefId: get-italian-regions
+    dependencies:
+      - name: provinces
+        dependsOn:
+          name: regions
+        resourceRefId: get-italian-provinces
+        extra:
+          key: region_code
+      - name: cities
+        dependsOn:
+          name: provinces
+        resourceRefId: get-italian-cities
+        extra:
+          key: province_code
     objectFields:
       - path: env
         displayField: name
@@ -514,22 +541,52 @@ spec:
       rest:
         - id: submit-complex
           type: rest
-          resourceRefId: resource-ref-1
-          headers: []
+          resourceRefId: submit-complex
+          payloadToOverride:
+            - name: provinces
+              value: ${ .json.provinces }
+            - name: regions
+              value: ${ .json.regions }
+            - name: cities
+              value: ${ .json.cities }
+            - name: strategy
+              value: ${ .json.strategy }
+          payload:
+           name: static-name
+          headers:
+            - "Content-Type: application/json"
   resourcesRefs:
     items:
-      - id: resource-ref-1
-        apiVersion: composition.krateo.io/v1
-        name: submit-complex
-        namespace: krateo-system
-        resource: fireworksapps
-        verb: POST
       - id: getStrategies
         apiVersion: composition.krateo.io/v1
         name: getStrategies
         namespace: krateo-system
         resource: restactions
         verb: GET
+      - id: get-italian-regions
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-cities
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-cities
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-provinces
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-provinces
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: submit-complex
+        apiVersion: v1
+        resource: configmaps
+        name: submit-complex
+        namespace: krateo-system
+        verb: POST
 ---
 # Schema object (alphabetically ordered fields)
 # Target: validate rendering from a raw JSON object (`schema` instead of `stringSchema`).
