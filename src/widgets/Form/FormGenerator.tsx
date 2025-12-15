@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
 import type { FormInstance } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
@@ -166,8 +167,30 @@ const FormGenerator = ({
           }
 
           // Sets correct format for array fields
-          if (property.type === 'array' && !Array.isArray(valueToSet)) {
-            valueToSet = [valueToSet]
+          if (property.type === 'array') {
+            const { items } = property
+
+            // Objects
+            if (items && !Array.isArray(items) && items.type === 'object') {
+              if (!Array.isArray(valueToSet)) {
+                console.warn(`Invalid array value for object array "${currentPath}"`, valueToSet)
+                valueToSet = undefined
+              } else {
+                const isValid = valueToSet.every((el) => typeof el === 'object' && el !== null && !Array.isArray(el))
+
+                if (!isValid) {
+                  console.warn(`Invalid object array structure for "${currentPath}"`, valueToSet)
+                  valueToSet = undefined
+                }
+              }
+
+              return
+            }
+
+            // Primitive / enum / string / number
+            if (!Array.isArray(valueToSet)) {
+              valueToSet = [valueToSet]
+            }
           }
 
           form.setFieldValue(currentPath.split('.'), valueToSet)
