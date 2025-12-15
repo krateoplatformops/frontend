@@ -14,7 +14,7 @@ In order to see Krateo frontend widgets displayed in a real environment, you can
 
 To do that, clone this repository, then follow the steps below:
 
-#### **Step 1: Create a Kind Cluster with Krateo and Snowplow**
+#### **Step 1: Create a Kind Cluster with Krateo**
 
 Follow [this guide](https://docs.krateo.io/how-to-guides/install-krateo/installing-krateo-kind) to create a Kind cluster with the latest version of Krateo installed.
 
@@ -45,7 +45,7 @@ You should now see a sidebar item for each widget, directing you to a dedicated 
 Follow the steps below to run the frontend locally.
 
 
-### **Step 1: Create a Kind Cluster with Krateo and Snowplow**
+### **Step 1: Create a Kind Cluster with Krateo**
 
 Follow [this guide](https://docs.krateo.io/how-to-guides/install-krateo/installing-krateo-kind) to create a Kind cluster with the latest version of Krateo installed.
 
