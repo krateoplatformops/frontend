@@ -120,7 +120,11 @@ const FormGenerator = ({
         }
 
         // Checks if initial value or default value is present
-        let valueToSet = getInitialValue(initialValues, currentPath) || property.default
+        let valueToSet = getInitialValue(initialValues, currentPath)
+
+        if (valueToSet === undefined) {
+          valueToSet = property.default
+        }
 
         if (valueToSet !== undefined && valueToSet !== null) {
           // Sets correct format for string fields
@@ -338,7 +342,7 @@ const FormGenerator = ({
             const currentValue = getInitialValue(transformedInitialValues, name)
             const optionExists = options.some(({ value }) => String(value) === String(currentValue))
 
-            if (!optionExists) {
+            if (currentValue !== undefined && !optionExists) {
               console.warn(`Invalid initial value for "${name}"`, currentValue)
               form.setFieldValue(name.split('.'), undefined)
             }
