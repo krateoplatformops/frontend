@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
 import type { FormInstance } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
@@ -119,33 +118,58 @@ const FormGenerator = ({
           continue
         }
 
-        // Checks if initial value is present
-        let valueToSet = getInitialValue(initialValues, currentPath)
+        // Checks if initial value or default value is present
+        let valueToSet = getInitialValue(initialValues, currentPath) || property.default
 
-        // Checks if default value is present
-        if (valueToSet === undefined && property.default !== undefined) {
-          const { default: defaultValue } = property
+        if (valueToSet !== undefined && valueToSet !== null) {
+          // Sets correct format for string fields
+          if (property.type === 'string' && typeof valueToSet !== 'string') {
+            console.error(`Invalid string default for ${currentPath}`, valueToSet)
 
-          if (property.type === 'boolean' && typeof defaultValue !== 'boolean') {
-            console.error(`Invalid boolean default for ${currentPath}`, defaultValue)
-          } else if ((property.type === 'integer' || property.type === 'number') && typeof defaultValue !== 'number') {
-            console.error(`Invalid number default for ${currentPath}`, defaultValue)
-          } else {
-            valueToSet = defaultValue
+            if (typeof valueToSet === 'number' || typeof valueToSet === 'boolean' || typeof valueToSet === 'bigint' || typeof valueToSet === 'symbol') {
+              valueToSet = valueToSet.toString()
+            } else {
+              valueToSet = undefined
+            }
           }
-        }
 
-        // Sets correct format for boolean fields
-        if (property.type === 'boolean' && valueToSet === undefined) {
-          valueToSet = false
-        }
+          // Sets correct format for numeric fields
+          if ((property.type === 'integer' || property.type === 'number') && typeof valueToSet !== 'number') {
+            console.error(`Invalid number default for ${currentPath}`, valueToSet)
+            valueToSet = undefined
+          }
 
-        // Sets correct format for Autocomplete and Dependencies fields
-        if (typeof valueToSet === 'string' && isOptionField(currentPath)) {
-          valueToSet = { label: valueToSet, value: valueToSet } as DefaultOptionType
-        }
+          // Sets correct format for boolean fields
+          if (property.type === 'boolean' && typeof valueToSet !== 'boolean') {
+            console.warn(`Invalid boolean initialValue for "${currentPath}"`, valueToSet)
+            valueToSet = false
+          }
 
-        if (valueToSet !== undefined) {
+          // Sets correct format for Autocomplete and Dependencies fields
+          if (isOptionField(currentPath)) {
+            if (typeof valueToSet === 'string' || typeof valueToSet === 'number') {
+              valueToSet = { label: String(valueToSet), value: valueToSet } as DefaultOptionType
+            } else if (typeof valueToSet === 'boolean') {
+              valueToSet = { label: valueToSet ? 'true' : 'false', value: String(valueToSet) } as DefaultOptionType
+            } else if (Array.isArray(valueToSet)) {
+              console.warn(`Invalid array initialValue for option field "${currentPath}"`, valueToSet)
+              valueToSet = undefined
+            } else if (typeof valueToSet === 'object' && valueToSet !== null) {
+              // eslint-disable-next-line max-depth
+              if ('label' in valueToSet && 'value' in valueToSet && typeof valueToSet.label === 'string') {
+                valueToSet = valueToSet as DefaultOptionType
+              } else {
+                console.warn(`Invalid object initialValue for option field "${currentPath}"`, valueToSet)
+                valueToSet = undefined
+              }
+            }
+          }
+
+          // Sets correct format for array fields
+          if (property.type === 'array' && !Array.isArray(valueToSet)) {
+            valueToSet = [valueToSet]
+          }
+
           form.setFieldValue(currentPath.split('.'), valueToSet)
           newInitialValues[currentPath] = valueToSet
         }
@@ -155,6 +179,7 @@ const FormGenerator = ({
     parseInitialValues(schema)
     setTransformedInitialValues(newInitialValues)
   }, [schema, autocomplete, dependencies, initialValues, form])
+
   useEffect(() => {
     setInitialValues()
   }, [setInitialValues])
@@ -216,6 +241,7 @@ const FormGenerator = ({
           return parseData(property, currentPath, isRequired, currentForm)
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         return [renderField(property.title || key, currentPath.join('.'), property, isRequired, currentForm)]
       })
     }
