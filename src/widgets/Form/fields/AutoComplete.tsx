@@ -5,7 +5,7 @@ import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
 import debounce from 'lodash/debounce'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
@@ -30,6 +30,10 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const [debouncedValue, setDebouncedValue] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
 
+  const initialValueAppliedRef = useRef(false)
+
+  const queryValue = useMemo(() => debouncedValue || initialValue?.value, [debouncedValue, initialValue])
+
   const debouncedUpdate = useMemo(() => debounce((val: string) => setDebouncedValue(val), 500), [])
 
   useEffect(() => {
@@ -38,29 +42,48 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   }, [searchValue, debouncedUpdate])
 
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
-    enabled: !!(debouncedValue && resourceRefId && config),
+    enabled: !!(queryValue && resourceRefId && config),
     queryFn: () =>
-      getOptionsFromResourceRefId(debouncedValue, resourceRefId, resourcesRefs, extra?.key, notification, config),
+      getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, extra?.key, notification, config),
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ['autocomplete-options', resourceRefId, debouncedValue, extra?.key],
+    queryKey: ['autocomplete-options', resourceRefId, queryValue, extra?.key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })
 
-  const finalOptions = options ?? queriedOptions
+  const finalOptions = useMemo(() => options ?? queriedOptions, [options, queriedOptions])
 
+  // Sets initial value if present
   useEffect(() => {
-    if (initialValue) {
-      const optionExists = finalOptions.some(({ value }) => String(value) === String(initialValue.value))
+    if (!initialValue || initialValueAppliedRef.current) {
+      return
+    }
 
-      if (optionExists) {
-        form.setFieldsValue({ [name]: initialValue })
-        setInputValue(initialValue.label as string)
-      } else {
-        console.warn(`Invalid initial value for "${name}"`, initialValue)
-        form.setFieldsValue({ [name]: undefined })
-        setInputValue('')
-      }
+    form.setFieldsValue({ [name]: initialValue })
+    setInputValue(initialValue.label as string)
+
+    initialValueAppliedRef.current = true
+  }, [initialValue, form, name])
+
+  // Validates initial value against options
+  useEffect(() => {
+    if (!initialValueAppliedRef.current) {
+      return
+    }
+
+    const currentValue = form.getFieldValue(name) as DefaultOptionType | undefined
+    if (!currentValue) {
+      return
+    }
+
+    if (finalOptions.length === 0) { return }
+
+    const optionExists = finalOptions.some(({ value }) => String(value) === String(currentValue.value))
+
+    if (!optionExists) {
+      console.warn(`Initial value does not exist in options for "${name}"`, initialValue)
+      form.setFieldValue(name, undefined)
+      setInputValue('')
     }
   }, [finalOptions, form, initialValue, name])
 

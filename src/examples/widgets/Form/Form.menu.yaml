@@ -79,6 +79,7 @@ spec:
     allowedResources:
       - panels
     items:
+      - resourceRefId: example-form-complex-initial-values-panel
       - resourceRefId: example-form-missing-schema-panel
       - resourceRefId: example-form-basic-strings-panel
       - resourceRefId: example-form-enum-small-panel
@@ -90,7 +91,6 @@ spec:
       - resourceRefId: example-form-array-strings-enum-panel
       - resourceRefId: example-form-array-object-panel
       - resourceRefId: example-form-complex-mix-panel
-      - resourceRefId: example-form-complex-initial-values-panel
       - resourceRefId: example-form-ordered-schema-panel
       - resourceRefId: example-form-button-open-drawer-panel
       - resourceRefId: example-form-autocomplete-static-panel

@@ -65,11 +65,34 @@ const AsyncSelect = ({ data, form, initialValue, resourcesRefs }: AsyncSelectPro
     staleTime: 5 * 60 * 1000,
   })
 
-  // Sets initial value if present
+  // Sets initial value if present and validates it against options
   useEffect(() => {
-    if (!initialValue) { return }
-    form.setFieldsValue({ [name]: initialValue })
-  }, [initialValue, form, name])
+    const currentValue = form.getFieldValue(name) as DefaultOptionType | undefined
+
+    if (options.length === 0) {
+      if (currentValue !== undefined) {
+        form.setFieldValue(name, undefined)
+      }
+
+      return
+    }
+
+    const valueToCheck = currentValue ?? initialValue
+    if (!valueToCheck) {
+      return
+    }
+
+    const optionExists = options.some(({ value }) => String(value) === String(valueToCheck.value))
+
+    if (optionExists) {
+      if (!currentValue) {
+        form.setFieldValue(name, valueToCheck)
+      }
+    } else {
+      console.warn(`Initial value does not exist in options for "${name}"`, initialValue)
+      form.setFieldValue(name, undefined)
+    }
+  }, [options, initialValue, form, name])
 
   const handleChange = (_: string | undefined, option?: DefaultOptionType) => {
     if (!option) {

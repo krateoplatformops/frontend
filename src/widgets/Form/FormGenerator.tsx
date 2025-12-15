@@ -123,7 +123,7 @@ const FormGenerator = ({
 
         if (valueToSet !== undefined && valueToSet !== null) {
           // Sets correct format for string fields
-          if (property.type === 'string' && typeof valueToSet !== 'string') {
+          if (!isOptionField(currentPath) && property.type === 'string' && typeof valueToSet !== 'string') {
             console.warn(`Invalid string default for ${currentPath}`, valueToSet)
 
             if (typeof valueToSet === 'number' || typeof valueToSet === 'boolean' || typeof valueToSet === 'bigint' || typeof valueToSet === 'symbol') {
@@ -317,10 +317,11 @@ const FormGenerator = ({
 
             if (!optionExists) {
               console.warn(`Invalid initial value for "${name}"`, currentValue)
+              form.setFieldValue(name.split('.'), undefined)
             }
 
             if (options.length > 4) {
-              return <Select allowClear options={options} value={optionExists ? currentValue : undefined} />
+              return <Select allowClear options={options} />
             }
 
             return (
