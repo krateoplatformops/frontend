@@ -124,7 +124,7 @@ const FormGenerator = ({
         if (valueToSet !== undefined && valueToSet !== null) {
           // Sets correct format for string fields
           if (property.type === 'string' && typeof valueToSet !== 'string') {
-            console.error(`Invalid string default for ${currentPath}`, valueToSet)
+            console.warn(`Invalid string default for ${currentPath}`, valueToSet)
 
             if (typeof valueToSet === 'number' || typeof valueToSet === 'boolean' || typeof valueToSet === 'bigint' || typeof valueToSet === 'symbol') {
               valueToSet = valueToSet.toString()
@@ -135,7 +135,7 @@ const FormGenerator = ({
 
           // Sets correct format for numeric fields
           if ((property.type === 'integer' || property.type === 'number') && typeof valueToSet !== 'number') {
-            console.error(`Invalid number default for ${currentPath}`, valueToSet)
+            console.warn(`Invalid number default for ${currentPath}`, valueToSet)
             valueToSet = undefined
           }
 
@@ -312,8 +312,15 @@ const FormGenerator = ({
 
           // Enum
           if (options) {
+            const currentValue = getInitialValue(transformedInitialValues, name)
+            const optionExists = options.some(({ value }) => String(value) === String(currentValue))
+
+            if (!optionExists) {
+              console.warn(`Invalid initial value for "${name}"`, currentValue)
+            }
+
             if (options.length > 4) {
-              return <Select allowClear options={options} />
+              return <Select allowClear options={options} value={optionExists ? currentValue : undefined} />
             }
 
             return (

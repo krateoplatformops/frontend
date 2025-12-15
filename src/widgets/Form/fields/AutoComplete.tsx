@@ -51,10 +51,18 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
 
   useEffect(() => {
     if (initialValue) {
-      form.setFieldsValue({ [name]: initialValue })
-      setInputValue(initialValue.label as string)
+      const optionExists = finalOptions.some(({ value }) => String(value) === String(initialValue.value))
+
+      if (optionExists) {
+        form.setFieldsValue({ [name]: initialValue })
+        setInputValue(initialValue.label as string)
+      } else {
+        console.warn(`Invalid initial value for "${name}"`, initialValue)
+        form.setFieldsValue({ [name]: undefined })
+        setInputValue('')
+      }
     }
-  }, [form, initialValue, name])
+  }, [finalOptions, form, initialValue, name])
 
   const handleSelect = (_: string, { label, value }: DefaultOptionType) => {
     form.setFieldsValue({ [name]: { label: label as string, value } })
