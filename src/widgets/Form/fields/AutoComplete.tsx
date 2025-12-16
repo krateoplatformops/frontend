@@ -32,7 +32,6 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
 
   const formValue = Form.useWatch<DefaultOptionType | undefined>(name, form)
 
-  const formValueRef = useRef<DefaultOptionType | undefined | null>(null)
   const initialValueAppliedRef = useRef(false)
 
   const queryValue = useMemo(() => debouncedValue || initialValue?.value, [debouncedValue, initialValue])
@@ -92,19 +91,20 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
 
   // Syncs input value with form value
   useEffect(() => {
-    if (formValueRef.current === formValue) { return }
-    formValueRef.current = formValue ?? null
+    const value = formValue ?? form.getFieldValue(name) as DefaultOptionType | undefined
 
-    if (!formValue) {
+    if (!value || typeof value !== 'object' || !('label' in value)) {
       setInputValue('')
       return
     }
 
-    if (typeof formValue === 'object' && 'label' in formValue) {
-      const { label } = formValue as { label?: string | number }
-      setInputValue(label !== null ? String(label) : '')
+    const { label } = value
+    if (typeof label === 'string' || typeof label === 'number') {
+      setInputValue(String(label))
+    } else {
+      setInputValue('')
     }
-  }, [formValue])
+  }, [formValue, form, name])
 
   const handleSelect = (_: string, { label, value }: DefaultOptionType) => {
     form.setFieldsValue({ [name]: { label: label as string, value } })

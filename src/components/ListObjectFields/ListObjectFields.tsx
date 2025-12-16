@@ -50,9 +50,13 @@ const ListObjectFields = ({
   const onEdit = useCallback((index: number) => {
     const item = list[index]
     if (item && typeof item === 'object') {
-      form.setFieldsValue(item)
       setEditIndex(index)
       setOpen(true)
+
+      // This is instrumental to make sure that form fields are synced when opening the drawer
+      setTimeout(() => {
+        form.setFieldsValue(item)
+      }, 0)
     }
   }, [list, form])
 
