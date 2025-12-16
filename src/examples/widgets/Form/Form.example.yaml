@@ -447,6 +447,147 @@ spec:
         resource: restactions
         verb: GET
 ---
+# Complex mixed schema with initial values set
+# Target: full integration test to check if initial values are correctly set.
+# Expected behavior: form renders a combination of types with initial values.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-complex-initial-values
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-complex
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "title": "Name" },
+          "image": { "type": "string", "title": "Image" },
+          "strategy": { "type": "string", "title": "Strategy", "enum": ["rolling","recreate","blue-green"] },
+          "secondStrategy": {
+            "type": "string",
+            "title": "Second strategy",
+            "enum": ["rolling", "recreate", "blue-green"],
+            "description": "Second deployment strategy"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "enum": ["us-east-1", "eu-central-1", "ap-south-1", "sa-east-1", "eu-east-1"]
+          },
+          "enableMetrics": { "type": "boolean", "title": "Enable Metrics", "default": false },
+          "replicas": { "type": "integer", "title": "Replicas", "minimum": 1, "maximum": 200, "default": 3 },
+          "regions": { "type": "string", "title": "Region" },
+          "provinces": { "type": "string", "title": "Province" },
+          "cities": { "type": "string", "title": "City" },
+          "tags": { "type": "array", "title": "Tags", "items": { "type": "string" } },
+          "env": {
+            "type": "array",
+            "title": "Environment Variables",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        },
+        "required": ["name","image"]
+      }
+    initialValues:
+      name: ciao
+      image: v1
+      strategy: rolling
+      enableMetrics: true
+      replicas: 5
+      tags: ['krateo']
+      env:
+        - name: default
+          value: def val
+      secondStrategy: recreate
+      region: eu-central-1
+      regions:
+        label: Liguria
+        value: "7"
+      provinces:
+        label: Genova
+        value: "210"
+      cities:
+        label: Sestri Levante
+        value: "010059"
+    autocomplete:
+      - name: strategy
+      - name: regions
+        resourceRefId: get-italian-regions
+    dependencies:
+      - name: provinces
+        dependsOn:
+          name: regions
+        resourceRefId: get-italian-provinces
+        extra:
+          key: region_code
+      - name: cities
+        dependsOn:
+          name: provinces
+        resourceRefId: get-italian-cities
+        extra:
+          key: province_code
+    objectFields:
+      - path: env
+        displayField: name
+    actions:
+      rest:
+        - id: submit-complex
+          type: rest
+          resourceRefId: submit-complex
+          payloadToOverride:
+            - name: provinces
+              value: ${ .json.provinces }
+            - name: regions
+              value: ${ .json.regions }
+            - name: cities
+              value: ${ .json.cities }
+            - name: strategy
+              value: ${ .json.strategy }
+          payload:
+           name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: getStrategies
+        apiVersion: composition.krateo.io/v1
+        name: getStrategies
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-regions
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-cities
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-cities
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-provinces
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-provinces
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: submit-complex
+        apiVersion: v1
+        resource: configmaps
+        name: submit-complex
+        namespace: krateo-system
+        verb: POST
+---
 # Schema object (alphabetically ordered fields)
 # Target: validate rendering from a raw JSON object (`schema` instead of `stringSchema`).
 # Expected behavior: field order will be alphabetically ordered.
@@ -832,6 +973,113 @@ metadata:
   namespace: krateo-system
 stringData:
   server-url: https://public.opendatasoft.com
+---
+# Autocomplete and Dependencies field inside array of objects
+# Target: validate autocomplete and dependencies fields when they are nested inside an array of objects
+# Expected behavior: three fields are rendered inside an array of object, each field values depend on the previous field
+# value being set, otherwise the field is disabled
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-dependencies-array-objects
+  namespace: krateo-system
+spec:
+  widgetData:
+    autocomplete:
+      - name: regions
+        resourceRefId: get-italian-regions
+    dependencies:
+      - name: provinces
+        dependsOn:
+          name: regions
+        resourceRefId: get-italian-provinces
+        extra:
+          key: region_code
+      - name: cities
+        dependsOn:
+          name: provinces
+        resourceRefId: get-italian-cities
+        extra:
+          key: province_code
+    objectFields:
+      - path: location
+        displayField: cities
+    submitActionId: submit-complex
+    initialValues:
+      location:
+        - regions:
+            label: Liguria
+            value: "7"
+          provinces:
+            label: Genova
+            value: "210"
+          cities:
+            label: Sestri Levante
+            value: "010059"
+        - regions:
+            label: Liguria
+            value: "7"
+          provinces:
+            label: Genova
+            value: "210"
+          cities:
+            label: Genova
+            value: "01000"
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "array",
+            "title": "Location",
+            "items": {
+              "type": "object",
+              "properties": {
+                "regions": { "type": "string", "title": "Region" },
+                "provinces": { "type": "string", "title": "Province" },
+                "cities": { "type": "string", "title": "City" }
+              },
+              "required": ["regions", "provinces", "cities"]
+            }
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-complex
+          type: rest
+          resourceRefId: submit-complex
+          payloadToOverride:
+            - name: location
+              value: ${ .json.location }
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: submit-complex
+        apiVersion: v1
+        resource: configmaps
+        name: submit-complex
+        namespace: krateo-system
+        verb: POST
+      - id: get-italian-regions
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-cities
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-cities
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-provinces
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-provinces
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
 ---
 # Missing action
 # Target: validate error handling when action is missing.

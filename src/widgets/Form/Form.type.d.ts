@@ -230,6 +230,10 @@ export interface Form {
         }
       }
       /**
+       * optional object with initial values for form fields. Keys should match form field names (supports nested objects). These values override schema defaults.
+       */
+      initialValues?: Record<string, unknown>
+      /**
        * the schema of the form as an object
        */
       schema?: object

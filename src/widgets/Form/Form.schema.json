@@ -318,6 +318,12 @@
               },
               "additionalProperties": false
             },
+            "initialValues": {
+              "description": "optional object with initial values for form fields. Keys should match form field names (supports nested objects). These values override schema defaults.",
+              "type": "object",
+              "additionalProperties": true,
+              "tsType": "Record<string, unknown>"
+            },
             "schema": {
               "description": "the schema of the form as an object",
               "type": "object",

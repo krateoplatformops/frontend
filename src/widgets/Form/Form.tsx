@@ -74,7 +74,18 @@ const FormExtra = ({ buttonConfig, disabled = false, form, loading }: FormExtraP
 }
 
 const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>) => {
-  const { actions, autocomplete, buttonConfig, dependencies, fieldDescription, objectFields, schema, stringSchema, submitActionId } = widgetData
+  const {
+    actions,
+    autocomplete,
+    buttonConfig,
+    dependencies,
+    fieldDescription,
+    initialValues,
+    objectFields,
+    schema,
+    stringSchema,
+    submitActionId,
+  } = widgetData
   const { insideDrawer, setDrawerData } = useDrawerContext()
   const alreadySetDrawerData = useRef(false)
 
@@ -160,6 +171,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
         dependencies={dependencies}
         descriptionTooltip={fieldDescription === 'tooltip'}
         formId={formId}
+        initialValues={initialValues}
         objectFields={objectFields}
         onSubmit={values => onSubmit(values)}
         resourcesRefs={resourcesRefs}

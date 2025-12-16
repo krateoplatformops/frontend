@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable max-lines */
 import { Anchor, Col, Form, Input, InputNumber, Radio, Row, Select, Slider, Space, Switch, Typography } from 'antd'
 import type { FormInstance } from 'antd'
 import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
+import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
 import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -26,6 +27,7 @@ type FormGeneratorType = {
   autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
   objectFields?: FormWidgetData['objectFields']
+  initialValues?: FormWidgetData['initialValues']
 }
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
@@ -51,11 +53,35 @@ const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
   return { optionalCount, totalCount }
 }
 
+const isObjectSchema = (property: JSONSchema4) => {
+  return property.type === 'object' ||
+    (Array.isArray(property.type) && property.type.includes('object')) ||
+    (!!property.properties && typeof property.properties === 'object')
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
+
+const getInitialValue = (object: unknown, path: string): unknown => {
+  const pathParts = path.split('.')
+
+  let value: unknown = object
+
+  for (const pathKey of pathParts) {
+    if (!isRecord(value)) { return undefined }
+    if (!(pathKey in value)) { return undefined }
+
+    value = value[pathKey]
+  }
+
+  return value
+}
+
 const FormGenerator = ({
   autocomplete,
   dependencies,
   descriptionTooltip = false,
   formId,
+  initialValues,
   objectFields,
   onSubmit,
   resourcesRefs,
@@ -65,46 +91,119 @@ const FormGenerator = ({
   const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
 
+  const [transformedInitialValues, setTransformedInitialValues] = useState<FormWidgetData['initialValues'] | undefined>(undefined)
+
   const { optionalCount, totalCount } = getOptionalCount(schema, requiredFields)
 
   const hasOptionalFields = useMemo(() => optionalCount > 0 && optionalCount < totalCount, [optionalCount, totalCount])
 
   const setInitialValues = useCallback(() => {
-    const parseData = ({ properties }: JSONSchema4, name: string = ''): void => {
-      if (properties) {
-        Object.keys(properties).forEach((key) => {
-          const currentName = name ? `${name}.${key}` : key
-          const property = properties[key]
+    const isOptionField = (fieldName: string) => {
+      const autocompleteNames = (autocomplete ?? []).map(({ name }) => name)
+      const dependenciesNames = (dependencies ?? []).map(({ name }) => name)
+      return autocompleteNames.includes(fieldName) || dependenciesNames.includes(fieldName)
+    }
 
-          if (property.type === 'object') {
-            parseData(property, currentName)
-            return
+    const newInitialValues: Record<string, unknown> = {}
+
+    const parseInitialValues = (schemaNode: JSONSchema4, path: string = ''): void => {
+      const { properties } = schemaNode
+      if (!properties) { return }
+
+      for (const key of Object.keys(properties)) {
+        const property = properties[key]
+        const currentPath = path ? `${path}.${key}` : key
+
+        if (isObjectSchema(property)) {
+          parseInitialValues(property, currentPath)
+          continue
+        }
+
+        // Checks if initial value or default value is present
+        let valueToSet = getInitialValue(initialValues, currentPath)
+
+        if (valueToSet === undefined) {
+          valueToSet = property.default
+        }
+
+        if (valueToSet !== undefined && valueToSet !== null) {
+          // Sets correct format for string fields
+          if (!isOptionField(currentPath) && property.type === 'string' && typeof valueToSet !== 'string') {
+            console.warn(`Invalid string default for ${currentPath}`, valueToSet)
+
+            if (typeof valueToSet === 'number' || typeof valueToSet === 'boolean' || typeof valueToSet === 'bigint' || typeof valueToSet === 'symbol') {
+              valueToSet = valueToSet.toString()
+            } else {
+              valueToSet = undefined
+            }
           }
 
-          if (property.default !== undefined) {
-            let defaultValue = property.default
-
-            if (property.type === 'boolean' && typeof defaultValue !== 'boolean') {
-              console.error(
-                `boolean field ${currentName} has a default value that is not a boolean: defaulting to false. received value=${JSON.stringify(defaultValue)} type=${typeof JSON.stringify(defaultValue)}`
-              )
-              defaultValue = false
-            }
-
-            if ((property.type === 'integer' || property.type === 'number') && typeof defaultValue !== 'number') {
-              console.error(
-                `number field ${currentName} has a default value that is not a number. received value=${JSON.stringify(defaultValue)} type=${typeof defaultValue}`
-              )
-            }
-
-            form.setFieldValue(currentName.split('.'), defaultValue)
+          // Sets correct format for numeric fields
+          if ((property.type === 'integer' || property.type === 'number') && typeof valueToSet !== 'number') {
+            console.warn(`Invalid number default for ${currentPath}`, valueToSet)
+            valueToSet = undefined
           }
-        })
+
+          // Sets correct format for boolean fields
+          if (property.type === 'boolean' && typeof valueToSet !== 'boolean') {
+            console.warn(`Invalid boolean initialValue for "${currentPath}"`, valueToSet)
+            valueToSet = false
+          }
+
+          // Sets correct format for Autocomplete and Dependencies fields
+          if (isOptionField(currentPath)) {
+            if (typeof valueToSet === 'string' || typeof valueToSet === 'number') {
+              valueToSet = { label: String(valueToSet), value: valueToSet } as DefaultOptionType
+            } else if (typeof valueToSet === 'boolean') {
+              valueToSet = { label: valueToSet ? 'true' : 'false', value: String(valueToSet) } as DefaultOptionType
+            } else if (Array.isArray(valueToSet)) {
+              console.warn(`Invalid array initialValue for option field "${currentPath}"`, valueToSet)
+              valueToSet = undefined
+            } else if (typeof valueToSet === 'object' && valueToSet !== null) {
+              // eslint-disable-next-line max-depth
+              if ('label' in valueToSet && 'value' in valueToSet && typeof valueToSet.label === 'string') {
+                valueToSet = valueToSet as DefaultOptionType
+              } else {
+                console.warn(`Invalid object initialValue for option field "${currentPath}"`, valueToSet)
+                valueToSet = undefined
+              }
+            }
+          }
+
+          // Sets correct format for array fields
+          if (property.type === 'array') {
+            const { items } = property
+
+            // Objects
+            if (items && !Array.isArray(items) && items.type === 'object') {
+              if (!Array.isArray(valueToSet)) {
+                console.warn(`Invalid array value for object array "${currentPath}"`, valueToSet)
+                valueToSet = undefined
+              } else {
+                const isValid = valueToSet.every((el) => typeof el === 'object' && el !== null && !Array.isArray(el))
+
+                if (!isValid) {
+                  console.warn(`Invalid object array structure for "${currentPath}"`, valueToSet)
+                  valueToSet = undefined
+                }
+              }
+            }
+
+            // Primitive / enum / string / number
+            if (!Array.isArray(valueToSet)) {
+              valueToSet = [valueToSet]
+            }
+          }
+
+          form.setFieldValue(currentPath.split('.'), valueToSet)
+          newInitialValues[currentPath] = valueToSet
+        }
       }
     }
 
-    parseData(schema)
-  }, [form, schema])
+    parseInitialValues(schema)
+    setTransformedInitialValues(newInitialValues)
+  }, [schema, autocomplete, dependencies, initialValues, form])
 
   useEffect(() => {
     setInitialValues()
@@ -153,17 +252,22 @@ const FormGenerator = ({
     formInstance?: FormInstance,
   ): React.ReactNode[] => {
     const currentForm = formInstance ?? form
+
     if (properties) {
       const requiredFields = Array.isArray(required) ? required : []
+
       return Object.keys(properties).flatMap((key) => {
-        const prop = properties[key]
         const currentPath = [...name, key]
+        const property = properties[key]
+
         const isRequired = requiredFields.includes(key) && parentIsRequired
-        if (prop.type === 'object' && prop.properties) {
-          return parseData(prop, currentPath, isRequired, currentForm)
+
+        if (isObjectSchema(property)) {
+          return parseData(property, currentPath, isRequired, currentForm)
         }
 
-        return [renderField(prop.title || key, currentPath.join('.'), prop, isRequired, currentForm)]
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        return [renderField(property.title || key, currentPath.join('.'), property, isRequired, currentForm)]
       })
     }
 
@@ -201,7 +305,14 @@ const FormGenerator = ({
             const data = dependencies.find(field => field.name === name)
 
             if (data) {
-              return <AsyncSelect data={data} form={currentForm} resourcesRefs={resourcesRefs} />
+              return (
+                <AsyncSelect
+                  data={data}
+                  form={currentForm}
+                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
+                  resourcesRefs={resourcesRefs}
+                />
+              )
             }
           }
 
@@ -212,12 +323,28 @@ const FormGenerator = ({
             const data = autocomplete.find(field => field.name === name)
 
             if (data) {
-              return <AutoComplete data={data} form={currentForm} options={options} resourcesRefs={resourcesRefs} />
+              return (
+                <AutoComplete
+                  data={data}
+                  form={currentForm}
+                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
+                  options={options}
+                  resourcesRefs={resourcesRefs}
+                />
+              )
             }
           }
 
           // Enum
           if (options) {
+            const currentValue = getInitialValue(transformedInitialValues, name)
+            const optionExists = options.some(({ value }) => String(value) === String(currentValue))
+
+            if (currentValue !== undefined && !optionExists) {
+              console.warn(`Invalid initial value for "${name}"`, currentValue)
+              form.setFieldValue(name.split('.'), undefined)
+            }
+
             if (options.length > 4) {
               return <Select allowClear options={options} />
             }
@@ -245,6 +372,7 @@ const FormGenerator = ({
               key={name}
               label={renderLabel(name, label)}
               name={name.split('.')}
+              preserve={false}
               rules={rules}
               tooltip={descriptionTooltip && node.description ? node.description : undefined}
             >
@@ -255,9 +383,6 @@ const FormGenerator = ({
       }
 
       case 'boolean':
-        if (form.getFieldValue(name.split('.')) === undefined) {
-          form.setFieldValue(name.split('.'), false)
-        }
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
             <Space direction='vertical' style={{ width: '100%' }}>
@@ -305,7 +430,7 @@ const FormGenerator = ({
 
           return (
             <ListEditor
-              data={form.getFieldValue(name.split('.')) as string[] || []}
+              data={getInitialValue(transformedInitialValues, name) as string[] || []}
               onChange={(values) => {
                 form.setFieldValue(name.split('.'), values)
               }}
@@ -331,9 +456,13 @@ const FormGenerator = ({
       }
 
       case 'integer': {
-        if (node.minimum) { form.setFieldValue(name.split('.'), node.minimum) }
         const min = node.minimum
         const max = node.maximum
+
+        const existing = form.getFieldValue(name.split('.')) as number | undefined
+        if (existing === undefined && min !== undefined) {
+          form.setFieldValue(name.split('.'), min)
+        }
 
         return (
           <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>

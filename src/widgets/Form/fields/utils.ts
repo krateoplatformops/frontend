@@ -12,7 +12,7 @@ export const getOptionsFromResourceRefId = async (
   resourcesRefs: ResourcesRefs,
   valueKey: string | undefined,
   notification: NotificationInstance,
-  config: Config | null
+  config: Config | undefined
 ): Promise<DefaultOptionType[]> => {
   if (!resourceRefId) {
     return []
