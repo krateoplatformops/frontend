@@ -65,6 +65,21 @@ const AsyncSelect = ({ data, form, initialValue, resourcesRefs }: AsyncSelectPro
     staleTime: 5 * 60 * 1000,
   })
 
+  const formValue = Form.useWatch<DefaultOptionType | undefined>(name, form)
+
+  const value = useMemo(() => {
+    if (!formValue) { return undefined }
+    if (options.length === 0) { return undefined }
+
+    const optionExists = options.some(({ value }) => String(value) === String(formValue.value),)
+
+    if (!optionExists) {
+      console.warn(`Value does not exist in options for "${name}"`, formValue)
+    }
+
+    return optionExists ? String(formValue.value) : undefined
+  }, [formValue, name, options])
+
   // Sets initial value if present and validates it against options
   useEffect(() => {
     const currentValue = form.getFieldValue(name) as DefaultOptionType | undefined
@@ -113,9 +128,7 @@ const AsyncSelect = ({ data, form, initialValue, resourcesRefs }: AsyncSelectPro
       onChange={handleChange}
       options={options}
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
-      value={form.getFieldValue(name)
-        ? String((form.getFieldValue(name) as DefaultOptionType).value)
-        : undefined}
+      value={value}
     />
   )
 }

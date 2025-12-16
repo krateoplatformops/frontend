@@ -1005,6 +1005,26 @@ spec:
       - path: location
         displayField: cities
     submitActionId: submit-complex
+    initialValues:
+      location:
+        - regions:
+            label: Liguria
+            value: "7"
+          provinces:
+            label: Genova
+            value: "210"
+          cities:
+            label: Sestri Levante
+            value: "010059"
+        - regions:
+            label: Liguria
+            value: "7"
+          provinces:
+            label: Genova
+            value: "210"
+          cities:
+            label: Genova
+            value: "01000"
     stringSchema: |
       {
         "type": "object",

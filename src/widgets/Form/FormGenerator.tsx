@@ -187,8 +187,6 @@ const FormGenerator = ({
                   valueToSet = undefined
                 }
               }
-
-              return
             }
 
             // Primitive / enum / string / number
