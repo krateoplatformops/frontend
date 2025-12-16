@@ -1,7 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import type { FormInstance } from 'antd'
-import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
+import { AutoComplete as AntDAutoComplete, Form, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
 import debounce from 'lodash/debounce'
@@ -30,6 +30,9 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const [debouncedValue, setDebouncedValue] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
 
+  const formValue = Form.useWatch<DefaultOptionType | undefined>(name, form)
+
+  const formValueRef = useRef<DefaultOptionType | undefined | null>(null)
   const initialValueAppliedRef = useRef(false)
 
   const queryValue = useMemo(() => debouncedValue || initialValue?.value, [debouncedValue, initialValue])
@@ -86,6 +89,22 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
       setInputValue('')
     }
   }, [finalOptions, form, initialValue, name])
+
+  // Syncs input value with form value
+  useEffect(() => {
+    if (formValueRef.current === formValue) { return }
+    formValueRef.current = formValue ?? null
+
+    if (!formValue) {
+      setInputValue('')
+      return
+    }
+
+    if (typeof formValue === 'object' && 'label' in formValue) {
+      const { label } = formValue as { label?: string | number }
+      setInputValue(label !== null ? String(label) : '')
+    }
+  }, [formValue])
 
   const handleSelect = (_: string, { label, value }: DefaultOptionType) => {
     form.setFieldsValue({ [name]: { label: label as string, value } })

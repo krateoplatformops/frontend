@@ -1004,7 +1004,7 @@ spec:
     objectFields:
       - path: location
         displayField: cities
-    submitActionId: submit-autocomplete
+    submitActionId: submit-complex
     stringSchema: |
       {
         "type": "object",
@@ -1026,17 +1026,21 @@ spec:
       }
     actions:
       rest:
-        - id: submit-autocomplete
+        - id: submit-complex
           type: rest
-          resourceRefId: resource-ref-1
-          headers: []
+          resourceRefId: submit-complex
+          payloadToOverride:
+            - name: location
+              value: ${ .json.location }
+          headers:
+            - "Content-Type: application/json"
   resourcesRefs:
     items:
-      - id: resource-ref-1
-        apiVersion: composition.krateo.io/v1
-        name: submit-autocomplete
+      - id: submit-complex
+        apiVersion: v1
+        resource: configmaps
+        name: submit-complex
         namespace: krateo-system
-        resource: fireworksapps
         verb: POST
       - id: get-italian-regions
         apiVersion: templates.krateo.io/v1
