@@ -364,6 +364,10 @@ name of the k8s Custom Resource
 
 > For additional information about the `autocomplete` and `dependencies` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).
 
+      
+
+> For additional information about the `initialValues` property configuration, please visit [this page](./form-values.md).
+
 ---
 
 ### LineChart

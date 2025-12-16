@@ -84,7 +84,8 @@ async function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): Pro
   }
 
   const extraInfo = title.toLowerCase() === 'form'
-    ? `\n\n> For additional information about the \`autocomplete\` and \`dependencies\` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).\n`
+    ? `\n\n> For additional information about the \`autocomplete\` and \`dependencies\` properties configuration, please visit [this page](./autocomplete-and-dependencies.md).\n
+      \n\n> For additional information about the \`initialValues\` property configuration, please visit [this page](./form-values.md).\n`
     : ''
 
   return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n${exampleLink}${extraInfo}`
