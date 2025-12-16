@@ -75,20 +75,35 @@ const ListObjectFields = ({
   }, [editIndex, list, onChange, form])
 
   const getValue = useCallback((item: unknown, index: number): React.ReactNode => {
-    if (!displayField) { return `object item #${index + 1}` }
+    if (!displayField) {
+      return `object item #${index + 1}`
+    }
 
     return displayField.split('.').reduce<unknown>((acc, key) => {
       if (acc && typeof acc === 'object' && key in acc) {
-        const label = (acc as Record<string, unknown>)[key]
-        if (label !== undefined && label !== null) { return label }
+        const value = (acc as Record<string, unknown>)[key]
 
-        return (
-          <Flex align='center' gap={5}>
-            <FontAwesomeIcon color='orange' icon='triangle-exclamation' />
-            <Typography.Text>object item #{index + 1}</Typography.Text>
-          </Flex>
-        )
+        if (value === undefined || value === null) {
+          return (
+            <Flex align='center' gap={5}>
+              <FontAwesomeIcon color='orange' icon='triangle-exclamation' />
+              <Typography.Text>object item #{index + 1}</Typography.Text>
+            </Flex>
+          )
+        }
+
+        // { label, value } support
+        if (typeof value === 'object' && 'label' in value) {
+          const { label } = (value as { label?: unknown })
+          if (typeof label === 'string' || typeof label === 'number') {
+            return label
+          }
+        }
+
+        // primitive fallback
+        return value
       }
+
       return undefined
     }, item) as React.ReactNode
   }, [displayField])

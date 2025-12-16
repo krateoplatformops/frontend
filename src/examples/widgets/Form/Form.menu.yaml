@@ -97,6 +97,7 @@ spec:
       - resourceRefId: example-form-autocomplete-restaction-panel
       - resourceRefId: example-form-autocomplete-restaction-parameter-panel
       - resourceRefId: example-form-dependencies-panel
+      - resourceRefId: example-form-autocomplete-dependencies-array-objects-panel
   resourcesRefs:
     items:
       - id: example-form-missing-schema-panel
@@ -206,7 +207,13 @@ spec:
         name: example-form-dependencies-panel
         namespace: krateo-system
         resource: panels
-        verb: GET 
+        verb: GET
+      - id: example-form-autocomplete-dependencies-array-objects-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete-dependencies-array-objects-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
 ---
 kind: Column
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -709,6 +716,26 @@ spec:
       - id: example-form-dependencies
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-dependencies
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-dependencies-array-objects-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Autocomplete and Dependencies field inside array of objects'
+    items:
+      - resourceRefId: example-form-autocomplete-dependencies-array-objects
+  resourcesRefs:
+    items:
+      - id: example-form-autocomplete-dependencies-array-objects
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-autocomplete-dependencies-array-objects
         namespace: krateo-system
         resource: forms
         verb: GET

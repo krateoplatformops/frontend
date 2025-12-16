@@ -974,6 +974,89 @@ metadata:
 stringData:
   server-url: https://public.opendatasoft.com
 ---
+# Autocomplete and Dependencies field inside array of objects
+# Target: validate autocomplete and dependencies fields when they are nested inside an array of objects
+# Expected behavior: three fields are rendered inside an array of object, each field values depend on the previous field
+# value being set, otherwise the field is disabled
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-autocomplete-dependencies-array-objects
+  namespace: krateo-system
+spec:
+  widgetData:
+    autocomplete:
+      - name: regions
+        resourceRefId: get-italian-regions
+    dependencies:
+      - name: provinces
+        dependsOn:
+          name: regions
+        resourceRefId: get-italian-provinces
+        extra:
+          key: region_code
+      - name: cities
+        dependsOn:
+          name: provinces
+        resourceRefId: get-italian-cities
+        extra:
+          key: province_code
+    objectFields:
+      - path: location
+        displayField: cities
+    submitActionId: submit-autocomplete
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "array",
+            "title": "Location",
+            "items": {
+              "type": "object",
+              "properties": {
+                "regions": { "type": "string", "title": "Region" },
+                "provinces": { "type": "string", "title": "Province" },
+                "cities": { "type": "string", "title": "City" }
+              },
+              "required": ["regions", "provinces", "cities"]
+            }
+          }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-autocomplete
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-autocomplete
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+      - id: get-italian-regions
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-cities
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-cities
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-provinces
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-provinces
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+---
 # Missing action
 # Target: validate error handling when action is missing.
 # Expected behavior: an error is displayed on submit to inform that the action is not defined.
