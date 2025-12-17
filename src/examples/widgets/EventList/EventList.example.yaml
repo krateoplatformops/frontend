@@ -21,8 +21,7 @@ metadata:
 spec:
   widgetData:
     events:
-      - icon: "fa-exclamation-circle"
-        reason: "FailedScheduling"
+      - reason: "FailedScheduling"
         message: "0/1 nodes are available: 1 Insufficient memory."
         type: "Warning"
         count: 3
@@ -41,8 +40,7 @@ spec:
           uid: "abcd-1234"
         source:
           component: "scheduler"
-      - icon: "fa-rocket"
-        reason: "Started"
+      - reason: "Started"
         message: "Started container nginx"
         type: "Normal"
         eventTime: "2024-04-21T08:20:00Z"
@@ -73,8 +71,7 @@ spec:
   widgetData:
     prefix: example-eventlist-with-prefix-filter-prefix
     events:
-      - icon: "fa-exclamation-circle"
-        reason: "FailedScheduling"
+      - reason: "FailedScheduling"
         message: "0/1 nodes are available: 1 Insufficient memory."
         type: "Warning"
         count: 3
@@ -93,8 +90,7 @@ spec:
           uid: "abcd-1234"
         source:
           component: "scheduler"
-      - icon: "fa-rocket"
-        reason: "Started"
+      - reason: "Started"
         message: "Started container nginx"
         type: "Normal"
         eventTime: "2024-04-21T08:20:00Z"
