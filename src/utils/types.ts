@@ -36,14 +36,7 @@ export interface JSONSchema {
   }
 }
 
-export type K8sEvent = EventV1
-
-// Extends the Kubernetes type to include null values for eventTime, firstTimestamp and lastTimestamp
-export type SSEK8sEvent = {
-  [K in keyof EventV1]: K extends 'eventTime' | 'firstTimestamp' | 'lastTimestamp'
-    ? string | null
-    : EventV1[K]
-}
+export type SSEK8sEvent = EventV1
 
 export type RestApiResponse = {
   status?: string | number
