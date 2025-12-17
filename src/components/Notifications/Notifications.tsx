@@ -1,7 +1,6 @@
 import { BellFilled } from '@ant-design/icons'
 import { Badge, Button, Drawer, List, Skeleton, Typography } from 'antd'
-import { useCallback, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useMemo, useState } from 'react'
 
 import { useGetEvents } from '../../hooks/useGetEvents'
 import { formatISODate } from '../../utils/utils'
@@ -9,20 +8,9 @@ import { formatISODate } from '../../utils/utils'
 import styles from './Notifications.module.css'
 
 const Notifications = () => {
-  const navigate = useNavigate()
-
   const [drawerVisible, setDrawerVisible] = useState(false)
 
   const { data: notifications, isLoading } = useGetEvents({ registerToSSE: drawerVisible, topic: 'krateo' })
-
-  const onClickNotification = useCallback(
-    (url: string | undefined) => {
-      if (url && url?.length > 0) {
-        void navigate(url)
-      }
-    },
-    [navigate]
-  )
 
   const notificationList = useMemo(() => (
     <List
@@ -30,49 +18,50 @@ const Notifications = () => {
       dataSource={notifications}
       itemLayout='vertical'
       renderItem={({
-        description,
         firstTimestamp,
         involvedObject: { apiVersion, kind, name, namespace },
         lastTimestamp,
         message,
         metadata: { creationTimestamp, uid },
         reason,
-        title,
         type,
-        url,
-      }, index) => (
-        <List.Item
-          className={`${styles.listItem} ${index === 0 ? styles.firstElement : ''} ${notifications?.length && index === notifications.length - 1 ? styles.lastElement : ''}`}
-          key={uid}
-        >
-          <Button className={styles.notificationElement} onClick={() => onClickNotification(url)} type='link'>
-            <div className={styles.space}>
-              <div className={styles.titleWrapper}>
-                <Badge
-                  color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
-                  text={
-                    <Typography.Text className={styles.title} strong>
-                      {title || reason}
-                    </Typography.Text>
-                  }
-                />
-                <Typography.Paragraph className={styles.timestamp}>
-                  {formatISODate(lastTimestamp || firstTimestamp || creationTimestamp, true)}
+      }, index) => {
+        const timestamp = lastTimestamp || firstTimestamp || creationTimestamp
+
+        return (
+          <List.Item
+            className={`${styles.listItem} ${index === 0 ? styles.firstElement : ''} ${notifications?.length && index === notifications.length - 1 ? styles.lastElement : ''}`}
+            key={uid}
+          >
+            <Button className={styles.notificationElement} type='link'>
+              <div className={styles.space}>
+                <div className={styles.titleWrapper}>
+                  <Badge
+                    color={type === 'Normal' ? '#11B2E2' : '#ffaa00'}
+                    text={
+                      <Typography.Text className={styles.title} strong>
+                        {reason}
+                      </Typography.Text>
+                    }
+                  />
+                  <Typography.Paragraph className={styles.timestamp}>
+                    {timestamp && formatISODate(timestamp, true)}
+                  </Typography.Paragraph>
+                </div>
+                <Typography.Text className={styles.description}>
+                  {message}
+                </Typography.Text>
+                <Typography.Paragraph className={styles.details}>
+                  {`${kind}.${apiVersion}/${namespace}/${name}`}
                 </Typography.Paragraph>
               </div>
-              <Typography.Text className={styles.description}>
-                {description || message}
-              </Typography.Text>
-              <Typography.Paragraph className={styles.details}>
-                {`${kind}.${apiVersion}/${namespace}/${name}`}
-              </Typography.Paragraph>
-            </div>
-          </Button>
-        </List.Item>
-      )}
+            </Button>
+          </List.Item>
+        )
+      }}
       size='large'
     />
-  ), [notifications, onClickNotification])
+  ), [notifications])
 
   return (
     <>

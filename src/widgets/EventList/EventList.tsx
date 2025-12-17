@@ -124,7 +124,6 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
         ({
           eventTime,
           firstTimestamp,
-          icon,
           involvedObject: { apiVersion, kind, name, namespace },
           lastTimestamp,
           message,
@@ -137,7 +136,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
           return (
             <RichRow
               color={type === 'Normal' ? 'blue' : 'orange'}
-              icon={icon as string || 'fa-ellipsis-h'}
+              icon={'fa-ellipsis-h'}
               key={`${uid}-${rowUid}`}
               primaryText={
                 <>
