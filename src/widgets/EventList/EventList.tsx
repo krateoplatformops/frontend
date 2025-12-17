@@ -137,7 +137,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
           return (
             <RichRow
               color={type === 'Normal' ? 'blue' : 'orange'}
-              icon={icon || 'fa-ellipsis-h'}
+              icon={icon as string || 'fa-ellipsis-h'}
               key={`${uid}-${rowUid}`}
               primaryText={
                 <>
