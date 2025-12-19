@@ -1013,9 +1013,9 @@ spec:
           provinces:
             label: Genova
             value: "210"
-          cities:
-            label: Sestri Levante
-            value: "010059"
+          # cities:
+          #   label: Sestri Levante
+          #   value: "010059"
         - regions:
             label: Liguria
             value: "7"
@@ -1037,7 +1037,7 @@ spec:
               "properties": {
                 "regions": { "type": "string", "title": "Region" },
                 "provinces": { "type": "string", "title": "Province" },
-                "cities": { "type": "string", "title": "City" }
+                "cities": { "type": "string", "title": "City", "default": {"label": "Sestri Levante", "value": "010059"} }
               },
               "required": ["regions", "provinces", "cities"]
             }

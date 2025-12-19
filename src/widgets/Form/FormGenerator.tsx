@@ -104,6 +104,16 @@ const FormGenerator = ({
       return autocompleteNames.includes(fieldName) || dependenciesNames.includes(fieldName)
     }
 
+    const hasDependencyChanged = (fieldName: string): boolean => {
+      const dependsOnField = dependencies?.find(({ name }) => name === fieldName)?.dependsOn.name
+      if (!dependsOnField) { return false }
+
+      const current = form.getFieldValue(dependsOnField) as unknown
+      const initial = getInitialValue(initialValues, dependsOnField)
+
+      return JSON.stringify(current) !== JSON.stringify(initial)
+    }
+
     const newInitialValues: Record<string, unknown> = {}
 
     const parseInitialValues = (schemaNode: JSONSchema4, path: string = ''): void => {
@@ -138,6 +148,12 @@ const FormGenerator = ({
           valueToSet = defaultValue
         } else {
           continue
+        }
+
+        // Dependencies have an additional check to make sure that if the parent field has been updated
+        // the children field initial value is not set
+        if (isOptionField(currentPath) && hasDependencyChanged(currentPath)) {
+          valueToSet = undefined
         }
 
         // If the values has not been inserted now from the user, checks its format
