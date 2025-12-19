@@ -114,6 +114,81 @@ const FormGenerator = ({
       return JSON.stringify(current) !== JSON.stringify(initial)
     }
 
+    const formatValue = (currentPath: string, property: JSONSchema4, valueToSet: unknown) => {
+      let formattedValue = valueToSet
+
+      // Sets correct format for string fields
+      if (!isOptionField(currentPath) && property.type === 'string' && typeof formattedValue !== 'string') {
+        console.warn(`Invalid string default for ${currentPath}`, formattedValue)
+
+        if (typeof formattedValue === 'number' || typeof formattedValue === 'boolean' || typeof formattedValue === 'bigint' || typeof formattedValue === 'symbol') {
+          formattedValue = formattedValue.toString()
+        } else {
+          formattedValue = undefined
+        }
+      }
+
+      // Sets correct format for numeric fields
+      if ((property.type === 'integer' || property.type === 'number') && typeof formattedValue !== 'number') {
+        console.warn(`Invalid number default for ${currentPath}`, formattedValue)
+        formattedValue = undefined
+      }
+
+      // Sets correct format for boolean fields
+      if (property.type === 'boolean' && typeof formattedValue !== 'boolean') {
+        console.warn(`Invalid boolean initialValue for "${currentPath}"`, formattedValue)
+        formattedValue = false
+      }
+
+      // Sets correct format for Autocomplete and Dependencies fields
+      if (isOptionField(currentPath)) {
+        if (typeof formattedValue === 'string' || typeof formattedValue === 'number') {
+          formattedValue = { label: String(formattedValue), value: formattedValue } as DefaultOptionType
+        } else if (typeof formattedValue === 'boolean') {
+          formattedValue = { label: formattedValue ? 'true' : 'false', value: String(formattedValue) } as DefaultOptionType
+        } else if (Array.isArray(formattedValue)) {
+          console.warn(`Invalid array initialValue for option field "${currentPath}"`, formattedValue)
+          formattedValue = undefined
+        } else if (typeof formattedValue === 'object' && formattedValue !== null) {
+          if ('label' in formattedValue && 'value' in formattedValue && typeof formattedValue.label === 'string') {
+            formattedValue = formattedValue as DefaultOptionType
+          } else {
+            console.warn(`Invalid object initialValue for option field "${currentPath}"`, formattedValue)
+            formattedValue = undefined
+          }
+        }
+      }
+
+      // Sets correct format for array fields
+      if (property.type === 'array') {
+        const { items } = property
+
+        // Objects
+        if (items && !Array.isArray(items) && items.type === 'object') {
+          if (!Array.isArray(formattedValue)) {
+            console.warn(`Invalid array value for object array "${currentPath}"`, formattedValue)
+            formattedValue = undefined
+          } else {
+            const isValid = formattedValue.every((el) => typeof el === 'object' && el !== null && !Array.isArray(el))
+
+            if (!isValid) {
+              console.warn(`Invalid object array structure for "${currentPath}"`, formattedValue)
+              formattedValue = undefined
+            }
+          }
+        }
+
+        // Primitive / enum / string / number
+        if (!Array.isArray(formattedValue)) {
+          formattedValue = [formattedValue]
+        }
+
+        return formattedValue
+      }
+
+      return formattedValue
+    }
+
     const newInitialValues: Record<string, unknown> = {}
 
     const parseInitialValues = (schemaNode: JSONSchema4, path: string = ''): void => {
@@ -130,101 +205,32 @@ const FormGenerator = ({
           continue
         }
 
-        // Sets value with this hierarchy: value just inserted from user, initial value, default value
-        const userTouched = form.isFieldTouched(namePath)
-        const userValue = form.getFieldValue(namePath) as unknown
+        // Value just updated from the user has priority
+        const hasBeenUpdated = form.isFieldTouched(namePath)
+        if (hasBeenUpdated) {
+          const valueToSet = form.getFieldValue(namePath) as unknown
+
+          form.setFieldValue(namePath, valueToSet)
+          newInitialValues[currentPath] = valueToSet
+          continue
+        }
+
+        // If the user has not set a value, takes the initial or default value
         const initialValue = getInitialValue(initialValues, currentPath)
-        const defaultValue = property.default
+        let valueToSet = initialValue ?? property.default
 
-        let valueToSet: unknown
-        let comesFromUser = false
-
-        if (userTouched) {
-          valueToSet = userValue
-          comesFromUser = true
-        } else if (initialValue !== undefined) {
-          valueToSet = initialValue
-        } else if (defaultValue !== undefined) {
-          valueToSet = defaultValue
-        } else {
+        if (valueToSet === undefined) {
           continue
         }
 
         // Dependencies have an additional check to make sure that if the parent field has been updated
         // the children field initial value is not set
-        if (isOptionField(currentPath) && hasDependencyChanged(currentPath)) {
+        if (hasDependencyChanged(currentPath)) {
           valueToSet = undefined
         }
 
-        // If the values has not been inserted now from the user, checks its format
-        if (!comesFromUser) {
-          // Sets correct format for string fields
-          if (!isOptionField(currentPath) && property.type === 'string' && typeof valueToSet !== 'string') {
-            console.warn(`Invalid string default for ${currentPath}`, valueToSet)
-
-            if (typeof valueToSet === 'number' || typeof valueToSet === 'boolean' || typeof valueToSet === 'bigint' || typeof valueToSet === 'symbol') {
-              valueToSet = valueToSet.toString()
-            } else {
-              valueToSet = undefined
-            }
-          }
-
-          // Sets correct format for numeric fields
-          if ((property.type === 'integer' || property.type === 'number') && typeof valueToSet !== 'number') {
-            console.warn(`Invalid number default for ${currentPath}`, valueToSet)
-            valueToSet = undefined
-          }
-
-          // Sets correct format for boolean fields
-          if (property.type === 'boolean' && typeof valueToSet !== 'boolean') {
-            console.warn(`Invalid boolean initialValue for "${currentPath}"`, valueToSet)
-            valueToSet = false
-          }
-
-          // Sets correct format for Autocomplete and Dependencies fields
-          if (isOptionField(currentPath)) {
-            if (typeof valueToSet === 'string' || typeof valueToSet === 'number') {
-              valueToSet = { label: String(valueToSet), value: valueToSet } as DefaultOptionType
-            } else if (typeof valueToSet === 'boolean') {
-              valueToSet = { label: valueToSet ? 'true' : 'false', value: String(valueToSet) } as DefaultOptionType
-            } else if (Array.isArray(valueToSet)) {
-              console.warn(`Invalid array initialValue for option field "${currentPath}"`, valueToSet)
-              valueToSet = undefined
-            } else if (typeof valueToSet === 'object' && valueToSet !== null) {
-              if ('label' in valueToSet && 'value' in valueToSet && typeof valueToSet.label === 'string') {
-                valueToSet = valueToSet as DefaultOptionType
-              } else {
-                console.warn(`Invalid object initialValue for option field "${currentPath}"`, valueToSet)
-                valueToSet = undefined
-              }
-            }
-          }
-
-          // Sets correct format for array fields
-          if (property.type === 'array') {
-            const { items } = property
-
-            // Objects
-            if (items && !Array.isArray(items) && items.type === 'object') {
-              if (!Array.isArray(valueToSet)) {
-                console.warn(`Invalid array value for object array "${currentPath}"`, valueToSet)
-                valueToSet = undefined
-              } else {
-                const isValid = valueToSet.every((el) => typeof el === 'object' && el !== null && !Array.isArray(el))
-
-                if (!isValid) {
-                  console.warn(`Invalid object array structure for "${currentPath}"`, valueToSet)
-                  valueToSet = undefined
-                }
-              }
-            }
-
-            // Primitive / enum / string / number
-            if (!Array.isArray(valueToSet)) {
-              valueToSet = [valueToSet]
-            }
-          }
-        }
+        // If the value has not been inserted from the user, checks its format
+        valueToSet = formatValue(currentPath, property, valueToSet)
 
         form.setFieldValue(currentPath.split('.'), valueToSet)
         newInitialValues[currentPath] = valueToSet
