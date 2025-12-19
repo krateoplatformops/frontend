@@ -113,20 +113,35 @@ const FormGenerator = ({
       for (const key of Object.keys(properties)) {
         const property = properties[key]
         const currentPath = path ? `${path}.${key}` : key
+        const namePath = currentPath.split('.')
 
         if (isObjectSchema(property)) {
           parseInitialValues(property, currentPath)
           continue
         }
 
-        // Checks if initial value or default value is present
-        let valueToSet = getInitialValue(initialValues, currentPath)
+        // Sets value with this hierarchy: value just inserted from user, initial value, default value
+        const userTouched = form.isFieldTouched(namePath)
+        const userValue = form.getFieldValue(namePath) as unknown
+        const initialValue = getInitialValue(initialValues, currentPath)
+        const defaultValue = property.default
 
-        if (valueToSet === undefined) {
-          valueToSet = property.default
+        let valueToSet: unknown
+        let comesFromUser = false
+
+        if (userTouched) {
+          valueToSet = userValue
+          comesFromUser = true
+        } else if (initialValue !== undefined) {
+          valueToSet = initialValue
+        } else if (defaultValue !== undefined) {
+          valueToSet = defaultValue
+        } else {
+          continue
         }
 
-        if (valueToSet !== undefined && valueToSet !== null) {
+        // If the values has not been inserted now from the user, checks its format
+        if (!comesFromUser) {
           // Sets correct format for string fields
           if (!isOptionField(currentPath) && property.type === 'string' && typeof valueToSet !== 'string') {
             console.warn(`Invalid string default for ${currentPath}`, valueToSet)
@@ -160,7 +175,6 @@ const FormGenerator = ({
               console.warn(`Invalid array initialValue for option field "${currentPath}"`, valueToSet)
               valueToSet = undefined
             } else if (typeof valueToSet === 'object' && valueToSet !== null) {
-              // eslint-disable-next-line max-depth
               if ('label' in valueToSet && 'value' in valueToSet && typeof valueToSet.label === 'string') {
                 valueToSet = valueToSet as DefaultOptionType
               } else {
@@ -194,10 +208,10 @@ const FormGenerator = ({
               valueToSet = [valueToSet]
             }
           }
-
-          form.setFieldValue(currentPath.split('.'), valueToSet)
-          newInitialValues[currentPath] = valueToSet
         }
+
+        form.setFieldValue(currentPath.split('.'), valueToSet)
+        newInitialValues[currentPath] = valueToSet
       }
     }
 
