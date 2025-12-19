@@ -111,6 +111,10 @@ const FormGenerator = ({
       const current = form.getFieldValue(dependsOnField) as unknown
       const initial = getInitialValue(initialValues, dependsOnField)
 
+      if (!initial) {
+        return false
+      }
+
       return JSON.stringify(current) !== JSON.stringify(initial)
     }
 

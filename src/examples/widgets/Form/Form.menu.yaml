@@ -79,25 +79,26 @@ spec:
     allowedResources:
       - panels
     items:
-      # - resourceRefId: example-form-missing-schema-panel
-      # - resourceRefId: example-form-basic-strings-panel
-      # - resourceRefId: example-form-enum-small-panel
-      # - resourceRefId: example-form-enum-string-panel
-      # - resourceRefId: example-form-boolean-panel
-      # - resourceRefId: example-form-integer-basic-panel
-      # - resourceRefId: example-form-integer-slider-panel
-      # - resourceRefId: example-form-array-strings-panel
-      # - resourceRefId: example-form-array-strings-enum-panel
-      # - resourceRefId: example-form-array-object-panel
-      # - resourceRefId: example-form-complex-mix-panel
+      - resourceRefId: example-form-missing-schema-panel
+      - resourceRefId: example-form-basic-strings-panel
+      - resourceRefId: example-form-enum-small-panel
+      - resourceRefId: example-form-enum-string-panel
+      - resourceRefId: example-form-boolean-panel
+      - resourceRefId: example-form-integer-basic-panel
+      - resourceRefId: example-form-integer-slider-panel
+      - resourceRefId: example-form-array-strings-panel
+      - resourceRefId: example-form-array-strings-enum-panel
+      - resourceRefId: example-form-array-object-panel
+      - resourceRefId: example-form-complex-mix-panel
       - resourceRefId: example-form-complex-initial-values-panel
-      # - resourceRefId: example-form-ordered-schema-panel
-      # - resourceRefId: example-form-button-open-drawer-panel
-      # - resourceRefId: example-form-autocomplete-static-panel
-      # - resourceRefId: example-form-autocomplete-restaction-panel
-      # - resourceRefId: example-form-autocomplete-restaction-parameter-panel
-      # - resourceRefId: example-form-dependencies-panel
-      # - resourceRefId: example-form-autocomplete-dependencies-array-objects-panel
+      - resourceRefId: example-form-complex-malformed-initial-values-panel
+      - resourceRefId: example-form-ordered-schema-panel
+      - resourceRefId: example-form-button-open-drawer-panel
+      - resourceRefId: example-form-autocomplete-static-panel
+      - resourceRefId: example-form-autocomplete-restaction-panel
+      - resourceRefId: example-form-autocomplete-restaction-parameter-panel
+      - resourceRefId: example-form-dependencies-panel
+      - resourceRefId: example-form-autocomplete-dependencies-array-objects-panel
   resourcesRefs:
     items:
       - id: example-form-missing-schema-panel
@@ -169,6 +170,12 @@ spec:
       - id: example-form-complex-initial-values-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-complex-initial-values-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      - id: example-form-complex-malformed-initial-values-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-complex-malformed-initial-values-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -576,6 +583,26 @@ spec:
       - id: example-form-complex-initial-values
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-complex-initial-values
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-complex-malformed-initial-values-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Complex mixed schema with malformed initial values set'
+    items:
+      - resourceRefId: example-form-complex-malformed-initial-values
+  resourcesRefs:
+    items:
+      - id: example-form-complex-malformed-initial-values
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-complex-malformed-initial-values
         namespace: krateo-system
         resource: forms
         verb: GET 
