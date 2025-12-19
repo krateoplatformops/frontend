@@ -183,11 +183,11 @@ const FormGenerator = ({
         }
 
         // Primitive / enum / string / number
-        if (!Array.isArray(formattedValue)) {
+        if (formattedValue === undefined) {
+          formattedValue = []
+        } else if (!Array.isArray(formattedValue)) {
           formattedValue = [formattedValue]
         }
-
-        return formattedValue
       }
 
       return formattedValue
