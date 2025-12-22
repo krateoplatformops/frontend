@@ -463,7 +463,6 @@ spec:
         "type": "object",
         "properties": {
           "name": { "type": "string", "title": "Name" },
-          "image": { "type": "string", "title": "Image" },
           "strategy": { "type": "string", "title": "Strategy", "enum": ["rolling","recreate","blue-green"] },
           "secondStrategy": {
             "type": "string",
@@ -497,15 +496,14 @@ spec:
         "required": ["name","image"]
       }
     initialValues:
-      name: ciao
-      image: v1
+      name: container
       strategy: rolling
       enableMetrics: true
       replicas: 5
       tags: ['krateo']
       env:
         - name: default
-          value: def val
+          value: default value
       secondStrategy: recreate
       region: eu-central-1
       regions:
@@ -517,6 +515,137 @@ spec:
       cities:
         label: Sestri Levante
         value: "010059"
+    autocomplete:
+      - name: strategy
+      - name: regions
+        resourceRefId: get-italian-regions
+    dependencies:
+      - name: provinces
+        dependsOn:
+          name: regions
+        resourceRefId: get-italian-provinces
+        extra:
+          key: region_code
+      - name: cities
+        dependsOn:
+          name: provinces
+        resourceRefId: get-italian-cities
+        extra:
+          key: province_code
+    objectFields:
+      - path: env
+        displayField: name
+    actions:
+      rest:
+        - id: submit-complex
+          type: rest
+          resourceRefId: submit-complex
+          payloadToOverride:
+            - name: provinces
+              value: ${ .json.provinces }
+            - name: regions
+              value: ${ .json.regions }
+            - name: cities
+              value: ${ .json.cities }
+            - name: strategy
+              value: ${ .json.strategy }
+          payload:
+           name: static-name
+          headers:
+            - "Content-Type: application/json"
+  resourcesRefs:
+    items:
+      - id: getStrategies
+        apiVersion: composition.krateo.io/v1
+        name: getStrategies
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-regions
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-cities
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-cities
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: get-italian-provinces
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-provinces
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+      - id: submit-complex
+        apiVersion: v1
+        resource: configmaps
+        name: submit-complex
+        namespace: krateo-system
+        verb: POST
+---
+# Complex mixed schema with malformed initial values set
+# Target: full integration test to check what happens when malformed initial values are set.
+# Expected behavior: form renders a combination of types with initial values, some are casted to their values.
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-complex-malformed-initial-values
+  namespace: krateo-system
+spec:
+  widgetData:
+    submitActionId: submit-complex
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "title": "Name" },
+          "strategy": { "type": "string", "title": "Strategy", "enum": ["rolling","recreate","blue-green"] },
+          "secondStrategy": {
+            "type": "string",
+            "title": "Second strategy",
+            "enum": ["rolling", "recreate", "blue-green"],
+            "description": "Second deployment strategy"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "enum": ["us-east-1", "eu-central-1", "ap-south-1", "sa-east-1", "eu-east-1"]
+          },
+          "enableMetrics": { "type": "boolean", "title": "Enable Metrics", "default": false },
+          "replicas": { "type": "integer", "title": "Replicas", "minimum": 1, "maximum": 200, "default": 3 },
+          "regions": { "type": "string", "title": "Region" },
+          "provinces": { "type": "string", "title": "Province" },
+          "cities": { "type": "string", "title": "City" },
+          "tags": { "type": "array", "title": "Tags", "items": { "type": "string" } },
+          "env": {
+            "type": "array",
+            "title": "Environment Variables",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        },
+        "required": ["name","image"]
+      }
+    initialValues:
+      name: 22
+      strategy: non-existent
+      secondStrategy: non-existent
+      region: non-existent
+      enableMetrics: 'non-boolean'
+      replicas: 'non-number'
+      regions: non-existent 
+      provinces: non-existent
+      cities: non-existent
+      tags: outside-array
+      env: not-object
     autocomplete:
       - name: strategy
       - name: regions

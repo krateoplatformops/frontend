@@ -4,6 +4,9 @@ The Form widget supports the **`initialValues`** property, which allows form fie
 
 This property is useful when form values need to be displayed or edited after being submitted.
 
+> [!NOTE]
+> `initialValues` should not be confused with Form fields `default` values, which are usually defined using the `stringSchema` property and represent fallback values. `initialValues` are explicitly provided to represent the starting state of the form, taking precedence over `default` values but not over user-entered values.
+
 Initial values must be defined as children of the `initialValues` property, typically using a key-value structure that mirrors the form schema paths.
 
 Since the Form cannot know the correct value format in advance, it is the responsibility of the YAML author to provide values that match the expected field type. If a value does not match the expected type, the frontend logic will attempt to coerce it to a valid format when possible. If coercion is not possible, the value will be ignored and the field will be cleared.

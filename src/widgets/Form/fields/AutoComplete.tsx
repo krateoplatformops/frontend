@@ -33,6 +33,7 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const formValue = Form.useWatch<DefaultOptionType | undefined>(name, form)
 
   const initialValueAppliedRef = useRef(false)
+  const isTypingRef = useRef(false)
 
   const queryValue = useMemo(() => debouncedValue || initialValue?.value, [debouncedValue, initialValue])
 
@@ -55,9 +56,14 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
 
   const finalOptions = useMemo(() => options ?? queriedOptions, [options, queriedOptions])
 
-  // Sets initial value if present
+  // Apply initial value once
   useEffect(() => {
     if (!initialValue || initialValueAppliedRef.current) {
+      return
+    }
+
+    if (form.isFieldTouched(name)) {
+      initialValueAppliedRef.current = true
       return
     }
 
@@ -67,51 +73,46 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
     initialValueAppliedRef.current = true
   }, [initialValue, form, name])
 
-  // Validates initial value against options
+  // Sync inputValue with formValue only if user is not typing
+  useEffect(() => {
+    if (isTypingRef.current) {
+      return
+    }
+
+    if (!formValue || typeof formValue !== 'object' || !('label' in formValue)) {
+      setInputValue('')
+      return
+    }
+
+    const { label } = formValue
+    setInputValue(typeof label === 'string' ? label : '')
+  }, [formValue])
+
+  // Validate current value silently
   useEffect(() => {
     if (!initialValueAppliedRef.current) {
       return
     }
 
     const currentValue = form.getFieldValue(name) as DefaultOptionType | undefined
-    if (!currentValue) {
+    if (!currentValue || finalOptions.length === 0) {
       return
     }
-
-    if (finalOptions.length === 0) { return }
 
     const optionExists = finalOptions.some(({ value }) => String(value) === String(currentValue.value))
-
     if (!optionExists) {
-      console.warn(`Initial value does not exist in options for "${name}"`, initialValue)
-      form.setFieldValue(name, undefined)
-      setInputValue('')
+      form.setFieldsValue({ [name]: undefined })
     }
-  }, [finalOptions, form, initialValue, name])
-
-  // Syncs input value with form value
-  useEffect(() => {
-    const value = formValue ?? form.getFieldValue(name) as DefaultOptionType | undefined
-
-    if (!value || typeof value !== 'object' || !('label' in value)) {
-      setInputValue('')
-      return
-    }
-
-    const { label } = value
-    if (typeof label === 'string' || typeof label === 'number') {
-      setInputValue(String(label))
-    } else {
-      setInputValue('')
-    }
-  }, [formValue, form, name])
+  }, [finalOptions, form, name])
 
   const handleSelect = (_: string, { label, value }: DefaultOptionType) => {
+    isTypingRef.current = false
     form.setFieldsValue({ [name]: { label: label as string, value } })
     setInputValue(label as string)
   }
 
   const handleChange = (val: string) => {
+    isTypingRef.current = true
     setInputValue(val)
     setSearchValue(val)
   }
@@ -127,7 +128,7 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
       options={finalOptions}
       placeholder='Start typing...'
       suffixIcon={isLoading ? <Spin indicator={<LoadingOutlined />} size='small' /> : null}
-      value={inputValue}
+      value={searchValue || inputValue}
     />
   )
 }
