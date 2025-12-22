@@ -1,7 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import type { FormInstance } from 'antd'
-import { AutoComplete as AntDAutoComplete, Form, Spin } from 'antd'
+import { AutoComplete as AntDAutoComplete, Spin } from 'antd'
 import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
 import debounce from 'lodash/debounce'
@@ -30,8 +30,6 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const [debouncedValue, setDebouncedValue] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
 
-  const formValue = Form.useWatch<DefaultOptionType | undefined>(name, form)
-
   const initialValueAppliedRef = useRef(false)
 
   const queryValue = useMemo(() => debouncedValue || initialValue?.value, [debouncedValue, initialValue])
@@ -46,69 +44,77 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(queryValue && resourceRefId && config),
     queryFn: () =>
-      getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, extra?.key, notification, config),
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ['autocomplete-options', resourceRefId, queryValue, extra?.key],
+      getOptionsFromResourceRefId(
+        queryValue as string,
+        resourceRefId,
+        resourcesRefs,
+        extra?.key,
+        notification,
+        config,
+      ),
+    queryKey: ['autocomplete-options', resourceRefId, queryValue, extra?.key, resourcesRefs, notification, config],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })
 
   const finalOptions = useMemo(() => options ?? queriedOptions, [options, queriedOptions])
 
-  // Sets initial value if present
+  /**
+   * Apply initialValue ONCE
+   * - only if present
+   * - only if field not touched
+   */
   useEffect(() => {
     if (!initialValue || initialValueAppliedRef.current) {
       return
     }
 
+    if (form.isFieldTouched(name)) {
+      initialValueAppliedRef.current = true
+      return
+    }
+
     form.setFieldsValue({ [name]: initialValue })
-    setInputValue(initialValue.label as string)
+    const { label } = initialValue
+    setInputValue(
+      typeof label === 'string' || typeof label === 'number'
+        ? String(label)
+        : ''
+    )
 
     initialValueAppliedRef.current = true
   }, [initialValue, form, name])
 
-  // Validates initial value against options
+  /**
+   * Validate current value against options
+   * (runs also after async fetch)
+   */
   useEffect(() => {
     if (!initialValueAppliedRef.current) {
       return
     }
 
     const currentValue = form.getFieldValue(name) as DefaultOptionType | undefined
-    if (!currentValue) {
+    if (!currentValue || finalOptions.length === 0) {
       return
     }
-
-    if (finalOptions.length === 0) { return }
 
     const optionExists = finalOptions.some(({ value }) => String(value) === String(currentValue.value))
 
     if (!optionExists) {
-      console.warn(`Initial value does not exist in options for "${name}"`, initialValue)
+      console.warn(`Initial value does not exist in options for "${name}"`, currentValue)
       form.setFieldValue(name, undefined)
       setInputValue('')
     }
-  }, [finalOptions, form, initialValue, name])
-
-  // Syncs input value with form value
-  useEffect(() => {
-    const value = formValue ?? form.getFieldValue(name) as DefaultOptionType | undefined
-
-    if (!value || typeof value !== 'object' || !('label' in value)) {
-      setInputValue('')
-      return
-    }
-
-    const { label } = value
-    if (typeof label === 'string' || typeof label === 'number') {
-      setInputValue(String(label))
-    } else {
-      setInputValue('')
-    }
-  }, [formValue, form, name])
+  }, [finalOptions, form, name])
 
   const handleSelect = (_: string, { label, value }: DefaultOptionType) => {
     form.setFieldsValue({ [name]: { label: label as string, value } })
-    setInputValue(label as string)
+    setInputValue(
+      typeof label === 'string' || typeof label === 'number'
+        ? String(label)
+        : ''
+    )
   }
 
   const handleChange = (val: string) => {
