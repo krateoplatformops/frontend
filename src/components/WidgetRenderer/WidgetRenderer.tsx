@@ -55,6 +55,7 @@ import styles from './WidgetRenderer.module.css'
 type WidgetRendererProps = {
   invisible?: boolean
   onLoadingChange?: (isLoading: boolean) => void
+  onVisibilityChange?: (visible: boolean) => void
   prefix?: string
   widgetEndpoint: string
   wrapper?: {
@@ -165,7 +166,14 @@ const WidgetRendererError = ({ children, subtitle }: { children?: ReactNode; sub
   )
 }
 
-const WidgetRenderer = ({ invisible = false, onLoadingChange, prefix, widgetEndpoint, wrapper }: WidgetRendererProps) => {
+const WidgetRenderer = ({
+  invisible = false,
+  onLoadingChange,
+  onVisibilityChange,
+  prefix,
+  widgetEndpoint,
+  wrapper,
+}: WidgetRendererProps) => {
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
 
@@ -175,6 +183,14 @@ const WidgetRenderer = ({ invisible = false, onLoadingChange, prefix, widgetEndp
 
   const { isFetchingResourcesRefs, queryResult } = useWidgetQuery(widgetEndpoint)
   const { data: widget, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isLoading } = queryResult
+
+  let isVisible = true
+
+  useEffect(() => {
+    if (onVisibilityChange) {
+      onVisibilityChange(isVisible)
+    }
+  }, [isVisible, onVisibilityChange])
 
   useEffect(() => {
     if (onLoadingChange) {
@@ -258,10 +274,15 @@ const WidgetRenderer = ({ invisible = false, onLoadingChange, prefix, widgetEndp
   }
 
   if (prefix && isWidgetFilteredByProps(status.widgetData, prefix)) {
+    isVisible = false
     return null
   }
 
   const renderedWidget = parseWidget(widget, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isFetchingResourcesRefs)
+
+  if (!renderedWidget) {
+    return null
+  }
 
   if (wrapper) {
     return <wrapper.component {...wrapper.props}>{renderedWidget}</wrapper.component>
