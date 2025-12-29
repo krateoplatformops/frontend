@@ -53,7 +53,6 @@ spec:
       - resourceRefId: example-datagrid-multiple-default-panel
       - resourceRefId: example-datagrid-custom-grid-panel
       - resourceRefId: example-datagrid-with-prefix-panel
-      - resourceRefId: example-datagrid-nested-panel
   resourcesRefs:
     items:
       - id: example-datagrid-empty-panel
@@ -101,12 +100,6 @@ spec:
       - id: example-datagrid-multiple-child-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-datagrid-multiple-child-panel
-        namespace: krateo-system
-        resource: panels
-        verb: GET 
-      - id: example-datagrid-nested-panel
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-datagrid-nested-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -254,26 +247,6 @@ spec:
       - id: example-datagrid-with-prefix
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-datagrid-with-prefix
-        namespace: krateo-system
-        resource: datagrids
-        verb: GET 
----
-kind: Panel
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: example-datagrid-nested-panel
-  namespace: krateo-system
-spec:
-  widgetData:
-    actions: {}
-    title: 'Nested data grid'
-    items:
-      - resourceRefId: example-datagrid-nested
-  resourcesRefs:
-    items:
-      - id: example-datagrid-nested
-        apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-datagrid-nested
         namespace: krateo-system
         resource: datagrids
         verb: GET 
