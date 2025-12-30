@@ -223,6 +223,9 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 
 [Examples](../src/examples/widgets/Filters/Filters.example.yaml)
 
+
+> For additional information about the `Filters` configuration, please visit [this page](./filters.md).
+
 ---
 
 ### FlowChart
