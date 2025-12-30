@@ -79,6 +79,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
     autocomplete,
     buttonConfig,
     dependencies,
+    displayMenu,
     fieldDescription,
     initialValues,
     objectFields,
@@ -170,6 +171,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
         autocomplete={autocomplete}
         dependencies={dependencies}
         descriptionTooltip={fieldDescription === 'tooltip'}
+        displayMenu={displayMenu}
         formId={formId}
         initialValues={initialValues}
         objectFields={objectFields}

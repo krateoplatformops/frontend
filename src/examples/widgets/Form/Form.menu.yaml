@@ -81,6 +81,7 @@ spec:
     items:
       - resourceRefId: example-form-missing-schema-panel
       - resourceRefId: example-form-basic-strings-panel
+      - resourceRefId: example-form-basic-menu-hidden-panel
       - resourceRefId: example-form-enum-small-panel
       - resourceRefId: example-form-enum-string-panel
       - resourceRefId: example-form-boolean-panel
@@ -110,6 +111,12 @@ spec:
       - id: example-form-basic-strings-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-basic-strings-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-basic-menu-hidden-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-basic-menu-hidden-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -383,6 +390,26 @@ spec:
       - id: example-form-basic-strings
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-basic-strings
+        namespace: krateo-system
+        resource: forms
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-basic-menu-hidden-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Basic form with hidden side menu'
+    items:
+      - resourceRefId: example-form-basic-menu-hidden
+  resourcesRefs:
+    items:
+      - id: example-form-basic-menu-hidden
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-basic-menu-hidden
         namespace: krateo-system
         resource: forms
         verb: GET 

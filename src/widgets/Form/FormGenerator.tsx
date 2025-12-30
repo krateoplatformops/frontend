@@ -26,6 +26,7 @@ type FormGeneratorType = {
   schema: JSONSchema4
   autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
+  displayMenu?: FormWidgetData['displayMenu']
   objectFields?: FormWidgetData['objectFields']
   initialValues?: FormWidgetData['initialValues']
 }
@@ -80,6 +81,7 @@ const FormGenerator = ({
   autocomplete,
   dependencies,
   descriptionTooltip = false,
+  displayMenu = true,
   formId,
   initialValues,
   objectFields,
@@ -642,14 +644,16 @@ const FormGenerator = ({
             </div>
           </Col>
 
-          <Col className={styles.anchorLabelWrapper} flex={'1 1 0'}>
-            <Anchor
-              affix={false}
-              getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
-              items={getAnchorList()}
-              onClick={handleAnchorClick}
-            />
-          </Col>
+          {displayMenu && (
+            <Col className={styles.anchorLabelWrapper} flex={'1 1 0'}>
+              <Anchor
+                affix={false}
+                getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
+                items={getAnchorList()}
+                onClick={handleAnchorClick}
+              />
+            </Col>
+          )}
         </Row>
       </div>
     </div>

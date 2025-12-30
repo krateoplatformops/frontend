@@ -315,6 +315,10 @@ export interface Form {
          */
         displayField: string
       }[]
+      /**
+       * Displays a side menu with clickable anchor links for each field, allowing users to scroll to the selected field. If not specified, the menu is displayed by default.
+       */
+      displayMenu?: boolean
     }
     apiRef?: {
       name: string
