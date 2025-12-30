@@ -357,6 +357,7 @@ name of the k8s Custom Resource
 | objectFields | no | configuration for object fields in the form | array |
 | objectFields[].path | yes | the path of the object field | string |
 | objectFields[].displayField | yes | the field to display in the objects list | string |
+| displayMenu | no | Displays a side menu with clickable anchor links for each field, allowing users to scroll to the selected field. If not specified, the menu is displayed by default. | boolean |
 
 
 [Examples](../src/examples/widgets/Form/Form.example.yaml)

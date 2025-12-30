@@ -69,6 +69,51 @@ spec:
         resource: fireworksapps
         verb: POST
 ---
+# Basic form with hidden side menu
+# Target: validate displaying when side menu is hidden
+# Expected behavior: form is correctly displayed, menu is not displayed
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-basic-menu-hidden
+  namespace: krateo-system
+spec:
+  widgetData:
+    fieldDescription: tooltip
+    submitActionId: submit-basic
+    displayMenu: false
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Application Name",
+            "description": "The name of your app"
+          },
+          "image": {
+            "type": "string",
+            "title": "Container Image",
+            "description": "Full image path (e.g., ghcr.io/org/image:tag)"
+          }
+        },
+        "required": ["name"]
+      }
+    actions:
+      rest:
+        - id: submit-basic
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-basic
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
 # String field with enum (4 values or less) (renders as radio group)
 # Target: ensure enum with few options renders compact controls (radios).
 # Expected behavior: a small set of choices is rendered as radio buttons and is selectable.
