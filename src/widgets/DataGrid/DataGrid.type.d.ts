@@ -1,5 +1,8 @@
 export interface DataGrid {
   version: string
+  /**
+   * DataGrid is a layout component that renders its children as a responsive list or grid
+   */
   kind: string
   spec: {
     widgetData: {

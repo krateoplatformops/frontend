@@ -4,7 +4,7 @@ export interface Row {
    */
   version: string
   /**
-   * name of the k8s Custom Resource
+   * Row is a layout component that arranges its children horizontally with spacing between them
    */
   kind: string
   spec: {
