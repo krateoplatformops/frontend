@@ -135,7 +135,7 @@ Column is a layout component that arranges its children in a vertical stack, ali
 
 ### DataGrid
 
-
+DataGrid is a layout component that renders its children as a responsive list or grid
 
 #### Props
 
@@ -601,7 +601,7 @@ RoutesLoader loads the Route widgets it doesn't render anything by itself
 
 ### Row
 
-name of the k8s Custom Resource
+Row is a layout component that arranges its children horizontally with spacing between them
 
 #### Props
 

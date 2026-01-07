@@ -8,7 +8,8 @@
     },
     "kind": {
       "type": "string",
-      "default": "DataGrid"
+      "default": "DataGrid",
+      "description": "DataGrid is a layout component that renders its children as a responsive list or grid"
     },
     "spec": {
       "type": "object",
