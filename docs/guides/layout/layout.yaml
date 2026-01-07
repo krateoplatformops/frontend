@@ -1,0 +1,148 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-layout-button-left
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Left
+    type: primary
+    shape: default
+    clickActionId: navigate-self
+    actions:
+      navigate:
+        - id: navigate-self
+          path: /layout
+          type: navigate
+  resourcesRefs:
+    items: []
+---
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-layout-button-right
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Right
+    type: primary
+    shape: default
+    clickActionId: navigate-self
+    actions:
+      navigate:
+        - id: navigate-self
+          path: /layout
+          type: navigate
+  resourcesRefs:
+    items: []
+---
+kind: Column
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-layout-column-left
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources: [buttons]
+    items:
+      - resourceRefId: example-layout-button-left
+  resourcesRefs:
+    items:
+      - id: example-layout-button-left
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-layout-button-left
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Column
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-layout-column-right
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources: [buttons]
+    items:
+      - resourceRefId: example-layout-button-right
+  resourcesRefs:
+    items:
+      - id: example-layout-button-right
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-layout-button-right
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-layout-row
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources: [columns]
+    alignment: center
+    items:
+      - resourceRefId: example-layout-column-left
+        alignment: center
+        size: 8
+      - resourceRefId: example-layout-column-right
+        alignment: center
+        size: 16
+  resourcesRefs:
+    items:
+      - id: example-layout-column-left
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-layout-column-left
+        namespace: krateo-system
+        resource: columns
+        verb: GET
+      - id: example-layout-column-right
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-layout-column-right
+        namespace: krateo-system
+        resource: columns
+        verb: GET
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-layout-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - rows
+    items:
+      - resourceRefId: example-layout-row
+  resourcesRefs:
+    items:
+      - id: example-layout-row
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-layout-row
+        namespace: krateo-system
+        resource: rows
+        verb: GET
+---
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-layout-navmenuitem
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - pages
+    resourceRefId: example-layout-page
+    label: Layout
+    icon: fa-pager
+    path: /layout
+  resourcesRefs:
+    items:
+      - id: example-layout-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-layout-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
