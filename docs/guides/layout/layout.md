@@ -235,8 +235,10 @@ spec:
     items:
       - resourceRefId: example-layout-column-left
         alignment: center
+        size: 8
       - resourceRefId: example-layout-column-right
         alignment: center
+        size: 16
   resourcesRefs:
     items:
       - id: example-layout-column-left
@@ -304,5 +306,7 @@ After refreshing the UI, the page should now display two buttons aligned horizon
 This is the actual underlying structure:
 
 ![layout page structure](./img/layout-structure.png)
+
+The red bordered element represents the `Row` widget, while the two bordered elements in blue and green are the `Column` widgets with their different sizes.
 
 The complete example YAML file can be found [here](./layout.yaml).
