@@ -2,26 +2,25 @@ kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: simple-guide-button
-  namespace: simple-guide
+  namespace: krateo-system
 spec:
   widgetData:
     icon: fa-sun
-    label: I was updated!!!
-    clickActionId: openDrawer-action-id # <- this needs to match the id of an action declared below in spec.actions
+    label: I was updated!
+    clickActionId: openDrawer-action-id
     actions: 
       openDrawer:
         - id: openDrawer-action-id 
-          resourceRefId: paragraph-id # <- this needs to match the id of a resource declared below in spec.resourcesRefs
+          resourceRefId: paragraph-id
           type: openDrawer
-          title: Composition form
+          title: Drawer with paragraph
           size: large
-
   resourcesRefs:
     items:
       - id: paragraph-id
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: simple-guide-paragraph
-        namespace: simple-guide
+        namespace: krateo-system
         resource: paragraphs
         verb: GET
 ---
@@ -29,8 +28,7 @@ kind: Paragraph
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: simple-guide-paragraph
-  namespace: simple-guide
+  namespace: krateo-system
 spec:
   widgetData:
     text: "This is a paragraph"
----

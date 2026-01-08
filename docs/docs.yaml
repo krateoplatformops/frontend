@@ -1,0 +1,140 @@
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-1
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: This is a button
+    icon: fa-sun
+    type: primary
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: button-1
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: This is a button
+    icon: fa-sun
+    type: primary
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  widgetDataTemplate:
+    - forPath: label
+      expression: ${ now | strftime("%Y-%m-%d") }
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: table-of-namespaces
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources: []
+    pageSize: 10
+    data: []
+    columns:
+      - valueKey: name
+        title: Cluster Namespaces
+  widgetDataTemplate:
+    - forPath: data
+      expression: ${ .namespaces }
+  apiRef:
+    name: cluster-namespaces
+    namespace: krateo-system
+
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: cluster-namespaces
+  namespace: krateo-system
+spec:
+  api:
+    - name: namespaces
+      path: "/api/v1/namespaces"
+      filter: "[.items[] | {name: .metadata.name}]"
+---
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: my-row
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources: [tables, piecharts]
+    items:
+      - resourceRefId: pie-chart-inside-column
+        size: 6
+      - resourceRefId: table-of-pods
+        size: 18
+  resourcesRefs:
+    items:
+      - id: table-of-pods
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-of-pods
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+      - id: pie-chart-inside-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: pie-chart-inside-column
+        namespace: krateo-system
+        resource: piecharts
+        verb: GET
+---
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: templates-row
+  namespace: my-namespace
+spec:
+  apiRef:
+    name: templates-panels
+    namespace: my-namespace
+  widgetData:
+    allowedResources: []
+    items: []
+  widgetDataTemplate:
+    - forPath: items
+      expression: >
+        ${ [ .templatespanels[] | { resourceRefId: .metadata.name, size: 12 } ] }
+  resourcesRefs:
+    items: []
+  resourcesRefsTemplate:
+    - iterator: ${ .templatespanels }
+      template:
+        id: ${ .metadata.name }
+        apiVersion: ${ .apiVersion }
+        resource: panels
+        namespace: ${ .metadata.namespace }
+        name: ${ .metadata.name }
+        verb: GET
