@@ -15,6 +15,9 @@ Filtering is based on a shared string identifier called `prefix`:
 
 This allows filtering logic to be configured entirely via YAML.
 
+> **Note**
+> Filters are applied client side by the frontend logic. Reloading the current page will always reset any filter applied.
+
 ## Prefix
 
 The prefix is the linking mechanism between a `Filters` widget and the target widgets it filters:
@@ -37,6 +40,8 @@ The `name` field accepts a list of paths. A filter matches if any of the listed 
 ## Example
 
 Assume a `Table` widget displaying a list of pods, with a column named `name`. In this example, the table has two rows with different values inside the `name` column. To allow filtering, this widget defines a `prefix`.
+
+Create a `example-table-with-filter.yaml` file with the following content:
 
 ```yaml
 kind: Table
@@ -64,7 +69,9 @@ spec:
           stringValue: "backend-pod"
 ```
 
-The goal is to filter the table based on the value of the `name` column. To do that, we will need a string filter that points to the `name` field. A descriptive label is used to clearly indicate that the filter applies to the pod name. Finally, the same `prefix` defined for the table is reused in the filter definition. This is the resulting YAML:
+The goal is to filter the table based on the value of the `name` column. To do that, we will need a string filter that points to the `name` field. A descriptive label is used to clearly indicate that the filter applies to the pod name. Finally, the same `prefix` defined for the table is reused in the filter definition.
+
+Create a `example-table-with-filter-filter.yaml` file with the following content:
 
 ```yaml
 kind: Filters
@@ -80,6 +87,13 @@ spec:
         name:
           - name
         type: string
+```
+
+To actually create the two widgets, execute the following commands:
+
+```sh
+kubectl apply -f {YOUR_PATH}/example-table-with-filter.yaml
+kubectl apply -f {YOUR_PATH}/example-table-with-filter-filter.yaml
 ```
 
 Once both widgets are configured and applied, this is the final result displayed:

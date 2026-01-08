@@ -105,6 +105,8 @@ spec:
         verb: GET
 ```
 
+The new `NavMenuItem` widget and the existing `Page` widget are linked by the `spec.widgetData.resourceRefId` property and by the entry of the `spec.resourcesRefs` property. The combination of this two elements allows the frontend logic to fetch the referenced resource whose ID is matching the one specified.
+
 Apply the widget with the following command:
 
 ```sh
@@ -112,6 +114,9 @@ kubectl apply -f docs/guides/layout/example-layout-navmenuitem.yaml
 ```
 
 After refreshing the UI, a new item labeled **Layout Example** should appear in the sidebar. Clicking it will navigate to the `/layout-page` route, where an empty page is expected at this stage.
+
+> **Note**
+> The creation of a new sidebar element is automatically performed by the frontend logic for each valid `NavMenuItem` widget configured and applied.
 
 ### Creating the structure and the content
 
