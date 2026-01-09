@@ -10,8 +10,6 @@ In the previous guide, you created:
 
 In this guide, you will extend that setup by adding **actions** to the `Button` widget, enabling user interactions.
 
----
-
 ## Adding an `openDrawer` Action to the `Button`
 
 We will update the existing `Button` widget so that it triggers an action when clicked. A `Button` widget can trigger different types of actions. For a complete overview of available actions, refer to the [Actions documentation](../../docs.md).
@@ -26,9 +24,7 @@ kubectl apply -f docs/guides/action-button/guide-action-button.yaml
 
 After refreshing the UI, click the button. You should see a drawer opening and displaying the content of a `Paragraph` widget, which is referenced in the `resourcesRefs` section of the `Button` widget.
 
-![Drawer with paragraph](./images/drawer-paragraph.gif)
-
----
+![Drawer with paragraph](./images/drawer-paragraph.png)
 
 ## Adding a `Form` Widget to the Drawer
 
@@ -42,9 +38,7 @@ kubectl apply -f docs/guides/action-button/guide-action-button-form.yaml
 
 Now, clicking the `Button` widget will open a drawer containing the `Form` widget. Fill in the form fields and click **Submit**. As a result, a new Pod should be created in the Kubernetes cluster.
 
-![Drawer with form](./images/drawer-form.gif)
-
----
+![Drawer with form](./images/drawer-form.png)
 
 ## How It Works
 
