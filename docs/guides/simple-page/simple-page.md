@@ -6,8 +6,6 @@ This guide walks you through the creation of a very simple page in the Krateo Co
 - a `Page` widget that acts as a container for the `Button` widget
 - a navigation entry in the sidebar that links to the `Page` widget
 
----
-
 > [!NOTE]
 > To follow this guide, you need to run the Krateo frontend locally. This requires:
 > - a running Kubernetes cluster (for example, a local `kind` cluster),
@@ -15,8 +13,6 @@ This guide walks you through the creation of a very simple page in the Krateo Co
 > - the ability to create and edit Kubernetes resources as YAML files.
 >
 > Refer to the [installation guide](../../../README.md#running-locally) in the repository README for setup instructions.
-
----
 
 ## Creating a `Button` Widget
 
@@ -34,8 +30,6 @@ To verify that the widget has been created successfully, run:
 kubectl get button -n simple-guide
 ```
 
----
-
 ## Showing the `Button` Inside a `Page` Widget
 
 At this point, the `Button` widget exists in the cluster, but it is not yet visible in the UI. Widgets become visible only when they are rendered by another visible widget.
@@ -52,7 +46,6 @@ Declaring resources in `spec.resourcesRefs` is how Krateo knows which widgets to
 
 This referencing mechanism applies to all widgets and is the foundation of widget composition in Krateo.
 
----
 
 ## Making the Page Reachable
 
@@ -70,7 +63,6 @@ The frontend logic will automatically create a sidebar entry to the newly create
 
 ![Sidebar item](./images/sidebar-item.png)
 
----
 
 ### Visiting the Page
 
@@ -78,7 +70,6 @@ Clicking the new sidebar item navigates to the path defined in the `NavMenuItem`
 
 ![Simple guide page](./images/simple-guide-page.png)
 
----
 
 ## Recap
 
@@ -92,7 +83,6 @@ Widgets reference other widgets using `spec.resourcesRefs` and render them by re
 
 This composition model allows complex UIs to be built from small, reusable building blocks.
 
----
 
 ## Testing the Declarative Nature of Widgets
 
@@ -107,7 +97,6 @@ After refreshing the UI, the changes will be immediately reflected.
 
 ![Updated simple guide page](./images/simple-guide-page-updated.png)
 
----
 
 ## Next Steps
 
