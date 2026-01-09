@@ -1,44 +1,49 @@
-# Action Button guide
+# Action Button Guide
 
-## Prerequisites
+Before starting this guide, make sure you have completed the [Simple Page Guide](../simple-page/simple-page.md).
 
-NB: This guide depends on [Simple page guide](../simple-page/simple-page.md) complete it first.
+In the previous guide, you created:
 
-## Where we left off
+- a `Button` widget
+- a `Page` widget acting as a container for the `Button` widget
+- a `NavMenuItem` widget to navigate to the `Page` widget
 
-We have created a `Button`(`metadata.name=simple-guide-button`) and a `Page`(`metadata.name=simple-guide-page`) that references it. In order to see dispaly the page we created a `NavMenuItem` that navigates to it.
+In this guide, you will extend that setup by adding **actions** to the `Button` widget, enabling user interactions.
 
-## Next steps
+## Adding an `openDrawer` Action to the `Button`
 
-We will update the `Button` to trigger an action on click, there are different types of actions that can be triggered by a button, in this guide we will use the `openDrawer` action, more info about actions can be found in [docs](../../docs.md)
+We will update the existing `Button` widget so that it triggers an action when clicked. A `Button` widget can trigger different types of actions. For a complete overview of available actions, refer to the [Actions documentation](../../docs.md).
 
-NB: the namespace and the name of the `Button` is the same as the one used in the [Simple page guide](../simple-page/simple-page.md), so beware that we will overwrite the one created in the previous guide.
+In this guide, we will use the `openDrawer` action, which opens a side panel (drawer) and renders another widget inside it. 
+
+To apply the updated `Button` widget definition (this will override the previously created resource), run:
 
 ```sh
 kubectl apply -f docs/guides/action-button/guide-action-button.yaml
 ```
 
-Try clicking the button, you should see a drawer with the content of the `Paragraph` widget we declared in the `resourcesRefs` section.
+After refreshing the UI, click the button. You should see a drawer opening and displaying the content of a `Paragraph` widget, which is referenced in the `resourcesRefs` section of the `Button` widget.
 
-![drawer-paragraph](./images/drawer-paragraph.gif)
+![Drawer with paragraph](./images/drawer-paragraph.png)
 
-## Lets make a step forward
+## Adding a `Form` Widget to the Drawer
 
-Le's introduce a new widget, the `Form` widget, this widget can be used to create a new resource in the cluster.
+Next, we will introduce a new widget: the `Form` widget. A `Form` widget can be used to collect user input and trigger actions such as creating new resources in the cluster.
+
+Apply the following widget definition:
 
 ```sh
 kubectl apply -f docs/guides/action-button/guide-action-button-form.yaml
 ```
 
-NB: this is a different file that the previous one that uses the same `Button` widget but with a different widget referenced in the action, so it will overwrite the previous one.
+Now, clicking the `Button` widget will open a drawer containing the `Form` widget. Fill in the form fields and click **Submit**. As a result, a new Pod should be created in the Kubernetes cluster.
 
-Clicking the button should open a drawer with a form, fill the form and click submit, you should see a new pod created in the cluster.
+![Drawer with form](./images/drawer-form.png)
 
-![drawer-form](./images/drawer-form.gif)
+## How It Works
 
-### how it works
+The `Form` widget defines its fields using a static JSON schema and is associated with a `rest` action. This action sends an HTTP request to the Kubernetes API to create a new Pod.
 
-The `Form` rest action is used to create a new resource in the cluster, in this example it uses a static stringSchema, usually this schema or a resource is retrieved from the cluster using a restAction.
+The `payloadToOverride` property is used to merge the values submitted through the form into the payload of the `rest` action, allowing user input to dynamically influence the request sent to the API.
 
-The `payloadToOverride` is used to override the payload of the `rest` action with the value from the form.
-The `payloadKey` section is used to specify the key of the payload to override, in this case `spec`
+This pattern demonstrates how widgets, actions, and APIs can be combined to build interactive and data-driven user experiences in the Krateo Composable Portal.

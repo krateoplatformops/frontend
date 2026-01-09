@@ -1,22 +1,30 @@
 # Widgets
 
-In Krateo Composable Portal everything is based on the concept of widgets and their composition, a widget is a k8s CRD that maps to a UI element in the frontend (eg a Button) or to a configuration used by other widget (eg a Route)
+In the Krateo Composable Portal, everything is built around the concept of **widgets** and their composition. A widget is a Kubernetes **Custom Resource Definition (CRD)** that is mapped either to a UI element rendered in the frontend (for example, a `Button`) or to a configuration object used by other widgets (for example, a `Route`).
 
-[see all widgets](./widgets-api-reference.md)
+A complete list of available widgets and their properties is available in the [Widgets API Reference](./widgets-api-reference.md).
 
-## Anatomy of a widget
+---
 
-A widget source of truth is a JSON schema that is used to generate a CRD, this allow each widget to have it's own Kind and schema validation at the moment of apply
-example: [src/widgets/Button/Button.schema.json](/src/widgets/Button/Button.schema.json)
+## Anatomy of a Widget
 
-## widgetData
+Each widget is defined by a **JSON Schema**, which acts as its single source of truth. This schema is used to generate the corresponding CRD and enables schema validation at apply time.
 
-Every widget has a `widgetData` property that contains data used to control how the widget looks like or behave in the Frontend Composable Portal, in this example we are defining a `label`, an `icon` (using [fontawesome](https://fontawesome.com/search?ip=classic&s=solid&o=r) naming convention) and a `type` that control the the visual style of the button, in the button [API references](./widgets-api-reference.md) can be seen all possible values.
+As a result, every widget has its own `kind` and a well-defined structure.
 
-Let's explore a basic Button widget
+You can find an example of a widget schema in the [Button widget JSON schema](/src/widgets/Button/Button.schema.json).
 
-```
-# button.yaml
+---
+
+## `widgetData`
+
+Every widget defines a `spec.widgetData` field, which contains the data that controls how the widget looks and behaves in the Composable Portal.
+
+For example, in a `Button` widget, properties such as `label`, `icon` (using the [Font Awesome](https://fontawesome.com/search?ip=classic&s=solid&o=r) naming convention), and `type` determine the visual appearance of the button. All supported configuration options for each widget are documented in the [Widgets API Reference](./widgets-api-reference.md).
+
+Below is a minimal example of a `Button` widget:
+
+```yaml
 kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -27,47 +35,86 @@ spec:
     label: This is a button
     icon: fa-sun
     type: primary
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
 ```
 
-## widgetDataTemplate
+---
 
-Every widget supports the property `spec.widgetDataTemplate` that allows overriding a specific value defined in `spec.widgetData`, this is useful to inject dynamic content inside a widget.
+## `widgetDataTemplate`
 
+Every widget also supports the optional `spec.widgetDataTemplate` field. This field allows you to **override or populate specific values** defined in `spec.widgetData` with dynamic data at runtime.
+
+This mechanism is particularly useful for injecting data coming from APIs into widgets.
+
+A `widgetDataTemplate` is an array of objects with the following keys:
+
+- **`forPath`**: the path of the field in `widgetData` to override, using dot notation (for example, `parentProperty.childProperty`).
+- **`expression`**: a [jq](https://jqlang.org/) expression whose result will be injected into the specified path.
+
+Example structure:
+
+```yaml
+widgetDataTemplate:
+  - forPath: data
+    expression: ${ .namespaces }
 ```
- widgetDataTemplate:
-    - forPath: data
-      expression: ${ .namespaces }
-```
 
-`widgetDataTemplate` accepts an array of objects with `forPath` and `expression` keys.
+---
 
-`forPath` is used to chose what key in `widgetData` to override, it uses dot notation to reference nested data eg `parentProperty.childProperty`
+### Simple Example
 
-`expression` is a [jq](https://jqlang.org/) expression that uses the result of the jq expression as the data to be injected in the specified path
+In the following example, the label of the button is dynamically set to the current date when the widget is loaded:
 
-### Simple example
-
-In the example below, the label of the button will be the date when the widget is loaded, as the data from widgetDataTemplate is substituted dynamically at the moment of loading a widget
-
-```
+```yaml
 kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: button-post-nginx
+  name: button-1
   namespace: krateo-system
 spec:
   widgetData:
-    label: button 1
-    icon: fa-rocket
+    label: This is a button
+    icon: fa-sun
     type: primary
+    clickActionId: navigate-example-button-page
+    actions:
+      navigate:
+        - id: navigate-example-button-page
+          path: /button
+          type: navigate
   widgetDataTemplate:
     - forPath: label
       expression: ${ now | strftime("%Y-%m-%d") }
+  resourcesRefs:
+    items:
+      - id: navigate-example-button-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
 ```
 
-### Complete example
+---
 
-```
+### Complete Example
+
+The following example shows a `Table` widget whose data is dynamically populated from the Kubernetes API:
+
+```yaml
 kind: Table
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -75,6 +122,7 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources: []
     pageSize: 10
     data: []
     columns:
@@ -88,7 +136,6 @@ spec:
     name: cluster-namespaces
     namespace: krateo-system
 
-
 ---
 apiVersion: templates.krateo.io/v1
 kind: RESTAction
@@ -97,171 +144,61 @@ metadata:
   namespace: krateo-system
 spec:
   api:
-  - name: namespaces
-    path: "/api/v1/namespaces"
-    filter: "[.items[] | {name: .metadata.name}]"
+    - name: namespaces
+      path: "/api/v1/namespaces"
+      filter: "[.items[] | {name: .metadata.name}]"
 ```
 
-In the example above, we declared a table with a single column `name` to display all namespaces of the cluster.
-The data is loaded directly from the k8s api server
+In this example, the table defines a single column (`name`) and displays all namespaces in the cluster. The data is retrieved directly from the Kubernetes API server.
 
-### How does it work?
+---
 
-```
+### How It Works
+
+```yaml
 widgetDataTemplate:
-    - forPath: data
-      expression: ${ .namespaces }
+  - forPath: data
+    expression: ${ .namespaces }
 ```
 
-What is `.namespaces`?
+The `.namespaces` reference corresponds to the output of an API named `namespaces`.
 
-In the expression `.namespace` reference the result of an api called `namespaces`.
+The `Table` widget defines a `spec.apiRef` field that references a `RESTAction` resource by name (`cluster-namespaces`). That `RESTAction` declares an API named `namespaces` inside its `spec.api` list.
 
-The Table widget has a field `spec.apiRef` that references a RESTAction by name (`cluster-namespaces`), an `api` with name `namespaces` is declared in the RESTAction's `spec.api` array
-
-By this chain of references `Widget -> apiRef -> RESTAction -> api` widgetDataTemplate is able to refecence an api by name
+Through this chain of references:
 
 ```
-apiVersion: templates.krateo.io/v1
-kind: RESTAction
-metadata:
-  name: cluster-namespaces
-  namespace: krateo-system
-spec:
-  api:
-  - name: namespaces
-    path: "/api/v1/namespaces"
-    filter: "[.items[] | {name: .metadata.name}]"
+Widget → apiRef → RESTAction → api
 ```
 
-As shown above, the endpoint called is `/api/v1/namespaces` which call the k8s api server, if this were an absolute URL it could reference external APIs, see the [RESTActions documentation](./restactions.md) for more details and learning how to authenticate to external APIs
+`widgetDataTemplate` can access the API result by name and inject it into `widgetData`.
 
-## actions
+The REST endpoint `/api/v1/namespaces` is served by the Kubernetes API server. If an absolute URL were used instead, the same mechanism could be applied to external APIs. For more details, see the [RESTActions documentation](./restactions.md).
 
-Actions are a way to declare widget behavious and user interactions.
+---
 
-The currencly supported actions are:
+## `actions`
 
-- rest
-- navigate
-- openDrawer
-- openModal
+Actions define widget behavior and user interactions.
 
-Widgets can define actions inside widgetData
+The currently supported actions are:
 
-### Rest Action
+- **`rest`**: triggers an HTTP request to a referenced resource
+- **`navigate`**: navigates to a different route or referenced resource
+- **`openDrawer`**: displays another widget inside a drawer (side panel)
+- **`openModal`**: displays another widget inside a modal
 
-Used to trigger an HTTP request to a specified resource (mathing the resourceRefId)
+Actions are defined inside `widgetData`. A complete list of widgets supporting actions and their available properties can be found in the [Widgets API Reference](./widgets-api-reference.md).
 
-| Property                         | Type    | Required | Description                                                          | Additional Info                    |
-| -------------------------------- | ------- | -------- | -------------------------------------------------------------------- | ---------------------------------- |
-| payloadKey                       | string  | No       | Key used to nest the payload in the request body                     |                                    |
-| id                               | string  | No       | Unique identifier for the action                                     |                                    |
-| resourceRefId                    | string  | No       | The identifier of the k8s custom resource that should be represented |                                    |
-| requireConfirmation              | boolean | No       | Whether user confirmation is required before triggering the action   |                                    |
-| onSuccessNavigateTo              | string  | No       | URL to navigate to after successful execution                        |                                    |
-| onEventNavigateTo                | object  | No       | Conditional navigation triggered by a specific event                 | additionalProperties: false        |
-| onEventNavigateTo.eventReason    | string  | Yes      | Identifier of the awaited event reason                               |                                    |
-| onEventNavigateTo.url            | string  | Yes      | URL to navigate to when the event is received                        |                                    |
-| onEventNavigateTo.timeout        | integer | No       | The timeout in seconds to wait for the event                         | Default: 50                        |
-| onEventNavigateTo.loadingMessage | string  | No       | Message to display while waiting for the event                       |                                    |
-| loading                          | string  | No       | Defines the loading indicator behavior for the action                | Enum: ["global", "inline", "none"] |
-| type                             | string  | No       | Type of action to execute                                            | Enum: ["rest"]                     |
-| payload                          | object  | No       | Static payload sent with the request                                 | additionalProperties: true         |
-| payloadToOverride                | array   | No       | List of payload fields to override dynamically                       | Array of objects                   |
-| payloadToOverride.name           | string  | Yes      | Name of the field to override                                        |                                    |
-| payloadToOverride.value          | string  | Yes      | Value to use for overriding the field                                |                                    |
+---
 
-#### Example
+## Composing Widgets
 
-This is an example of a button that when clicked, creates a new nginx pod named `my-nginx`
+To build complex and powerful UIs, widgets must be able to reference other widgets and `RESTAction`s. This is achieved through the `spec.resourcesRefs` field.
 
-```
-kind: Button
-apiVersion: widgets.templates.krateo.io/v1beta1
-metadata:
-  name: button-post-nginx
-  namespace: krateo-system
-spec:
-  widgetData:
-    label: button 1
-    icon: fa-rocket
-    type: primary
-    clickActionId: action-1
-    actions:
-      rest:
-        - id: action-1
-          resourceRefId: resource-ref-1
-          type: rest
-          payload:
-            apiVersion: v1
-            kind: Pod
-            metadata:
-              name: nginx-pod-789
-            spec:
-              containers:
-                - image: 'nginx:latest'
-                  name: nginx
-                  ports:
-                    - containerPort: 80
+### `resourcesRefs`
 
-  resourcesRefs:
-    - id: resource-ref-1
-      apiVersion: v1
-      resource: pods
-      name: my-nginx
-      namespace: krateo-system
-      verb: POST
-```
-
-### Navigate action
-
-Navigate to a different URL
-
-| Property            | Type    | Required | Description                                                          | Additional Info                    |
-| ------------------- | ------- | -------- | -------------------------------------------------------------------- | ---------------------------------- |
-| id                  | string  | No       | Unique identifier for the action                                     |                                    |
-| type                | string  | No       | Type of navigation action                                            | Enum: ["navigate"]                 |
-| name                | string  | No       | Name of the navigation action                                        |                                    |
-| resourceRefId       | string  | No       | The identifier of the k8s custom resource that should be represented |                                    |
-| requireConfirmation | boolean | No       | Whether user confirmation is required before navigating              |                                    |
-| loading             | string  | No       | Defines the loading indicator behavior during navigation             | Enum: ["global", "inline", "none"] |
-
-### OpenDrawer action
-
-Display another widget, referenced by resourceRefId inside a drawer (side panel)
-
-| Property            | Type    | Required | Description                                                          | Additional Info                    |
-| ------------------- | ------- | -------- | -------------------------------------------------------------------- | ---------------------------------- |
-| id                  | string  | No       | Unique identifier for the drawer action                              |                                    |
-| type                | string  | No       | Type of drawer action                                                | Enum: ["openDrawer"]               |
-| resourceRefId       | string  | No       | The identifier of the k8s custom resource that should be represented |                                    |
-| requireConfirmation | boolean | No       | Whether user confirmation is required before opening                 |                                    |
-| loading             | string  | No       | Defines the loading indicator behavior for the drawer                | Enum: ["global", "inline", "none"] |
-| size                | string  | No       | Drawer size to be displayed                                          | Enum: ["default", "large"]         |
-| title               | string  | No       | Title shown in the drawer header                                     |                                    |
-
-### OpenModal action
-
-Display another widget, referenced by resourceRefId inside a modal
-
-| Property            | Type    | Required | Description                                                          | Additional Info                    |
-| ------------------- | ------- | -------- | -------------------------------------------------------------------- | ---------------------------------- |
-| id                  | string  | No       | Unique identifier for the modal action                               |                                    |
-| type                | string  | No       | Type of modal action                                                 | Enum: ["openModal"]                |
-| name                | string  | No       | Name of the modal action                                             |                                    |
-| resourceRefId       | string  | No       | The identifier of the k8s custom resource that should be represented |                                    |
-| requireConfirmation | boolean | No       | Whether user confirmation is required before opening                 |                                    |
-| loading             | string  | No       | Defines the loading indicator behavior for the modal                 | Enum: ["global", "inline", "none"] |
-| title               | string  | No       | Title shown in the modal header                                      |                                    |
-
-## composing widgets
-
-In order to compose complex and more powetful UIs, widgets needs a way to reference other widgets and RESTActions, this is possible via the `spec.resourcesRefs` property
-
-### resourcesRefs
-
-```
+```yaml
 kind: Row
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -269,33 +206,41 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    allowedResources: [tables, piecharts]
     items:
       - resourceRefId: pie-chart-inside-column
         size: 6
       - resourceRefId: table-of-pods
         size: 18
   resourcesRefs:
-    - id: table-of-pods
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: table-of-pods
-      namespace: krateo-system
-      resource: tables
-      verb: GET
-    - id: pie-chart-inside-column
-      apiVersion: widgets.templates.krateo.io/v1beta1
-      name: pie-chart-inside-column
-      namespace: krateo-system
-      resource: piecharts
-      verb: GET
+    items:
+      - id: table-of-pods
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: table-of-pods
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+      - id: pie-chart-inside-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: pie-chart-inside-column
+        namespace: krateo-system
+        resource: piecharts
+        verb: GET
 ```
 
-In the example above we can see `resourcesRefs` declaring a list of other resources and a user-defined ID. A widget of kind `Row` use a matching ID to reference and display other resource, in this example it will display the items in order or declaration, `pie-chart-inside-column` on top and `table-of-pods` below regardless of the order of the resourcesRefs.
+In this example, `resourcesRefs` declares a list of referenced resources, each associated with a user-defined `id`. The `Row` widget uses these IDs to resolve and render its children.
 
-### resourcesRefsTemplate
+The rendering order is determined by the order of the `items` list in `widgetData`, not by the order of `resourcesRefs`.
 
-Similar to `widgetDataTemplate`, `resourcesRefsTemplate` allows to populate `resourcesRefs` with dynamic data coming from an `api`
+Some widgets can be used to build complex layouts. To learn more, please check [this guide](./guides/layout/layout.md).
 
-```
+---
+
+### `resourcesRefsTemplate`
+
+Similar to `widgetDataTemplate`, `resourcesRefsTemplate` allows `resourcesRefs` to be populated dynamically using data returned by an API.
+
+```yaml
 kind: Row
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
@@ -306,12 +251,14 @@ spec:
     name: templates-panels
     namespace: my-namespace
   widgetData:
+    allowedResources: []
     items: []
   widgetDataTemplate:
     - forPath: items
       expression: >
         ${ [ .templatespanels[] | { resourceRefId: .metadata.name, size: 12 } ] }
-  resourcesRefs: []
+  resourcesRefs:
+    items: []
   resourcesRefsTemplate:
     - iterator: ${ .templatespanels }
       template:
@@ -323,15 +270,10 @@ spec:
         verb: GET
 ```
 
-In the example above `resourcesRefsTemplate` declares an iterator, that loop over the result of an api called `templatespanels` and populate resourcesRefs with it.
-if `resourcesRefs` has some manually filled items they will be merged with the result of resourcesRefsTemplate
+In this example:
 
-As a quick recap of what is happing:
+- the widget references a `RESTAction` named `templates-panels` via `apiRef`
+- the `RESTAction` exposes an API named `templatespanels`
+- `resourcesRefsTemplate` iterates over the API result and dynamically generates `resourcesRefs`
 
-- the widget references a RESTAction with name templates-panels in `apiRef`
-- templates-panels RESTAction declares an api called `templatespanels`
-- resourcesRefsTemplate's iterator uss the result of `templatespanels` to populate them items that will be part of resourcesRefs
-
-### Widgets API reference
-
-An api reference listing all widgets and their `widgetData` is available at [widgets-api-reference.md](./widgets-api-reference.md)
+If `resourcesRefs` also contains statically defined entries, they are merged with the dynamically generated ones.

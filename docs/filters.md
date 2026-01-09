@@ -15,7 +15,7 @@ Filtering is based on a shared string identifier called `prefix`:
 
 This allows filtering logic to be configured entirely via YAML.
 
-> **Note**
+> [!NOTE]
 > Filters are applied client side by the frontend logic. Reloading the current page will always reset any filter applied.
 
 ## Prefix

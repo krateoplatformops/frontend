@@ -2,26 +2,25 @@ kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: simple-guide-button
-  namespace: simple-guide
+  namespace: krateo-system
 spec:
   widgetData:
     icon: fa-sun
     label: I open a drawer with a form
-    clickActionId: openDrawer-action-id # <- this needs to match the id of an action declared below in spec.actions
+    clickActionId: openDrawer-action-id
     actions: 
       openDrawer:
         - id: openDrawer-action-id 
-          resourceRefId: form-id # <- this needs to match the id of a resource declared below in spec.resourcesRefs
+          resourceRefId: form-id
           type: openDrawer
           title: Composition form
           size: large
-
   resourcesRefs:
     items:
       - id: form-id
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: simple-guide-form
-        namespace: simple-guide
+        namespace: krateo-system
         resource: forms
         verb: GET
 ---
@@ -29,7 +28,7 @@ kind: Form
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: simple-guide-form
-  namespace: simple-guide
+  namespace: krateo-system
 spec:
   widgetData:
     stringSchema: |
@@ -44,34 +43,31 @@ spec:
         },
         "required": ["name"]
       }
-    
-    submitActionId: submit-action-id
+    submitActionId: create-action-guide-pod
     actions:
       rest:
-        - id: submit-action-id
-          resourceRefId: resource-ref-1
+        - id: create-action-guide-pod
           type: rest
-          payloadKey: spec
-          payloadToOverride:
-            - name: metadata.name
-              value: ${ name }
+          resourceRefId: create-action-guide-pod
           payload:
             apiVersion: v1
             kind: Pod
             metadata:
-              name: "aa"
+              name: action-guide-pod
             spec:
               containers:
-                - image: 'nginx:latest'
-                  name: nginx
-                  ports:
-                    - containerPort: 80
-
+                - name: demo
+                  image: nginx:latest
+          payloadToOverride:
+            - name: metadata.name
+              value: ${ .json.name }
+          headers:
+            - "Content-Type: application/json"
   resourcesRefs:
     items:
-      - id: resource-ref-1
+      - id: create-action-guide-pod
         apiVersion: v1
         resource: pods
-        name: my-pod-name
+        name: action-guide-pod
         namespace: krateo-system
         verb: POST

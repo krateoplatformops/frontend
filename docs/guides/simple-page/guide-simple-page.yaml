@@ -2,16 +2,17 @@ kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: simple-guide-page
-  namespace: simple-guide
+  namespace: krateo-system
 spec:
   widgetData:
+    allowedResources: [buttons]
     items:
-      - resourceRefId: simple-button-id # <- this need to match the id of and item in spec.resourcesRefs
+      - resourceRefId: simple-button-id
   resourcesRefs:
     items:
       - id: simple-button-id
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: simple-guide-button # <- matches metadata.name of the button widgetw e created
-        namespace: simple-guide
+        name: simple-guide-button
+        namespace: krateo-system
         resource: buttons
         verb: GET
