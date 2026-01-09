@@ -8,7 +8,7 @@ This guide walks you through the creation of a very simple page in the Krateo Co
 
 ---
 
-> **Note**
+> [!NOTE]
 > To follow this guide, you need to run the Krateo frontend locally. This requires:
 > - a running Kubernetes cluster (for example, a local `kind` cluster),
 > - the Krateo frontend codebase,

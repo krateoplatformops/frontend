@@ -21,7 +21,7 @@ A non-exhaustive list of available layout widgets includes:
 - **`Page`**: a top-level wrapper component that defines a page and renders all nested widgets.
 - **`TabList`**: displays a set of tabs used for navigation or content grouping.
 
-> **Note**
+> [!NOTE]
 > Layout widgets are not strictly required to display functional widgets. Functional widgets can be added directly as children of a `Page` widget and will be rendered vertically with default spacing. Layout widgets become essential when building more complex or responsive layouts.
 
 ---
@@ -38,7 +38,7 @@ To configure a layout, follow these steps:
 
 ## Example
 
-> **Note**
+> [!NOTE]
 > To follow this guide, you need to run the Krateo frontend locally. This requires:
 > - a running Kubernetes cluster (for example, a local `kind` cluster),
 > - the Krateo frontend codebase,
@@ -115,7 +115,7 @@ kubectl apply -f docs/guides/layout/example-layout-navmenuitem.yaml
 
 After refreshing the UI, a new item labeled **Layout Example** should appear in the sidebar. Clicking it will navigate to the `/layout-page` route, where an empty page is expected at this stage.
 
-> **Note**
+> [!NOTE]
 > The creation of a new sidebar element is automatically performed by the frontend logic for each valid `NavMenuItem` widget configured and applied.
 
 ### Creating the structure and the content
