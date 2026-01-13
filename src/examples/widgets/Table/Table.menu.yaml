@@ -55,6 +55,7 @@ spec:
       - resourceRefId: example-table-null-values-panel
       - resourceRefId: example-table-with-filter-panel
       - resourceRefId: example-table-with-pagination-panel
+      - resourceRefId: example-table-restaction-panel
   resourcesRefs:
     items:
       - id: example-table-empty-columns-panel
@@ -108,6 +109,12 @@ spec:
       - id: example-table-with-pagination-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-with-pagination-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-table-restaction-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-restaction-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -295,6 +302,26 @@ spec:
       - id: example-table-with-pagination
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-with-pagination
+        namespace: krateo-system
+        resource: tables
+        verb: GET 
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-restaction-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Table with data retrieved by RESTAction'
+    items:
+      - resourceRefId: example-table-restaction
+  resourcesRefs:
+    items:
+      - id: example-table-restaction
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-restaction
         namespace: krateo-system
         resource: tables
         verb: GET 
