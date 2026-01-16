@@ -313,8 +313,8 @@ spec:
       navigate:
         - id: navigate-to-dashboard
           type: navigate
-          resourceURLPrefix: button-dashboard
           resourceRefId: dashboard-page
+          resourceURLPathExtension: button-dashboard
   resourcesRefs:
     items:
       - id: dashboard-page

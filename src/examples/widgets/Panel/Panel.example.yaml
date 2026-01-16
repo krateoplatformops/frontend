@@ -192,8 +192,8 @@ spec:
       navigate:
         - id: navigate-dashboard
           type: navigate
-          resourceURLPrefix: panel-dashboard
           resourceRefId: dashboard-page
+          resourceURLPathExtension: panel-dashboard
   resourcesRefs:
     items:
       - id: dashboard-page

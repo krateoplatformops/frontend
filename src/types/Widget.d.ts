@@ -78,7 +78,7 @@ export type WidgetActions = {
     }
     path?: string
     resourceRefId?: string
-    resourceURLPrefix: string
+    resourceURLPathExtension: string
     requireConfirmation?: boolean
     type: 'navigate'
   }[]
