@@ -61,6 +61,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.navigate[].loading.display | yes |  | boolean |
 | actions.navigate[].path | no | the identifier of the route to navigate to | string |
 | actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].resourceURLPathExtension | no | optional additional string URL path appended to the current URL when navigating to a resource via resourceRefId | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
@@ -312,6 +313,7 @@ name of the k8s Custom Resource
 | actions.navigate[].loading.display | yes |  | boolean |
 | actions.navigate[].path | no | the identifier of the route to navigate to | string |
 | actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].resourceURLPathExtension | no | optional additional string URL path appended to the current URL when navigating to a resource via resourceRefId | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
@@ -497,6 +499,7 @@ Panel is a container to display information
 | actions.navigate[].loading.display | yes |  | boolean |
 | actions.navigate[].path | no | the identifier of the route to navigate to | string |
 | actions.navigate[].resourceRefId | no | the identifier of the k8s custom resource that should be represented | string |
+| actions.navigate[].resourceURLPathExtension | no | optional additional string URL path appended to the current URL when navigating to a resource via resourceRefId | string |
 | actions.navigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
 | actions.navigate[].type | yes | type of navigation action | `navigate` |
 | actions.openDrawer | no | actions to open side drawer components | array |
