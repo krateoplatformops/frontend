@@ -117,6 +117,10 @@ export interface Form {
            */
           path?: string
           /**
+           * prefix displayed in the URL and set when navigating to a resource via resourceRefId, default is current location
+           */
+          resourceURLPrefix?: string
+          /**
            * the identifier of the k8s custom resource that should be represented
            */
           resourceRefId?: string

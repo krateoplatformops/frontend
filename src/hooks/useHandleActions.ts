@@ -180,7 +180,8 @@ export const useHandleAction = () => {
 
     let url: string
     if (action.type === 'navigate') {
-      url = `${location.pathname}?widgetEndpoint=${encodeURIComponent(path)}`
+      const prefix = action.resourceURLPrefix || location.pathname
+      url = `${prefix}?widgetEndpoint=${encodeURIComponent(path)}`
     } else {
       url = config?.api.SNOWPLOW_API_BASE_URL + path
     }

@@ -163,6 +163,10 @@
                         "description": "the identifier of the route to navigate to",
                         "type": "string"
                       },
+                      "resourceURLPrefix": {
+                        "description": "prefix displayed in the URL and set when navigating to a resource via resourceRefId, default is current location",
+                        "type": "string"
+                      },
                       "resourceRefId": {
                         "type": "string",
                         "description": "the identifier of the k8s custom resource that should be represented"
