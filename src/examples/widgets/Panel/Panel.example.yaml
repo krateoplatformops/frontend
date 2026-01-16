@@ -175,7 +175,7 @@ spec:
         resource: pages
         verb: GET
 ---
-# navigate action - Navigation to another resource using `resourceRefId` with URL prefix
+# navigate action - Navigation to another resource using `resourceRefId` with URL path extension
 # Target: navigate to another resource identified by its ref ID, setting a custom URL path prefix.
 # Expected behavior: clicking the panel triggers navigation to the target resource page. The specified URL path prefix is displayed in the URL.
 kind: Panel

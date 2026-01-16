@@ -568,7 +568,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'navigate - Navigation to another resource using `resourceRefId` with URL prefix'
+    title: 'navigate - Navigation to another resource using `resourceRefId` with URL path extension'
     items:
       - resourceRefId: example-button-navigate-resource-prefix
   resourcesRefs:
