@@ -130,7 +130,7 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
         key={uid}
         mode='inline'
         onClick={(item) => handleClick(item.key)}
-        selectedKeys={[location.pathname]}
+        selectedKeys={[`/${location.pathname.split('/')[1]}`]}
       />
 
       <WidgetRenderer invisible={true} widgetEndpoint={config!.api.ROUTES_LOADER} />
