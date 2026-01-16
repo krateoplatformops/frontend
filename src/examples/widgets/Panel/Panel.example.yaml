@@ -175,6 +175,34 @@ spec:
         resource: pages
         verb: GET
 ---
+# navigate action - Navigation to another resource using `resourceRefId` with URL prefix
+# Target: navigate to another resource identified by its ref ID, setting a custom URL path prefix.
+# Expected behavior: clicking the panel triggers navigation to the target resource page. The specified URL path prefix is displayed in the URL.
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-navigate-resource-prefix
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Navigate to Dashboard
+    clickActionId: navigate-dashboard
+    items: []
+    actions:
+      navigate:
+        - id: navigate-dashboard
+          type: navigate
+          resourceURLPrefix: panel-dashboard
+          resourceRefId: dashboard-page
+  resourcesRefs:
+    items:
+      - id: dashboard-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: dashboard-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
 # navigate action - Navigation with confirmation prompt (`requireConfirmation: true`)
 # Target: prevent accidental navigation by requiring explicit user confirmation.
 # Expected behavior: before navigating, a confirmation dialog is shown; navigation proceeds only upon confirmation.
