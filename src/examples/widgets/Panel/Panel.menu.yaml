@@ -130,7 +130,7 @@ spec:
       - resourceRefId: example-panel-no-action-panel
       - resourceRefId: example-panel-navigate-path-panel
       - resourceRefId: example-panel-navigate-resource-panel
-      - resourceRefId: example-panel-navigate-resource-prefix-panel
+      - resourceRefId: example-panel-navigate-resource-url-path-extension-panel
       - resourceRefId: example-panel-navigate-confirm-panel
       - resourceRefId: example-panel-navigate-loading-panel
       - resourceRefId: example-panel-open-drawer-default-panel
@@ -159,9 +159,9 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET 
-      - id: example-panel-navigate-resource-prefix-panel
+      - id: example-panel-navigate-resource-url-path-extension-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-panel-navigate-resource-prefix-panel
+        name: example-panel-navigate-resource-url-path-extension-panel
         namespace: krateo-system
         resource: panels
         verb: GET 
@@ -377,19 +377,19 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-panel-navigate-resource-prefix-panel
+  name: example-panel-navigate-resource-url-path-extension-panel
   namespace: krateo-system
 spec:
   widgetData:
     actions: {}
     title: 'navigate - Navigation to another resource using `resourceRefId` with URL path extension'
     items:
-      - resourceRefId: example-panel-navigate-resource-prefix
+      - resourceRefId: example-panel-navigate-resource-url-path-extension
   resourcesRefs:
     items:
-      - id: example-panel-navigate-resource-prefix
+      - id: example-panel-navigate-resource-url-path-extension
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: example-panel-navigate-resource-prefix
+        name: example-panel-navigate-resource-url-path-extension
         namespace: krateo-system
         resource: panels
         verb: GET

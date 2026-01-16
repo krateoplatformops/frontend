@@ -181,7 +181,7 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-panel-navigate-resource-prefix
+  name: example-panel-navigate-resource-url-path-extension
   namespace: krateo-system
 spec:
   widgetData:

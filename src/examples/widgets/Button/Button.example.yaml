@@ -302,7 +302,7 @@ spec:
 kind: Button
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-button-navigate-resource-prefix
+  name: example-button-navigate-resource-url-path-extension
   namespace: krateo-system
 spec:
   widgetData:
