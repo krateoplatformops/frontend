@@ -29,7 +29,6 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const [searchValue, setSearchValue] = useState<string>('')
   const [debouncedValue, setDebouncedValue] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
-  console.log(inputValue, searchValue, debouncedValue)
 
   const formValue = Form.useWatch<DefaultOptionType | undefined>(name, form)
 
