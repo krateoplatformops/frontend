@@ -29,6 +29,7 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const [searchValue, setSearchValue] = useState<string>('')
   const [debouncedValue, setDebouncedValue] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
+  console.log(inputValue, searchValue, debouncedValue)
 
   const formValue = Form.useWatch<DefaultOptionType | undefined>(name, form)
 
@@ -109,6 +110,7 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
     isTypingRef.current = false
     form.setFieldsValue({ [name]: { label: label as string, value } })
     setInputValue(label as string)
+    setSearchValue(label as string)
   }
 
   const handleChange = (val: string) => {
