@@ -17,4 +17,26 @@
       gap: var(--spacing-xs);
     }
   }
+
+  table {
+    border-collapse: collapse;
+    margin: 1rem 0;
+    width: 100%;
+  }
+
+  th, td {
+  border: 1px solid #d9d9d9;
+  padding: 8px 12px;
+  text-align: left;
+  }
+
+  thead th {
+    background-color: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 600;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
 }

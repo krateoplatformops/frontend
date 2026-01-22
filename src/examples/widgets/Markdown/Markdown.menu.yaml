@@ -53,6 +53,7 @@ spec:
       - resourceRefId: example-markdown-download-md-panel
       - resourceRefId: example-markdown-combined-panel
       - resourceRefId: example-markdown-long-panel
+      - resourceRefId: example-markdown-table-panel
   resourcesRefs:
     items:
       - id: example-markdown-empty-panel
@@ -94,6 +95,12 @@ spec:
       - id: example-markdown-long-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-markdown-long-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-markdown-table-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-markdown-table-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -234,6 +241,26 @@ spec:
       - id: example-markdown-long
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-markdown-long
+        namespace: krateo-system
+        resource: markdowns
+        verb: GET  
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-table-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Markdown with table'
+    items:
+      - resourceRefId: example-markdown-table
+  resourcesRefs:
+    items:
+      - id: example-markdown-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-markdown-table
         namespace: krateo-system
         resource: markdowns
         verb: GET  
