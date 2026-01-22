@@ -21,6 +21,7 @@ Previous changes not listed in this document can be traced using Git history.
 
 ### Fixed
 - Fixed UI displaying of `DataGrid` filtering
+- Fixed UI displaying of label in `Autocomplete`
 
 ## [1.0.5] - 2025-12-22
 
