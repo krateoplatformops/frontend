@@ -11,6 +11,7 @@ Previous changes not listed in this document can be traced using Git history.
 
 ### Added
 - Added property to enable side menu inside `Form`
+- Added add customized URL path extension property to `navigate` action
 
 ### Documentation
 - Added layout documentation page
