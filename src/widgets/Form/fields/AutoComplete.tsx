@@ -109,6 +109,7 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
     isTypingRef.current = false
     form.setFieldsValue({ [name]: { label: label as string, value } })
     setInputValue(label as string)
+    setSearchValue(label as string)
   }
 
   const handleChange = (val: string) => {
