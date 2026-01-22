@@ -70,7 +70,7 @@ spec:
     allowCopy: true
     markdown: |
       ## Copy example
-      Questo testo può essere copiato negli appunti.
+      This text can be copied.
 ---
 # Allow download enabled
 # Target: verify download button functionality.
@@ -85,7 +85,7 @@ spec:
     allowDownload: true
     markdown: |
       ## Download example
-      Questo testo sarà scaricato in un file di testo.
+      This text will be downloaded in a '.txt' file.
 ---
 # Custom file extension for download
 # Target: verify correct handling of custom download extensions.
@@ -101,7 +101,7 @@ spec:
     downloadFileExtension: md
     markdown: |
       ## Custom extension example
-      File scaricato come `file.md`
+      This text will be downloaded in a '.md' file.
 ---
 # Combined actions (copy + download)
 # Target: verify rendering of both buttons together.
@@ -118,13 +118,9 @@ spec:
     downloadFileExtension: md
     markdown: |
       ## Markdown completo
-      Questo è un esempio con **entrambe** le azioni abilitate:
-      - Copia negli appunti
-      - Scarica file `.md`
-
-      ```bash
-      echo "Krateo Markdown Widget"
-      ```
+      This is an example with both actions enabled:
+      - copy
+      - download
 ---
 # Long content markdown
 # Target: test rendering performance and scroll handling.
@@ -139,8 +135,8 @@ spec:
     allowCopy: true
     allowDownload: true
     markdown: |
-      # Documentazione di esempio
-      Questo è un testo lungo per verificare la gestione dello scroll nel componente.
+      # Example
+      This is an example of long test.
 
       ## Sezione 1
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
@@ -155,4 +151,25 @@ spec:
       Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra.
 
       ---
-      Fine documento.
+      End of document.
+---
+# Markdown with table
+# Target: test complex markdown elements like tables are rendered.
+# Expected behavior: correctly displays markdown tables.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-table
+  namespace: krateo-system
+spec:
+  widgetData:
+    markdown: |
+      # Example with table
+      This is a table:
+
+      | Project | Status        | Owner        | Priority | Technologies                     | Notes                                   |
+      |:--------|:-------------:|--------------|---------:|----------------------------------|-----------------------------------------|
+      | Website | ✅ Active     | **Luke**     | 1        | `React`, `TypeScript`, `Vite`    | [Repository](https://github.com/org/web) |
+      | API     | 🟡 Pending    | _Anna_       | 2        | `Node.js`, `Fastify`            | Requires security review                |
+      | Mobile  | ❌ Blocked    | Mark         | 3        | `React Native`, `Expo`          | Depends on API availability             |
+      | Admin   | ✅ Active     | **Team**     | 1        | `React`, `Ant Design`           | Internal tool                            |
