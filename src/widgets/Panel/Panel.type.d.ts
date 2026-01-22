@@ -115,6 +115,10 @@ export interface Panel {
            */
           resourceRefId?: string
           /**
+           * optional additional string URL path appended to the current URL when navigating to a resource via resourceRefId
+           */
+          resourceURLPathExtension?: string
+          /**
            * whether user confirmation is required before navigating
            */
           requireConfirmation?: boolean

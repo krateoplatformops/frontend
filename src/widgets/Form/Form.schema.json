@@ -167,6 +167,10 @@
                         "type": "string",
                         "description": "the identifier of the k8s custom resource that should be represented"
                       },
+                      "resourceURLPathExtension": {
+                        "description": "optional additional string URL path appended to the current URL when navigating to a resource via resourceRefId",
+                        "type": "string"
+                      },
                       "requireConfirmation": {
                         "type": "boolean",
                         "description": "whether user confirmation is required before navigating"
