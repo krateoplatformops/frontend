@@ -5,8 +5,8 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { App as AntdApp, Spin } from 'antd'
-import { useMemo } from 'react'
+import { App as AntdApp, ConfigProvider as AntdConfigProvider, Spin, theme } from 'antd'
+import { useEffect, useMemo } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import '../index.css'
@@ -43,18 +43,31 @@ const AppInitializer: React.FC = () => {
   return <RouterProvider key={routerVersion} router={router} />
 }
 
-const App: React.FC = () => {
-  cssVariables()
+const AntdThemeBridge = () => {
+  const { token } = theme.useToken()
 
+  useEffect(() => {
+    const root = document.documentElement
+    cssVariables()
+    root.style.setProperty('--light-color', token.colorWhite)
+  }, [token])
+
+  return null
+}
+
+const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <RoutesProvider>
-          <AntdApp className={styles.app}>
-            <FiltersProvider>
-              <AppInitializer />
-            </FiltersProvider>
-          </AntdApp>
+          <AntdConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
+            <AntdApp className={styles.app}>
+              <AntdThemeBridge />
+              <FiltersProvider>
+                <AppInitializer />
+              </FiltersProvider>
+            </AntdApp>
+          </AntdConfigProvider>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </ConfigProvider>
