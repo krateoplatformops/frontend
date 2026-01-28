@@ -17,7 +17,8 @@ import styles from './App.module.css'
 import FiltersProvider from './components/FiltesProvider/FiltersProvider'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
-import { cssVariables } from './theme/palette'
+import { antdToCssVariables } from './theme/bridge'
+import { defaultTheme } from './theme/defaultTheme'
 
 library.add(fab, fas, far)
 
@@ -47,9 +48,7 @@ const AntdThemeBridge = () => {
   const { token } = theme.useToken()
 
   useEffect(() => {
-    const root = document.documentElement
-    cssVariables()
-    root.style.setProperty('--light-color', token.colorWhite)
+    antdToCssVariables(token)
   }, [token])
 
   return null
@@ -60,7 +59,7 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <RoutesProvider>
-          <AntdConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
+          <AntdConfigProvider theme={defaultTheme}>
             <AntdApp className={styles.app}>
               <AntdThemeBridge />
               <FiltersProvider>

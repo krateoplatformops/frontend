@@ -47,7 +47,7 @@
   :global(.ant-menu-item.ant-menu-item-active),
   :global(.ant-menu-item.ant-menu-item-active:hover) {
     background-color: transparent;
-    color: var(--light-color) !important;
+    border-radius: 0;
 
     svg {
       opacity: 1;
