@@ -13,7 +13,7 @@
   }
 
   :global(.ant-menu-item) {
-    color: var(--menuitem-color);
+    color: #ffffff80;
     height: auto;
     margin: 0;
     padding-bottom: 10px;
@@ -31,7 +31,7 @@
   }
 
   :global(.ant-menu-item-selected) {
-    background-color: var(--menuitembg-color);
+    background-color: #11b2e266;
     border-radius: 0;
     color: var(--light-color);
 
