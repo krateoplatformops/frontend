@@ -13,6 +13,7 @@
   }
 
   :global(.ant-menu-item) {
+    border-radius: 0;
     color: #ffffff80;
     height: auto;
     margin: 0;
@@ -32,7 +33,6 @@
 
   :global(.ant-menu-item-selected) {
     background-color: #11b2e266;
-    border-radius: 0;
     color: var(--light-color);
 
     svg {
@@ -46,8 +46,8 @@
 
   :global(.ant-menu-item.ant-menu-item-active),
   :global(.ant-menu-item.ant-menu-item-active:hover) {
-    background-color: transparent;
-    border-radius: 0;
+    background-color: transparent !important;
+    color: var(--light-color) !important;
 
     svg {
       opacity: 1;

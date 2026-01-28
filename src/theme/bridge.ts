@@ -6,7 +6,7 @@ export const antdToCssVariables = (token: GlobalToken) => {
   root.style.setProperty('--background-color', token.colorBgLayout)
   root.style.setProperty('--border-color', token.colorBorder)
   root.style.setProperty('--gray-color', token.colorTextSecondary)
-  root.style.setProperty('--light-color', token.colorWhite)
+  root.style.setProperty('--light-color', token.colorBgContainer)
   root.style.setProperty('--lightgray-color', token.colorFillSecondary)
   root.style.setProperty('--panelbg-color', token.colorBgContainer)
   root.style.setProperty('--primary-color', token.colorPrimary)
