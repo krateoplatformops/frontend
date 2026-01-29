@@ -1,6 +1,31 @@
 import type { ThemeConfig } from 'antd'
 
-export const defaultTheme: ThemeConfig = {
+export type AppCustomTheme = {
+  sidebar?: {
+    bgGradientStart?: string
+    bgGradientEnd?: string
+  }
+  menu?: {
+    itemColor?: string
+    itemHoverColor?: string
+    itemSelectedBg?: string
+    itemSelectedColor?: string
+  }
+}
+
+export const defaultTheme: ThemeConfig & { custom?: AppCustomTheme} = {
+  custom: {
+    menu: {
+      itemColor: '#ffffff80',
+      itemHoverColor: '#f5f5f5',
+      itemSelectedBg: '#11b2e266',
+      itemSelectedColor: '#f5f5f5',
+    },
+    sidebar: {
+      bgGradientEnd: '#002f46',
+      bgGradientStart: '#005d8b',
+    },
+  },
   token: {
     colorBgContainer: '#FBFBFB',
     colorBgLayout: '#f5f5f5',

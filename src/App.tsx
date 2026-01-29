@@ -46,16 +46,17 @@ const AppInitializer: React.FC = () => {
 
 const AntdThemeBridge = () => {
   const { token } = theme.useToken()
+  const { custom } = defaultTheme
 
   useEffect(() => {
-    antdToCssVariables(token)
-  }, [token])
+    antdToCssVariables(token, custom)
+  }, [custom, token])
 
   return null
 }
 
 const App: React.FC = () => {
-  const IS_DARK = true
+  const IS_DARK = false
 
   return (
     <QueryClientProvider client={queryClient}>

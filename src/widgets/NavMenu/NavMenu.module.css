@@ -1,6 +1,6 @@
 .menu {
   background-color: transparent;
-  border: 0 !important;
+  border: 0;
 
   :global(.ant-menu.ant-menu-root.ant-menu-inline) {
     border-inline-end: 0;
@@ -14,7 +14,7 @@
 
   :global(.ant-menu-item) {
     border-radius: 0;
-    color: #ffffff80;
+    color: var(--menu-item-color);
     height: auto;
     margin: 0;
     padding-bottom: 10px;
@@ -32,22 +32,18 @@
   }
 
   :global(.ant-menu-item-selected) {
-    background-color: #11b2e266;
-    color: var(--gray-color);
+    background-color: var(--menu-item-selected-bg);
+    color: var(--menu-item-selected-color);
 
     svg {
       opacity: 1;
-      
-      path {
-        fill: var(--gray-color);
-      }  
     }
   }
 
-  :global(.ant-menu-item.ant-menu-item-active),
-  :global(.ant-menu-item.ant-menu-item-active:hover) {
-    background-color: transparent !important;
-    color: var(--gray-color) !important;
+  :global(.ant-menu-item.ant-menu-item-active:not(.ant-menu-item-selected)),
+  :global(.ant-menu-item.ant-menu-item-active:hover:not(.ant-menu-item-selected)) {
+    background-color: transparent;
+    color: var(--menu-item-hover-color);
 
     svg {
       opacity: 1;
