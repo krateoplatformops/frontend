@@ -33,13 +33,13 @@
 
   :global(.ant-menu-item-selected) {
     background-color: #11b2e266;
-    color: var(--light-color);
+    color: var(--gray-color);
 
     svg {
       opacity: 1;
       
       path {
-        fill: var(--light-color);
+        fill: var(--gray-color);
       }  
     }
   }
@@ -47,7 +47,7 @@
   :global(.ant-menu-item.ant-menu-item-active),
   :global(.ant-menu-item.ant-menu-item-active:hover) {
     background-color: transparent !important;
-    color: var(--light-color) !important;
+    color: var(--gray-color) !important;
 
     svg {
       opacity: 1;

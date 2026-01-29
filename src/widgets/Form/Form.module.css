@@ -65,12 +65,8 @@
         width: 100%;
         z-index: 1;
 
-        [data-inside-drawer='true'] & {
-          background-color: var(--panelbg-color);
-        }
-
         .optionalFieldsSwitch {
-          background: var(--lightgray-color);
+          background: var(--gray-color);
           border-radius: 10px;
           box-sizing: border-box;
           padding: 10px;

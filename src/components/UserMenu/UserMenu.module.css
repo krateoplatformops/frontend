@@ -27,7 +27,7 @@
 
   .userData {
     align-items: center;
-    background-color: var(--background-color);
+    background-color: var(--gray-color);
     border-radius: var(--spacing-md);
     display: flex;
     flex: 1;

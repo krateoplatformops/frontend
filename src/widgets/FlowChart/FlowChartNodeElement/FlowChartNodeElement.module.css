@@ -1,5 +1,4 @@
 .node {
-  background: var(--light-color);
   border: solid 1px var(--border-color);
   border-radius: 50px;
   padding: 10px;
