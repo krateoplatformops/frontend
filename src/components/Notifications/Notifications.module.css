@@ -1,4 +1,10 @@
 .badge {
+  svg {
+    path {
+      fill: var(--primary-color);
+    }
+  }
+
   &.hasNotifications {
     top: 5px;
   }
