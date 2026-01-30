@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
+import { buildTheme } from '../theme/buildTheme'
 import { defaultTheme } from '../theme/defaultTheme'
 import type { AppTheme } from '../theme/types'
 
@@ -8,14 +9,20 @@ type ThemeContextType = {
   isLoading: boolean
 }
 
+export type ThemeMode = 'light' | 'dark'
+
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme] = useState<AppTheme>(defaultTheme)
+export const ThemeProvider: React.FC<{ children: React.ReactNode; mode: ThemeMode }> = ({ children, mode }) => {
+  const [theme, setTheme] = useState<AppTheme>(() => buildTheme(mode, defaultTheme))
   const [isLoading] = useState(false)
 
   useEffect(() => {
-    // ⏳ FUTURO: fetch tema da API
+    setTheme(buildTheme(mode, defaultTheme))
+  }, [mode])
+
+  useEffect(() => {
+    // TODO: fetch tema da API
     // setIsLoading(true)
     // fetchTheme().then(setTheme).finally(() => setIsLoading(false))
   }, [])

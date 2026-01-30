@@ -56,11 +56,10 @@ const AntdThemeBridge = () => {
 }
 
 const AppContent: React.FC = () => {
-  const IS_DARK = false
   const { theme } = useAppTheme()
 
   return (
-    <AntdConfigProvider theme={IS_DARK ? { algorithm: antdTheme.darkAlgorithm } : theme}>
+    <AntdConfigProvider theme={theme}>
       <AntdApp className={styles.app}>
         <AntdThemeBridge />
         <FiltersProvider>
@@ -72,11 +71,13 @@ const AppContent: React.FC = () => {
 }
 
 const App: React.FC = () => {
+  const APP_THEME_MODE = 'light'
+
   return (
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <RoutesProvider>
-          <ThemeProvider>
+          <ThemeProvider mode={APP_THEME_MODE}>
             <AppContent />
           </ThemeProvider>
         </RoutesProvider>
