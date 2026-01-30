@@ -1,9 +1,10 @@
 import type { GlobalToken } from 'antd'
 
-import type { AppCustomTheme } from './defaultTheme'
+import type { AppTheme } from './types'
 
-export const antdToCssVariables = (token: GlobalToken, custom?: AppCustomTheme) => {
+export const antdToCssVariables = (token: GlobalToken, theme: AppTheme) => {
   const root = document.documentElement
+  const { custom } = theme
 
   // COLORS
   root.style.setProperty('--gray-color', '#f5f5f5')

@@ -1,19 +1,6 @@
-import type { ThemeConfig } from 'antd'
+import type { AppTheme } from './types'
 
-export type AppCustomTheme = {
-  sidebar?: {
-    bgGradientStart?: string
-    bgGradientEnd?: string
-  }
-  menu?: {
-    itemColor?: string
-    itemHoverColor?: string
-    itemSelectedBg?: string
-    itemSelectedColor?: string
-  }
-}
-
-export const defaultTheme: ThemeConfig & { custom?: AppCustomTheme} = {
+export const defaultTheme: AppTheme = {
   custom: {
     menu: {
       itemColor: '#ffffff80',
