@@ -1,20 +1,20 @@
-import { theme } from 'antd'
+import { theme as antdTheme } from 'antd'
 
 import type { ThemeMode } from '../hooks/useAppTheme'
 
 import type { AppTheme } from './types'
 
-export const buildTheme = (mode: ThemeMode, overrides?: AppTheme): AppTheme => {
+export const buildTheme = (mode: ThemeMode, theme?: AppTheme): AppTheme => {
   return {
-    algorithm: mode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
+    algorithm: mode === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
     components: {
-      ...overrides?.components,
+      ...theme?.components,
     },
     custom: {
-      ...overrides?.custom,
+      ...theme?.custom,
     },
     token: {
-      ...overrides?.token,
+      ...theme?.token,
     },
   }
 }

@@ -1,8 +1,16 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { theme as antdTheme, ConfigProvider } from 'antd'
+import { createContext, useContext, useEffect, useMemo } from 'react'
 
+import { antdToCssVariables } from '../theme/bridge'
 import { buildTheme } from '../theme/buildTheme'
 import { defaultTheme } from '../theme/defaultTheme'
 import type { AppTheme } from '../theme/types'
+
+type ThemeProviderType = {
+  children: React.ReactNode
+  mode: ThemeMode
+  baseTheme?: AppTheme
+}
 
 type ThemeContextType = {
   theme: AppTheme
@@ -13,23 +21,20 @@ export type ThemeMode = 'light' | 'dark'
 
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode; mode: ThemeMode }> = ({ children, mode }) => {
-  const [theme, setTheme] = useState<AppTheme>(() => buildTheme(mode, defaultTheme))
-  const [isLoading] = useState(false)
+export const ThemeProvider: React.FC<ThemeProviderType> = ({ baseTheme = defaultTheme, children, mode }) => {
+  const { token } = antdTheme.useToken()
+
+  const theme = useMemo(() => buildTheme(mode, baseTheme), [mode, baseTheme])
 
   useEffect(() => {
-    setTheme(buildTheme(mode, defaultTheme))
-  }, [mode])
-
-  useEffect(() => {
-    // TODO: fetch tema da API
-    // setIsLoading(true)
-    // fetchTheme().then(setTheme).finally(() => setIsLoading(false))
-  }, [])
+    antdToCssVariables(token, theme)
+  }, [token, theme])
 
   return (
-    <ThemeContext.Provider value={{ isLoading, theme }}>
-      {children}
+    <ThemeContext.Provider value={{ isLoading: false, theme }}>
+      <ConfigProvider theme={theme}>
+        {children}
+      </ConfigProvider>
     </ThemeContext.Provider>
   )
 }

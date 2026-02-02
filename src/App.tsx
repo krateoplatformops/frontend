@@ -5,8 +5,8 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { App as AntdApp, ConfigProvider as AntdConfigProvider, Spin, theme as antdTheme } from 'antd'
-import { useEffect, useMemo } from 'react'
+import { App as AntdApp, Spin } from 'antd'
+import { useMemo } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import '../index.css'
@@ -17,8 +17,7 @@ import styles from './App.module.css'
 import FiltersProvider from './components/FiltesProvider/FiltersProvider'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
-import { ThemeProvider, useAppTheme } from './hooks/useAppTheme'
-import { antdToCssVariables } from './theme/bridge'
+import { ThemeProvider } from './hooks/useAppTheme'
 
 library.add(fab, fas, far)
 
@@ -44,32 +43,6 @@ const AppInitializer: React.FC = () => {
   return <RouterProvider key={routerVersion} router={router} />
 }
 
-const AntdThemeBridge = () => {
-  const { theme } = useAppTheme()
-  const { token } = antdTheme.useToken()
-
-  useEffect(() => {
-    antdToCssVariables(token, theme)
-  }, [theme, token])
-
-  return null
-}
-
-const AppContent: React.FC = () => {
-  const { theme } = useAppTheme()
-
-  return (
-    <AntdConfigProvider theme={theme}>
-      <AntdApp className={styles.app}>
-        <AntdThemeBridge />
-        <FiltersProvider>
-          <AppInitializer />
-        </FiltersProvider>
-      </AntdApp>
-    </AntdConfigProvider>
-  )
-}
-
 const App: React.FC = () => {
   const APP_THEME_MODE = 'light'
 
@@ -78,7 +51,11 @@ const App: React.FC = () => {
       <ConfigProvider>
         <RoutesProvider>
           <ThemeProvider mode={APP_THEME_MODE}>
-            <AppContent />
+            <AntdApp className={styles.app}>
+              <FiltersProvider>
+                <AppInitializer />
+              </FiltersProvider>
+            </AntdApp>
           </ThemeProvider>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
