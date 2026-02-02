@@ -7,9 +7,6 @@ import type { AppTheme } from './types'
 export const buildTheme = (mode: ThemeMode, theme?: AppTheme): AppTheme => {
   return {
     algorithm: mode === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-    components: {
-      ...theme?.components,
-    },
     custom: {
       ...theme?.custom,
     },
