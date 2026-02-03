@@ -1,15 +1,14 @@
+import { useQuery } from '@tanstack/react-query'
 import { theme as antdTheme, ConfigProvider } from 'antd'
 import { createContext, useContext, useEffect, useMemo } from 'react'
 
+import { useConfigContext } from '../context/ConfigContext'
 import { antdToCssVariables } from '../theme/bridge'
-import { buildTheme } from '../theme/buildTheme'
-import { defaultTheme } from '../theme/defaultTheme'
 import type { AppTheme } from '../theme/types'
+import type { Theme } from '../widgets/Theme/Theme.type'
 
 type ThemeProviderType = {
   children: React.ReactNode
-  mode: ThemeMode
-  baseTheme?: AppTheme
 }
 
 type ThemeContextType = {
@@ -21,17 +20,50 @@ export type ThemeMode = 'light' | 'dark'
 
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
-export const ThemeProvider: React.FC<ThemeProviderType> = ({ baseTheme = defaultTheme, children, mode }) => {
-  const { token } = antdTheme.useToken()
+export const buildTheme = (themeWidget: Theme): AppTheme => {
+  const { spec: { widgetData: { custom, mode, token } } } = themeWidget
+  const { darkAlgorithm, defaultAlgorithm } = antdTheme
 
-  const theme = useMemo(() => buildTheme(mode, baseTheme), [mode, baseTheme])
+  return ({
+    algorithm: mode === 'dark' ? darkAlgorithm : defaultAlgorithm,
+    custom,
+    token,
+  })
+}
+
+export const useThemeResource = () => {
+  const { config } = useConfigContext()
+
+  const themeUrl = config!.api.THEME
+
+  return useQuery({
+    queryFn: async () => {
+      const res = await fetch(themeUrl)
+      return await res.json() as Theme
+    },
+    queryKey: ['theme', config!.api.THEME, themeUrl],
+    retry: false,
+    staleTime: Infinity,
+  })
+}
+
+// TODO: handle error
+export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
+  const { token } = antdTheme.useToken()
+  const { data, isLoading } = useThemeResource()
+
+  console.log(data)
+
+  const theme = useMemo<AppTheme>(() => (
+    data ? buildTheme(data) : { algorithm: antdTheme.defaultAlgorithm }
+  ), [data])
 
   useEffect(() => {
     antdToCssVariables(token, theme)
   }, [token, theme])
 
   return (
-    <ThemeContext.Provider value={{ isLoading: false, theme }}>
+    <ThemeContext.Provider value={{ isLoading, theme }}>
       <ConfigProvider theme={theme}>
         {children}
       </ConfigProvider>

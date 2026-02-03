@@ -9,6 +9,7 @@ export interface Config {
     EVENTS_PUSH_API_BASE_URL: string
     ROUTES_LOADER: string
     INIT: string
+    THEME: string
     TERMINAL_SOCKET_URL: string
   }
   params: {

@@ -44,13 +44,11 @@ const AppInitializer: React.FC = () => {
 }
 
 const App: React.FC = () => {
-  const APP_THEME_MODE = 'light'
-
   return (
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <RoutesProvider>
-          <ThemeProvider mode={APP_THEME_MODE}>
+          <ThemeProvider>
             <AntdApp className={styles.app}>
               <FiltersProvider>
                 <AppInitializer />
