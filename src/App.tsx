@@ -40,7 +40,15 @@ const AppInitializer: React.FC = () => {
     )
   }
 
-  return <RouterProvider key={routerVersion} router={router} />
+  return (
+    <ThemeProvider>
+      <AntdApp className={styles.app}>
+        <FiltersProvider>
+          <RouterProvider key={routerVersion} router={router} />
+        </FiltersProvider>
+      </AntdApp>
+    </ThemeProvider>
+  )
 }
 
 const App: React.FC = () => {
@@ -48,13 +56,7 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <RoutesProvider>
-          <ThemeProvider>
-            <AntdApp className={styles.app}>
-              <FiltersProvider>
-                <AppInitializer />
-              </FiltersProvider>
-            </AntdApp>
-          </ThemeProvider>
+          <AppInitializer />
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </ConfigProvider>

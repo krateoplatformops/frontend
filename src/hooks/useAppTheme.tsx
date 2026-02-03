@@ -1,11 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
-import { theme as antdTheme, ConfigProvider } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import type { GlobalToken } from 'antd'
+import { theme as antdTheme, ConfigProvider, Spin } from 'antd'
 import { createContext, useContext, useEffect, useMemo } from 'react'
 
+import styles from '../App.module.css'
 import { useConfigContext } from '../context/ConfigContext'
-import { antdToCssVariables } from '../theme/bridge'
 import type { AppTheme } from '../theme/types'
 import type { Theme } from '../widgets/Theme/Theme.type'
+
+import { useWidgetQuery } from './useWidgetQuery'
 
 type ThemeProviderType = {
   children: React.ReactNode
@@ -13,14 +16,11 @@ type ThemeProviderType = {
 
 type ThemeContextType = {
   theme: AppTheme
-  isLoading: boolean
 }
-
-export type ThemeMode = 'light' | 'dark'
 
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
-export const buildTheme = (themeWidget: Theme): AppTheme => {
+const buildTheme = (themeWidget: Theme): AppTheme => {
   const { spec: { widgetData: { custom, mode, token } } } = themeWidget
   const { darkAlgorithm, defaultAlgorithm } = antdTheme
 
@@ -31,39 +31,77 @@ export const buildTheme = (themeWidget: Theme): AppTheme => {
   })
 }
 
+// Maps theme variables to CSS variables
+const antdToCssVariables = (token: GlobalToken, theme: AppTheme) => {
+  const root = document.documentElement
+  const { custom } = theme
+
+  // COLORS
+  root.style.setProperty('--gray-color', '#f5f5f5')
+
+  // MENU
+  root.style.setProperty('--menu-item-color', custom?.menu?.itemColor || '#ffffff80')
+  root.style.setProperty('--menu-item-hover-color', custom?.menu?.itemHoverColor || '#f5f5f5')
+  root.style.setProperty('--menu-item-selected-bg', custom?.menu?.itemSelectedBg || '#11b2e266')
+  root.style.setProperty('--menu-item-selected-color', custom?.menu?.itemSelectedColor || '#f5f5f5')
+
+  // SIDEBAR
+  root.style.setProperty('--sidebar-bg-color-gradient-start', custom?.sidebar?.bgGradientStart || '#005d8b')
+  root.style.setProperty('--sidebar-bg-color-gradient-end', custom?.sidebar?.bgGradientEnd || '#002f46')
+
+  // THEME ELEMENTS
+  // Color of the application background
+  root.style.setProperty('--background-color', token.colorBgLayout)
+  // Color of every border in the application
+  root.style.setProperty('--border-color', token.colorBorder)
+  // Color of the header background
+  root.style.setProperty('--header-color', token.colorBgContainer)
+  // Color of every primary element
+  root.style.setProperty('--primary-color', token.colorPrimary)
+}
+
+// Fetches Theme resource from config
 export const useThemeResource = () => {
   const { config } = useConfigContext()
 
-  const themeUrl = config!.api.THEME
+  const themeEndpoint = config!.api.THEME
 
-  return useQuery({
-    queryFn: async () => {
-      const res = await fetch(themeUrl)
-      return await res.json() as Theme
-    },
-    queryKey: ['theme', config!.api.THEME, themeUrl],
-    retry: false,
-    staleTime: Infinity,
-  })
+  const { queryResult } = useWidgetQuery(themeEndpoint)
+
+  const { data, error, isLoading } = queryResult
+
+  return {
+    data: data as Theme | undefined,
+    error,
+    isLoading,
+  }
 }
 
-// TODO: handle error
 export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
   const { token } = antdTheme.useToken()
-  const { data, isLoading } = useThemeResource()
+  const { data, error, isLoading } = useThemeResource()
 
-  console.log(data)
+  if (error) {
+    console.error(`Error while loading theme in useAppTheme: ${error}`)
+  }
 
-  const theme = useMemo<AppTheme>(() => (
-    data ? buildTheme(data) : { algorithm: antdTheme.defaultAlgorithm }
-  ), [data])
+  // Sets theme from fetched resource or default Ant Design theme
+  const theme = useMemo<AppTheme>(() => (data ? buildTheme(data) : ({ algorithm: antdTheme.defaultAlgorithm })), [data])
 
   useEffect(() => {
     antdToCssVariables(token, theme)
   }, [token, theme])
 
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        <Spin indicator={<LoadingOutlined />} size='large' />
+      </div>
+    )
+  }
+
   return (
-    <ThemeContext.Provider value={{ isLoading, theme }}>
+    <ThemeContext.Provider value={{ theme }}>
       <ConfigProvider theme={theme}>
         {children}
       </ConfigProvider>
