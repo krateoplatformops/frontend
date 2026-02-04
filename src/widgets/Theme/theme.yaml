@@ -32,19 +32,7 @@ metadata:
 spec:
   widgetData:
     mode: dark
-    # custom:
-    #   menu:
-    #     itemColor: '#ffffff80'
-    #     itemHoverColor: '#f5f5f5'
-    #     itemSelectedBg: '#11b2e266'
-    #     itemSelectedColor: '#f5f5f5'
-    #   sidebar:
-    #     bgGradientEnd: '#002f46'
-    #     bgGradientStart: '#005d8b'
     token:
-      # colorBgContainer: '#141414'
-      # colorBgLayout: '#262626'
-      # colorBorder: '#434343'
       colorPrimary: '#05629A'
       fontFamily: 'Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif'
   resourcesRefs:
