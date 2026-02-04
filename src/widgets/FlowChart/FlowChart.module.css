@@ -1,6 +1,17 @@
 .flowChart {
   height: 100%;
   min-height: 500px;
+
+  .controls {
+    :global(.react-flow__controls-button) {
+      background-color: var(--background-color);
+      border: var(--border-color);
+
+      svg {
+        fill: var(--text-color)
+      }
+    }
+  }
 }
 
 .flowChart :global(.react-flow) {

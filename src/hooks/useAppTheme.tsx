@@ -51,13 +51,29 @@ const antdToCssVariables = (token: GlobalToken, theme: AppTheme) => {
 
   // THEME ELEMENTS
   // Color of the application background
-  root.style.setProperty('--background-color', token.colorBgLayout)
+  root.style.setProperty('--background-color', theme.token?.colorBgLayout || token.colorBgLayout)
   // Color of every border in the application
-  root.style.setProperty('--border-color', token.colorBorder)
+  root.style.setProperty('--border-color', theme.token?.colorBorder || token.colorBorder)
   // Color of the header background
-  root.style.setProperty('--header-color', token.colorBgContainer)
+  root.style.setProperty('--header-color', theme.token?.colorBgContainer || token.colorBgContainer)
   // Color of every primary element
-  root.style.setProperty('--primary-color', token.colorPrimary)
+  root.style.setProperty('--primary-color', theme.token?.colorPrimary || token.colorPrimary)
+  // Text color
+  root.style.setProperty('--text-color', theme.token?.colorText || token.colorText)
+}
+
+const isThemeWidget = (value: unknown): value is Theme => {
+  const isObject = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
+
+  if (!isObject(value)) { return false }
+
+  if (value.kind !== 'Theme') { return false }
+
+  if (!isObject(value.spec)) { return false }
+  if (!isObject(value.spec.widgetData)) { return false }
+  if (!value.spec.widgetData.mode) { return false }
+
+  return true
 }
 
 // Fetches Theme resource from config
@@ -70,15 +86,26 @@ export const useThemeResource = () => {
 
   const { data, error, isLoading } = queryResult
 
+  const theme = isThemeWidget(data) ? data : undefined
+
   return {
-    data: data as Theme | undefined,
-    error,
+    data: theme,
+    error: theme ? undefined : error,
     isLoading,
   }
 }
 
-export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
+const ThemeCssBridge = ({ theme }: { theme: AppTheme }) => {
   const { token } = antdTheme.useToken()
+
+  useEffect(() => {
+    antdToCssVariables(token, theme)
+  }, [token, theme])
+
+  return null
+}
+
+export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
   const { data, error, isLoading } = useThemeResource()
 
   if (error) {
@@ -87,10 +114,6 @@ export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
 
   // Sets theme from fetched resource or default Ant Design theme
   const theme = useMemo<AppTheme>(() => (data ? buildTheme(data) : ({ algorithm: antdTheme.defaultAlgorithm })), [data])
-
-  useEffect(() => {
-    antdToCssVariables(token, theme)
-  }, [token, theme])
 
   if (isLoading) {
     return (
@@ -103,6 +126,7 @@ export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
   return (
     <ThemeContext.Provider value={{ theme }}>
       <ConfigProvider theme={theme}>
+        <ThemeCssBridge theme={theme} />
         {children}
       </ConfigProvider>
     </ThemeContext.Provider>

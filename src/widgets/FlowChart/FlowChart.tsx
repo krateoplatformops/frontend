@@ -78,7 +78,7 @@ const FlowChart = ({ uid, widgetData }: WidgetProps<FlowChartWidgetData>) => {
         onNodesChange={onNodesChange}
         proOptions={{ hideAttribution: true }}
       >
-        <Controls showInteractive={false} />
+        <Controls className={styles.controls} showInteractive={false} />
       </ReactFlow>
     </div>
   )
