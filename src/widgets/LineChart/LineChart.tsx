@@ -20,6 +20,8 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
 
   const xValues = dataChart[0]?.coords?.map(({ xAxis }) => xAxis) || []
 
+  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim()
+
   const optionLine = {
     grid: {
       bottom: '30%',
@@ -28,6 +30,9 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
     legend: {
       bottom: 0,
       data: lines.map(({ name }) => name),
+      textStyle: {
+        color: textColor,
+      },
     },
     series: lines.map(({ color, coords, name }) => ({
       color: getColorCode(color),
@@ -38,13 +43,23 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
     })),
     xAxis: {
       axisLabel: {
+        color: textColor,
         rotate: 45,
       },
       data: xValues,
       name: xAxisName,
+      nameTextStyle: {
+        color: textColor,
+      },
     },
     yAxis: {
+      axisLabel: {
+        color: textColor,
+      },
       name: yAxisName,
+      nameTextStyle: {
+        color: textColor,
+      },
     },
   }
 

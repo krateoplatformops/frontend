@@ -38,6 +38,7 @@ const antdToCssVariables = (token: GlobalToken, theme: AppTheme) => {
 
   // COLORS
   root.style.setProperty('--gray-color', '#f5f5f5')
+  root.style.setProperty('--dark-gray-color', '#ccc')
 
   // MENU
   root.style.setProperty('--menu-item-color', custom?.menu?.itemColor || '#ffffff80')

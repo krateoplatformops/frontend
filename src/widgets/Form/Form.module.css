@@ -112,7 +112,7 @@
     }
 
     .anchorObjectLabel {
-      color: #ccc;
+      color: var(--dark-gray-color);
       cursor: default;
       font-weight: 400;
     }
