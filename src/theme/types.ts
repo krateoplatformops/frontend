@@ -1,5 +1,7 @@
 import type { ThemeConfig } from 'antd'
 
+import type { Theme } from '../widgets/Theme/Theme.type'
+
 export type AppCustomTheme = {
   sidebar?: {
     bgGradientStart?: string
@@ -15,4 +17,5 @@ export type AppCustomTheme = {
 
 export type AppTheme = ThemeConfig & {
   custom?: AppCustomTheme
+  mode: Theme['spec']['widgetData']['mode']
 }

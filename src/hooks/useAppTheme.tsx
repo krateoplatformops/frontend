@@ -27,6 +27,7 @@ const buildTheme = (themeWidget: Theme): AppTheme => {
   return ({
     algorithm: mode === 'dark' ? darkAlgorithm : defaultAlgorithm,
     custom,
+    mode,
     token,
   })
 }
@@ -56,12 +57,15 @@ const antdToCssVariables = (token: GlobalToken, theme: AppTheme) => {
   // Color of every border in the application
   root.style.setProperty('--border-color', theme.token?.colorBorder || token.colorBorder)
   // Color of the header background
-  root.style.setProperty('--header-color', theme.token?.colorBgContainer || token.colorBgContainer)
+  root.style.setProperty('--container-color', theme.token?.colorBgContainer || token.colorBgContainer)
   // Color of every primary element
   root.style.setProperty('--primary-color', theme.token?.colorPrimary || token.colorPrimary)
   // Text color
   root.style.setProperty('--text-color', theme.token?.colorText || token.colorText)
+  root.style.setProperty('--text-secondary-color', theme.token?.colorTextSecondary || token.colorTextSecondary)
 }
+
+export const getCssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 
 const isThemeWidget = (value: unknown): value is Theme => {
   const isObject = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -114,7 +118,9 @@ export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
   }
 
   // Sets theme from fetched resource or default Ant Design theme
-  const theme = useMemo<AppTheme>(() => (data ? buildTheme(data) : ({ algorithm: antdTheme.defaultAlgorithm })), [data])
+  const theme = useMemo<AppTheme>(() =>
+    (data ? buildTheme(data) : ({ algorithm: antdTheme.defaultAlgorithm, mode: 'light' })),
+  [data])
 
   if (isLoading) {
     return (

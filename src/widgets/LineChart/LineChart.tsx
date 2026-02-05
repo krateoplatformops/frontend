@@ -1,6 +1,7 @@
 import { Empty } from 'antd'
 import ReactECharts from 'echarts-for-react'
 
+import { getCssVar } from '../../hooks/useAppTheme'
 import { getColorCode } from '../../theme/palette'
 import type { WidgetProps } from '../../types/Widget'
 
@@ -20,7 +21,7 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
 
   const xValues = dataChart[0]?.coords?.map(({ xAxis }) => xAxis) || []
 
-  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim()
+  const textColor = getCssVar('--text-color')
 
   const optionLine = {
     grid: {

@@ -25,18 +25,18 @@
   }
 
   th, td {
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--border-color);
   padding: 8px 12px;
   text-align: left;
   }
 
   thead th {
-    background-color: #fafafa;
-    border-bottom: 1px solid #f0f0f0;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
     font-weight: 600;
   }
 
   tbody tr:nth-child(even) {
-    background-color: #fcfcfc;
+    background-color: var(--container-color);
   }
 }
