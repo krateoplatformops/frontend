@@ -12,7 +12,7 @@ function parseNumberParam(param: string | null) {
   return isNaN(parsed!) ? undefined : parsed
 }
 
-export const useWidgetQuery = (widgetEndpoint: string) => {
+export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: boolean}) => {
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
   const requestUrl = new URL(widgetFullUrl)
@@ -55,6 +55,7 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
   }
 
   const queryResult = useInfiniteQuery({
+    enabled: options?.enabled ?? true,
     queryKey: ['widgets', widgetEndpoint],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
     initialPageParam: {

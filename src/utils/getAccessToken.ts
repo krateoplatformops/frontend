@@ -16,3 +16,11 @@ export const getAccessToken = () => {
   cachedAccessToken = user.accessToken
   return cachedAccessToken
 }
+
+export const safeGetAccessToken = (): string | null => {
+  try {
+    return getAccessToken()
+  } catch {
+    return null
+  }
+}

@@ -7,6 +7,7 @@ import styles from '../App.module.css'
 import fallbackLogo from '../assets/images/logo_big.svg'
 import { useConfigContext } from '../context/ConfigContext'
 import type { AppBranding, AppTheme } from '../theme/types'
+import { safeGetAccessToken } from '../utils/getAccessToken'
 import type { Theme } from '../widgets/Theme/Theme.type'
 
 import { useWidgetQuery } from './useWidgetQuery'
@@ -18,6 +19,15 @@ type ThemeProviderType = {
 type ThemeContextType = {
   branding: AppBranding
   theme: AppTheme
+}
+
+const PUBLIC_THEME: AppTheme = {
+  algorithm: antdTheme.defaultAlgorithm,
+  mode: 'light',
+}
+
+const PUBLIC_BRANDING: AppBranding = {
+  logoUrl: fallbackLogo,
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null)
@@ -38,7 +48,7 @@ const buildBranding = (themeWidget?: Theme): AppBranding => {
   const logoUrl = themeWidget?.spec.widgetData.logo?.url
 
   return {
-    logoUrl: logoUrl || fallbackLogo,
+    logoUrl: logoUrl || PUBLIC_BRANDING.logoUrl,
   }
 }
 
@@ -95,9 +105,12 @@ const isThemeWidget = (value: unknown): value is Theme => {
 export const useThemeResource = () => {
   const { config } = useConfigContext()
 
-  const themeEndpoint = config!.api.THEME
+  const hasToken = Boolean(safeGetAccessToken())
+  const themeEndpoint = config?.api.THEME
 
-  const { queryResult } = useWidgetQuery(themeEndpoint)
+  const { queryResult } = useWidgetQuery(themeEndpoint!, {
+    enabled: Boolean(hasToken && themeEndpoint),
+  })
 
   const { data, error, isLoading } = queryResult
 
@@ -105,8 +118,8 @@ export const useThemeResource = () => {
 
   return {
     data: theme,
-    error: theme ? undefined : error,
-    isLoading,
+    error: hasToken && !theme ? error : undefined,
+    isLoading: hasToken ? isLoading : false,
   }
 }
 
@@ -129,10 +142,12 @@ export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
 
   // Sets theme from fetched resource or default Ant Design theme
   const theme = useMemo<AppTheme>(() =>
-    (data ? buildTheme(data) : ({ algorithm: antdTheme.defaultAlgorithm, mode: 'light' })),
+    (data ? buildTheme(data) : PUBLIC_THEME),
   [data])
 
-  const branding = useMemo<AppBranding>(() => buildBranding(data), [data],)
+  const branding = useMemo<AppBranding>(() =>
+    (data ? buildBranding(data) : PUBLIC_BRANDING),
+  [data],)
 
   if (isLoading) {
     return (
