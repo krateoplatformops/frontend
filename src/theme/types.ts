@@ -21,5 +21,6 @@ export type AppTheme = ThemeConfig & {
 }
 
 export type AppBranding = {
-  logoUrl: string
+  logoSvg?: string
+  logoUrl?: string
 }

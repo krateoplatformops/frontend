@@ -23,13 +23,17 @@ export interface Theme {
        */
       mode: 'dark' | 'light'
       /**
-       * Defines the application logo
+       * Defines the application logo as SVG string or URL
        */
       logo?: {
         /**
+         * The logo as SVG
+         */
+        svg?: string
+        /**
          * The logo resource URL
          */
-        url: string
+        url?: string
       }
       /**
        * Defines customization for specific style tokens

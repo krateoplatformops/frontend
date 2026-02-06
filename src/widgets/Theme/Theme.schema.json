@@ -32,15 +32,18 @@
               "type": "string"
             },
             "logo": {
-              "description": "Defines the application logo",
+              "description": "Defines the application logo as SVG string or URL",
               "type": "object",
               "properties": {
+                "svg": {
+                  "description": "The logo as SVG",
+                  "type": "string"
+                },
                 "url": {
                   "description": "The logo resource URL",
                   "type": "string"
                 }
               },
-              "required": ["url"],
               "additionalProperties": false
             },
             "token": {

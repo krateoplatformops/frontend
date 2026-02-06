@@ -6,17 +6,18 @@ import styles from './Sidebar.module.css'
 
 const Sidebar = () => {
   const { config } = useConfigContext()
-  const { logoUrl } = useAppBranding()
+  const { logoSvg, logoUrl } = useAppBranding()
+
+  // TODO: fix style
 
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <img
-          alt='Krateo DevOpsApp'
-          className={styles.image}
-          height={48}
-          src={logoUrl}
-        />
+        {logoSvg ?
+          <span className={styles.logoSvg} dangerouslySetInnerHTML={{ __html: logoSvg }}/>
+          :
+          <img alt='Logo' className={styles.logoImg} src={logoUrl} />
+        }
       </div>
 
       <div className={styles.content}>

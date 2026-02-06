@@ -45,10 +45,11 @@ const buildTheme = (themeWidget: Theme): AppTheme => {
 }
 
 const buildBranding = (themeWidget?: Theme): AppBranding => {
-  const logoUrl = themeWidget?.spec.widgetData.logo?.url
+  const logo = themeWidget?.spec.widgetData.logo
 
   return {
-    logoUrl: logoUrl || PUBLIC_BRANDING.logoUrl,
+    logoSvg: logo?.svg,
+    logoUrl: logo?.url || PUBLIC_BRANDING.logoUrl,
   }
 }
 
