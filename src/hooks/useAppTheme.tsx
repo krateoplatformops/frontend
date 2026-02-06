@@ -4,8 +4,9 @@ import { theme as antdTheme, ConfigProvider, Spin } from 'antd'
 import { createContext, useContext, useEffect, useMemo } from 'react'
 
 import styles from '../App.module.css'
+import fallbackLogo from '../assets/images/logo_big.svg'
 import { useConfigContext } from '../context/ConfigContext'
-import type { AppTheme } from '../theme/types'
+import type { AppBranding, AppTheme } from '../theme/types'
 import type { Theme } from '../widgets/Theme/Theme.type'
 
 import { useWidgetQuery } from './useWidgetQuery'
@@ -15,6 +16,7 @@ type ThemeProviderType = {
 }
 
 type ThemeContextType = {
+  branding: AppBranding
   theme: AppTheme
 }
 
@@ -30,6 +32,14 @@ const buildTheme = (themeWidget: Theme): AppTheme => {
     mode,
     token,
   })
+}
+
+const buildBranding = (themeWidget?: Theme): AppBranding => {
+  const logoUrl = themeWidget?.spec.widgetData.logo?.url
+
+  return {
+    logoUrl: logoUrl || fallbackLogo,
+  }
 }
 
 // Maps theme variables to CSS variables
@@ -122,6 +132,8 @@ export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
     (data ? buildTheme(data) : ({ algorithm: antdTheme.defaultAlgorithm, mode: 'light' })),
   [data])
 
+  const branding = useMemo<AppBranding>(() => buildBranding(data), [data],)
+
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -131,13 +143,23 @@ export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme }}>
+    <ThemeContext.Provider value={{ branding, theme }}>
       <ConfigProvider theme={theme}>
         <ThemeCssBridge theme={theme} />
         {children}
       </ConfigProvider>
     </ThemeContext.Provider>
   )
+}
+
+export const useAppBranding = () => {
+  const context = useContext(ThemeContext)
+
+  if (!context) {
+    throw new Error('useAppBranding must be used inside ThemeProvider')
+  }
+
+  return context.branding
 }
 
 export const useAppTheme = () => {

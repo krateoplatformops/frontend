@@ -20,16 +20,28 @@
           "type": "object",
           "required": ["mode"],
           "properties": {
+            "custom": {
+              "description": "Defines customization for specific components / widgets",
+              "type": "object",
+              "additionalProperties": true
+            },
             "mode": {
               "description": "The mode on which the theme is based (dark or light)",
               "enum": ["dark", "light"],
               "default": "light",
               "type": "string"
             },
-            "custom": {
-              "description": "Defines customization for specific components / widgets",
+            "logo": {
+              "description": "Defines the application logo",
               "type": "object",
-              "additionalProperties": true
+              "properties": {
+                "url": {
+                  "description": "The logo resource URL",
+                  "type": "string"
+                }
+              },
+              "required": ["url"],
+              "additionalProperties": false
             },
             "token": {
               "description": "Defines customization for specific style tokens",

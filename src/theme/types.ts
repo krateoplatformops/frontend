@@ -19,3 +19,7 @@ export type AppTheme = ThemeConfig & {
   custom?: AppCustomTheme
   mode: Theme['spec']['widgetData']['mode']
 }
+
+export type AppBranding = {
+  logoUrl: string
+}

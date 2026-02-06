@@ -13,14 +13,23 @@ export interface Theme {
      */
     widgetData: {
       /**
-       * The mode on which the theme is based (dark or light)
-       */
-      mode: 'dark' | 'light'
-      /**
        * Defines customization for specific components / widgets
        */
       custom?: {
         [k: string]: unknown
+      }
+      /**
+       * The mode on which the theme is based (dark or light)
+       */
+      mode: 'dark' | 'light'
+      /**
+       * Defines the application logo
+       */
+      logo?: {
+        /**
+         * The logo resource URL
+         */
+        url: string
       }
       /**
        * Defines customization for specific style tokens

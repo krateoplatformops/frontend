@@ -1,11 +1,12 @@
-import logo from '../../assets/images/logo_big.svg'
 import { useConfigContext } from '../../context/ConfigContext'
+import { useAppBranding } from '../../hooks/useAppTheme'
 import WidgetRenderer from '../WidgetRenderer'
 
 import styles from './Sidebar.module.css'
 
 const Sidebar = () => {
   const { config } = useConfigContext()
+  const { logoUrl } = useAppBranding()
 
   return (
     <div className={styles.sidebar}>
@@ -14,7 +15,7 @@ const Sidebar = () => {
           alt='Krateo DevOpsApp'
           className={styles.image}
           height={48}
-          src={logo}
+          src={logoUrl}
         />
       </div>
 
