@@ -8,16 +8,16 @@ const Sidebar = () => {
   const { config } = useConfigContext()
   const { logoSvg, logoUrl } = useAppBranding()
 
-  // TODO: fix style
-
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        {logoSvg ?
-          <span className={styles.logoSvg} dangerouslySetInnerHTML={{ __html: logoSvg }}/>
-          :
-          <img alt='Logo' className={styles.logoImg} src={logoUrl} />
-        }
+        <div className={styles.logoInner}>
+          {logoSvg ?
+            <span className={styles.logoSvg} dangerouslySetInnerHTML={{ __html: logoSvg }}/>
+            :
+            <img alt='Logo' className={styles.logoImg} src={logoUrl} />
+          }
+        </div>
       </div>
 
       <div className={styles.content}>
