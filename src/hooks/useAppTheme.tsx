@@ -21,12 +21,30 @@ type ThemeContextType = {
   theme: AppTheme
 }
 
-const PUBLIC_THEME: AppTheme = {
+const DEFAULT_THEME: AppTheme = {
   algorithm: antdTheme.defaultAlgorithm,
+  custom: {
+    menu: {
+      itemColor: '#ffffff80',
+      itemHoverColor: '#f5f5f5',
+      itemSelectedBg: '#11b2e266',
+      itemSelectedColor: '#f5f5f5',
+    },
+    sidebar: {
+      bgGradientEnd: '#002f46',
+      bgGradientStart: '#005d8b',
+    },
+  },
   mode: 'light',
+  token: {
+    colorBgContainer: '#FBFBFB',
+    colorBgLayout: '#f5f5f5',
+    colorBorder: '#E1E3E8',
+    colorPrimary: '#05629A',
+    fontFamily: 'Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif',
+  },
 }
-
-const PUBLIC_BRANDING: AppBranding = {
+const DEFAULT_BRANDING: AppBranding = {
   logoUrl: fallbackLogo,
 }
 
@@ -49,7 +67,7 @@ const buildBranding = (themeWidget?: Theme): AppBranding => {
 
   return {
     logoSvg: logo?.svg,
-    logoUrl: logo?.url || PUBLIC_BRANDING.logoUrl,
+    logoUrl: logo?.url || DEFAULT_BRANDING.logoUrl,
   }
 }
 
@@ -105,22 +123,30 @@ const isThemeWidget = (value: unknown): value is Theme => {
 // Fetches Theme resource from config
 export const useThemeResource = () => {
   const { config } = useConfigContext()
-
   const hasToken = Boolean(safeGetAccessToken())
-  const themeEndpoint = config?.api.THEME
+  const themeEndpoint = config?.api?.THEME
 
-  const { queryResult } = useWidgetQuery(themeEndpoint!, {
-    enabled: Boolean(hasToken && themeEndpoint),
+  const shouldFetch = Boolean(themeEndpoint && hasToken)
+
+  const { queryResult } = useWidgetQuery(themeEndpoint ?? '', {
+    enabled: shouldFetch,
   })
 
-  const { data, error, isLoading } = queryResult
+  if (!shouldFetch) {
+    return {
+      data: undefined,
+      error: undefined,
+      isLoading: false,
+    }
+  }
 
+  const { data, error, isLoading } = queryResult
   const theme = isThemeWidget(data) ? data : undefined
 
   return {
     data: theme,
-    error: hasToken && !theme ? error : undefined,
-    isLoading: hasToken ? isLoading : false,
+    error: !theme ? error : undefined,
+    isLoading,
   }
 }
 
@@ -143,11 +169,11 @@ export const ThemeProvider: React.FC<ThemeProviderType> = ({ children }) => {
 
   // Sets theme from fetched resource or default Ant Design theme
   const theme = useMemo<AppTheme>(() =>
-    (data ? buildTheme(data) : PUBLIC_THEME),
+    (data ? buildTheme(data) : DEFAULT_THEME),
   [data])
 
   const branding = useMemo<AppBranding>(() =>
-    (data ? buildBranding(data) : PUBLIC_BRANDING),
+    (data ? buildBranding(data) : DEFAULT_BRANDING),
   [data],)
 
   if (isLoading) {
