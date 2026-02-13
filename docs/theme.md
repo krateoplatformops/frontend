@@ -10,7 +10,7 @@ This mechanism allows centralized theme management and runtime customization wit
 
 ## Integration with Ant Design
 
-The application uses **[Ant Design*](https://ant.design/docs/react/introduce)* as the underlying design system.
+The application uses **[Ant Design](https://ant.design/docs/react/introduce)** as the underlying design system.
 
 The `Theme` widget maps its configuration to a frontend logic which is a combination of:
 - Ant Design theme algorithms to define the base mode (dark vs light)
