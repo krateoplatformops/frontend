@@ -17,7 +17,7 @@ import styles from './App.module.css'
 import FiltersProvider from './components/FiltesProvider/FiltersProvider'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
-import { cssVariables } from './theme/palette'
+import { ThemeProvider } from './hooks/useAppTheme'
 
 library.add(fab, fas, far)
 
@@ -40,21 +40,23 @@ const AppInitializer: React.FC = () => {
     )
   }
 
-  return <RouterProvider key={routerVersion} router={router} />
+  return (
+    <ThemeProvider>
+      <AntdApp className={styles.app}>
+        <FiltersProvider>
+          <RouterProvider key={routerVersion} router={router} />
+        </FiltersProvider>
+      </AntdApp>
+    </ThemeProvider>
+  )
 }
 
 const App: React.FC = () => {
-  cssVariables()
-
   return (
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <RoutesProvider>
-          <AntdApp className={styles.app}>
-            <FiltersProvider>
-              <AppInitializer />
-            </FiltersProvider>
-          </AntdApp>
+          <AppInitializer />
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </ConfigProvider>

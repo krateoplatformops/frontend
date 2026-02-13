@@ -1,0 +1,150 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "description": "widget version",
+      "type": "string",
+      "default": "v1beta1"
+    },
+    "kind": {
+      "type": "string",
+      "description": "Theme is a widget that allows to define an UI theme for the entire application.",
+      "default": "Theme"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "widgetData": {
+          "description": "the data that will be passed to the widget on the frontend",
+          "type": "object",
+          "required": ["mode"],
+          "properties": {
+            "custom": {
+              "description": "Defines customization for specific components / widgets",
+              "type": "object",
+              "additionalProperties": true
+            },
+            "mode": {
+              "description": "The mode on which the theme is based (dark or light)",
+              "enum": ["dark", "light"],
+              "default": "light",
+              "type": "string"
+            },
+            "logo": {
+              "description": "Defines the application logo as SVG string or URL",
+              "type": "object",
+              "properties": {
+                "svg": {
+                  "description": "The logo as SVG",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "The logo resource URL",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "token": {
+              "description": "Defines customization for specific style tokens",
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "resourcesRefs": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "allowed": {
+                    "type": "boolean"
+                  },
+                  "apiVersion": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  },
+                  "resource": {
+                    "type": "string"
+                  },
+                  "verb": {
+                    "type": "string",
+                    "enum": ["POST", "PUT", "PATCH", "DELETE", "GET"]
+                  },
+                  "slice": {
+                    "type": "object",
+                    "properties": {
+                      "offset": {
+                        "type": "integer"
+                      },
+                      "page": {
+                        "type": "integer"
+                      },
+                      "perPage": {
+                        "type": "integer"
+                      },
+                      "continue": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["page", "perPage"]
+                  }
+                },
+                "required": ["allowed", "id"]
+              }
+            }
+          },
+          "required": ["items"]
+        },
+        "apiRef": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "namespace"],
+          "additionalProperties": false
+        },
+        "widgetDataTemplate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "forPath": {
+                "type": "string"
+              },
+              "expression": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["widgetData", "resourcesRefs"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["kind", "spec", "version"]
+}

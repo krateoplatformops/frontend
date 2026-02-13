@@ -28,7 +28,7 @@ spec:
 kind: YamlViewer
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: example-yamlviewer-simple-json
+  name: example-yamlviewer-valid-json
   namespace: krateo-system
 spec:
   widgetData:

@@ -3,6 +3,7 @@ import type { EChartsCoreOption } from 'echarts'
 import ReactECharts from 'echarts-for-react'
 import { useEffect, useRef, useState } from 'react'
 
+import { getCssVar } from '../../hooks/useAppTheme'
 import { getColorCode } from '../../theme/palette'
 import type { WidgetProps } from '../../types/Widget'
 
@@ -83,6 +84,11 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
   const filledValue = (data || []).reduce((sum, item) => sum + (item.value ?? 0), 0)
   const emptyValue = Math.max((total ?? 0) - filledValue, 0)
 
+  const borderColor = getCssVar('--border-color')
+  const darkGrayColor = getCssVar('--dark-gray-color')
+  const textColor = getCssVar('--text-color')
+  const textSecondaryColor = getCssVar('--text-secondary-color')
+
   const chartData = [
     ...(data || []).map((item) => ({
       itemStyle: { color: getColorCode(item.color || 'gray') },
@@ -91,7 +97,7 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
     })),
     {
       emphasis: { disabled: true },
-      itemStyle: { color: '#E1E3E8' },
+      itemStyle: { color: darkGrayColor },
       label: { show: false },
       name: '',
       tooltip: { show: false },
@@ -102,7 +108,7 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
   const graphicTextElements = [
     {
       style: {
-        fill: '#000',
+        fill: textColor,
         fontSize: fontSizes.title,
         fontWeight: 500,
         text: title ?? '',
@@ -118,7 +124,7 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
   if (description) {
     graphicTextElements.push({
       style: {
-        fill: '#666',
+        fill: textSecondaryColor,
         fontSize: fontSizes.subtitle,
         fontWeight: 400,
         text: description,
@@ -143,7 +149,7 @@ const PieChart = ({ uid, widgetData }: WidgetProps<PieChartWidgetData>) => {
         avoidLabelOverlap: false,
         data: chartData,
         itemStyle: {
-          borderColor: '#fff',
+          borderColor,
           borderRadius: 6,
           borderWidth: 2,
         },

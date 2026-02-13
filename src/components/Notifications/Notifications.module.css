@@ -1,4 +1,10 @@
 .badge {
+  svg {
+    path {
+      fill: var(--primary-color);
+    }
+  }
+
   &.hasNotifications {
     top: 5px;
   }
@@ -23,7 +29,7 @@
       }
 
       &:hover {
-        background-color: var(--background-color);
+        background-color: var(--gray-color);
       }   
 
       .notificationElement {

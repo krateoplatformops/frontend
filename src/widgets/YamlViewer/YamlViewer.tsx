@@ -4,8 +4,10 @@ import { dump } from 'js-yaml'
 import { useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import lightfair from 'react-syntax-highlighter/dist/esm/styles/hljs/lightfair.js'
+import darkTheme from 'react-syntax-highlighter/dist/esm/styles/hljs/atom-one-dark.js'
+import lightTheme from 'react-syntax-highlighter/dist/esm/styles/hljs/lightfair.js'
 
+import { useAppTheme } from '../../hooks/useAppTheme'
 import type { WidgetProps } from '../../types/Widget'
 
 import styles from './YamlViewer.module.css'
@@ -15,6 +17,11 @@ export type YamlViewerWidgetData = WidgetType['spec']['widgetData']
 
 const YamlViewer = ({ uid, widgetData }: WidgetProps<YamlViewerWidgetData>) => {
   const { json } = widgetData
+  const { theme } = useAppTheme()
+
+  const syntaxTheme = useMemo(() =>
+     (theme.mode === 'dark' ? darkTheme : lightTheme) as { [key: string]: React.CSSProperties },
+  [theme.mode])
 
   const [isCopied, setIsCopied] = useState(false)
 
@@ -69,7 +76,7 @@ const YamlViewer = ({ uid, widgetData }: WidgetProps<YamlViewerWidgetData>) => {
         <SyntaxHighlighter
           language='yaml'
           showLineNumbers
-          style={lightfair as { [key: string]: React.CSSProperties }}
+          style={syntaxTheme}
           wrapLines
           wrapLongLines
         >

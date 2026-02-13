@@ -3,8 +3,8 @@ import { Card, Divider, Result, Skeleton } from 'antd'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
-import logo from '../../assets/images/logo_big.svg'
 import { useConfigContext } from '../../context/ConfigContext'
+import { useAppBranding } from '../../hooks/useAppTheme'
 import useCatchError from '../../hooks/useCatchError'
 
 import styles from './Login.module.css'
@@ -16,6 +16,7 @@ const Login = () => {
   const navigate = useNavigate()
   const { catchError } = useCatchError()
   const { config } = useConfigContext()
+  const { logoUrl } = useAppBranding()
 
   const authUrl = `${config!.api.AUTHN_API_BASE_URL}/strategies`
 
@@ -118,7 +119,7 @@ const Login = () => {
   return (
     <div className={styles.login}>
       <aside className={styles.aside}>
-        <img alt='Krateo | PlatformOps' className={styles.image} src={logo} />
+        <img alt='Krateo | PlatformOps' className={styles.image} src={logoUrl} />
       </aside>
       <section className={styles.section}>
         <Card

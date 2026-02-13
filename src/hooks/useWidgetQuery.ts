@@ -2,6 +2,7 @@
 /* this rules conflicts with react-query ordering required for correct type inference */
 
 import { useInfiniteQuery, useIsFetching } from '@tanstack/react-query'
+import { useMemo } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { ResourceRef, Widget } from '../types/Widget'
@@ -12,21 +13,33 @@ function parseNumberParam(param: string | null) {
   return isNaN(parsed!) ? undefined : parsed
 }
 
-export const useWidgetQuery = (widgetEndpoint: string) => {
+export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: boolean}) => {
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
-  const requestUrl = new URL(widgetFullUrl)
 
-  /* TO DEBUG BEFORE SNOWPLOW RETURNS THESE IN THE widgetEndpoint */
-  // if (requestUrl.searchParams.get('resource') === 'datagrids') {
-  //   requestUrl.searchParams.set('page', '1')
-  //   requestUrl.searchParams.set('perPage', '1')
-  // }
+  const { initialPage, initialPerPage, requestUrl } = useMemo(() => {
+    let url: URL | null = null
+    let page: number | undefined
+    let perPage: number | undefined
 
-  const initialPage = parseNumberParam(requestUrl.searchParams.get('page'))
-  const initialPerPage = parseNumberParam(requestUrl.searchParams.get('perPage'))
+    try {
+      url = new URL(widgetFullUrl)
+      page = parseNumberParam(url.searchParams.get('page'))
+      perPage = parseNumberParam(url.searchParams.get('perPage'))
+    } catch (error) {
+      console.error('useWidgetQuery: error in generating URL: ', error)
+    }
+
+    return { requestUrl: url, initialPage: page, initialPerPage: perPage }
+  }, [widgetFullUrl])
+
+  const enabledFlag = (options?.enabled ?? true) && requestUrl !== null
 
   async function fetchWidget({ page, perPage }: { page?: number; perPage?: number }) {
+    if (!requestUrl) {
+      throw new Error('Cannot fetch widget: invalid URL')
+    }
+
     /* set new page and perPage to the original requestUrl with updated values */
     if (typeof page === 'number') {
       requestUrl.searchParams.set('page', page.toString())
@@ -55,6 +68,7 @@ export const useWidgetQuery = (widgetEndpoint: string) => {
   }
 
   const queryResult = useInfiniteQuery({
+    enabled: enabledFlag,
     queryKey: ['widgets', widgetEndpoint],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
     initialPageParam: {

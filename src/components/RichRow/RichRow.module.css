@@ -12,6 +12,6 @@
     }
 
     .subtext {
-      color: var(--gray-color);
+      color: var(--text-secondary-color);
     }
   }

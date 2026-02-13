@@ -663,6 +663,26 @@ TabList display a set of tab items for navigation or content grouping
 
 ---
 
+### Theme
+
+Theme is a widget that allows to define an UI theme for the entire application.
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| custom | no | Defines customization for specific components / widgets | object |
+| mode | yes | The mode on which the theme is based (dark or light) | `dark` \| `light` |
+| logo | no | Defines the application logo as SVG string or URL | object |
+| logo.svg | no | The logo as SVG | string |
+| logo.url | no | The logo resource URL | string |
+| token | no | Defines customization for specific style tokens | object |
+
+
+[Examples](../src/examples/widgets/Theme/Theme.example.yaml)
+
+---
+
 ### YamlViewer
 
 YamlViewer receives a JSON string as input and renders its equivalent YAML representation for display.
