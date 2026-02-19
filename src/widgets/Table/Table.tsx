@@ -9,11 +9,12 @@ import { getEndpointUrl } from '../../utils/utils'
 
 import styles from './Table.module.css'
 import type { Table as WidgetType } from './Table.type'
+import TableAction from './TableAction'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
 const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>) => {
-  const { columns, data, pageSize, prefix } = widgetData
+  const { columns, data, pageSize, prefix, tableActions } = widgetData
   const { getFilteredData } = useFilter()
 
   // TODO: check if this works with RESTAction, it should not be displayed
@@ -32,79 +33,89 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
     dataTable = getFilteredData(data, prefix) as TableWidgetData['data']
   }
 
-  return (
-    <AntdTable
-      columns={columns?.map(({ color, title, valueKey }, index) => ({
-        dataIndex: valueKey,
-        key: `${uid}-col-${index}`,
-        render: (_: unknown, row: TableWidgetData['data'][number]) => {
-          const cell = row.find((cell) => cell.valueKey === valueKey)
+  const renderedColumns = columns?.map(({ color, title, valueKey }, index) => ({
+    dataIndex: valueKey,
+    key: `${uid}-col-${index}`,
+    render: (_: unknown, row: TableWidgetData['data'][number]) => {
+      const cell = row.find((cell) => cell.valueKey === valueKey)
 
-          if (!cell) {
-            console.error('Table rendering error: cell is undefined')
+      if (!cell) {
+        console.error('Table rendering error: cell is undefined')
+        return <span>-</span>
+      }
+
+      const { arrayValue, booleanValue, decimalValue, kind, numberValue, resourceRefId, stringValue, type } = cell
+      const endpoint = kind === 'widget' && resourceRefId && getEndpointUrl(resourceRefId, resourcesRefs)
+
+      switch (kind) {
+        case 'icon':
+          if (stringValue) { return <FontAwesomeIcon color={color} icon={stringValue as IconProp} /> }
+          console.error('Table rendering error: icon value has incorrect format')
+          return <span>-</span>
+
+        case 'widget':
+          if (!resourceRefId) {
+            console.error('Table rendering error: widget resourceRefId not found')
             return <span>-</span>
           }
 
-          const { arrayValue, booleanValue, decimalValue, kind, numberValue, resourceRefId, stringValue, type } = cell
-          const endpoint = kind === 'widget' && resourceRefId && getEndpointUrl(resourceRefId, resourcesRefs)
+          if (!endpoint) {
+            console.error('Table rendering error: widget resourceRefId endpoint not found')
+            return <span>-</span>
+          }
 
-          switch (kind) {
-            case 'icon':
-              if (stringValue) { return <FontAwesomeIcon color={color} icon={stringValue as IconProp} /> }
-              console.error('Table rendering error: icon value has incorrect format')
+          return <WidgetRenderer widgetEndpoint={endpoint} />
+
+        case 'jsonSchemaType':
+          if (!type) {
+            console.error('Table rendering error: jsonSchemaType cell missing type')
+            return <span>-</span>
+          }
+
+          switch (type) {
+            case 'string':
+              return <span style={{ color }}>{stringValue ?? '-'}</span>
+            case 'number':
+            case 'integer':
+              return <span style={{ color }}>{numberValue ?? '-'}</span>
+            case 'decimal':
+              return <span style={{ color }}>{String(decimalValue) ?? '-'}</span>
+            case 'boolean':
+              return <span style={{ color }}>{booleanValue !== undefined ? String(booleanValue) : '-'}</span>
+            case 'array':
+              return <span style={{ color }}>{arrayValue ? arrayValue.join(', ') : '-'}</span>
+            case 'null':
               return <span>-</span>
-
-            case 'widget':
-              if (!resourceRefId) {
-                console.error('Table rendering error: widget resourceRefId not found')
-                return <span>-</span>
-              }
-
-              if (!endpoint) {
-                console.error('Table rendering error: widget resourceRefId endpoint not found')
-                return <span>-</span>
-              }
-
-              return <WidgetRenderer widgetEndpoint={endpoint} />
-
-            case 'jsonSchemaType':
-              if (!type) {
-                console.error('Table rendering error: jsonSchemaType cell missing type')
-                return <span>-</span>
-              }
-
-              switch (type) {
-                case 'string':
-                  return <span style={{ color }}>{stringValue ?? '-'}</span>
-                case 'number':
-                case 'integer':
-                  return <span style={{ color }}>{numberValue ?? '-'}</span>
-                case 'decimal':
-                  return <span style={{ color }}>{String(decimalValue) ?? '-'}</span>
-                case 'boolean':
-                  return <span style={{ color }}>{booleanValue !== undefined ? String(booleanValue) : '-'}</span>
-                case 'array':
-                  return <span style={{ color }}>{arrayValue ? arrayValue.join(', ') : '-'}</span>
-                case 'null':
-                  return <span>-</span>
-                default:
-                  console.error('Table rendering error: unknown jsonSchemaType')
-                  return <span>-</span>
-              }
-
             default:
-              console.error('Table rendering error: unknown kind')
+              console.error('Table rendering error: unknown jsonSchemaType')
               return <span>-</span>
           }
-        },
-        title: (
-          <div className={styles.headerEllipsis}>
-            <Typography.Text ellipsis={{ tooltip: true }}>
-              {title}
-            </Typography.Text>
-          </div>
-        ),
-      }))}
+
+        default:
+          console.error('Table rendering error: unknown kind')
+          return <span>-</span>
+      }
+    },
+    title: (
+      <div className={styles.headerEllipsis}>
+        <Typography.Text ellipsis={{ tooltip: true }}>
+          {title}
+        </Typography.Text>
+      </div>
+    ),
+  }))
+
+  const renderedActions = tableActions
+    ? {
+      key: `${uid}-actions`,
+      render: (_: unknown, row: TableWidgetData['data'][number]) => <TableAction row={row} tableActions={tableActions} />,
+      title: 'Actions',
+    }
+    : []
+
+  return (
+    <AntdTable
+      columns={{ ...renderedColumns, ...renderedActions }}
       dataSource={dataTable}
       key={uid}
       pagination={dataTable && pageSize && dataTable.length > pageSize ? { defaultPageSize: pageSize } : false}
