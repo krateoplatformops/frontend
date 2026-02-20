@@ -14,7 +14,7 @@ import TableAction from './TableAction'
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
 const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>) => {
-  const { columns, data, pageSize, prefix, tableActions } = widgetData
+  const { actions, columns, data, pageSize, prefix, tableActions } = widgetData
   const { getFilteredData } = useFilter()
 
   // TODO: check if this works with RESTAction, it should not be displayed
@@ -106,16 +106,24 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
   }))
 
   const renderedActions = tableActions
-    ? {
+    ? [{
       key: `${uid}-actions`,
-      render: (_: unknown, row: TableWidgetData['data'][number]) => <TableAction row={row} tableActions={tableActions} />,
+      render: (_: unknown, row: TableWidgetData['data'][number], rowIndex) =>
+        tableActions.map((action, index) => (
+          <TableAction
+            actions={actions}
+            resourcesRefs={resourcesRefs}
+            row={row}
+            tableAction={action}
+            uid={`${uid}-${rowIndex}-${index}`}
+          />)),
       title: 'Actions',
-    }
+    }]
     : []
 
   return (
     <AntdTable
-      columns={{ ...renderedColumns, ...renderedActions }}
+      columns={[...renderedColumns, ...renderedActions]}
       dataSource={dataTable}
       key={uid}
       pagination={dataTable && pageSize && dataTable.length > pageSize ? { defaultPageSize: pageSize } : false}

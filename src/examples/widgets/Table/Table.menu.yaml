@@ -46,6 +46,7 @@ spec:
       - tablists
       - yamlviewers
     items:
+      - resourceRefId: example-table-actions-panel
       - resourceRefId: example-table-empty-columns-panel
       - resourceRefId: example-table-empty-data-panel
       - resourceRefId: example-table-basic-panel
@@ -118,6 +119,12 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET
+      - id: example-table-actions-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-actions-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET  
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -324,4 +331,24 @@ spec:
         name: example-table-restaction
         namespace: krateo-system
         resource: tables
-        verb: GET 
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-actions-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Basic table with table actions'
+    items:
+      - resourceRefId: example-table-actions
+  resourcesRefs:
+    items:
+      - id: example-table-actions
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-actions
+        namespace: krateo-system
+        resource: tables
+        verb: GET
