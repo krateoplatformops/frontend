@@ -109,14 +109,17 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
     ? [{
       key: `${uid}-actions`,
       render: (_: unknown, row: TableWidgetData['data'][number], rowIndex) =>
-        tableActions.map((action, index) => (
-          <TableAction
-            actions={actions}
-            resourcesRefs={resourcesRefs}
-            row={row}
-            tableAction={action}
-            uid={`${uid}-${rowIndex}-${index}`}
-          />)),
+        <div className={styles.actions}>
+          {tableActions.map((tableAction, index) => (
+            <TableAction
+              actions={actions}
+              resourcesRefs={resourcesRefs}
+              row={row}
+              tableAction={tableAction}
+              uid={`${uid}-${rowIndex}-${index}`}
+            />))
+          }
+        </div>,
       title: 'Actions',
     }]
     : []

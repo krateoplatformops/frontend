@@ -4,3 +4,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.actions {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-sm);
+}

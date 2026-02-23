@@ -491,3 +491,8 @@ spec:
       - clickActionId: pippo
         button:
           label: test
+      - clickActionId: pippo
+        button:
+          label: pluto
+          type: default
+          size: large
