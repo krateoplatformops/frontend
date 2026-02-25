@@ -163,7 +163,14 @@ export const useHandleAction = () => {
       return
     }
 
-    const resourceRef = action.resourceRefId ? getResourceRef(action.resourceRefId, resourcesRefs) : undefined
+    let resolvedResourceRefId: string | undefined
+    if (action.resourceRefId) {
+      resolvedResourceRefId = action.resourceRefId.startsWith('${')
+        ? await resolveJq(action.resourceRefId, { json: customPayload, widget })
+        : action.resourceRefId
+    }
+
+    const resourceRef = resolvedResourceRefId ? getResourceRef(resolvedResourceRefId, resourcesRefs) : undefined
 
     if (!resourceRef) {
       message.destroy()

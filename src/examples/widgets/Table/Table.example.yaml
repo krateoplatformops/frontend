@@ -463,6 +463,13 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    actions:
+      openDrawer:
+        - id: open-drawer-default
+          type: openDrawer
+          resourceRefId: example-markdown-basic
+          size: default
+          title: Default Drawer Example
     allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
     pageSize: 5
     columns:
@@ -488,7 +495,7 @@ spec:
           type: integer
           numberValue: 42
     tableActions:
-      - clickActionId: pippo
+      - clickActionId: open-drawer-default
         button:
           label: test
       - clickActionId: pippo
@@ -496,3 +503,11 @@ spec:
           label: pluto
           type: default
           size: large
+  resourcesRefs:
+    items:
+      - id: example-markdown-basic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-markdown-basic
+        namespace: krateo-system
+        resource: markdowns
+        verb: GET
