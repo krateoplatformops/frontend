@@ -13,6 +13,13 @@ import TableAction from './TableAction'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
 
+type TableCell = TableWidgetData['data'][number][number]
+
+export type NormalizedRow = {
+  key: string
+  cells: TableCell[]
+} & Record<string, unknown>
+
 const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>) => {
   const { actions, columns, data, pageSize, prefix, tableActions } = widgetData
   const { getFilteredData } = useFilter()
@@ -33,10 +40,33 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
     dataTable = getFilteredData(data, prefix) as TableWidgetData['data']
   }
 
+  const normalizedData: NormalizedRow[] = dataTable.map((row, index) => {
+    const rowObject = Object.fromEntries(
+      row.map<[string, unknown]>(cell => {
+        switch (cell.type) {
+          case 'string': return [cell.valueKey, cell.stringValue]
+          case 'integer':
+          case 'number': return [cell.valueKey, cell.numberValue]
+          case 'decimal': return [cell.valueKey, cell.decimalValue]
+          case 'boolean': return [cell.valueKey, cell.booleanValue]
+          case 'array': return [cell.valueKey, cell.arrayValue]
+          default: return [cell.valueKey, null]
+        }
+      })
+    )
+
+    return {
+      cells: row,
+      key: `${uid}-row-${index}`,
+      ...rowObject,
+    }
+  })
+
   const renderedColumns = columns?.map(({ color, title, valueKey }, index) => ({
     dataIndex: valueKey,
     key: `${uid}-col-${index}`,
-    render: (_: unknown, row: TableWidgetData['data'][number]) => {
+    render: (_: unknown, record: NormalizedRow) => {
+      const row = record.cells
       const cell = row.find((cell) => cell.valueKey === valueKey)
 
       if (!cell) {
@@ -108,13 +138,13 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
   const renderedActions = tableActions
     ? [{
       key: `${uid}-actions`,
-      render: (_: unknown, row: TableWidgetData['data'][number], rowIndex) =>
+      render: (_: unknown, record: NormalizedRow, rowIndex) =>
         <div className={styles.actions}>
           {tableActions.map((tableAction, index) => (
             <TableAction
               actions={actions}
               resourcesRefs={resourcesRefs}
-              row={row}
+              row={record}
               tableAction={tableAction}
               uid={`${uid}-${rowIndex}-${index}`}
             />))
@@ -127,9 +157,10 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
   return (
     <AntdTable
       columns={[...renderedColumns, ...renderedActions]}
-      dataSource={dataTable}
+      dataSource={normalizedData}
       key={uid}
-      pagination={dataTable && pageSize && dataTable.length > pageSize ? { defaultPageSize: pageSize } : false}
+      pagination={normalizedData && pageSize && normalizedData.length > pageSize ? { defaultPageSize: pageSize } : false}
+      rowKey='key'
       scroll={{ x: 'max-content' }}
     />
   )

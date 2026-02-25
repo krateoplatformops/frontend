@@ -6,6 +6,7 @@ import useApp from 'antd/es/app/useApp'
 import { useHandleAction } from '../../hooks/useHandleActions'
 import type { ResourcesRefs } from '../../types/Widget'
 
+import type { NormalizedRow } from './Table'
 import type { Table as WidgetType } from './Table.type'
 
 export type TableWidgetData = WidgetType['spec']['widgetData']
@@ -13,12 +14,12 @@ export type TableWidgetData = WidgetType['spec']['widgetData']
 type TableActionType = {
   actions: TableWidgetData['actions']
   tableAction: NonNullable<TableWidgetData['tableActions']>[number]
-  row: TableWidgetData['data'][number]
+  row: NormalizedRow
   resourcesRefs: ResourcesRefs
   uid: string
 }
 
-const TableAction = ({ actions, resourcesRefs, tableAction, uid }: TableActionType) => {
+const TableAction = ({ actions, resourcesRefs, row, tableAction, uid }: TableActionType) => {
   const {
     button: {
       backgroundColor,
@@ -49,7 +50,9 @@ const TableAction = ({ actions, resourcesRefs, tableAction, uid }: TableActionTy
       return
     }
 
-    await handleAction(action, resourcesRefs)
+    const { cells, key, ...payload } = row
+
+    await handleAction(action, resourcesRefs, payload)
   }
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {

@@ -170,6 +170,8 @@ export const useHandleAction = () => {
         : action.resourceRefId
     }
 
+    console.log(resolvedResourceRefId, customPayload)
+
     const resourceRef = resolvedResourceRefId ? getResourceRef(resolvedResourceRefId, resourcesRefs) : undefined
 
     if (!resourceRef) {
