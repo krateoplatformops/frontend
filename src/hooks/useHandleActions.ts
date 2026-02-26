@@ -154,7 +154,7 @@ export const useHandleAction = () => {
 
     if (action.type === 'navigate' && action.path) {
       const updatedUrl = action.path.startsWith('${')
-        ? await resolveJq(action.path, { widget })
+        ? await resolveJq(action.path, { json: customPayload, widget })
         : action.path
 
       await handleNavigate(action.requireConfirmation, updatedUrl)
@@ -170,14 +170,12 @@ export const useHandleAction = () => {
         : action.resourceRefId
     }
 
-    console.log(resolvedResourceRefId, customPayload)
-
     const resourceRef = resolvedResourceRefId ? getResourceRef(resolvedResourceRefId, resourcesRefs) : undefined
 
     if (!resourceRef) {
       message.destroy()
       notification.error({
-        description: `The widget definition does not include a resource reference for resource (ID: ${action.resourceRefId})`,
+        description: `The widget definition does not include a resource reference for resource (ID: ${resolvedResourceRefId})`,
         message: 'Error while executing the action',
         placement: 'bottomLeft',
       })
