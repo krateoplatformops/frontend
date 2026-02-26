@@ -467,7 +467,7 @@ spec:
       openDrawer:
         - id: open-drawer-default
           type: openDrawer
-          resourceRefId: example-markdown-basic
+          resourceRefId: ${ "example-markdown-basic" }
           size: default
           title: Default Drawer Example
     allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
@@ -477,6 +477,9 @@ spec:
         title: Name
       - valueKey: age
         title: Age
+      - valueKey: rowId
+        title: Row ID
+        hidden: true
     data:
       - - valueKey: name
           kind: jsonSchemaType
@@ -486,6 +489,10 @@ spec:
           kind: jsonSchemaType
           type: integer
           numberValue: 30
+        - valueKey: rowId
+          kind: jsonSchemaType
+          type: string
+          stringValue: row-1
       - - valueKey: name
           kind: jsonSchemaType
           type: string
@@ -494,6 +501,10 @@ spec:
           kind: jsonSchemaType
           type: integer
           numberValue: 42
+        - valueKey: rowId
+          kind: jsonSchemaType
+          type: string
+          stringValue: row-2
     tableActions:
       - clickActionId: open-drawer-default
         button:

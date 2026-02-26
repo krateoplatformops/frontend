@@ -220,6 +220,10 @@ export interface Table {
          */
         color?: 'blue' | 'darkBlue' | 'orange' | 'gray' | 'red' | 'green' | 'violet'
         /**
+         * option that disallows columns displaying, useful to insert data to be used in table actions logic, e.g. a row id. default is `false`
+         */
+        hidden?: boolean
+        /**
          * column header label
          */
         title: string
