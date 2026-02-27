@@ -483,6 +483,18 @@ spec:
           resourceRefId: ${ "example-markdown-" + .json.rowId }
           size: default
           title: Default Modal Example
+      rest:
+        - id: create-config-map-rest
+          type: rest
+          resourceRefId: create-configmap-from-form
+          payload:
+            metadata:
+              name: static-name
+          payloadToOverride:
+            - name: metadata.name
+              value: ${ .json.rowId }
+          headers:
+            - "Content-Type: application/json"
     allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
     pageSize: 5
     columns:
@@ -534,6 +546,10 @@ spec:
         button:
           label: navigate (resource ref id)
           type: default
+      - clickActionId: create-config-map-rest
+        button:
+          label: create config map (rest)
+          type: default
   resourcesRefs:
     items:
       - id: example-markdown-row-1
@@ -548,6 +564,12 @@ spec:
         namespace: krateo-system
         resource: markdowns
         verb: GET
+      - id: create-configmap-from-form
+        apiVersion: v1
+        name: create-configmap-from-form
+        resource: configmaps
+        namespace: krateo-system
+        verb: POST
 ---
 kind: Markdown
 apiVersion: widgets.templates.krateo.io/v1beta1
