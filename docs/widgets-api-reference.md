@@ -703,6 +703,9 @@ Table displays structured data with customizable columns and pagination
 
 [Examples](../src/examples/widgets/Table/Table.example.yaml)
 
+
+> For additional information about the `tableActions` property configuration, please visit [this page](./table-actions.md).
+
 ---
 
 ### TabList

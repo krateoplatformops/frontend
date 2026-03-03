@@ -94,6 +94,10 @@ async function formatSchemaToMarkdown(schema: JSONSchema, filePath: string): Pro
       \n\n> For additional information about the \`initialValues\` property configuration, please visit [this page](./form-values.md).\n`
   }
 
+  if (title.toLowerCase() === 'table') {
+    extraInfo = `\n\n> For additional information about the \`tableActions\` property configuration, please visit [this page](./table-actions.md).\n`
+  }
+
   return `### ${title}\n\n${description}\n\n#### Props\n\n${table}\n${exampleLink}${extraInfo}`
 }
 
