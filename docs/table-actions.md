@@ -14,10 +14,10 @@ Table actions allow you to attach one or more buttons to every row of a `Table` 
 
 To recap, each table action:
 
-- Is defined under `tableActions`
-- References a global action defined under `actions`
-- Receives the current row data as payload
-- Can interpolate row values
+- is defined under `tableActions`
+- references a global action defined under `actions`
+- receives the current row data as payload
+- can interpolate row values
 
 ## How to reference row data
 
@@ -76,7 +76,6 @@ columns:
   - valueKey: rowId
     title: Row ID
     hidden: true
-
 data:
   - - valueKey: name
       kind: jsonSchemaType
@@ -257,8 +256,6 @@ To achieve this, we combine:
 - a `RESTAction`, which retrieves the resources
 - the `resourcesRefsTemplate` property, which iterates over the retrieved resources and dynamically populates the `resourcesRefs` section
 
-Let's expand the previous example by furtherly templatize the Table widget. Instead of referencing static resources (such as `example-markdown-row-1`, `example-markdown-row-2`), we want to use a common iterator to retrieve them. In this specific case, we want to fetch all Markdown widgets that have the following prefix: `example-markdown`.
-
 For further informations about `resourcesRefsTemplate`, please visit [this page](docs.md#resourcesrefstemplate).
 For further informations about `RESTAction`, please visit [this page](./restactions.md).
 
@@ -275,8 +272,11 @@ spec:
     - name: markdowns
       path: /apis/widgets.templates.krateo.io/v1beta1/namespaces/krateo-system/markdowns
   filter: >
-    .markdowns.items
-    | map(select(.metadata.name | startswith("example-markdown")))
+    {
+      markdowns:
+        (.markdowns.items
+        | map(select(.metadata.name | startswith("example-markdown"))))
+    }
 ```
 
 This `RESTAction` must be referenced using the `apiRef` property:
