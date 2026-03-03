@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.8] - 2026-03-04
+
+### Added
+- Added `tableActions` property to `Table` widget
+
+### Documentation
+- Added `tableActions` documentation page
+
 ## [1.0.7] - 2026-02-13
 
 ### Added
