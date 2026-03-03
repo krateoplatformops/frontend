@@ -46,7 +46,6 @@ spec:
       - tablists
       - yamlviewers
     items:
-      - resourceRefId: example-table-actions-panel
       - resourceRefId: example-table-empty-columns-panel
       - resourceRefId: example-table-empty-data-panel
       - resourceRefId: example-table-basic-panel
@@ -57,6 +56,8 @@ spec:
       - resourceRefId: example-table-with-filter-panel
       - resourceRefId: example-table-with-pagination-panel
       - resourceRefId: example-table-restaction-panel
+      - resourceRefId: example-table-actions-panel
+      - resourceRefId: example-table-actions-dynamic-panel
   resourcesRefs:
     items:
       - id: example-table-empty-columns-panel
@@ -124,7 +125,14 @@ spec:
         name: example-table-actions-panel
         namespace: krateo-system
         resource: panels
-        verb: GET  
+        verb: GET 
+      - id: example-table-actions-dynamic-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-actions-dynamic-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET 
+      
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -349,6 +357,26 @@ spec:
       - id: example-table-actions
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-actions
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-actions-dynamic-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Basic table with table actions and dynamic resources'
+    items:
+      - resourceRefId: example-table-actions-dynamic
+  resourcesRefs:
+    items:
+      - id: example-table-actions-dynamic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-actions-dynamic
         namespace: krateo-system
         resource: tables
         verb: GET

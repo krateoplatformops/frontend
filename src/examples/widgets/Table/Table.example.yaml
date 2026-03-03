@@ -590,3 +590,97 @@ spec:
   widgetData:
     markdown: |
       # Row 2
+---
+# Basic table with table actions and dynamic resources
+# Target: confirm that actions are rendered correctly and resources are fetched.
+# Expected behavior: table shows an additional column for actions. When clicking on buttons, resources exist.
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-actions-dynamic
+  namespace: krateo-system
+spec:
+  apiRef:
+    name: get-example-markdowns
+    namespace: krateo-system
+  widgetData:
+    actions:
+      openModal:
+        - id: open-modal-markdown
+          type: openModal
+          resourceRefId: ${ "example-markdown-" + .json.rowId }
+          title: Default Modal Example
+      navigate:
+        - id: navigate-markdown
+          type: navigate
+          path: ${ "example-markdown-" + .json.rowId }
+    allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
+    pageSize: 5
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: age
+        title: Age
+      - valueKey: rowId
+        title: Row ID
+        hidden: true
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Alice"
+        - valueKey: age
+          kind: jsonSchemaType
+          type: integer
+          numberValue: 30
+        - valueKey: rowId
+          kind: jsonSchemaType
+          type: string
+          stringValue: row-1
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Bob"
+        - valueKey: age
+          kind: jsonSchemaType
+          type: integer
+          numberValue: 42
+        - valueKey: rowId
+          kind: jsonSchemaType
+          type: string
+          stringValue: row-2
+    tableActions:
+      - clickActionId: open-modal-markdown
+        button:
+          label: Open modal
+      - clickActionId: navigate-markdown
+        button:
+          label: Navigate
+          type: default
+  resourcesRefs:
+    items: []
+  resourcesRefsTemplate:
+    - iterator: ${ .markdowns }
+      template:
+        id: ${ .metadata.name }
+        apiVersion: ${ .apiVersion }
+        resource: markdowns
+        namespace: ${ .metadata.namespace }
+        name: ${ .metadata.name }
+        verb: GET
+---
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: get-example-markdowns
+  namespace: krateo-system
+spec:
+  api:
+    - name: markdowns
+      path: /apis/widgets.templates.krateo.io/v1beta1/namespaces/krateo-system/markdowns
+  filter: >
+    {
+      markdowns:
+        (.markdowns.items
+        | map(select(.metadata.name | startswith("example-markdown"))))
+    }
