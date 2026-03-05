@@ -38,6 +38,26 @@ export interface JSONSchema {
 
 export type SSEK8sEvent = EventV1
 
+export interface EventsApiResource {
+  global_uid: string
+  cluster_name: string
+  first_timestamp: string
+  last_timestamp: string
+  namespace: string
+  resource_kind: string
+  resource_name: string
+  event_type: string
+  reason: string
+  message: string
+  created_at: string
+  raw: string
+}
+
+export interface EventsApiResponse {
+  cursor: string
+  resources: EventsApiResource[]
+}
+
 export type RestApiResponse = {
   status?: string | number
   reason?: string

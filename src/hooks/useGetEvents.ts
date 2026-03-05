@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
-import type { SSEK8sEvent } from '../utils/types'
+import type { EventsApiResource, EventsApiResponse } from '../utils/types'
 
 const MAX_EVENTS = 200
 // 10 seconds
@@ -27,8 +27,9 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
     gcTime: Infinity,
     queryFn: async () => {
       const res = await fetch(eventsUrl)
-      const notifications = (await res.json()) as SSEK8sEvent[]
-      return notifications
+      const data = (await res.json()) as EventsApiResponse
+      console.log(data)
+      return data.resources
     },
     // eslint-disable-next-line @tanstack/query/exhaustive-deps -- we want to re-fetch when the url changes
     queryKey,
@@ -42,7 +43,7 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
   // Cleanup old events periodically to prevent memory issues
   useEffect(() => {
     const interval = setInterval(() => {
-      queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => {
+      queryClient.setQueryData(queryKey, (prev: EventsApiResource[]) => {
         if (!prev || prev.length <= MAX_EVENTS) {
           return prev
         }
@@ -84,8 +85,8 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
 
     const handler = (event: MessageEvent<string>) => {
       try {
-        const data = JSON.parse(event.data) as SSEK8sEvent
-        queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => [data, ...(prev || [])])
+        const data = JSON.parse(event.data) as EventsApiResource
+        queryClient.setQueryData(queryKey, (prev: EventsApiResource[]) => [data, ...(prev || [])])
       } catch (error) {
         console.error('Error parsing event data:', error)
       }

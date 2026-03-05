@@ -18,13 +18,16 @@ const Notifications = () => {
       dataSource={notifications}
       itemLayout='vertical'
       renderItem={({
-        firstTimestamp,
-        involvedObject: { apiVersion, kind, name, namespace },
-        lastTimestamp,
+        created_at: creationTimestamp,
+        event_type: type,
+        first_timestamp: firstTimestamp,
+        global_uid: uid,
+        last_timestamp: lastTimestamp,
         message,
-        metadata: { creationTimestamp, uid },
+        namespace,
         reason,
-        type,
+        resource_kind: kind,
+        resource_name: name,
       }, index) => {
         const timestamp = lastTimestamp || firstTimestamp || creationTimestamp
 
@@ -52,7 +55,7 @@ const Notifications = () => {
                   {message}
                 </Typography.Text>
                 <Typography.Paragraph className={styles.details}>
-                  {`${kind}.${apiVersion}/${namespace}/${name}`}
+                  {`${kind}/${namespace}/${name}`}
                 </Typography.Paragraph>
               </div>
             </Button>
