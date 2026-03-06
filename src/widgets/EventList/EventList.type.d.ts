@@ -12,7 +12,7 @@ export interface EventList {
       /**
        * list of events received from a k8s cluster or server sent event
        */
-      events: SSEK8sEvent[]
+      events: EventsApiResource[]
       /**
        * filter prefix used to filter data
        */

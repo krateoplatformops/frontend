@@ -6,7 +6,7 @@ import { useFilter } from '../../components/FiltesProvider/FiltersProvider'
 import RichRow from '../../components/RichRow'
 import { useConfigContext } from '../../context/ConfigContext'
 import type { WidgetProps } from '../../types/Widget'
-import type { SSEK8sEvent } from '../../utils/types'
+import type { EventsApiResource } from '../../utils/types'
 import { formatISODate } from '../../utils/utils'
 
 import type { EventList as WidgetType } from './EventList.type'
@@ -20,7 +20,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
   const { getFilteredData } = useFilter()
   const [loading, setLoading] = useState<boolean>(!!sseEndpoint && !!sseTopic)
 
-  const [eventList, setEventList] = useState<SSEK8sEvent[]>(events || [])
+  const [eventList, setEventList] = useState<EventsApiResource[]>(events || [])
 
   useEffect(() => {
     if (!sseEndpoint || !sseTopic) { return }
@@ -37,25 +37,17 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
           return
         }
 
-        const fakeEvent: SSEK8sEvent = {
-          eventTime: new Date().toISOString(),
-          involvedObject: {
-            apiVersion: 'v1',
-            kind: 'Pod',
-            name: 'example-pod',
-            namespace: 'default',
-            uid: 'mock-obj',
-          },
+        const fakeEvent: EventsApiResource = {
+          cluster_name: 'mock-cluster',
+          created_at: new Date().toISOString(),
+          event_type: 'Normal',
+          global_uid: `mock-${Date.now()}`,
           message: `Simulated Kubernetes event #${counter + 1}`,
-          metadata: {
-            creationTimestamp: new Date().toISOString(),
-            name: `mock-event-${Date.now()}`,
-            namespace: 'default',
-            uid: `mock-${Date.now()}`,
-          },
+          namespace: 'default',
+          raw: '',
           reason: 'MockEvent',
-          source: { component: 'mock-generator' },
-          type: 'Normal',
+          resource_kind: 'Pod',
+          resource_name: 'example-pod',
         }
 
         setEventList((prev) => [fakeEvent, ...prev].slice(0, 200))
@@ -78,7 +70,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
 
       eventSource.addEventListener(sseTopic, (event: MessageEvent<string>) => {
         try {
-          const data = JSON.parse(event.data) as SSEK8sEvent
+          const data = JSON.parse(event.data) as EventsApiResource
           setEventList((prev) => [data, ...prev].slice(0, 200))
           setLoading(false)
         } catch (error) {
@@ -104,7 +96,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
 
   const filteredEventList = useMemo(() => {
     if (prefix && eventList.length > 0) {
-      return getFilteredData(eventList, prefix) as SSEK8sEvent[]
+      return getFilteredData(eventList, prefix) as EventsApiResource[]
     }
 
     return eventList
@@ -122,39 +114,33 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
     <>
       {filteredEventList.map(
         ({
-          eventTime,
-          firstTimestamp,
-          involvedObject: { apiVersion, kind, name, namespace },
-          lastTimestamp,
+          created_at: creationTimestamp,
+          event_type: type,
+          global_uid: rowUid,
           message,
-          metadata: { uid: rowUid },
+          namespace,
           reason,
-          type,
-        }) => {
-          const timestamp = lastTimestamp || firstTimestamp || eventTime
-
-          return (
-            <RichRow
-              color={type === 'Normal' ? 'blue' : 'orange'}
-              icon={'fa-ellipsis-h'}
-              key={`${uid}-${rowUid}`}
-              primaryText={
-                <>
-                  <Typography.Text type='secondary'>name:</Typography.Text> <Typography.Text>{name}</Typography.Text>
-                  <Divider type='vertical' />
-                  <Typography.Text type='secondary'>namespace:</Typography.Text> <Typography.Text>{namespace}</Typography.Text>
-                  <Divider type='vertical' />
-                  <Typography.Text type='secondary'>kind:</Typography.Text> <Typography.Text>{kind}</Typography.Text>
-                  <Divider type='vertical' />
-                  <Typography.Text type='secondary'>apiVersion:</Typography.Text> <Typography.Text>{apiVersion}</Typography.Text>
-                </>
-              }
-              secondaryText={timestamp && formatISODate(timestamp, true)}
-              subPrimaryText={message}
-              subSecondaryText={reason}
-            />
-          )
-        }
+          resource_kind: kind,
+          resource_name: name,
+        }) => (
+          <RichRow
+            color={type === 'Normal' ? 'blue' : 'orange'}
+            icon={'fa-ellipsis-h'}
+            key={`${uid}-${rowUid}`}
+            primaryText={
+              <>
+                <Typography.Text type='secondary'>name:</Typography.Text> <Typography.Text>{name}</Typography.Text>
+                <Divider type='vertical' />
+                <Typography.Text type='secondary'>namespace:</Typography.Text> <Typography.Text>{namespace}</Typography.Text>
+                <Divider type='vertical' />
+                <Typography.Text type='secondary'>kind:</Typography.Text> <Typography.Text>{kind}</Typography.Text>
+              </>
+            }
+            secondaryText={creationTimestamp && formatISODate(creationTimestamp, true)}
+            subPrimaryText={message}
+            subSecondaryText={reason}
+          />
+        )
       )}
     </>
   )

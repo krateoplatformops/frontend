@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { createContext, useState, useContext, useEffect } from 'react'
 
 import { useEvents } from '../../hooks/useEvents'
+import type { EventsApiResource } from '../../utils/types'
 import type { TableWidgetData } from '../../widgets/Table/Table'
 
 export type FilterType = {
@@ -13,7 +14,7 @@ export type FilterType = {
 
 type FilterMap = Record<string, FilterType[]>
 type TableRow = TableWidgetData['data'][number]
-type FilterableRow = Record<string, unknown> | TableRow
+type FilterableRow = Record<string, unknown> | TableRow | EventsApiResource
 
 type FiltersContextType = {
   setFilters: (prefix: string, filters: FilterType[]) => void
