@@ -28,7 +28,6 @@ export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic
     queryFn: async () => {
       const res = await fetch(eventsUrl)
       const data = (await res.json()) as EventsApiResponse
-      console.log(data)
       return data.resources
     },
     // eslint-disable-next-line @tanstack/query/exhaustive-deps -- we want to re-fetch when the url changes

@@ -20,17 +20,13 @@ const Notifications = () => {
       renderItem={({
         created_at: creationTimestamp,
         event_type: type,
-        first_timestamp: firstTimestamp,
         global_uid: uid,
-        last_timestamp: lastTimestamp,
         message,
         namespace,
         reason,
         resource_kind: kind,
         resource_name: name,
       }, index) => {
-        const timestamp = lastTimestamp || firstTimestamp || creationTimestamp
-
         return (
           <List.Item
             className={`${styles.listItem} ${index === 0 ? styles.firstElement : ''} ${notifications?.length && index === notifications.length - 1 ? styles.lastElement : ''}`}
@@ -48,7 +44,7 @@ const Notifications = () => {
                     }
                   />
                   <Typography.Paragraph className={styles.timestamp}>
-                    {timestamp && formatISODate(timestamp, true)}
+                    {creationTimestamp && formatISODate(creationTimestamp, true)}
                   </Typography.Paragraph>
                 </div>
                 <Typography.Text className={styles.description}>
