@@ -1,4 +1,3 @@
-import type { EventV1 } from '../types/k8s/event.type'
 import type { WidgetActions } from '../types/Widget'
 interface JSONSchemaProperty {
   type?: string | string[]
@@ -35,8 +34,6 @@ export interface JSONSchema {
     }
   }
 }
-
-export type SSEK8sEvent = EventV1
 
 export interface EventsApiResource {
   global_uid: string
