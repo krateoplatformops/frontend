@@ -1,6 +1,7 @@
 import { BellFilled } from '@ant-design/icons'
+import { useQueryClient } from '@tanstack/react-query'
 import { Badge, Button, Drawer, List, Skeleton, Typography } from 'antd'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useGetEvents } from '../../hooks/useGetEvents'
 import { formatISODate } from '../../utils/utils'
@@ -9,8 +10,15 @@ import styles from './Notifications.module.css'
 
 const Notifications = () => {
   const [drawerVisible, setDrawerVisible] = useState(false)
+  const queryClient = useQueryClient()
 
-  const { data: notifications, isLoading } = useGetEvents({ registerToSSE: drawerVisible, topic: 'krateo' })
+  const { data: notifications, isLoading, unreadCount } = useGetEvents({ registerToSSE: drawerVisible, topic: 'krateo' })
+
+  useEffect(() => {
+    if (drawerVisible) {
+      queryClient.setQueryData(['events-unread', 'krateo', undefined], 0)
+    }
+  }, [drawerVisible, queryClient])
 
   const notificationList = useMemo(() => (
     <List
@@ -65,8 +73,8 @@ const Notifications = () => {
   return (
     <>
       <Badge
-        className={`${styles.badge} ${notifications && notifications?.length > 0 ? styles.hasNotifications : ''}`}
-        count={notifications?.length || 0}
+        className={`${styles.badge} ${unreadCount > 0 ? styles.hasNotifications : ''}`}
+        count={unreadCount}
       >
         <Button className={styles.icon} icon={<BellFilled />} onClick={() => setDrawerVisible(true)} shape='circle' type='link' />
       </Badge>
