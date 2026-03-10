@@ -6,6 +6,7 @@ import { useConfigContext } from '../context/ConfigContext'
 import type { EventsApiResource, EventsApiResponse } from '../utils/types'
 
 type UseGetEventsOptions = {
+  enabled?: boolean
   topic?: string
   registerToSSE?: boolean
   sseEndpoint?: string
@@ -17,6 +18,7 @@ const MAX_PAGES = 50
 const sseConnections = new Map<string, EventSource>()
 
 export function useGetEvents({
+  enabled,
   registerToSSE = true,
   sseEndpoint,
   topic = 'krateo',
@@ -44,6 +46,7 @@ export function useGetEvents({
   )
 
   const queryResult = useQuery({
+    enabled: !!enabled,
     gcTime: Infinity,
     queryFn: async () => {
       let cursor: string | undefined
@@ -75,7 +78,7 @@ export function useGetEvents({
   })
 
   useEffect(() => {
-    if (!registerToSSE) { return }
+    if (!enabled || !registerToSSE) { return }
 
     const connectionKey = `${notificationsUrl}:${topic}`
 

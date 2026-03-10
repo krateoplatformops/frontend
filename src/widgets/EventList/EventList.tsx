@@ -14,23 +14,26 @@ import type { EventList as WidgetType } from './EventList.type'
 export type EventListWidgetData = WidgetType['spec']['widgetData']
 
 const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
-  const { prefix, sseEndpoint, sseTopic } = widgetData
+  const { events, prefix, sseEndpoint, sseTopic } = widgetData
 
   const { getFilteredData } = useFilter()
 
   const { data: eventList = [], isLoading } = useGetEvents({
+    enabled: events === undefined,
     registerToSSE: !!sseEndpoint && !!sseTopic,
     sseEndpoint,
     topic: sseTopic,
   })
 
+  const eventsSource = useMemo(() => (events ?? eventList) as EventsApiResource[], [eventList, events])
+
   const filteredEventList = useMemo(() => {
-    if (prefix && eventList.length > 0) {
-      return getFilteredData(eventList, prefix) as EventsApiResource[]
+    if (prefix && eventsSource.length > 0) {
+      return getFilteredData(eventsSource, prefix) as EventsApiResource[]
     }
 
-    return eventList
-  }, [prefix, eventList, getFilteredData])
+    return eventsSource
+  }, [prefix, eventsSource, getFilteredData])
 
   if (isLoading) {
     return <Spin indicator={<LoadingOutlined />} size='large' spinning />
