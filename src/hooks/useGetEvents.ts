@@ -1,5 +1,5 @@
-import type { QueryKey } from '@tanstack/react-query'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { InfiniteData, QueryKey } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
@@ -12,9 +12,6 @@ type UseGetEventsOptions = {
   sseEndpoint?: string
 }
 
-const MAX_PAGES = 50
-
-// evita connessioni SSE duplicate
 const sseConnections = new Map<string, EventSource>()
 
 export function useGetEvents({
@@ -26,88 +23,90 @@ export function useGetEvents({
   const { config } = useConfigContext()
   const queryClient = useQueryClient()
 
-  const eventsUrl = `${config!.api.EVENTS_API_BASE_URL}/events`
+  const eventsBaseUrl = config!.api.EVENTS_API_BASE_URL
+  const eventsUrl = `${eventsBaseUrl}/events`
 
-  const notificationsUrl = useMemo(() => {
-    return new URL(
-      sseEndpoint ?? '/notifications',
-      config!.api.EVENTS_PUSH_API_BASE_URL
-    ).toString()
-  }, [config, sseEndpoint])
+  const notificationsUrl = useMemo(() =>
+    new URL(sseEndpoint ?? '/notifications', config!.api.EVENTS_PUSH_API_BASE_URL).toString(),
+  [config, sseEndpoint])
 
-  const queryKey: QueryKey = useMemo(
-    () => ['events', eventsUrl, 'topic', topic, 'endpoint', sseEndpoint, 'maxPages', MAX_PAGES],
-    [eventsUrl, topic, sseEndpoint]
-  )
+  const queryKey = ['events', eventsUrl, topic, sseEndpoint] as const
+  const unreadKey: QueryKey = ['events-unread', topic, sseEndpoint ?? undefined]
 
-  const unreadKey: QueryKey = useMemo(
-    () => ['events-unread', topic, sseEndpoint],
-    [topic, sseEndpoint]
-  )
+  // Infinite query
+  const queryResult = useInfiniteQuery<
+    EventsApiResponse,
+    Error,
+    InfiniteData<EventsApiResponse>,
+    typeof queryKey,
+    string | undefined
+  >({
+    enabled: !!enabled && !!eventsBaseUrl,
+    gcTime: 5 * 60_000,
+    queryFn: async ({ pageParam, signal }) => {
+      const [, eventsUrl] = queryKey
 
-  const queryResult = useQuery({
-    enabled: !!enabled,
-    gcTime: Infinity,
-    queryFn: async () => {
-      let cursor: string | undefined
-      let pages = 0
-      const allEvents: EventsApiResource[] = []
+      const url = pageParam ? `${eventsUrl}?cursor=${pageParam}` : eventsUrl
+      const res = await fetch(url, { signal })
 
-      do {
-        const url = cursor ? `${eventsUrl}?cursor=${cursor}` : eventsUrl
-
-        // eslint-disable-next-line no-await-in-loop
-        const res = await fetch(url)
-
-        // eslint-disable-next-line no-await-in-loop
-        const data = (await res.json()) as EventsApiResponse
-
-        allEvents.push(...data.resources)
-        cursor = data.cursor
-
-        pages += 1
-      } while (cursor && pages < MAX_PAGES)
-
-      return allEvents
+      return (await res.json()) as EventsApiResponse
     },
+    // eslint-disable-next-line sort-keys/sort-keys-fix
+    getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
+    initialPageParam: undefined,
     queryKey,
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 30_000,
   })
 
+  const events = useMemo(() =>
+    queryResult.data?.pages.flatMap(page => page.resources) ?? [],
+  [queryResult.data])
+
   useEffect(() => {
-    if (!enabled || !registerToSSE) { return }
+    if (!enabled || !registerToSSE) {
+      const source = sseConnections.get(`${notificationsUrl}:${topic}`)
+
+      if (source) {
+        source.close()
+        sseConnections.delete(`${notificationsUrl}:${topic}`)
+      }
+
+      return
+    }
 
     const connectionKey = `${notificationsUrl}:${topic}`
 
     if (!sseConnections.has(connectionKey)) {
-      const eventSource = new EventSource(notificationsUrl, {
-        withCredentials: false,
-      })
-
+      const eventSource = new EventSource(notificationsUrl, { withCredentials: false })
       sseConnections.set(connectionKey, eventSource)
 
-      eventSource.onerror = (event) => {
-        console.error('[SSE] Connection error:', event)
-      }
+      eventSource.onerror = console.error
 
       eventSource.addEventListener(topic, (event: MessageEvent<string>) => {
         try {
           const data = JSON.parse(event.data) as EventsApiResource
 
-          queryClient.setQueryData(queryKey, (prev: EventsApiResource[] = []) => {
-            const alreadyExists = prev.some(event => event.global_uid === data.global_uid)
+          queryClient.setQueryData<InfiniteData<EventsApiResponse>>(queryKey, prev => {
+            if (!prev) { return prev }
+            const [firstPage, ...rest] = prev.pages
+            const exists = firstPage.resources.some(event => event.global_uid === data.global_uid)
+            if (exists) { return prev }
 
-            if (alreadyExists) { return prev }
-
-            return [data, ...prev]
+            return {
+              ...prev,
+              pages: [
+                { ...firstPage, resources: [data, ...firstPage.resources] },
+                ...rest,
+              ],
+            }
           })
 
           queryClient.setQueryData(unreadKey, (prev: number = 0) => prev + 1)
-        } catch (error) {
-          console.error('Error parsing event data:', error)
+        } catch (err) {
+          console.error('SSE parse error:', err)
         }
       })
     }
@@ -120,13 +119,22 @@ export function useGetEvents({
         sseConnections.delete(connectionKey)
       }
     }
-  }, [notificationsUrl, topic, registerToSSE, queryClient, queryKey, unreadKey])
+  }, [enabled, registerToSSE, notificationsUrl, topic, queryClient, queryKey, unreadKey])
 
-  const unreadCount
-    = queryClient.getQueryData<number>(unreadKey) ?? 0
+  // Auto-fetch next page
+  useEffect(() => {
+    if (!enabled) { return }
+    if (queryResult.hasNextPage && !queryResult.isFetchingNextPage) {
+      queryResult.fetchNextPage().catch(error => console.error(error))
+    }
+  }, [enabled, queryResult.hasNextPage, queryResult.isFetchingNextPage, queryResult.fetchNextPage])
+
+  const unreadCount = queryClient.getQueryData<number>(unreadKey) ?? 0
 
   return {
-    data: queryResult.data,
+    data: events,
+    fetchNextPage: queryResult.fetchNextPage,
+    hasNextPage: queryResult.hasNextPage,
     isLoading: queryResult.isLoading,
     refetch: queryResult.refetch,
     unreadCount,

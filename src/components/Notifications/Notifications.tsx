@@ -12,7 +12,11 @@ const Notifications = () => {
   const [drawerVisible, setDrawerVisible] = useState(false)
   const queryClient = useQueryClient()
 
-  const { data: notifications, isLoading, unreadCount } = useGetEvents({ registerToSSE: drawerVisible, topic: 'krateo' })
+  const { data: notifications = [], isLoading, unreadCount } = useGetEvents({
+    enabled: drawerVisible,
+    registerToSSE: drawerVisible,
+    topic: 'krateo',
+  })
 
   useEffect(() => {
     if (drawerVisible) {
