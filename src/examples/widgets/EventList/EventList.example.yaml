@@ -88,3 +88,17 @@ spec:
         name: 
         - resource_name
         type: string
+---
+# Live updates via SSE
+# Expected behavior: The widget connects to the provided SSE endpoint and updates in real time as new events are received.
+# Use this configuration to test streaming behavior from a live backend.
+kind: EventList
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-eventlist-sse
+  namespace: krateo-system
+spec:
+  widgetData:
+    sseEndpoint: "events"
+    sseTopic: "k8s-events"
+    events: []

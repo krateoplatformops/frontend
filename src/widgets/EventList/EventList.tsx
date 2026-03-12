@@ -19,13 +19,13 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
   const { getFilteredData } = useFilter()
 
   const { data: eventList = [], isLoading } = useGetEvents({
-    enabled: events === undefined,
+    enabled: !!sseEndpoint && !!sseTopic,
     registerToSSE: !!sseEndpoint && !!sseTopic,
     sseEndpoint,
     topic: sseTopic,
   })
 
-  const eventsSource = useMemo(() => (events ?? eventList) as EventsApiResource[], [eventList, events])
+  const eventsSource = useMemo(() => (!!sseEndpoint && !!sseTopic ? eventList : events) as EventsApiResource[], [eventList, events, sseEndpoint, sseTopic])
 
   const filteredEventList = useMemo(() => {
     if (prefix && eventsSource.length > 0) {

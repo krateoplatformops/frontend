@@ -49,6 +49,7 @@ spec:
       - resourceRefId: example-eventlist-empty-panel
       - resourceRefId: example-eventlist-basic-panel
       - resourceRefId: example-eventlist-with-prefix-panel
+      - resourceRefId: example-eventlist-sse-panel
   resourcesRefs:
     items:
       - id: example-eventlist-empty-panel
@@ -69,6 +70,12 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET      
+      - id: example-eventlist-sse-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-eventlist-sse-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -136,3 +143,23 @@ spec:
         namespace: krateo-system
         resource: filters
         verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-eventlist-sse-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Live updates via SSE (5 events mock)'
+    items:
+      - resourceRefId: example-eventlist-sse
+  resourcesRefs:
+    items:
+      - id: example-eventlist-sse
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-eventlist-sse
+        namespace: krateo-system
+        resource: eventlists
+        verb: GET  
