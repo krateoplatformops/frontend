@@ -17,6 +17,8 @@ export type EventListWidgetData = WidgetType['spec']['widgetData']
 const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
   const { events, prefix, sseEndpoint, sseTopic } = widgetData
 
+  const isStatic = useMemo(() => !(!!sseEndpoint && !!sseTopic), [sseEndpoint, sseTopic])
+
   const { getFilteredData } = useFilter()
 
   const {
@@ -25,8 +27,8 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
     hasNextPage,
     isLoading,
   } = useGetEvents({
-    enabled: !!sseEndpoint && !!sseTopic,
-    registerToSSE: !!sseEndpoint && !!sseTopic,
+    enabled: !isStatic,
+    registerToSSE: !isStatic,
     sseEndpoint,
     topic: sseTopic,
   })
@@ -41,7 +43,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
     }
   }
 
-  const eventsSource = useMemo(() => (!!sseEndpoint && !!sseTopic ? eventList : events) as EventsApiResource[], [eventList, events, sseEndpoint, sseTopic])
+  const eventsSource = useMemo(() => (!isStatic ? eventList : events) as EventsApiResource[], [eventList, events, isStatic])
 
   const filteredEventList = useMemo(() => {
     if (prefix && eventsSource.length > 0) {
@@ -91,9 +93,9 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
           />
         )
       )}
-      {hasNextPage && (
+      {!isStatic && hasNextPage && (
         <div className={styles.loading}>
-          <Spin indicator={<LoadingOutlined />} size='large' spinning />
+          <Spin indicator={<LoadingOutlined />} spinning />
         </div>
       )}
     </div>

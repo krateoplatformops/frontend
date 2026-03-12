@@ -15,63 +15,76 @@
 }
 
 .drawer {
-  .list {
-    .listItem {
-      padding: var(--spacing-sm) 0;
-      width: 100%;
+  & .container {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: var(--spacing-md);
 
-      &.firstElement {
-        padding-top: 0;
-      }
+    & .loading {
+      align-items: center;
+      display: flex;
+      height: 100px;
+      justify-content: center;
+    }
 
-      &.lastElement {
-        padding-bottom: 0;
-      }
-
-      &:hover {
-        background-color: var(--gray-color);
-      }   
-
-      .notificationElement {
-        height: auto;
-        padding: 0;
-        text-align: left;
-        text-wrap: wrap;
+    .list {
+      .listItem {
+        padding: var(--spacing-sm) 0;
         width: 100%;
 
-        .space {
-          display: flex;
-          flex: 1;
-          flex-direction: column;
-          gap: var(--spacing-xs);
+        &.firstElement {
+          padding-top: 0;
+        }
+
+        &.lastElement {
+          padding-bottom: 0;
+        }
+
+        &:hover {
+          background-color: var(--gray-color);
+        }   
+
+        .notificationElement {
+          height: auto;
+          padding: 0;
+          text-align: left;
+          text-wrap: wrap;
           width: 100%;
 
-          .description {
-            max-width: 100%;
-            white-space: initial;
-          }
-
-          .details {
-            color: var(--dark-gray-color);
-            font-size: var(--font-size-xxs);
-            margin: 0;
-          }
-
-          .titleWrapper {
+          .space {
             display: flex;
-            gap: var(--spacing-sm);
-            justify-content: space-between;
+            flex: 1;
+            flex-direction: column;
+            gap: var(--spacing-xs);
             width: 100%;
 
-            .timestamp {
+            .description {
+              max-width: 100%;
+              white-space: initial;
+            }
+
+            .details {
               color: var(--dark-gray-color);
               font-size: var(--font-size-xxs);
               margin: 0;
-              text-align: right;
             }
 
-            .title {
-              text-wrap: wrap;
+            .titleWrapper {
+              display: flex;
+              gap: var(--spacing-sm);
+              justify-content: space-between;
+              width: 100%;
+
+              .timestamp {
+                color: var(--dark-gray-color);
+                font-size: var(--font-size-xxs);
+                margin: 0;
+                text-align: right;
+              }
+
+              .title {
+                text-wrap: wrap;
+              }
             }
           }
         }
