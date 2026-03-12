@@ -1,0 +1,12 @@
+.container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: var(--spacing-md);
+
+  & .loading {
+    align-items: center;
+    display: flex;
+    height: 100px;
+    justify-content: center;
+  }
+}

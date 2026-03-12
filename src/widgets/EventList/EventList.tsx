@@ -9,6 +9,7 @@ import type { WidgetProps } from '../../types/Widget'
 import type { EventsApiResource } from '../../utils/types'
 import { formatISODate } from '../../utils/utils'
 
+import styles from './EventList.module.css'
 import type { EventList as WidgetType } from './EventList.type'
 
 export type EventListWidgetData = WidgetType['spec']['widgetData']
@@ -18,12 +19,27 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
 
   const { getFilteredData } = useFilter()
 
-  const { data: eventList = [], isLoading } = useGetEvents({
+  const {
+    data: eventList = [],
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+  } = useGetEvents({
     enabled: !!sseEndpoint && !!sseTopic,
     registerToSSE: !!sseEndpoint && !!sseTopic,
     sseEndpoint,
     topic: sseTopic,
   })
+
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const { clientHeight, scrollHeight, scrollTop } = event.currentTarget
+
+    const nearBottom = scrollHeight - scrollTop - clientHeight < 120
+
+    if (nearBottom && hasNextPage) {
+      fetchNextPage().catch(error => console.error(error))
+    }
+  }
 
   const eventsSource = useMemo(() => (!!sseEndpoint && !!sseTopic ? eventList : events) as EventsApiResource[], [eventList, events, sseEndpoint, sseTopic])
 
@@ -44,7 +60,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
   }
 
   return (
-    <>
+    <div className={styles.container} onScroll={handleScroll}>
       {filteredEventList.map(
         ({
           created_at: creationTimestamp,
@@ -75,7 +91,12 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
           />
         )
       )}
-    </>
+      {hasNextPage && (
+        <div className={styles.loading}>
+          <Spin indicator={<LoadingOutlined />} size='large' spinning />
+        </div>
+      )}
+    </div>
   )
 }
 

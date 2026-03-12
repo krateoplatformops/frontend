@@ -121,14 +121,6 @@ export function useGetEvents({
     }
   }, [enabled, registerToSSE, notificationsUrl, topic, queryClient, queryKey, unreadKey])
 
-  // Auto-fetch next page
-  useEffect(() => {
-    if (!enabled) { return }
-    if (queryResult.hasNextPage && !queryResult.isFetchingNextPage) {
-      queryResult.fetchNextPage().catch(error => console.error(error))
-    }
-  }, [enabled, queryResult.hasNextPage, queryResult.isFetchingNextPage, queryResult.fetchNextPage])
-
   const unreadCount = queryClient.getQueryData<number>(unreadKey) ?? 0
 
   return {
