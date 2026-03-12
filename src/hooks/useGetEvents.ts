@@ -1,5 +1,5 @@
 import type { InfiniteData, QueryKey } from '@tanstack/react-query'
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
@@ -121,7 +121,11 @@ export function useGetEvents({
     }
   }, [enabled, registerToSSE, notificationsUrl, topic, queryClient, queryKey, unreadKey])
 
-  const unreadCount = queryClient.getQueryData<number>(unreadKey) ?? 0
+  const { data: unreadCount = 0 } = useQuery<number>({
+    initialData: 0,
+    queryKey: unreadKey,
+    staleTime: Infinity,
+  })
 
   return {
     data: events,

@@ -1,17 +1,11 @@
-.badge {
+.icon {
   svg {
     path {
       fill: var(--primary-color);
     }
   }
 
-  &.hasNotifications {
-    top: 5px;
-  }
-
-  .icon {
-    font-size: 22px;
-  }
+  font-size: 22px;
 }
 
 .drawer {

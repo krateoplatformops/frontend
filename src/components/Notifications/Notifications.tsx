@@ -17,7 +17,6 @@ const Notifications = () => {
     fetchNextPage,
     hasNextPage,
     isLoading,
-    unreadCount,
   } = useGetEvents({
     enabled: drawerVisible,
     registerToSSE: drawerVisible,
@@ -99,14 +98,21 @@ const Notifications = () => {
 
   return (
     <>
-      <Badge
-        className={`${styles.badge} ${unreadCount > 0 ? styles.hasNotifications : ''}`}
-        count={unreadCount}
-      >
-        <Button className={styles.icon} icon={<BellFilled />} onClick={() => setDrawerVisible(true)} shape='circle' type='link' />
-      </Badge>
+      <Button
+        className={styles.icon}
+        icon={<BellFilled />}
+        onClick={() => setDrawerVisible(true)}
+        shape='circle'
+        type='link'
+      />
 
-      <Drawer className={styles.drawer} onClose={() => setDrawerVisible(false)} open={drawerVisible} title='Notifications' width={550}>
+      <Drawer
+        className={styles.drawer}
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+        title='Notifications'
+        width={550}
+      >
         {isLoading ? <Skeleton active /> : notificationList}
       </Drawer>
     </>
