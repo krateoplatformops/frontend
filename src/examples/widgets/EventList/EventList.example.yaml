@@ -100,5 +100,5 @@ metadata:
 spec:
   widgetData:
     sseEndpoint: "events"
-    sseTopic: "k8s-events"
+    sseTopic: "krateo"
     events: []

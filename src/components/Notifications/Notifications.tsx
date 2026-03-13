@@ -31,7 +31,7 @@ const Notifications: React.FC = () => {
   } = useGetEvents({
     enabled: drawerVisible,
     registerToSSE: drawerVisible,
-    topic: 'k8s-event',
+    topic: 'krateo',
   })
 
   const virtualData: NotificationItem[] = useMemo(() => {
