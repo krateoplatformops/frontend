@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.9] - 2026-03-13
+
+### Changed
+- **BREAKING:** Updated events format and handling for `EventList` and `Notifications`
+
 ## [1.0.8] - 2026-03-03
 
 ### Added
