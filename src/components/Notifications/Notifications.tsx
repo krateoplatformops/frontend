@@ -68,15 +68,14 @@ const Notifications: React.FC = () => {
       return
     }
 
-    const drawerBody = document.querySelector('.ant-drawer-body')
-
-    if (drawerBody) {
-      const bodyHeight = drawerBody.clientHeight
-      setListHeight(bodyHeight)
-      return
+    const measureHeight = () => {
+      const drawerBody = document.querySelector('.ant-drawer-body')
+      if (drawerBody) {
+        setListHeight(drawerBody.clientHeight)
+      }
     }
 
-    setListHeight(window.innerHeight - 120)
+    requestAnimationFrame(measureHeight)
   }, [drawerVisible])
 
   const renderVirtualItem = useCallback((item: NotificationItem, index: number) => {
