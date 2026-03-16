@@ -1,104 +1,138 @@
-import type { QueryKey } from '@tanstack/react-query'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo, useRef } from 'react'
+import type { InfiniteData, QueryKey } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useMemo } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
-import type { SSEK8sEvent } from '../utils/types'
+import type { EventsApiResource, EventsApiResponse } from '../utils/types'
 
-const MAX_EVENTS = 200
-// 10 seconds
-const CLEANUP_INTERVAL = 10000
+type UseGetEventsOptions = {
+  enabled?: boolean
+  topic?: string
+  registerToSSE?: boolean
+  sseEndpoint?: string
+}
 
-export function useGetEvents({ registerToSSE = true, topic = 'krateo' }: { topic?: string; registerToSSE?: boolean }) {
+const sseConnections = new Map<string, EventSource>()
+
+export function useGetEvents({
+  enabled,
+  registerToSSE = true,
+  sseEndpoint,
+  topic = 'krateo',
+}: UseGetEventsOptions) {
   const { config } = useConfigContext()
-  const refConnected = useRef(false)
-  const eventSourceRef = useRef<EventSource | null>(null)
-
-  // list of events
-  const eventsUrl = `${config!.api.EVENTS_API_BASE_URL}/events`
-
-  // stream of events
-  const notificationsUrl = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
-
-  const queryKey: QueryKey = useMemo(() => ['events', eventsUrl, 'topic', topic], [eventsUrl, topic])
-
   const queryClient = useQueryClient()
-  const queryResult = useQuery({
-    gcTime: Infinity,
-    queryFn: async () => {
-      const res = await fetch(eventsUrl)
-      const notifications = (await res.json()) as SSEK8sEvent[]
-      return notifications
+
+  const eventsBaseUrl = config!.api.EVENTS_API_BASE_URL
+  const eventsUrl = `${eventsBaseUrl}/events`
+
+  const notificationsUrl = useMemo(() =>
+    new URL(sseEndpoint ?? '/notifications', config!.api.EVENTS_PUSH_API_BASE_URL).toString(),
+  [config, sseEndpoint])
+
+  const queryKey = ['events', eventsUrl, topic, sseEndpoint] as const
+  const unreadKey: QueryKey = ['events-unread', topic, sseEndpoint ?? undefined]
+
+  // Infinite query
+  const queryResult = useInfiniteQuery<
+    EventsApiResponse,
+    Error,
+    InfiniteData<EventsApiResponse>,
+    typeof queryKey,
+    string | undefined
+  >({
+    enabled: !!enabled && !!eventsBaseUrl,
+    gcTime: 5 * 60_000,
+    queryFn: async ({ pageParam, signal }) => {
+      const [, eventsUrl] = queryKey
+
+      const url = pageParam ? `${eventsUrl}?cursor=${pageParam}` : eventsUrl
+      const res = await fetch(url, { signal })
+
+      return (await res.json()) as EventsApiResponse
     },
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps -- we want to re-fetch when the url changes
+    // eslint-disable-next-line sort-keys/sort-keys-fix
+    getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
+    initialPageParam: undefined,
     queryKey,
-    /* Prevent all automatic refetching, SSE will handle new events  */
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 30_000,
   })
 
-  // Cleanup old events periodically to prevent memory issues
-  useEffect(() => {
-    const interval = setInterval(() => {
-      queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => {
-        if (!prev || prev.length <= MAX_EVENTS) {
-          return prev
-        }
-        return prev.slice(0, MAX_EVENTS)
-      })
-    }, CLEANUP_INTERVAL)
-
-    return () => clearInterval(interval)
-  }, [queryClient, queryKey])
+  const events = useMemo(() =>
+    queryResult.data?.pages.flatMap(page => page.resources) ?? [],
+  [queryResult.data])
 
   useEffect(() => {
-    if (!registerToSSE) {
+    if (!enabled || !registerToSSE) {
+      const source = sseConnections.get(`${notificationsUrl}:${topic}`)
+
+      if (source) {
+        source.close()
+        sseConnections.delete(`${notificationsUrl}:${topic}`)
+      }
+
       return
     }
 
-    // Clean up any existing connection before creating a new one
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close()
-      eventSourceRef.current = null
-      refConnected.current = false
+    const connectionKey = `${notificationsUrl}:${topic}`
+
+    if (!sseConnections.has(connectionKey)) {
+      const eventSource = new EventSource(notificationsUrl, { withCredentials: false })
+      sseConnections.set(connectionKey, eventSource)
+
+      eventSource.onerror = console.error
+
+      eventSource.addEventListener(topic, (event: MessageEvent<string>) => {
+        try {
+          const data = JSON.parse(event.data) as EventsApiResource
+
+          queryClient.setQueryData<InfiniteData<EventsApiResponse>>(queryKey, prev => {
+            if (!prev) { return prev }
+            const [firstPage, ...rest] = prev.pages
+            const exists = firstPage.resources.some(event => event.global_uid === data.global_uid)
+            if (exists) { return prev }
+
+            return {
+              ...prev,
+              pages: [
+                { ...firstPage, resources: [data, ...firstPage.resources] },
+                ...rest,
+              ],
+            }
+          })
+
+          queryClient.setQueryData(unreadKey, (prev: number = 0) => prev + 1)
+        } catch (err) {
+          console.error('SSE parse error:', err)
+        }
+      })
     }
-
-    const eventSource = new EventSource(notificationsUrl, {
-      withCredentials: false,
-    })
-    eventSourceRef.current = eventSource
-
-    eventSource.onopen = () => {
-      refConnected.current = true
-    }
-
-    eventSource.onerror = (event) => {
-      console.error('[SSE] Connection error:', event)
-      refConnected.current = false
-      // Close the connection on error to prevent orphaned connections
-      eventSource.close()
-      eventSourceRef.current = null
-    }
-
-    const handler = (event: MessageEvent<string>) => {
-      try {
-        const data = JSON.parse(event.data) as SSEK8sEvent
-        queryClient.setQueryData(queryKey, (prev: SSEK8sEvent[]) => [data, ...(prev || [])])
-      } catch (error) {
-        console.error('Error parsing event data:', error)
-      }
-    }
-
-    eventSource.addEventListener(topic, handler)
 
     return () => {
-      refConnected.current = false
-      eventSource.close()
-      eventSourceRef.current = null
-    }
-  }, [notificationsUrl, topic, queryClient, queryKey, registerToSSE])
+      const source = sseConnections.get(connectionKey)
 
-  return queryResult
+      if (source) {
+        source.close()
+        sseConnections.delete(connectionKey)
+      }
+    }
+  }, [enabled, registerToSSE, notificationsUrl, topic, queryClient, queryKey, unreadKey])
+
+  const { data: unreadCount = 0 } = useQuery<number>({
+    initialData: 0,
+    queryKey: unreadKey,
+    staleTime: Infinity,
+  })
+
+  return {
+    data: events,
+    fetchNextPage: queryResult.fetchNextPage,
+    hasNextPage: queryResult.hasNextPage,
+    isLoading: queryResult.isLoading,
+    refetch: queryResult.refetch,
+    unreadCount,
+  }
 }

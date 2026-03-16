@@ -171,31 +171,16 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
 | events | yes | list of events received from a k8s cluster or server sent event | array |
-| events[].icon | no | name of the icon associated with the event (font awesome icon name eg: `fa-inbox`) | string |
+| events[].global_uid | yes | unique identifier of the event | string |
+| events[].cluster_name | yes | name of the cluster | string |
+| events[].namespace | yes | namespace the event belongs to | string |
+| events[].resource_kind | yes | resource type involved | string |
+| events[].resource_name | yes | unique name of the resource | string |
+| events[].event_type | yes | type of the event, e.g., normal or warning | `Normal` \| `Warning` |
 | events[].reason | yes | reason or cause of the event | string |
 | events[].message | yes | descriptive message of the event | string |
-| events[].type | yes | type of the event, e.g., normal or warning | `Normal` \| `Warning` |
-| events[].count | no | number of times the event has occurred | integer |
-| events[].action | no | action associated with the event, if any | string |
-| events[].reportingComponent | no | component that reported the event | string |
-| events[].reportingInstance | no | instance of the component that reported the event | string |
-| events[].firstTimestamp | no | timestamp of the first occurrence of the event | string |
-| events[].lastTimestamp | no | timestamp of the last occurrence of the event | string |
-| events[].eventTime | no | specific timestamp of the event | string |
-| events[].metadata | yes | metadata of the event such as name, namespace, and uid | object |
-| events[].metadata.name | yes | unique name of the event | string |
-| events[].metadata.namespace | yes | namespace the event belongs to | string |
-| events[].metadata.uid | yes | unique identifier of the event | string |
-| events[].metadata.creationTimestamp | yes | creation date and time of the event | string |
-| events[].involvedObject | yes | object involved in the event with key details | object |
-| events[].involvedObject.apiVersion | no | api version of the involved object | string |
-| events[].involvedObject.kind | yes | resource type involved | string |
-| events[].involvedObject.name | yes | name of the involved object | string |
-| events[].involvedObject.namespace | yes | namespace of the involved object | string |
-| events[].involvedObject.uid | yes | unique identifier of the involved object | string |
-| events[].source | yes | information about the source generating the event | object |
-| events[].source.component | no | component source of the event | string |
-| events[].source.host | no | host where the event originated | string |
+| events[].created_at | yes | creation date and time of the event | string |
+| events[].raw | yes | raw content of the event | string |
 | prefix | no | filter prefix used to filter data | string |
 | sseEndpoint | no | endpoint url for server sent events connection | string |
 | sseTopic | no | subscription topic for server sent events | string |

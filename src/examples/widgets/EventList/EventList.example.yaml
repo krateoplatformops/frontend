@@ -21,43 +21,26 @@ metadata:
 spec:
   widgetData:
     events:
-      - reason: "FailedScheduling"
+      - global_uid: "mock-cluster-1:event-1"
+        cluster_name: "mock-cluster-1"
+        namespace: "default"
+        resource_kind: "Pod"
+        resource_name: "my-pod"
+        event_type: "Warning"
+        reason: "FailedScheduling"
         message: "0/1 nodes are available: 1 Insufficient memory."
-        type: "Warning"
-        count: 3
-        firstTimestamp: "2024-04-20T12:34:56Z"
-        lastTimestamp: "2024-04-20T12:45:00Z"
-        metadata:
-          name: "my-pod.17d90d9c8ab2b1e1"
-          namespace: "default"
-          uid: "d1234567-89ab-4def-8123-abcdef012345"
-          creationTimestamp: "2024-04-20T12:34:56Z"
-        involvedObject:
-          apiVersion: "v1"
-          kind: "Pod"
-          name: "my-pod"
-          namespace: "default"
-          uid: "abcd-1234"
-        source:
-          component: "scheduler"
-      - reason: "Started"
+        created_at: "2024-04-20T12:34:56Z"
+        raw: ""
+      - global_uid: "mock-cluster-1:event-2"
+        cluster_name: "mock-cluster-1"
+        namespace: "default"
+        resource_kind: "Pod"
+        resource_name: "nginx-pod"
+        event_type: "Normal"
+        reason: "Started"
         message: "Started container nginx"
-        type: "Normal"
-        eventTime: "2024-04-21T08:20:00Z"
-        metadata:
-          name: "nginx-pod.17d90d9c8ab2b1e2"
-          namespace: "default"
-          uid: "f1234567-89ab-4def-8123-abcdef012346"
-          creationTimestamp: "2024-04-21T08:20:00Z"
-        involvedObject:
-          apiVersion: "v1"
-          kind: "Pod"
-          name: "nginx-pod"
-          namespace: "default"
-          uid: "defg-5678"
-        source:
-          component: "kubelet"
-          host: "worker-node-1"
+        created_at: "2024-04-21T08:20:00Z"
+        raw: ""
 ---
 # Events filtered by prefix
 # Expected behavior: The widget displays only events whose name or message starts with the defined prefix.
@@ -71,42 +54,26 @@ spec:
   widgetData:
     prefix: example-eventlist-with-prefix-filter-prefix
     events:
-      - reason: "FailedScheduling"
+      - global_uid: "mock-cluster-1:event-1"
+        cluster_name: "mock-cluster-1"
+        namespace: "default"
+        resource_kind: "Pod"
+        resource_name: "my-pod"
+        event_type: "Warning"
+        reason: "FailedScheduling"
         message: "0/1 nodes are available: 1 Insufficient memory."
-        type: "Warning"
-        count: 3
-        firstTimestamp: "2024-04-20T12:34:56Z"
-        lastTimestamp: "2024-04-20T12:45:00Z"
-        metadata:
-          name: "my-pod.17d90d9c8ab2b1e1"
-          namespace: "default"
-          uid: "d1234567-89ab-4def-8123-abcdef012345"
-          creationTimestamp: "2024-04-20T12:34:56Z"
-        involvedObject:
-          apiVersion: "v1"
-          kind: "Pod"
-          name: "my-pod"
-          namespace: "default"
-          uid: "abcd-1234"
-        source:
-          component: "scheduler"
-      - reason: "Started"
+        created_at: "2024-04-20T12:34:56Z"
+        raw: ""
+      - global_uid: "mock-cluster-1:event-2"
+        cluster_name: "mock-cluster-1"
+        namespace: "default"
+        resource_kind: "Pod"
+        resource_name: "nginx-pod"
+        event_type: "Normal"
+        reason: "Started"
         message: "Started container nginx"
-        type: "Normal"
-        eventTime: "2024-04-21T08:20:00Z"
-        metadata:
-          name: "nginx-pod.17d90d9c8ab2b1e2"
-          namespace: "default"
-          uid: "f1234567-89ab-4def-8123-abcdef012346"
-          creationTimestamp: "2024-04-21T08:20:00Z"
-        involvedObject:
-          apiVersion: "v1"
-          kind: "Pod"
-          name: "nginx-pod"
-          namespace: "default"
-          uid: "defg-5678"
-        source:
-          component: "kubelet"
+        created_at: "2024-04-21T08:20:00Z"
+        raw: ""
 ---
 kind: Filters
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -119,7 +86,7 @@ spec:
     fields:
       - label: Filter pod name
         name: 
-        - metadata.name
+        - resource_name
         type: string
 ---
 # Live updates via SSE
@@ -132,6 +99,6 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
-    sseEndpoint: "krateo-test-mock-simulate"
-    sseTopic: "k8s.cluster.events"
+    sseEndpoint: "events"
+    sseTopic: "krateo"
     events: []

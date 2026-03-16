@@ -152,7 +152,7 @@ metadata:
 spec:
   widgetData:
     actions: {}
-    title: 'Live updates via SSE (5 events mock)'
+    title: 'Live updates via SSE'
     items:
       - resourceRefId: example-eventlist-sse
   resourcesRefs:
