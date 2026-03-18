@@ -13,84 +13,110 @@ function parseNumberParam(param: string | null) {
   return isNaN(parsed!) ? undefined : parsed
 }
 
-export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: boolean}) => {
+type PageParam = {
+  page?: number
+  perPage?: number
+  cursor?: string
+}
+
+export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: boolean }) => {
   const { config } = useConfigContext()
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
 
-  const { initialPage, initialPerPage, requestUrl } = useMemo(() => {
+  const {
+    initialCursor,
+    initialPage,
+    initialPerPage,
+    isCursorPagination,
+    requestUrl,
+  } = useMemo(() => {
     let url: URL | null = null
     let page: number | undefined
     let perPage: number | undefined
+    let cursor: string | undefined
 
     try {
       url = new URL(widgetFullUrl)
       page = parseNumberParam(url.searchParams.get('page'))
       perPage = parseNumberParam(url.searchParams.get('perPage'))
+      cursor = url.searchParams.get('cursor') ?? undefined
     } catch (error) {
       console.error('useWidgetQuery: error in generating URL: ', error)
     }
 
-    return { requestUrl: url, initialPage: page, initialPerPage: perPage }
+    const isCursorPagination = page === undefined && perPage === undefined
+
+    return {
+      requestUrl: url,
+      initialPage: page,
+      initialPerPage: perPage,
+      initialCursor: cursor,
+      isCursorPagination,
+    }
   }, [widgetFullUrl])
 
   const enabledFlag = (options?.enabled ?? true) && requestUrl !== null
 
-  async function fetchWidget({ page, perPage }: { page?: number; perPage?: number }) {
+  async function fetchWidget({ cursor, page, perPage }: PageParam): Promise<Widget> {
     if (!requestUrl) {
       throw new Error('Cannot fetch widget: invalid URL')
     }
 
-    /* set new page and perPage to the original requestUrl with updated values */
-    if (typeof page === 'number') {
-      requestUrl.searchParams.set('page', page.toString())
+    const url = new URL(requestUrl.toString())
+
+    if (isCursorPagination) {
+      if (cursor) {
+        url.searchParams.set('cursor', cursor)
+      }
+    } else {
+      if (typeof page === 'number') {
+        url.searchParams.set('page', page.toString())
+      }
+      if (typeof perPage === 'number') {
+        url.searchParams.set('perPage', perPage.toString())
+      }
     }
-    if (typeof perPage === 'number') {
-      requestUrl.searchParams.set('perPage', perPage.toString())
-    }
 
-    const urlString = requestUrl.toString()
-
-    // console.log({
-    //   kind: url.searchParams.get('resource'),
-    //   page: url.searchParams.get('page'),
-    //   perPage: url.searchParams.get('perPage'),
-    //   urlString,
-    // })
-
-    const res = await fetch(urlString, {
+    const res = await fetch(url.toString(), {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     })
 
-    const widget = (await res.json()) as Widget
-    return widget
+    return (await res.json()) as Widget
   }
 
   const queryResult = useInfiniteQuery({
     enabled: enabledFlag,
     queryKey: ['widgets', widgetEndpoint],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
-    initialPageParam: {
-      page: initialPage,
-      perPage: initialPerPage,
-    },
-    getNextPageParam: (lastPage, _allPages, pageParams) => {
-      if (typeof pageParams.page !== 'number') {
-        // no initial page, so no more pages
+    initialPageParam: isCursorPagination ? { cursor: initialCursor } : { page: initialPage, perPage: initialPerPage },
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (isCursorPagination) {
+        const nextCursor = typeof lastPage.status === 'object'
+          ? lastPage.status.resourcesRefs?.slice?.cursor
+          : undefined
+
+        if (!nextCursor) {
+          return undefined
+        }
+
+        return { cursor: nextCursor }
+      }
+
+      if (typeof lastPageParam.page !== 'number') {
         return undefined
       }
 
-      const hasMorePages = typeof lastPage.status === 'object' && lastPage.status?.resourcesRefs?.slice?.continue === true
+      const hasMorePages = typeof lastPage.status === 'object' && lastPage.status.resourcesRefs?.slice?.continue === true
 
       if (!hasMorePages) {
-        /* to signal there are not other pages */
         return undefined
       }
 
       return {
-        page: pageParams.page + 1,
-        perPage: pageParams.perPage,
+        page: lastPageParam.page + 1,
+        perPage: lastPageParam.perPage,
       }
     },
     select: (data) => {
@@ -100,7 +126,6 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
         return firstPage
       }
 
-      // Merge items from all pages
       const allResourcesRefs: ResourceRef[] = []
       const allWidgetDataItems: unknown[] = []
 
@@ -108,6 +133,7 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
         if (typeof page.status === 'object' && page.status?.resourcesRefs?.items) {
           allResourcesRefs.push(...page.status.resourcesRefs.items)
         }
+
         if (
           typeof page.status === 'object'
           && page.status?.widgetData
@@ -119,7 +145,6 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
         }
       }
 
-      // Return NEW object to ensure React detects the change
       return {
         ...firstPage,
         status: {

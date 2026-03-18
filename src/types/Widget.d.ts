@@ -9,9 +9,10 @@ export interface ResourceRef {
 export type ResourcesRefs = {
   items: ResourceRef[]
   slice?: {
-    page: number
-    perPage: number
-    continue: boolean
+    page?: number
+    perPage?: number
+    continue?: boolean
+    cursor?: string
   }
 }
 
