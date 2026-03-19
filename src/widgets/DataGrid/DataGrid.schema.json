@@ -181,9 +181,11 @@
                       },
                       "continue": {
                         "type": "boolean"
+                      },
+                      "cursor": {
+                        "type": "string"
                       }
-                    },
-                    "required": ["page", "perPage"]
+                    }
                   }
                 },
                 "required": ["allowed", "id"]

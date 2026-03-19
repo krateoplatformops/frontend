@@ -98,9 +98,10 @@ export interface DataGrid {
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
         slice?: {
           offset?: number
-          page: number
-          perPage: number
+          page?: number
+          perPage?: number
           continue?: boolean
+          cursor?: string
           [k: string]: unknown
         }
         [k: string]: unknown
