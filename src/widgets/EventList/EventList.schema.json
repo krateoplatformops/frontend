@@ -148,7 +148,7 @@
                         "type": "boolean"
                       }
                     },
-                    "required": ["page", "perPage"]
+                    "required": ["perPage"]
                   }
                 },
                 "required": ["id"]

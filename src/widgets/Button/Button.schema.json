@@ -398,7 +398,7 @@
                         "type": "boolean"
                       }
                     },
-                    "required": ["page", "perPage"]
+                    "required": ["perPage"]
                   }
                 },
                 "required": ["allowed", "id"]

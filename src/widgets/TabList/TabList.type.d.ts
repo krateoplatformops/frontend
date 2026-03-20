@@ -67,7 +67,7 @@ export interface TabList {
         verb?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'GET'
         slice?: {
           offset?: number
-          page: number
+          page?: number
           perPage: number
           continue?: boolean
           [k: string]: unknown
