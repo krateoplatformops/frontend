@@ -14,8 +14,8 @@ function parseNumberParam(param: string | null) {
 }
 
 type PageParam = {
+  perPage: number
   page?: number
-  perPage?: number
   cursor?: string
 }
 
@@ -44,7 +44,7 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
       console.error('useWidgetQuery: error in generating URL: ', error)
     }
 
-    const isCursorPagination = page === undefined && perPage === undefined
+    const isCursorPagination = page === undefined
 
     return {
       requestUrl: url,
@@ -72,6 +72,7 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
       if (typeof page === 'number') {
         url.searchParams.set('page', page.toString())
       }
+
       if (typeof perPage === 'number') {
         url.searchParams.set('perPage', perPage.toString())
       }
@@ -90,7 +91,9 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
     enabled: enabledFlag,
     queryKey: ['widgets', widgetEndpoint],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
-    initialPageParam: isCursorPagination ? { cursor: initialCursor } : { page: initialPage, perPage: initialPerPage },
+    initialPageParam: isCursorPagination
+      ? { cursor: initialCursor, perPage: initialPerPage || 10 }
+      : { page: initialPage, perPage: initialPerPage || 10 },
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
       if (isCursorPagination) {
         const nextCursor = typeof lastPage.status === 'object'
@@ -101,7 +104,10 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
           return undefined
         }
 
-        return { cursor: nextCursor }
+        return {
+          cursor: nextCursor,
+          perPage: lastPageParam.perPage,
+        }
       }
 
       if (typeof lastPageParam.page !== 'number') {

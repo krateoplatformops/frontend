@@ -131,11 +131,9 @@
                       },
                       "continue": {
                         "type": "boolean"
-                      },
-                      "cursor": {
-                        "type": "string"
                       }
-                    }
+                    },
+                    "required": ["perPage"]
                   }
                 },
                 "required": ["allowed", "id"]

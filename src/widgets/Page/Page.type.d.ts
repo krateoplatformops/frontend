@@ -66,9 +66,8 @@ export interface Page {
         slice?: {
           offset?: number
           page?: number
-          perPage?: number
+          perPage: number
           continue?: boolean
-          cursor?: string
           [k: string]: unknown
         }
         [k: string]: unknown
