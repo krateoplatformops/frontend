@@ -65,8 +65,8 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: Install krateoctl v0.8.9
-        run: curl -sL https://raw.githubusercontent.com/krateoplatformops/krateoctl/main/install.sh 0.8.9 | bash
+      - name: Install krateoctl
+        run: curl -sL https://raw.githubusercontent.com/krateoplatformops/krateoctl/main/install.sh 1.0.0-rc8 | bash
 
       - name: Checkout repository
         uses: actions/checkout@v4
