@@ -123,6 +123,7 @@ export function useGetEvents({
 
   const { data: unreadCount = 0 } = useQuery<number>({
     initialData: 0,
+    queryFn: () => 0,
     queryKey: unreadKey,
     staleTime: Infinity,
   })
