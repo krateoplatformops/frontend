@@ -46,6 +46,7 @@ export interface EventsApiResource {
   message: string
   created_at: string
   raw: string
+  involved_object_uid: string
 }
 
 export interface EventsApiResponse {

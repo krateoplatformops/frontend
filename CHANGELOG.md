@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
-## [1.0.11] - 2026-03-30
+## [1.0.12] - 2026-03-25
+
+### Fixed
+- Fixed redirect with events inside Form
+
+## [1.0.11] - 2026-03-23
 
 ### Fixed
 - Fixed logging in `useGetEvents` hook 
