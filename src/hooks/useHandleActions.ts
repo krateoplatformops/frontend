@@ -9,17 +9,10 @@ import { useRoutesContext } from '../context/RoutesContext'
 import type { ResourcesRefs, Widget, WidgetAction } from '../types/Widget'
 import { getAccessToken } from '../utils/getAccessToken'
 import { useResolveJqExpression } from '../utils/jq-expression'
-import type { Payload, RestApiResponse } from '../utils/types'
+import type { EventsApiResource, Payload, RestApiResponse } from '../utils/types'
 import { getHeadersObject, getResourceRef } from '../utils/utils'
 import { closeDrawer, openDrawer } from '../widgets/Drawer/Drawer'
 import { openModal } from '../widgets/Modal/Modal'
-
-interface EventData {
-  involvedObject: {
-    uid: string
-  }
-  reason: string
-}
 
 /**
  * Interpolates a route template using values from a nested payload object.
@@ -225,7 +218,6 @@ export const useHandleAction = () => {
             onSuccessNavigateTo,
             successMessage,
           } = action
-
           let jsonResponse: RestApiResponse | null = null
 
           if (!requireConfirmation || window.confirm('Are you sure?')) {
@@ -289,8 +281,9 @@ export const useHandleAction = () => {
                   return
                 }
 
-                const eventData = JSON.parse(event.data as string) as EventData
-                if (eventData.reason === onEventNavigateTo.eventReason && eventData.involvedObject.uid === resourceUid) {
+                const eventData = JSON.parse(event.data as string) as EventsApiResource
+
+                if (eventData.reason === onEventNavigateTo.eventReason && eventData.involved_object_uid === resourceUid) {
                   eventReceived = true
 
                   if (onEventNavigateTo.reloadRoutes !== false) {

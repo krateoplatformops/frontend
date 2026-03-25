@@ -34,7 +34,8 @@
                   "reason",
                   "message",
                   "created_at",
-                  "raw"
+                  "raw",
+                  "involved_object_uid"
                 ],
                 "properties": {
                   "global_uid": {
@@ -78,6 +79,10 @@
                   "raw": {
                     "type": "string",
                     "description": "raw content of the event"
+                  },
+                  "involved_object_uid": {
+                    "type": "string",
+                    "description": "unique identifier of a resource associated to the event"
                   }
                 },
                 "additionalProperties": false
