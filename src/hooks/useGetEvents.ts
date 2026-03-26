@@ -52,7 +52,10 @@ export function useGetEvents({
       return (await res.json()) as EventsApiResponse
     },
     // eslint-disable-next-line sort-keys/sort-keys-fix
-    getNextPageParam: (lastPage) => lastPage.cursor ?? undefined,
+    getNextPageParam: (lastPage) => {
+      const { cursor } = lastPage
+      return cursor && cursor.length > 0 ? cursor : undefined
+    },
     initialPageParam: undefined,
     queryKey,
     refetchOnMount: false,
@@ -83,8 +86,9 @@ export function useGetEvents({
       const eventSource = new EventSource(notificationsUrl, { withCredentials: false })
       sseConnections.set(connectionKey, eventSource)
 
-      eventSource.onerror = console.error
-
+      eventSource.onerror = (error) => {
+        console.error('SSE error', error)
+      }
       eventSource.addEventListener(topic, (event: MessageEvent<string>) => {
         try {
           const data = JSON.parse(event.data) as EventsApiResource
@@ -132,6 +136,7 @@ export function useGetEvents({
     data: events,
     fetchNextPage: queryResult.fetchNextPage,
     hasNextPage: queryResult.hasNextPage,
+    isFetchingNextPage: queryResult.isFetchingNextPage,
     isLoading: queryResult.isLoading,
     refetch: queryResult.refetch,
     unreadCount,

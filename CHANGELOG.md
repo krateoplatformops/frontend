@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.13] - 2026-03-26
+
+### Fixed
+- Fixed bug in Notifications displaying
+- Fixed bug in Login
+
 ## [1.0.12] - 2026-03-25
 
 ### Fixed

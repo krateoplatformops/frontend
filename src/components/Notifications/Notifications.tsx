@@ -17,6 +17,9 @@ type LoaderItem = {
 
 type NotificationItem = EventsApiResource | LoaderItem
 
+const isLoaderItem = (item: unknown): item is LoaderItem =>
+  (!!item && typeof item === 'object' && '__isLoader' in item && (item as LoaderItem).__isLoader === true)
+
 const Notifications: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false)
   const queryClient = useQueryClient()
@@ -27,6 +30,7 @@ const Notifications: React.FC = () => {
     data: notifications = [],
     fetchNextPage,
     hasNextPage,
+    isFetchingNextPage,
     isLoading,
   } = useGetEvents({
     enabled: drawerVisible,
@@ -35,15 +39,17 @@ const Notifications: React.FC = () => {
   })
 
   const virtualData: NotificationItem[] = useMemo(() => {
-    if (hasNextPage) {
+    const safeNotifications = notifications.filter((notification): notification is EventsApiResource => notification !== null)
+
+    if (hasNextPage || isFetchingNextPage) {
       return [
-        ...notifications,
+        ...safeNotifications,
         { __isLoader: true, __loaderId: '__loader__' },
-      ] as NotificationItem[]
+      ]
     }
 
-    return notifications as NotificationItem[]
-  }, [notifications, hasNextPage])
+    return safeNotifications
+  }, [notifications, hasNextPage, isFetchingNextPage])
 
   const handleVirtualScroll = useCallback((event: React.UIEvent<HTMLElement>) => {
     const target = event.currentTarget
@@ -51,10 +57,10 @@ const Notifications: React.FC = () => {
 
     const nearBottom = scrollHeight - scrollTop - clientHeight < 120
 
-    if (nearBottom && hasNextPage) {
+    if (nearBottom && hasNextPage && !isFetchingNextPage) {
       fetchNextPage().catch(console.error)
     }
-  }, [fetchNextPage, hasNextPage])
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   useEffect(() => {
     if (drawerVisible) {
@@ -79,7 +85,11 @@ const Notifications: React.FC = () => {
   }, [drawerVisible])
 
   const renderVirtualItem = useCallback((item: NotificationItem, index: number) => {
-    if ('__isLoader' in item && item.__isLoader) {
+    if (!item) {
+      return <div style={{ height: 0 }} />
+    }
+
+    if (isLoaderItem(item)) {
       return (
         <div className={styles.loading} key={item.__loaderId}>
           <Spin indicator={<LoadingOutlined />} spinning />
@@ -96,10 +106,10 @@ const Notifications: React.FC = () => {
       reason,
       resource_kind: kind,
       resource_name: name,
-    } = item as EventsApiResource
+    } = item
 
     const isFirst = index === 0
-    const isLast = notifications?.length && index === notifications.length - 1
+    const isLast = !hasNextPage && !isFetchingNextPage && index === virtualData.length - 1
 
     return (
       <List.Item
@@ -131,7 +141,7 @@ const Notifications: React.FC = () => {
         </Button>
       </List.Item>
     )
-  }, [notifications])
+  }, [hasNextPage, isFetchingNextPage, notifications, virtualData])
 
   const notificationList = useMemo(() => (
     <div className={styles.container} ref={containerRef}>
@@ -142,8 +152,15 @@ const Notifications: React.FC = () => {
             height={listHeight - 48}
             itemHeight={90}
             itemKey={(item: NotificationItem) => {
-              if ('__isLoader' in item && item.__isLoader) { return item.__loaderId }
-              return (item as EventsApiResource).global_uid
+              if (!item) {
+                return '__null__'
+              }
+
+              if (isLoaderItem(item)) {
+                return item.__loaderId
+              }
+
+              return (item).global_uid
             }}
             onScroll={handleVirtualScroll}
           >
