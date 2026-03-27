@@ -50,7 +50,7 @@ jobs:
 
     steps:
       - name: Install krateoctl v0.8.9
-        run: curl -sL https://raw.githubusercontent.com/krateoplatformops/krateoctl/main/install.sh 0.8.9 | bash
+        run: curl -sL https://raw.githubusercontent.com/krateoplatformops/krateoctl/main/install.sh | bash -s -- 1.0.0-rc9
 
       - name: Checkout repository
         uses: actions/checkout@v4
