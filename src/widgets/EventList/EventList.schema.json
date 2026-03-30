@@ -34,8 +34,7 @@
                   "reason",
                   "message",
                   "created_at",
-                  "raw",
-                  "involved_object_uid"
+                  "raw"
                 ],
                 "properties": {
                   "global_uid": {

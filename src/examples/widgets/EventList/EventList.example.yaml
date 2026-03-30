@@ -31,7 +31,6 @@ spec:
         message: "0/1 nodes are available: 1 Insufficient memory."
         created_at: "2024-04-20T12:34:56Z"
         raw: ""
-        involved_object_uid: ""
       - global_uid: "mock-cluster-1:event-2"
         cluster_name: "mock-cluster-1"
         namespace: "default"
@@ -42,7 +41,6 @@ spec:
         message: "Started container nginx"
         created_at: "2024-04-21T08:20:00Z"
         raw: ""
-        involved_object_uid: ""
 ---
 # Events filtered by prefix
 # Expected behavior: The widget displays only events whose name or message starts with the defined prefix.
@@ -66,7 +64,6 @@ spec:
         message: "0/1 nodes are available: 1 Insufficient memory."
         created_at: "2024-04-20T12:34:56Z"
         raw: ""
-        involved_object_uid: ""
       - global_uid: "mock-cluster-1:event-2"
         cluster_name: "mock-cluster-1"
         namespace: "default"
@@ -77,7 +74,6 @@ spec:
         message: "Started container nginx"
         created_at: "2024-04-21T08:20:00Z"
         raw: ""
-        involved_object_uid: ""
 ---
 kind: Filters
 apiVersion: widgets.templates.krateo.io/v1beta1
