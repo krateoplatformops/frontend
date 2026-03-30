@@ -182,6 +182,7 @@ EventList renders data coming from a Kubernetes cluster or Server Sent Events as
 | events[].created_at | yes | creation date and time of the event | string |
 | events[].raw | yes | raw content of the event | string |
 | events[].involved_object_uid | yes | unique identifier of a resource associated to the event | string |
+| events[].composition_id | no | unique identifier of the composition | string |
 | prefix | no | filter prefix used to filter data | string |
 | sseEndpoint | no | endpoint url for server sent events connection | string |
 | sseTopic | no | subscription topic for server sent events | string |

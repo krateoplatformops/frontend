@@ -83,6 +83,10 @@
                   "involved_object_uid": {
                     "type": "string",
                     "description": "unique identifier of a resource associated to the event"
+                  },
+                  "composition_id": {
+                    "type": "string",
+                    "description": "unique identifier of the composition"
                   }
                 },
                 "additionalProperties": false
