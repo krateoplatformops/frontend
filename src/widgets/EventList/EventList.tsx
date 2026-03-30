@@ -14,6 +14,61 @@ import type { EventList as WidgetType } from './EventList.type'
 
 export type EventListWidgetData = WidgetType['spec']['widgetData']
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function isEventsApiResource(value: unknown): value is EventsApiResource {
+  if (!isRecord(value)) {
+    return false
+  }
+
+  return (
+    typeof value.global_uid === 'string'
+    && typeof value.created_at === 'string'
+    && typeof value.event_type === 'string'
+    && typeof value.message === 'string'
+    && typeof value.namespace === 'string'
+    && typeof value.reason === 'string'
+    && typeof value.resource_kind === 'string'
+    && typeof value.resource_name === 'string'
+  )
+}
+
+function normalizeEvents(value: unknown): EventsApiResource[] {
+  if (!Array.isArray(value)) {
+    return []
+  }
+
+  const result: EventsApiResource[] = []
+
+  for (const item of value) {
+    if (isEventsApiResource(item)) {
+      result.push(item)
+    }
+  }
+
+  return result
+}
+
+function mergeUniqueEvents(...lists: EventsApiResource[][]): EventsApiResource[] {
+  const seen = new Set<string>()
+  const merged: EventsApiResource[] = []
+
+  for (const list of lists) {
+    for (const item of list) {
+      if (seen.has(item.global_uid)) {
+        continue
+      }
+
+      seen.add(item.global_uid)
+      merged.push(item)
+    }
+  }
+
+  return merged
+}
+
 const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
   const { events, prefix, sseEndpoint, sseTopic } = widgetData
 
@@ -43,15 +98,24 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
     }
   }
 
-  const eventsSource = useMemo(() => (!isStatic ? eventList : events) as EventsApiResource[], [eventList, events, isStatic])
+  const staticEvents = useMemo(() => normalizeEvents(events), [events])
+  const liveEvents = useMemo(() => normalizeEvents(eventList), [eventList])
 
-  const filteredEventList = useMemo(() => {
-    if (prefix && eventsSource.length > 0) {
-      return getFilteredData(eventsSource, prefix) as EventsApiResource[]
+  const eventsSource = useMemo<EventsApiResource[]>(() => {
+    if (isStatic) {
+      return staticEvents
     }
 
-    return eventsSource
-  }, [prefix, eventsSource, getFilteredData])
+    return mergeUniqueEvents(liveEvents, staticEvents)
+  }, [isStatic, liveEvents, staticEvents])
+
+  const filteredEventList = useMemo<EventsApiResource[]>(() => {
+    if (!prefix) {
+      return eventsSource
+    }
+
+    return normalizeEvents(getFilteredData(eventsSource, prefix))
+  }, [eventsSource, prefix, getFilteredData])
 
   if (isLoading) {
     return <Spin indicator={<LoadingOutlined />} size='large' spinning />
