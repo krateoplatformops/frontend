@@ -41,7 +41,6 @@ const Login = () => {
       const authUrl = `${config!.api.AUTHN_API_BASE_URL}${credentials.path}`
 
       const response = await fetch(authUrl, {
-        credentials: 'include',
         headers: {
           Authorization: `Basic ${btoa(`${credentials.username}:${credentials.password}`)}`,
         },
