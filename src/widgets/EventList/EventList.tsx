@@ -85,7 +85,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
     enabled: !isStatic,
     registerToSSE: !isStatic,
     sseEndpoint,
-    topic: sseTopic,
+    topic: 'krateo',
   })
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
