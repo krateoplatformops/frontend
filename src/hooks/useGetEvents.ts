@@ -1,6 +1,6 @@
-import type { InfiniteData, QueryKey } from '@tanstack/react-query'
+import type { InfiniteData } from '@tanstack/react-query'
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
 import type { EventsApiResource, EventsApiResponse } from '../utils/types'
@@ -15,13 +15,15 @@ type UseGetEventsOptions = {
 const sseConnections = new Map<string, EventSource>()
 
 export function useGetEvents({
-  enabled,
+  enabled = true,
   registerToSSE = true,
   sseEndpoint,
   topic = 'krateo',
 }: UseGetEventsOptions) {
   const { config } = useConfigContext()
   const queryClient = useQueryClient()
+
+  const [sseEvents, setSseEvents] = useState<EventsApiResource[]>([])
 
   const eventsBaseUrl = config!.api.EVENTS_API_BASE_URL
   const eventsUrl = `${eventsBaseUrl}/events`
@@ -30,10 +32,10 @@ export function useGetEvents({
     new URL(sseEndpoint ?? '/notifications', config!.api.EVENTS_PUSH_API_BASE_URL).toString(),
   [config, sseEndpoint])
 
-  const queryKey = ['events', eventsUrl, topic, sseEndpoint] as const
-  const unreadKey: QueryKey = ['events-unread', topic, sseEndpoint ?? undefined]
+  const queryKey = useMemo(() => ['events', eventsUrl] as const, [eventsUrl],)
+  const unreadKey = useMemo(() => ['events-unread', topic, sseEndpoint ?? undefined] as const, [topic, sseEndpoint])
+  const isSseOnly = !!sseEndpoint
 
-  // Infinite query
   const queryResult = useInfiniteQuery<
     EventsApiResponse,
     Error,
@@ -41,22 +43,25 @@ export function useGetEvents({
     typeof queryKey,
     string | undefined
   >({
-    enabled: !!enabled && !!eventsBaseUrl,
+    enabled: enabled && !!eventsBaseUrl && !isSseOnly,
     gcTime: 5 * 60_000,
-    queryFn: async ({ pageParam, signal }) => {
-      const [, eventsUrl] = queryKey
+    queryFn: async ({ pageParam, queryKey, signal }) => {
+      const [, currentEventsUrl] = queryKey
 
-      const url = pageParam ? `${eventsUrl}?cursor=${pageParam}` : eventsUrl
+      const url = pageParam
+        ? `${currentEventsUrl}?cursor=${pageParam}`
+        : currentEventsUrl
+
       const res = await fetch(url, { signal })
-
       return (await res.json()) as EventsApiResponse
     },
     // eslint-disable-next-line sort-keys/sort-keys-fix
-    getNextPageParam: (lastPage) => {
-      const { cursor } = lastPage
-      return cursor && cursor.length > 0 ? cursor : undefined
-    },
     initialPageParam: undefined,
+    // eslint-disable-next-line sort-keys/sort-keys-fix
+    getNextPageParam: (lastPage) =>
+      (lastPage.cursor && lastPage.cursor.length > 0
+        ? lastPage.cursor
+        : undefined),
     queryKey,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -64,55 +69,52 @@ export function useGetEvents({
     staleTime: 30_000,
   })
 
-  const events = useMemo(() =>
-    queryResult.data?.pages.flatMap(page => page.resources) ?? [],
-  [queryResult.data])
+  const fetchedEvents = useMemo(() => queryResult.data?.pages.flatMap((page) => page.resources) ?? [], [queryResult.data])
 
   useEffect(() => {
-    if (!enabled || !registerToSSE) {
-      const source = sseConnections.get(`${notificationsUrl}:${topic}`)
+    const connectionKey = `${notificationsUrl}:${topic}`
 
+    if (!enabled || !registerToSSE) {
+      const source = sseConnections.get(connectionKey)
       if (source) {
         source.close()
-        sseConnections.delete(`${notificationsUrl}:${topic}`)
+        sseConnections.delete(connectionKey)
       }
-
       return
     }
-
-    const connectionKey = `${notificationsUrl}:${topic}`
 
     if (!sseConnections.has(connectionKey)) {
       const eventSource = new EventSource(notificationsUrl, { withCredentials: false })
       sseConnections.set(connectionKey, eventSource)
 
-      eventSource.onerror = (error) => {
-        console.error('SSE error', error)
-      }
-      eventSource.addEventListener(topic, (event: MessageEvent<string>) => {
+      const handleIncoming = (raw: string) => {
         try {
-          const data = JSON.parse(event.data) as EventsApiResource
+          const data = JSON.parse(raw) as EventsApiResource
 
-          queryClient.setQueryData<InfiniteData<EventsApiResponse>>(queryKey, prev => {
-            if (!prev) { return prev }
-            const [firstPage, ...rest] = prev.pages
-            const exists = firstPage.resources.some(event => event.global_uid === data.global_uid)
+          setSseEvents((prev) => {
+            const exists = prev.some((item) => item.global_uid === data.global_uid)
             if (exists) { return prev }
 
-            return {
-              ...prev,
-              pages: [
-                { ...firstPage, resources: [data, ...firstPage.resources] },
-                ...rest,
-              ],
-            }
+            return [data, ...prev].slice(0, 200)
           })
 
-          queryClient.setQueryData(unreadKey, (prev: number = 0) => prev + 1)
+          queryClient.setQueryData<number>(unreadKey, (prev = 0) => prev + 1)
         } catch (err) {
           console.error('SSE parse error:', err)
         }
+      }
+
+      eventSource.onerror = (error) => {
+        console.error('SSE error', error)
+      }
+
+      eventSource.addEventListener(topic, (event: MessageEvent<string>) => {
+        handleIncoming(event.data)
       })
+
+      eventSource.onmessage = (event: MessageEvent<string>) => {
+        handleIncoming(event.data)
+      }
     }
 
     return () => {
@@ -123,7 +125,28 @@ export function useGetEvents({
         sseConnections.delete(connectionKey)
       }
     }
-  }, [enabled, registerToSSE, notificationsUrl, topic, queryClient, queryKey, unreadKey])
+  }, [
+    enabled,
+    registerToSSE,
+    notificationsUrl,
+    topic,
+    queryClient,
+    unreadKey,
+  ])
+
+  const events = useMemo(() => {
+    if (isSseOnly) {
+      return sseEvents
+    }
+
+    const merged = [...sseEvents, ...fetchedEvents]
+    const seen = new Set<string>()
+    return merged.filter((item) => {
+      if (seen.has(item.global_uid)) { return false }
+      seen.add(item.global_uid)
+      return true
+    })
+  }, [isSseOnly, sseEvents, fetchedEvents])
 
   const { data: unreadCount = 0 } = useQuery<number>({
     initialData: 0,
@@ -135,9 +158,9 @@ export function useGetEvents({
   return {
     data: events,
     fetchNextPage: queryResult.fetchNextPage,
-    hasNextPage: queryResult.hasNextPage,
-    isFetchingNextPage: queryResult.isFetchingNextPage,
-    isLoading: queryResult.isLoading,
+    hasNextPage: isSseOnly ? false : queryResult.hasNextPage,
+    isFetchingNextPage: isSseOnly ? false : queryResult.isFetchingNextPage,
+    isLoading: isSseOnly ? false : queryResult.isLoading,
     refetch: queryResult.refetch,
     unreadCount,
   }

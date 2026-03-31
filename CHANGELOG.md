@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.15] - 2026-03-31
+
+### Fixed
+- Fixed bug in `EventList` to prevent wrong call to `/events`
+
 ## [1.0.14] - 2026-03-27
 
 ### Changed
