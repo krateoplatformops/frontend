@@ -3,6 +3,7 @@ import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-quer
 import { useEffect, useMemo, useState } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
+import { getAccessToken } from '../utils/getAccessToken'
 import type { EventsApiResource, EventsApiResponse } from '../utils/types'
 
 type UseGetEventsOptions = {
@@ -52,7 +53,11 @@ export function useGetEvents({
         ? `${currentEventsUrl}?cursor=${pageParam}`
         : currentEventsUrl
 
-      const res = await fetch(url, { signal })
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        signal })
       return (await res.json()) as EventsApiResponse
     },
     // eslint-disable-next-line sort-keys/sort-keys-fix
