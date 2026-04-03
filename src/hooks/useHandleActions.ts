@@ -1,5 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import useApp from 'antd/es/app/useApp'
+import type { EventListener, MessageEvent } from 'event-source-polyfill'
+import { EventSourcePolyfill } from 'event-source-polyfill'
 import { merge, set } from 'lodash'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
@@ -238,10 +240,14 @@ export const useHandleAction = () => {
 
             let resourceUid: string | null = null
             let eventReceived = false
+
             if (onEventNavigateTo) {
               const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
 
-              const eventSource = new EventSource(eventsEndpoint, {
+              const eventSource = new EventSourcePolyfill(eventsEndpoint, {
+                headers: {
+                  Authorization: `Bearer ${getAccessToken()}`,
+                },
                 withCredentials: false,
               })
 
@@ -274,12 +280,8 @@ export const useHandleAction = () => {
                 : 'Waiting for resource and redirecting...'
 
               message.loading(loadingMessage, onEventNavigateTo.timeout)
-
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              eventSource.addEventListener('krateo', async (event) => {
-                if (!resourceUid) {
-                  return
-                }
+              eventSource.addEventListener('krateo', ((event: MessageEvent) => {
+                if (!resourceUid) { return }
 
                 const eventData = JSON.parse(event.data as string) as EventsApiResource
 
@@ -293,58 +295,56 @@ export const useHandleAction = () => {
                   eventSource.close()
                   clearTimeout(timeoutId)
 
-                  const redirectUrl = await (async () => {
-                    /* if it starts with ${ should be resolved by cassing JQ endpoint otherwise use legacy method */
+                  void (async () => {
+                    let redirectUrl: string | null | undefined
+
                     if (onEventNavigateTo.url.startsWith('${')) {
-                      return resolveJq(onEventNavigateTo.url, {
+                      redirectUrl = await resolveJq(onEventNavigateTo.url, {
                         event: eventData as unknown as Record<string, unknown>,
                         json: payload,
                         response: jsonResponse,
                       })
+                    } else if (customPayload) {
+                      redirectUrl = interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                    } else {
+                      redirectUrl = onEventNavigateTo.url
                     }
 
-                    if (customPayload) {
-                      const url = interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
-                      return url
+                    if (!redirectUrl) {
+                      message.destroy()
+                      notification.error({
+                        description: 'Impossible to redirect, the route contains an undefined value',
+                        message: 'Error while redirecting',
+                        placement: 'bottomLeft',
+                      })
+
+                      return
                     }
 
-                    return onEventNavigateTo.url
-                  })()
+                    let description = 'The action has been executed successfully'
+                    if (successMessage) {
+                      description = successMessage.startsWith('${')
+                        ? await resolveJq(successMessage, {
+                          event: eventData as unknown as Record<string, unknown>,
+                          json: payload,
+                          response: jsonResponse,
+                        })
+                        : successMessage
+                    }
 
-                  if (!redirectUrl) {
                     message.destroy()
-                    notification.error({
-                      description: 'Impossible to redirect, the route contains an undefined value',
-                      message: 'Error while redirecting',
+                    notification.success({
+                      description,
+                      message: `Successfully executed action`,
                       placement: 'bottomLeft',
                     })
 
-                    return
-                  }
-
-                  let description = 'The action has been executed successfully'
-                  if (successMessage) {
-                    description = successMessage.startsWith('${')
-                      ? await resolveJq(successMessage, {
-                        event: eventData as unknown as Record<string, unknown>,
-                        json: payload,
-                        response: jsonResponse,
-                      })
-                      : successMessage
-                  }
-
-                  message.destroy()
-                  notification.success({
-                    description,
-                    message: `Successfully executed action`,
-                    placement: 'bottomLeft',
-                  })
-
-                  setIsActionLoading(false)
-                  closeDrawer()
-                  void navigate(redirectUrl)
+                    setIsActionLoading(false)
+                    closeDrawer()
+                    void navigate(redirectUrl)
+                  })()
                 }
-              })
+              }) as EventListener)
             }
 
             const updatedUrl = customPayload
