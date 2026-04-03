@@ -1,8 +1,16 @@
 import type { InfiniteData } from '@tanstack/react-query'
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
+import type {
+  MessageEvent,
+  EventListener,
+} from 'event-source-polyfill'
+import {
+  EventSourcePolyfill,
+} from 'event-source-polyfill'
 import { useEffect, useMemo, useState } from 'react'
 
 import { useConfigContext } from '../context/ConfigContext'
+import { getAccessToken } from '../utils/getAccessToken'
 import type { EventsApiResource, EventsApiResponse } from '../utils/types'
 
 type UseGetEventsOptions = {
@@ -52,7 +60,11 @@ export function useGetEvents({
         ? `${currentEventsUrl}?cursor=${pageParam}`
         : currentEventsUrl
 
-      const res = await fetch(url, { signal })
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        signal })
       return (await res.json()) as EventsApiResponse
     },
     // eslint-disable-next-line sort-keys/sort-keys-fix
@@ -84,7 +96,13 @@ export function useGetEvents({
     }
 
     if (!sseConnections.has(connectionKey)) {
-      const eventSource = new EventSource(notificationsUrl, { withCredentials: false })
+      const eventSource = new EventSourcePolyfill(notificationsUrl, {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        withCredentials: false,
+      })
+
       sseConnections.set(connectionKey, eventSource)
 
       const handleIncoming = (raw: string) => {
@@ -108,12 +126,12 @@ export function useGetEvents({
         console.error('SSE error', error)
       }
 
-      eventSource.addEventListener(topic, (event: MessageEvent<string>) => {
-        handleIncoming(event.data)
-      })
+      eventSource.addEventListener(topic, ((event: MessageEvent) => {
+        handleIncoming(event.data as string)
+      }) as EventListener)
 
-      eventSource.onmessage = (event: MessageEvent<string>) => {
-        handleIncoming(event.data)
+      eventSource.onmessage = (event: MessageEvent) => {
+        handleIncoming(event.data as string)
       }
     }
 
