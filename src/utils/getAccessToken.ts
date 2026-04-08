@@ -1,20 +1,19 @@
 import type { AuthResponseType } from '../pages/Login/Login.types'
 
-let cachedAccessToken: string | null = null
+const cachedAccessToken: string | null = null
 
 export const getAccessToken = () => {
   if (cachedAccessToken) {
     return cachedAccessToken
   }
 
-  const userData = localStorage.getItem('K_user')
-  if (!userData) {
+  const accessToken = localStorage.getItem('K_accessToken') as AuthResponseType['accessToken']
+
+  if (!accessToken) {
     throw new Error('No access token found')
   }
 
-  const user = JSON.parse(userData) as NonNullable<AuthResponseType>
-  cachedAccessToken = user.accessToken
-  return cachedAccessToken
+  return accessToken
 }
 
 export const safeGetAccessToken = (): string | null => {

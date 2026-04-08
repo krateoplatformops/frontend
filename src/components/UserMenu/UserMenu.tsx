@@ -10,8 +10,8 @@ import styles from './UserMenu.module.css'
 const UserMenu = () => {
   const { refetch } = useConfigContext()
 
-  const userData = JSON.parse(localStorage.getItem('K_user') || '{}') as AuthResponseType
-  const { avatarURL, displayName, username } = userData.user || {}
+  const userData = JSON.parse(localStorage.getItem('K_user') || '{}') as AuthResponseType['user']
+  const { avatarURL, displayName, username } = userData || {}
 
   const fullName = (displayName !== '' ? displayName : username) || ''
   const initials = fullName

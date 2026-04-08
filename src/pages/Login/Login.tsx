@@ -8,7 +8,7 @@ import { useAppBranding } from '../../hooks/useAppTheme'
 import useCatchError from '../../hooks/useCatchError'
 
 import styles from './Login.module.css'
-import type { AuthModeType, FormType, LoginFormType } from './Login.types'
+import type { AuthModeType, AuthResponseType, FormType, LoginFormType } from './Login.types'
 import LoginForm from './LoginForm'
 import SocialLogin from './SocialLogin'
 
@@ -48,8 +48,12 @@ const Login = () => {
       })
 
       if (response.ok) {
-        const data = await response.json() as AuthModeType[]
-        localStorage.setItem('K_user', JSON.stringify(data))
+        const data = await response.json() as AuthResponseType
+
+        localStorage.setItem('K_user', JSON.stringify(data.user))
+        localStorage.setItem('K_accessToken', data.accessToken)
+        localStorage.setItem('K_groups', JSON.stringify(data.groups))
+
         void navigate('/')
       } else {
         catchError({

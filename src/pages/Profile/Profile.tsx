@@ -3,30 +3,30 @@ import { useEffect, useState } from 'react'
 
 import Header from '../../components/Header'
 import Sidebar from '../../components/Sidebar'
+import type { AuthResponseType } from '../Login/Login.types'
 
 import styles from './Profile.module.css'
 
-type UserData = {
-  user: {
-    avatarURL: string
-    displayName: string
-    username: string
-    email: string
-  }
-  groups: string[]
-} | undefined
-
 const Profile = () => {
   const lsUserData = localStorage.getItem('K_user')
-  const [userData, setUserData] = useState<UserData>(undefined)
+  const [userData, setUserData] = useState<AuthResponseType['user']>(null)
+
+  const lsGroupsData = localStorage.getItem('K_groups')
+  const [groupsData, setGroupsData] = useState<AuthResponseType['groups']>([])
 
   useEffect(() => {
     if (!lsUserData) {
       window.location.replace('/login')
     } else {
-      setUserData(JSON.parse(lsUserData) as UserData)
+      setUserData(JSON.parse(lsUserData) as AuthResponseType['user'])
     }
   }, [lsUserData])
+
+  useEffect(() => {
+    if (lsGroupsData) {
+      setGroupsData(JSON.parse(lsGroupsData) as AuthResponseType['groups'])
+    }
+  }, [lsGroupsData])
 
   return (
     <div className={styles.profile}>
@@ -37,21 +37,20 @@ const Profile = () => {
           <Card>
             <Row>
               <Col className={styles.avatar} sm={24}>
-                <Avatar size={200} src={userData?.user.avatarURL} />
+                <Avatar size={200} src={userData?.avatarURL} />
               </Col>
               <Col md={12} sm={24}>
                 <Space direction='vertical' size='large'>
                   <div>
-                    <Typography.Text className={styles.fullname}>{userData?.user.displayName}</Typography.Text>
-                    <a className={styles.email} href={`mailto:${userData?.user.email}`}>{userData?.user.email}</a>
+                    <Typography.Text className={styles.fullname}>{userData?.displayName}</Typography.Text>
                   </div>
 
                   <Descriptions column={1}>
                     <Descriptions.Item label='Username'>
-                      {userData?.user.username}
+                      {userData?.username || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label='Groups'>
-                      {userData?.groups.join(', ')}
+                      {groupsData.join(', ') || '-'}
                     </Descriptions.Item>
                   </Descriptions>
                 </Space>
