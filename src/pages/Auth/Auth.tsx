@@ -4,6 +4,7 @@ import { Result, Space, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 
+import { useAuth } from '../../context/AuthContext'
 import { useConfigContext } from '../../context/ConfigContext'
 import useCatchError from '../../hooks/useCatchError'
 import type { AuthModeType, AuthRequestType, AuthResponseType } from '../Login/Login.types'
@@ -11,6 +12,7 @@ import type { AuthModeType, AuthRequestType, AuthResponseType } from '../Login/L
 const Auth = () => {
   const navigate = useNavigate()
   const { catchError } = useCatchError()
+  const { login } = useAuth()
 
   const [searchParams] = useSearchParams()
   const [showError, setShowError] = useState<boolean>(false)
@@ -56,6 +58,7 @@ const Auth = () => {
       if (response.ok) {
         return parsedResponse
       }
+
       catchError({
         message: `Login error (${response.status}: ${response.statusText})`,
         status: response.status,
@@ -73,8 +76,8 @@ const Auth = () => {
       const userData = await socialsAuthentication(request)
 
       if (userData) {
-        localStorage.setItem('K_user', JSON.stringify(userData))
-        void navigate('/')
+        login(userData)
+        void navigate('/', { replace: true })
       }
     }
 
@@ -94,7 +97,7 @@ const Auth = () => {
     if (isMethodsError || isSocialAuthError) {
       setShowError(true)
     }
-  }, [code, methods, isSocialAuthError, isMethodsError, isMethodSuccess, navigate, socialsAuthentication, state, kind])
+  }, [code, methods, isSocialAuthError, isMethodsError, isMethodSuccess, navigate, socialsAuthentication, state, kind, login])
 
   return (
     showError

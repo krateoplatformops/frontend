@@ -7,11 +7,11 @@ import { useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import WidgetRenderer from '../../components/WidgetRenderer'
+import { useAuth } from '../../context/AuthContext'
 import { useConfigContext } from '../../context/ConfigContext'
 import type { AppRoute } from '../../context/RoutesContext'
 import { useRoutesContext } from '../../context/RoutesContext'
 import type { ResourceRef, WidgetProps } from '../../types/Widget'
-import { getAccessToken } from '../../utils/getAccessToken'
 import type { NavMenuItem } from '../NavMenuItem/NavMenuItem.type'
 
 import styles from './NavMenu.module.css'
@@ -31,6 +31,7 @@ type NavMenuItemResponse = Omit<NavMenuItem, 'status'> & {
 export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) {
   const location = useLocation()
   const navigate = useNavigate()
+  const { accessToken } = useAuth()
   const { menuRoutes, updateMenuRoutes } = useRoutesContext()
   const { config } = useConfigContext()
 
@@ -52,13 +53,13 @@ export function NavMenu({ resourcesRefs, uid }: WidgetProps<NavMenuWidgetData>) 
         queryFn: async (): Promise<NavMenuItemResponse> => {
           const res = await fetch(widgetFullUrl, {
             headers: {
-              Authorization: `Bearer ${getAccessToken()}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           })
           const widget = (await res.json()) as NavMenuItemResponse
           return widget
         },
-        queryKey: ['navmenuitems', id, widgetFullUrl],
+        queryKey: ['navmenuitems', id, widgetFullUrl, accessToken],
       }
     }),
   })

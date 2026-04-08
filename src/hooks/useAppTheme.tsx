@@ -5,9 +5,9 @@ import { createContext, useContext, useEffect, useMemo } from 'react'
 
 import styles from '../App.module.css'
 import fallbackLogo from '../assets/images/logo_big.svg'
+import { useAuth } from '../context/AuthContext'
 import { useConfigContext } from '../context/ConfigContext'
 import type { AppBranding, AppTheme } from '../theme/types'
-import { safeGetAccessToken } from '../utils/getAccessToken'
 import type { Theme } from '../widgets/Theme/Theme.type'
 
 import { useWidgetQuery } from './useWidgetQuery'
@@ -123,7 +123,8 @@ const isThemeWidget = (value: unknown): value is Theme => {
 // Fetches Theme resource from config
 export const useThemeResource = () => {
   const { config } = useConfigContext()
-  const hasToken = Boolean(safeGetAccessToken())
+  const { accessToken } = useAuth()
+  const hasToken = Boolean(accessToken)
   const themeEndpoint = config?.api?.THEME
 
   const shouldFetch = Boolean(themeEndpoint && hasToken)

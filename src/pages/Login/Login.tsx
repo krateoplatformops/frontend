@@ -3,12 +3,13 @@ import { Card, Divider, Result, Skeleton } from 'antd'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
+import { useAuth } from '../../context/AuthContext'
 import { useConfigContext } from '../../context/ConfigContext'
 import { useAppBranding } from '../../hooks/useAppTheme'
 import useCatchError from '../../hooks/useCatchError'
 
 import styles from './Login.module.css'
-import type { AuthModeType, FormType, LoginFormType } from './Login.types'
+import type { AuthModeType, AuthResponseType, FormType, LoginFormType } from './Login.types'
 import LoginForm from './LoginForm'
 import SocialLogin from './SocialLogin'
 
@@ -17,6 +18,7 @@ const Login = () => {
   const { catchError } = useCatchError()
   const { config } = useConfigContext()
   const { logoUrl } = useAppBranding()
+  const { login: setAuth } = useAuth()
 
   const authUrl = `${config!.api.AUTHN_API_BASE_URL}/strategies`
 
@@ -48,8 +50,10 @@ const Login = () => {
       })
 
       if (response.ok) {
-        const data = await response.json() as AuthModeType[]
-        localStorage.setItem('K_user', JSON.stringify(data))
+        const data = await response.json() as AuthResponseType
+
+        setAuth(data)
+
         void navigate('/')
       } else {
         catchError({

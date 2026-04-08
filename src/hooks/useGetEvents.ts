@@ -9,8 +9,8 @@ import {
 } from 'event-source-polyfill'
 import { useEffect, useMemo, useState } from 'react'
 
+import { useAuth } from '../context/AuthContext'
 import { useConfigContext } from '../context/ConfigContext'
-import { getAccessToken } from '../utils/getAccessToken'
 import type { EventsApiResource, EventsApiResponse } from '../utils/types'
 
 type UseGetEventsOptions = {
@@ -30,6 +30,7 @@ export function useGetEvents({
 }: UseGetEventsOptions) {
   const { config } = useConfigContext()
   const queryClient = useQueryClient()
+  const { accessToken } = useAuth()
 
   const [sseEvents, setSseEvents] = useState<EventsApiResource[]>([])
 
@@ -40,7 +41,7 @@ export function useGetEvents({
     new URL(sseEndpoint ?? '/notifications', config!.api.EVENTS_PUSH_API_BASE_URL).toString(),
   [config, sseEndpoint])
 
-  const queryKey = useMemo(() => ['events', eventsUrl] as const, [eventsUrl],)
+  const queryKey = useMemo(() => ['events', eventsUrl, accessToken] as const, [eventsUrl],)
   const unreadKey = useMemo(() => ['events-unread', topic, sseEndpoint ?? undefined] as const, [topic, sseEndpoint])
   const isSseOnly = !!sseEndpoint
 
@@ -54,7 +55,7 @@ export function useGetEvents({
     enabled: enabled && !!eventsBaseUrl && !isSseOnly,
     gcTime: 5 * 60_000,
     queryFn: async ({ pageParam, queryKey, signal }) => {
-      const [, currentEventsUrl] = queryKey
+      const [, currentEventsUrl, accessToken] = queryKey
 
       const url = pageParam
         ? `${currentEventsUrl}?cursor=${pageParam}`
@@ -62,7 +63,7 @@ export function useGetEvents({
 
       const res = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         signal })
       return (await res.json()) as EventsApiResponse
@@ -98,7 +99,7 @@ export function useGetEvents({
     if (!sseConnections.has(connectionKey)) {
       const eventSource = new EventSourcePolyfill(notificationsUrl, {
         headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         withCredentials: false,
       })

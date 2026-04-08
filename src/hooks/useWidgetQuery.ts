@@ -4,9 +4,9 @@
 import { useInfiniteQuery, useIsFetching } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
+import { useAuth } from '../context/AuthContext'
 import { useConfigContext } from '../context/ConfigContext'
 import type { ResourceRef, Widget } from '../types/Widget'
-import { getAccessToken } from '../utils/getAccessToken'
 
 function parseNumberParam(param: string | null) {
   const parsed = param ? parseInt(param) : undefined
@@ -21,6 +21,7 @@ type PageParam = {
 
 export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: boolean }) => {
   const { config } = useConfigContext()
+  const { accessToken } = useAuth()
   const widgetFullUrl = `${config!.api.SNOWPLOW_API_BASE_URL}${widgetEndpoint}`
 
   const {
@@ -80,7 +81,7 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
 
     const res = await fetch(url.toString(), {
       headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     })
 

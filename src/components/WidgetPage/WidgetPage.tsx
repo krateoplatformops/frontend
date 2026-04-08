@@ -1,7 +1,7 @@
 import { useIsFetching } from '@tanstack/react-query'
-import { useEffect } from 'react'
-import { useLocation, useSearchParams } from 'react-router'
+import { Navigate, useLocation, useSearchParams } from 'react-router'
 
+import { useAuth } from '../../context/AuthContext'
 import { useRoutesContext } from '../../context/RoutesContext'
 import Page404 from '../../pages/Page404'
 import Drawer from '../../widgets/Drawer'
@@ -13,20 +13,13 @@ import WidgetRenderer from '../WidgetRenderer'
 import styles from './WidgetPage.module.css'
 
 export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: string }) => {
+  const { user } = useAuth()
   const location = useLocation()
   const { menuRoutes } = useRoutesContext()
   const [searchParams] = useSearchParams()
   const queryParamWidgetEndpoint = searchParams.get('widgetEndpoint')
   const currentRoute = menuRoutes.find(({ path }) => path === location.pathname)
   const widgetEndpoint = queryParamWidgetEndpoint || currentRoute?.resourceRef?.path || defaultWidgetEndpoint || ''
-
-  useEffect(() => {
-    const userData = localStorage.getItem('K_user')
-
-    if (!userData) {
-      window.location.replace('/login')
-    }
-  }, [])
 
   const isFetchingRoutes = useIsFetching({
     predicate: (query) => {
@@ -37,6 +30,10 @@ export const WidgetPage = ({ defaultWidgetEndpoint }: { defaultWidgetEndpoint?: 
       )
     },
   })
+
+  if (!user) {
+    return <Navigate replace to='/login' />
+  }
 
   return (
     <div className={styles.widgetPage}>

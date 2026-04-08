@@ -15,6 +15,7 @@ import 'reactflow/dist/style.css'
 
 import styles from './App.module.css'
 import FiltersProvider from './components/FiltesProvider/FiltersProvider'
+import { AuthProvider } from './context/AuthContext'
 import { ConfigProvider, useConfigContext } from './context/ConfigContext'
 import { RoutesProvider, useRoutesContext } from './context/RoutesContext'
 import { ThemeProvider } from './hooks/useAppTheme'
@@ -56,7 +57,9 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <RoutesProvider>
-          <AppInitializer />
+          <AuthProvider>
+            <AppInitializer />
+          </AuthProvider>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </ConfigProvider>
