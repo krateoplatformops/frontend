@@ -1,11 +1,12 @@
+import { useAuth } from '../context/AuthContext'
 import { useConfigContext } from '../context/ConfigContext'
 
-import { getAccessToken } from './getAccessToken'
 /**
  * Resolves a single jq expression wrapped in ${}
  * Example: '${"repo name: " + .json.spec.git.toRepo.name + ", event reason: " + .event.reason + ", response kind: " + .response.kind}'
  */
 export function useResolveJqExpression() {
+  const { accessToken } = useAuth()
   const { config } = useConfigContext()
   const url = `${config!.api.SNOWPLOW_API_BASE_URL}/jq`
 
@@ -23,7 +24,7 @@ export function useResolveJqExpression() {
       const res = await fetch(url, {
         body: JSON.stringify({ data: values, query: jqExpression }),
         headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         method: 'POST',

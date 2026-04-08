@@ -3,6 +3,7 @@ import { Card, Divider, Result, Skeleton } from 'antd'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
+import { useAuth } from '../../context/AuthContext'
 import { useConfigContext } from '../../context/ConfigContext'
 import { useAppBranding } from '../../hooks/useAppTheme'
 import useCatchError from '../../hooks/useCatchError'
@@ -17,6 +18,7 @@ const Login = () => {
   const { catchError } = useCatchError()
   const { config } = useConfigContext()
   const { logoUrl } = useAppBranding()
+  const { login: setAuth } = useAuth()
 
   const authUrl = `${config!.api.AUTHN_API_BASE_URL}/strategies`
 
@@ -50,9 +52,7 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json() as AuthResponseType
 
-        localStorage.setItem('K_user', JSON.stringify(data.user))
-        localStorage.setItem('K_accessToken', data.accessToken)
-        localStorage.setItem('K_groups', JSON.stringify(data.groups))
+        setAuth(data)
 
         void navigate('/')
       } else {

@@ -6,10 +6,10 @@ import { merge, set } from 'lodash'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
+import { useAuth } from '../context/AuthContext'
 import { useConfigContext } from '../context/ConfigContext'
 import { useRoutesContext } from '../context/RoutesContext'
 import type { ResourcesRefs, Widget, WidgetAction } from '../types/Widget'
-import { getAccessToken } from '../utils/getAccessToken'
 import { useResolveJqExpression } from '../utils/jq-expression'
 import type { EventsApiResource, Payload, RestApiResponse } from '../utils/types'
 import { getHeadersObject, getResourceRef } from '../utils/utils'
@@ -124,6 +124,7 @@ const buildPayload = async (
 export const useHandleAction = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { accessToken } = useAuth()
   const queryClient = useQueryClient()
   const { message, notification } = useApp()
   const { config } = useConfigContext()
@@ -246,7 +247,7 @@ export const useHandleAction = () => {
 
               const eventSource = new EventSourcePolyfill(eventsEndpoint, {
                 headers: {
-                  Authorization: `Bearer ${getAccessToken()}`,
+                  Authorization: `Bearer ${accessToken}`,
                 },
                 withCredentials: false,
               })
@@ -365,7 +366,7 @@ export const useHandleAction = () => {
             const requestHeaders = {
               ...headersObject,
               Accept: 'application/json',
-              Authorization: `Bearer ${getAccessToken()}`,
+              Authorization: `Bearer ${accessToken}`,
             }
 
             const shouldSendPayload = ['POST', 'PUT', 'PATCH'].includes(verb)
