@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   const [accessToken, setAccessToken] = useState(() => {
     const stored = localStorage.getItem('K_accessToken')
-    return stored ? JSON.parse(stored) as AuthResponseType['accessToken'] : null
+    return stored ?? null
   })
 
   const [groups, setGroups] = useState(() => {
