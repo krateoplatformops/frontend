@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.18] - 2026-04-09
+
+### Fixed
+- Fixed access token retrieval after refreshing
+
 ## [1.0.17] - 2026-04-08
 
 ### Changed
