@@ -219,7 +219,7 @@ const WidgetRenderer = ({
   }
 
   if (error) {
-    console.error('error', error)
+    console.error(error)
     return <WidgetRendererError subtitle={`There has been an error while fetching the widget: ${error}`} />
   }
 
