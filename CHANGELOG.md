@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.19] - 2026-04-17
+
+### Fixed
+- Fixed reconciliation in `WidgetRenderer` and `DataGrid`
+
 ## [1.0.18] - 2026-04-09
 
 ### Fixed
