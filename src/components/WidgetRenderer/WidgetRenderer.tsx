@@ -1,5 +1,5 @@
 import { Result, Skeleton } from 'antd'
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
 import useCatchError from '../../hooks/useCatchError'
 import { useWidgetQuery } from '../../hooks/useWidgetQuery'
@@ -177,7 +177,9 @@ const WidgetRenderer = ({
   const { isWidgetFilteredByProps } = useFilter()
   const { catchError } = useCatchError()
 
-  if (!widgetEndpoint?.includes('widgets.templates.krateo.io')) {
+  const [wasEverLoaded, setWasEverLoaded] = useState(false)
+
+  if (widgetEndpoint && !widgetEndpoint.includes('widgets.templates.krateo.io')) {
     console.warn(`WidgetRenderer received widgetEndpoint=${widgetEndpoint}, which is probably invalid. An url is expected.`)
   }
 
@@ -185,6 +187,16 @@ const WidgetRenderer = ({
   const { data: widget, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isLoading } = queryResult
 
   let isVisible = true
+
+  useEffect(() => {
+    setWasEverLoaded(false)
+  }, [widgetEndpoint])
+
+  useEffect(() => {
+    if (widget && !error) {
+      setWasEverLoaded(true)
+    }
+  }, [widget, error])
 
   useEffect(() => {
     if (onVisibilityChange) {
@@ -232,6 +244,10 @@ const WidgetRenderer = ({
           },
           'notification'
         )
+      }
+
+      if (code === 404 && wasEverLoaded) {
+        return null
       }
 
       if (code === 500 && status === 'Failure' && message?.includes('credentials')) {

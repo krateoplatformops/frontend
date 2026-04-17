@@ -40,7 +40,7 @@ const DataGrid = ({ resourcesRefs, widgetData }: WidgetProps<DataGridWidgetData>
 
       return (
         <WidgetRenderer
-          key={resourceRefId}
+          key={`${resourceRefId}-${endpoint}`}
           onVisibilityChange={(visible) => handleVisibilityChange(resourceRefId, visible)}
           prefix={prefix}
           widgetEndpoint={endpoint}
