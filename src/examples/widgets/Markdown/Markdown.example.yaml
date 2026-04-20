@@ -173,3 +173,22 @@ spec:
       | API     | 🟡 Pending    | _Anna_       | 2        | `Node.js`, `Fastify`            | Requires security review                |
       | Mobile  | ❌ Blocked    | Mark         | 3        | `React Native`, `Expo`          | Depends on API availability             |
       | Admin   | ✅ Active     | **Team**     | 1        | `React`, `Ant Design`           | Internal tool                            |
+---
+# Markdown with links
+# Target: verify link rendering with custom attributes.
+# Expected behavior: renders links correctly, opening some in a new tab.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-with-links
+  namespace: krateo-system
+spec:
+  widgetData:
+    markdown: |
+      ## Links examples
+
+      - Same tab:
+        :link[Open Google]{href="https://www.google.com" target="_self"}
+
+      - New tab:
+        :link[Open Google in new tab]{href="https://www.google.com" target="_blank" rel="noopener noreferrer"}

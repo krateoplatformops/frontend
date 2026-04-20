@@ -3,12 +3,14 @@ import { Button } from 'antd'
 import { useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import { default as ReactMarkdown } from 'react-markdown'
+import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
 
 import type { WidgetProps } from '../../types/Widget'
 
 import styles from './Markdown.module.css'
 import type { Markdown as WidgetType } from './Markdown.type'
+import { remarkLinkDirective } from './remarkLinkDirective'
 
 export type MarkdownWidgetData = WidgetType['spec']['widgetData']
 
@@ -57,7 +59,9 @@ const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
         </div>
       )}
 
-      <ReactMarkdown key={uid} remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+      <ReactMarkdown key={uid} remarkPlugins={[remarkGfm, remarkDirective, remarkLinkDirective]}>
+        {markdown}
+      </ReactMarkdown>
     </div>
   )
 }
