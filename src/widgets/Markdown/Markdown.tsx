@@ -15,7 +15,7 @@ import { remarkLinkDirective } from './remarkLinkDirective'
 export type MarkdownWidgetData = WidgetType['spec']['widgetData']
 
 const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
-  const { allowCopy, allowDownload, downloadFileExtension = 'txt', markdown } = widgetData
+  const { allowCopy, allowDownload, contentMaxHeight, downloadFileExtension = 'txt', markdown } = widgetData
 
   const [isCopied, setIsCopied] = useState(false)
 
@@ -59,9 +59,14 @@ const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
         </div>
       )}
 
-      <ReactMarkdown key={uid} remarkPlugins={[remarkGfm, remarkDirective, remarkLinkDirective]}>
-        {markdown}
-      </ReactMarkdown>
+      <div
+        className={contentMaxHeight ? styles.scrollableContent : undefined}
+        style={contentMaxHeight ? { maxHeight: contentMaxHeight } : undefined}
+      >
+        <ReactMarkdown key={uid} remarkPlugins={[remarkGfm, remarkDirective, remarkLinkDirective]}>
+          {markdown}
+        </ReactMarkdown>
+      </div>
     </div>
   )
 }

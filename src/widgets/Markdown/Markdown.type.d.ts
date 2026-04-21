@@ -15,6 +15,10 @@ export interface Markdown {
        */
       allowDownload?: boolean
       /**
+       * if set, defines a max height for the markdown content. when content overflows its container becomes scrollable
+       */
+      contentMaxHeight?: number
+      /**
        * if 'allowDownload' is set, this property allows to set an extension for the downloaded file. Default is .txt
        */
       downloadFileExtension?: string

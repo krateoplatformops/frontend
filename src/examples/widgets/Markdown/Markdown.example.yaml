@@ -212,3 +212,51 @@ spec:
           at fetchUser (/app/services/user.js:42:15)
           at processTicksAndRejections (node:internal/process/task_queues:96:5)
       ```
+---
+# Markdown with max height set (scrollable content)
+# Target: verify that if content max height is set content becomes scrollable
+# Expected behavior: renders markdown correctly, when content overflows vertical scroll is enabled.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-content-max-height
+  namespace: krateo-system
+spec:
+  widgetData:
+    contentMaxHeight: 300
+    markdown: |
+      # cloudnative-stack
+      A Cloud Native Stack based on Frontend / Backend / Kafka / Hazelcast / MongoDB / CloudNativePG
+
+      ## Overview
+
+      This Krateo blueprint deploys a complex, multi-tier application stack on Kubernetes. It is designed to be highly configurable and relies on best-practice Kubernetes operators for managing stateful components like databases and message queues.
+
+      The blueprint will provision the following components:
+
+      - A **Frontend** pod (e.g., Nginx) to serve a user interface.
+      - A **Backend** pod (e.g., Spring Boot) for business logic.
+      - A **Kafka Topic** managed by the Strimzi operator.
+      - A **Hazelcast** in-memory data grid cluster managed by the Hazelcast Platform Operator.
+      - A **MongoDB** replica set managed by the MongoDB Community Kubernetes Operator.
+      - A **PostgreSQL** cluster managed by the CloudNative-PG operator.
+
+      ## Requirements
+
+      For this blueprint to function correctly, your Kubernetes cluster **must** have the following operators installed and running. Please follow their official documentation for installation instructions.
+
+      1. **Strimzi (for Kafka):**
+         - **Purpose:** Manages Kafka clusters and topics.
+         - **Installation Guide:** [Strimzi Deployment Documentation](https://strimzi.io/docs/operators/latest/deploying)
+
+      2. **Hazelcast Platform Operator:**
+         - **Purpose:** Manages Hazelcast in-memory computing clusters.
+         - **Installation Guide:** [Hazelcast Operator Deployment](https://docs.hazelcast.com/operator/5.14/)
+
+      3. **MongoDB Kubernetes Operator:**
+         - **Purpose:** Manages MongoDB Community replica sets and clusters.
+         - **Installation Guide:** [https://github.com/mongodb/mongodb-kubernetes](https://github.com/mongodb/mongodb-kubernetes)
+
+      4. **CloudNative-PG (for PostgreSQL):**
+         - **Purpose:** Manages the full lifecycle of a PostgreSQL cluster.
+         - **Installation Guide:** [CloudNative-PG Installation](https://cloudnative-pg.io/documentation/1.27/)
