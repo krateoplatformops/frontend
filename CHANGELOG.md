@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.20] - 2026-04-21
+
+### Added
+- Added links handling and content optional vertical scroll to `Markdown`
+
+### Fixed
+- Fixed code blocks displaying in `Markdown`
+
 ## [1.0.19] - 2026-04-17
 
 ### Fixed

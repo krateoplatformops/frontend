@@ -3,17 +3,19 @@ import { Button } from 'antd'
 import { useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import { default as ReactMarkdown } from 'react-markdown'
+import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
 
 import type { WidgetProps } from '../../types/Widget'
 
 import styles from './Markdown.module.css'
 import type { Markdown as WidgetType } from './Markdown.type'
+import { remarkLinkDirective } from './remarkLinkDirective'
 
 export type MarkdownWidgetData = WidgetType['spec']['widgetData']
 
 const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
-  const { allowCopy, allowDownload, downloadFileExtension = 'txt', markdown } = widgetData
+  const { allowCopy, allowDownload, contentMaxHeight, downloadFileExtension = 'txt', markdown } = widgetData
 
   const [isCopied, setIsCopied] = useState(false)
 
@@ -57,7 +59,14 @@ const Markdown = ({ uid, widgetData }: WidgetProps<MarkdownWidgetData>) => {
         </div>
       )}
 
-      <ReactMarkdown key={uid} remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+      <div
+        className={contentMaxHeight ? styles.scrollableContent : undefined}
+        style={contentMaxHeight ? { maxHeight: contentMaxHeight } : undefined}
+      >
+        <ReactMarkdown key={uid} remarkPlugins={[remarkGfm, remarkDirective, remarkLinkDirective]}>
+          {markdown}
+        </ReactMarkdown>
+      </div>
     </div>
   )
 }

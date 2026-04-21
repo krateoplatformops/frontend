@@ -1,6 +1,18 @@
 .markdown {
   overflow-wrap: break-word;    
-  overflow-x: hidden;
+
+  pre {
+    background-color: var(--background-color);
+    border-radius: var(--spacing-md);
+    max-width: 100%;
+    overflow-x: auto;      
+    padding: var(--spacing-md);
+    white-space: pre;
+  }
+
+  code {
+    white-space: pre;
+  }
 
   > *:first-child {
     margin-top: 0;
@@ -16,6 +28,10 @@
       display: flex;
       gap: var(--spacing-xs);
     }
+  }
+
+  .scrollableContent {
+    overflow-y: auto;
   }
 
   table {
