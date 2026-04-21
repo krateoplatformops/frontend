@@ -192,3 +192,23 @@ spec:
 
       - New tab:
         :link[Open Google in new tab]{href="https://www.google.com" target="_blank" rel="noopener noreferrer"}
+---
+# Markdown with code block
+# Target: verify code block rendering.
+# Expected behavior: renders code block correctly, when text overflows horizontal scroll is enabled.
+kind: Markdown
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-markdown-with-code-block
+  namespace: krateo-system
+spec:
+  widgetData:
+    markdown: |
+      ## Code block example
+
+      ```bash
+      [2026-04-21 10:15:32] INFO  Server started on port 4000 [2026-04-21 10:15:35] INFO  Connected to database [2026-04-21 10:16:02] WARN  Slow query detected (245ms) [2026-04-21 10:16:10] ERROR Failed to fetch user data [2026-04-21 10:16:10] ERROR Stack trace:
+      Error: Request failed with status code 500
+          at fetchUser (/app/services/user.js:42:15)
+          at processTicksAndRejections (node:internal/process/task_queues:96:5)
+      ```
