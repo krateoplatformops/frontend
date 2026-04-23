@@ -51,6 +51,7 @@ spec:
       - resourceRefId: example-linechart-multi-panel
       - resourceRefId: example-linechart-missing-coords-panel
       - resourceRefId: example-linechart-invalid-values-panel
+      - resourceRefId: example-linechart-full-panel
   resourcesRefs:
     items:
       - id: example-linechart-empty-panel
@@ -80,6 +81,12 @@ spec:
       - id: example-linechart-invalid-values-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-linechart-invalid-values-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-linechart-full-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-linechart-full-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -180,6 +187,26 @@ spec:
       - id: example-linechart-invalid-values
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-linechart-invalid-values
+        namespace: krateo-system
+        resource: linecharts
+        verb: GET  
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-linechart-full-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Full chart'
+    items:
+      - resourceRefId: example-linechart-full
+  resourcesRefs:
+    items:
+      - id: example-linechart-full
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-linechart-full
         namespace: krateo-system
         resource: linecharts
         verb: GET  

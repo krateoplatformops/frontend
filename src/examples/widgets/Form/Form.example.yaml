@@ -79,6 +79,11 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    buttonConfig:
+      primary:
+        label: Invia
+      secondary:
+        label: Annulla
     fieldDescription: tooltip
     submitActionId: submit-basic
     displayMenu: false

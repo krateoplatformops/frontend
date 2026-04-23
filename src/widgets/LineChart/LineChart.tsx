@@ -25,15 +25,17 @@ const LineChart = ({ uid, widgetData }: WidgetProps<LineChartWidgetData>) => {
 
   const optionLine = {
     grid: {
-      bottom: '30%',
+      bottom: 130,
       left: '15%',
     },
     legend: {
       bottom: 0,
       data: lines.map(({ name }) => name),
+      padding: [10, 0, 0, 0],
       textStyle: {
         color: textColor,
       },
+      type: 'scroll',
     },
     series: lines.map(({ color, coords, name }) => ({
       color: getColorCode(color),
