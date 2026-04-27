@@ -687,6 +687,8 @@ Table displays structured data with customizable columns and pagination
 | tableActions[].button.size | no | the size of the button | `small` \| `middle` \| `large` |
 | tableActions[].button.type | no | the visual style of the button | `default` \| `text` \| `link` \| `primary` \| `dashed` |
 | tableActions[].clickActionId | no | the id of the action to be executed when the button is clicked | string |
+| tableActionsColumn | no | customization for the table actions column | object |
+| tableActionsColumn.label | no | table actions column customized label, default is empty string | string |
 
 
 [Examples](../src/examples/widgets/Table/Table.example.yaml)

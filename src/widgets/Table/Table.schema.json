@@ -466,6 +466,17 @@
                 },
                 "additionalProperties": false
               }
+            },
+            "tableActionsColumn": {
+              "description": "customization for the table actions column",
+              "type": "object",
+              "properties": {
+                "label": {
+                  "description": "table actions column customized label, default is empty string",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false

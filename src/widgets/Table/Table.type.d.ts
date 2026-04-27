@@ -319,6 +319,15 @@ export interface Table {
          */
         clickActionId?: string
       }[]
+      /**
+       * customization for the table actions column
+       */
+      tableActionsColumn?: {
+        /**
+         * table actions column customized label, default is empty string
+         */
+        label?: string
+      }
     }
     resourcesRefs?: {
       items: {
