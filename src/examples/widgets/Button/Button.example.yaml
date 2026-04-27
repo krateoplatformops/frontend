@@ -450,7 +450,6 @@ spec:
   widgetData:
     label: Open Modal Default
     type: primary
-    
     size: middle
     clickActionId: open-modal-default
     actions:
@@ -458,7 +457,7 @@ spec:
         - id: open-modal-default
           type: openModal
           resourceRefId: example-yamlviewer-simple-json
-          title: Default Modal Example
+          title: ${"Default Modal Example:" + " " + .widget.status.widgetData.label}
           loading:
             display: true
           size: default

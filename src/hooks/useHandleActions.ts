@@ -200,16 +200,30 @@ export const useHandleAction = () => {
         case 'openDrawer': {
           const { size, title } = action
 
+          let drawerTitle: string | undefined
+          if (title) {
+            drawerTitle = title.startsWith('${')
+              ? await resolveJq(title, { json: customPayload, widget })
+              : title
+          }
+
           setIsActionLoading(false)
-          openDrawer({ size, title, widgetEndpoint: path })
+          openDrawer({ size, title: drawerTitle, widgetEndpoint: path })
 
           break
         }
         case 'openModal': {
           const { customWidth, size, title } = action
 
+          let modalTitle: string | undefined
+          if (title) {
+            modalTitle = title.startsWith('${')
+              ? await resolveJq(title, { json: customPayload, widget })
+              : title
+          }
+
           setIsActionLoading(false)
-          openModal({ customWidth, size, title, widgetEndpoint: path })
+          openModal({ customWidth, size, title: modalTitle, widgetEndpoint: path })
 
           break
         }
