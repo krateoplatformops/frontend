@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [1.0.22] - 2026-04-27
+
+### Added
+- Added customization for `tableActions` column label
+- Added JQ interpolation logic for `openDrawer` and `openModal` titles
+
 ## [1.0.21] - 2026-04-23
 
 ### Fixed
