@@ -21,7 +21,7 @@ export type NormalizedRow = {
 } & Record<string, unknown>
 
 const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>) => {
-  const { actions, columns, data, pageSize, prefix, tableActions } = widgetData
+  const { actions, columns, data, pageSize, prefix, tableActions, tableActionsColumn } = widgetData
   const { getFilteredData } = useFilter()
 
   // TODO: check if this works with RESTAction, it should not be displayed
@@ -152,7 +152,7 @@ const Table = ({ resourcesRefs, uid, widgetData }: WidgetProps<TableWidgetData>)
             />))
           }
         </div>,
-      title: 'Actions',
+      title: tableActionsColumn?.label ?? '',
     }]
     : []
 
