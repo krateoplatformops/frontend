@@ -160,8 +160,16 @@ export function useGetEvents({
 
     const merged = [...sseEvents, ...fetchedEvents]
     const seen = new Set<string>()
+
     return merged.filter((item) => {
-      if (seen.has(item.global_uid)) { return false }
+      if (!item || !item.global_uid) {
+        return false
+      }
+
+      if (seen.has(item.global_uid)) {
+        return false
+      }
+
       seen.add(item.global_uid)
       return true
     })
