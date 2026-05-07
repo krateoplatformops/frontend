@@ -1,0 +1,9 @@
+# Basic Notifications
+# Expected behavior: Displays a Notifications component
+kind: Notifications
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-notifications-basic
+  namespace: krateo-system
+spec:
+  widgetData: {}
