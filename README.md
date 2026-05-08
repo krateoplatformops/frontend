@@ -86,6 +86,7 @@ The file should have this content:
     "SNOWPLOW_API_BASE_URL": "http://localhost:30081",
     "EVENTS_API_BASE_URL": "http://localhost:30083",
     "ROUTES_LOADER": "/call?resource=routesloaders&apiVersion=widgets.templates.krateo.io/v1beta1&name=routes-loader&namespace=krateo-system",
+    "NOTIFICATIONS_WIDGET": "/call?resource=notifications&apiVersion=widgets.templates.krateo.io/v1beta1&name=notifications&namespace=krateo-system",
     "EVENTS_PUSH_API_BASE_URL": "http://localhost:30083",
     "INIT": "/call?resource=navmenus&apiVersion=widgets.templates.krateo.io/v1beta1&name=sidebar-nav-menu&namespace=krateo-system"
   },

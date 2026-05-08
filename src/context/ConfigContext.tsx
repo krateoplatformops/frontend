@@ -7,6 +7,7 @@ export interface Config {
     SNOWPLOW_API_BASE_URL: string
     EVENTS_API_BASE_URL: string
     EVENTS_PUSH_API_BASE_URL: string
+    NOTIFICATIONS_WIDGET: string
     ROUTES_LOADER: string
     INIT: string
     THEME?: string

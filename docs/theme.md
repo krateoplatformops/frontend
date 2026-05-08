@@ -170,6 +170,7 @@ config:
   EVENTS_PUSH_API_BASE_URL: "" # should be mapped to eventsse service
   EVENTS_API_BASE_URL: "" # should be mapped to eventsse service
   ROUTES_LOADER: ""
+  NOTIFICATIONS: ""
   INIT: ""
   THEME: "/call?resource=themes&apiVersion=widgets.templates.krateo.io/v1beta1&name=dark-theme&namespace=krateo-system"
 ```
