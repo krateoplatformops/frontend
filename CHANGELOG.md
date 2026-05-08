@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## [Unreleased]
+
+### Changed
+- `Notifications` component has been replaced by `Notifications` widget
+
 ## [1.0.23] - 2026-04-28
 
 ### Fixed
