@@ -5,10 +5,14 @@ import VirtualList from 'rc-virtual-list'
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useGetEvents } from '../../hooks/useGetEvents'
+import type { WidgetProps } from '../../types/Widget'
 import type { EventsApiResource } from '../../utils/types'
 import { formatISODate } from '../../utils/utils'
 
 import styles from './Notifications.module.css'
+import type { Notifications as WidgetType } from './Notifications.type'
+
+export type NotificationsWidgetData = WidgetType['spec']['widgetData']
 
 type LoaderItem = {
   __isLoader: true
@@ -20,7 +24,7 @@ type NotificationItem = EventsApiResource | LoaderItem
 const isLoaderItem = (item: unknown): item is LoaderItem =>
   (!!item && typeof item === 'object' && '__isLoader' in item && (item as LoaderItem).__isLoader === true)
 
-const Notifications: React.FC = () => {
+const Notifications = ({ uid }: WidgetProps<NotificationsWidgetData>) => {
   const [drawerVisible, setDrawerVisible] = useState(false)
   const queryClient = useQueryClient()
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -100,7 +104,7 @@ const Notifications: React.FC = () => {
     const {
       created_at: creationTimestamp,
       event_type: type,
-      global_uid: uid,
+      global_uid: globalUid,
       message,
       namespace,
       reason,
@@ -114,7 +118,7 @@ const Notifications: React.FC = () => {
     return (
       <List.Item
         className={`${styles.listItem} ${isFirst ? styles.firstElement : ''} ${notifications?.length && isLast ? styles.lastElement : ''}`}
-        key={uid}
+        key={globalUid}
       >
         <Button className={styles.notificationElement} type='link'>
           <div className={styles.space}>
@@ -176,6 +180,7 @@ const Notifications: React.FC = () => {
       <Button
         className={styles.icon}
         icon={<BellFilled />}
+        id={uid}
         onClick={() => setDrawerVisible(true)}
         shape='circle'
         type='link'

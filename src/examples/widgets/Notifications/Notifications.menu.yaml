@@ -1,0 +1,77 @@
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-notifications-navmenuitem
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - pages
+    resourceRefId: example-notifications-page
+    label: Notifications
+    icon: fa-bell
+    path: /notifications
+  resourcesRefs:
+    items:
+      - id: example-notifications-page
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-notifications-page
+        namespace: krateo-system
+        resource: pages
+        verb: GET
+---
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-notifications-page
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - eventlists
+      - buttons
+      - columns
+      - datagrids
+      - eventlists
+      - filters
+      - flowcharts
+      - forms
+      - linecharts
+      - markdowns
+      - panels
+      - paragraphs
+      - piecharts
+      - rows
+      - tables
+      - tablists
+      - yamlviewers
+    items:
+      - resourceRefId: example-notifications-basic-panel
+  resourcesRefs:
+    items: 
+      - id: example-notifications-basic-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-notifications-basic-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET  
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-notifications-basic-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Basic Notifications'
+    items:
+      - resourceRefId: example-notifications-basic
+  resourcesRefs:
+    items:
+      - id: example-notifications-basic
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-notifications-basic
+        namespace: krateo-system
+        resource: notifications
+        verb: GET  

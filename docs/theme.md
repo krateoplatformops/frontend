@@ -169,6 +169,7 @@ config:
   SNOWPLOW_API_BASE_URL: "" # should be mapped to snowplow service
   EVENTS_PUSH_API_BASE_URL: "" # should be mapped to eventsse service
   EVENTS_API_BASE_URL: "" # should be mapped to eventsse service
+  NOTIFICATIONS_WIDGET: ""
   ROUTES_LOADER: ""
   INIT: ""
   THEME: "/call?resource=themes&apiVersion=widgets.templates.krateo.io/v1beta1&name=dark-theme&namespace=krateo-system"
