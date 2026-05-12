@@ -250,6 +250,10 @@ const WidgetRenderer = ({
         )
       }
 
+      if (code === 403 && message?.includes('notifications')) {
+        return null
+      }
+
       if (code === 404 && wasEverLoaded) {
         return null
       }
