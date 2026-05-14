@@ -422,6 +422,98 @@
                 }
               }
             },
+            "displayDependencies": {
+              "type": "array",
+              "description": "Configuration for the form fields whose displaying is dependent from other form fields.",
+              "items": {
+                "type": "object",
+                "required": ["dependsOn", "name"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "description": "the name of the field",
+                    "type": "string"
+                  },
+                  "dependsOn": {
+                    "description": "the field on which this field depends on",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["name", "conditionType"],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "the name of the field on which this field depends on"
+                      },
+                      "conditionType": {
+                        "type": "string",
+                        "description": "`notEmpty` (default) indicates that the current field is displayed if the dependency field has a non-empty value. `value` indicates that the current field is displayed only when the dependency field matches a specific value.",
+                        "enum": ["notEmpty", "value"]
+                      },
+                      "value": {
+                        "type": "object",
+                        "description": "Expected value used when `type = value`.",
+                        "additionalProperties": false,
+                        "required": ["type"],
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "string",
+                              "number",
+                              "integer",
+                              "decimal",
+                              "boolean",
+                              "array",
+                              "option",
+                              "null"
+                            ],
+                            "description": "Expected dependency value type."
+                          },
+                          "stringValue": {
+                            "type": "string",
+                            "description": "Value if type = string"
+                          },
+                          "numberValue": {
+                            "type": "integer",
+                            "description": "Value if type = number or integer"
+                          },
+                          "decimalValue": {
+                            "type": "string",
+                            "description": "Value if type = number or decimal"
+                          },
+                          "booleanValue": {
+                            "type": "boolean",
+                            "description": "Value if type = boolean"
+                          },
+                          "arrayValue": {
+                            "type": "array",
+                            "description": "Value if type = array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "optionValue": {
+                            "description": "Value if type = option",
+                            "additionalProperties": false,
+                            "required": ["value"],
+                            "properties": {
+                              "label": {
+                                "description": "Label of the option",
+                                "type": "string"
+                              },
+                              "value": {
+                                "description": "Value of the option",
+                                "type": ["string", "number", "boolean"]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
             "objectFields": {
               "type": "array",
               "description": "configuration for object fields in the form",

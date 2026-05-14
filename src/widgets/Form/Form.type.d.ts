@@ -307,6 +307,70 @@ export interface Form {
         resourceRefId: string
       }[]
       /**
+       * Configuration for the form fields whose displaying is dependent from other form fields.
+       */
+      displayDependencies?: {
+        /**
+         * the name of the field
+         */
+        name: string
+        /**
+         * the field on which this field depends on
+         */
+        dependsOn: {
+          /**
+           * the name of the field on which this field depends on
+           */
+          name: string
+          /**
+           * `notEmpty` (default) indicates that the current field is displayed if the dependency field has a non-empty value. `value` indicates that the current field is displayed only when the dependency field matches a specific value.
+           */
+          conditionType: 'notEmpty' | 'value'
+          /**
+           * Expected value used when `type = value`.
+           */
+          value?: {
+            /**
+             * Expected dependency value type.
+             */
+            type: 'string' | 'number' | 'integer' | 'decimal' | 'boolean' | 'array' | 'option' | 'null'
+            /**
+             * Value if type = string
+             */
+            stringValue?: string
+            /**
+             * Value if type = number or integer
+             */
+            numberValue?: number
+            /**
+             * Value if type = number or decimal
+             */
+            decimalValue?: string
+            /**
+             * Value if type = boolean
+             */
+            booleanValue?: boolean
+            /**
+             * Value if type = array
+             */
+            arrayValue?: string[]
+            /**
+             * Value if type = option
+             */
+            optionValue?: {
+              /**
+               * Label of the option
+               */
+              label?: string
+              /**
+               * Value of the option
+               */
+              value: string | number | boolean
+            }
+          }
+        }
+      }[]
+      /**
        * configuration for object fields in the form
        */
       objectFields?: {

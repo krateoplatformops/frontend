@@ -59,8 +59,7 @@ const AsyncSelect = ({ data, form, initialValue, resourcesRefs }: AsyncSelectPro
   const { data: options = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(queryValue && config),
     queryFn: () => getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, key, notification, config),
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: ['async-select-options', resourceRefId, dependFieldValue, key],
+    queryKey: ['async-select-options', resourceRefId, dependFieldValue, key, queryValue, resourcesRefs, notification, config],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })
