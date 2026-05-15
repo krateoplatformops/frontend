@@ -26,6 +26,7 @@ type FormGeneratorType = {
   schema: JSONSchema4
   autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
+  displayingDependencies?: FormWidgetData['displayingDependencies']
   displayMenu?: FormWidgetData['displayMenu']
   objectFields?: FormWidgetData['objectFields']
   initialValues?: FormWidgetData['initialValues']
@@ -82,6 +83,7 @@ const FormGenerator = ({
   dependencies,
   descriptionTooltip = false,
   displayMenu = true,
+  displayingDependencies,
   formId,
   initialValues,
   objectFields,

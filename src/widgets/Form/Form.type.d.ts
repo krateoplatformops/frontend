@@ -309,7 +309,7 @@ export interface Form {
       /**
        * Configuration for the form fields whose displaying is dependent from other form fields.
        */
-      displayDependencies?: {
+      displayingDependencies?: {
         /**
          * the name of the field
          */

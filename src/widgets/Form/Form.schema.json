@@ -422,7 +422,7 @@
                 }
               }
             },
-            "displayDependencies": {
+            "displayingDependencies": {
               "type": "array",
               "description": "Configuration for the form fields whose displaying is dependent from other form fields.",
               "items": {
