@@ -107,75 +107,79 @@ const FormFieldWrapper = ({
   )
 }
 
+type DisplayDependency = NonNullable<FormWidgetData['displayingDependencies']>[number]
+
+const evaluateVisibility = (dependency: DisplayDependency | undefined, dependencyValue: unknown): boolean => {
+  if (!dependency) {
+    return true
+  }
+
+  if (dependency.dependsOn.conditionType === 'notEmpty') {
+    if (dependencyValue === undefined || dependencyValue === null) {
+      return false
+    }
+
+    if (typeof dependencyValue === 'string') {
+      return dependencyValue.trim().length > 0
+    }
+
+    if (Array.isArray(dependencyValue)) {
+      return dependencyValue.length > 0
+    }
+
+    return true
+  }
+
+  if (dependency.dependsOn.conditionType === 'value') {
+    const expected = dependency.dependsOn.value
+    if (!expected) {
+      return true
+    }
+
+    switch (expected.type) {
+      case 'string':
+        return dependencyValue === expected.stringValue
+      case 'number':
+      case 'integer':
+        return dependencyValue === expected.numberValue
+      case 'decimal':
+        return String(dependencyValue) === expected.decimalValue
+      case 'boolean':
+        return dependencyValue === expected.booleanValue
+      case 'array':
+        return JSON.stringify(dependencyValue) === JSON.stringify(expected.arrayValue)
+      case 'option':
+        return (
+          isOptionValue(dependencyValue) &&
+          dependencyValue.value === expected.optionValue?.value
+        )
+      case 'null':
+        return dependencyValue === null
+      default:
+        return true
+    }
+  }
+
+  return true
+}
+
 const VisibilityGate = ({
   children,
-  displayingDependencies,
+  dependency,
   form,
-  name,
 }: {
   form: FormInstance
-  name: string
-  displayingDependencies?: FormWidgetData['displayingDependencies']
+  dependency?: DisplayDependency
   children: React.ReactNode
 }) => {
-  const dependency = displayingDependencies?.find(field => field.name === name)
-
   const watchedValue = Form.useWatch(
     dependency?.dependsOn.name?.split('.') ?? [],
     form,
   ) as unknown
 
-  if (!dependency) { return <>{children}</> }
-
-  const dependencyValue = watchedValue
-
-  const isVisible = (() => {
-    if (dependency.dependsOn.conditionType === 'notEmpty') {
-      if (dependencyValue === undefined || dependencyValue === null) { return false }
-
-      if (typeof dependencyValue === 'string') {
-        return dependencyValue.trim().length > 0
-      }
-
-      if (Array.isArray(dependencyValue)) {
-        return dependencyValue.length > 0
-      }
-
-      return true
-    }
-
-    if (dependency.dependsOn.conditionType === 'value') {
-      const expected = dependency.dependsOn.value
-      if (!expected) { return true }
-
-      switch (expected.type) {
-        case 'string':
-          return dependencyValue === expected.stringValue
-        case 'number':
-        case 'integer':
-          return dependencyValue === expected.numberValue
-        case 'decimal':
-          return String(dependencyValue) === expected.decimalValue
-        case 'boolean':
-          return dependencyValue === expected.booleanValue
-        case 'array':
-          return JSON.stringify(dependencyValue) === JSON.stringify(expected.arrayValue)
-        case 'option':
-          return (
-            isOptionValue(dependencyValue) &&
-            dependencyValue.value === expected.optionValue?.value
-          )
-        case 'null':
-          return dependencyValue === null
-        default:
-          return true
-      }
-    }
-
-    return true
-  })()
-
-  if (!isVisible) { return null }
+  if (!evaluateVisibility(dependency, watchedValue)) {
+    return null
+  }
 
   return <>{children}</>
 }
@@ -196,6 +200,12 @@ const FormGenerator = ({
   const [form] = Form.useForm()
   const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
+
+  const formValues = Form.useWatch([], form) as Store
+  const displayingDependenciesMap = useMemo(
+    () => new Map((displayingDependencies ?? []).map(dep => [dep.name, dep])),
+    [displayingDependencies],
+  )
 
   const [transformedInitialValues, setTransformedInitialValues] = useState<FormWidgetData['initialValues'] | undefined>(undefined)
 
@@ -451,7 +461,7 @@ const FormGenerator = ({
       rules.push({ message: 'Insert right value', pattern: new RegExp(node.pattern) })
     }
 
-    const displayingDependency = displayingDependencies?.find(field => field.name === name)
+    const displayingDependency = displayingDependenciesMap.get(name)
     const displayingDependencyPath = displayingDependency?.dependsOn.name
 
     switch (node.type) {
@@ -522,11 +532,7 @@ const FormGenerator = ({
         })()
 
         return (
-          <VisibilityGate
-            displayingDependencies={displayingDependencies}
-            form={currentForm}
-            name={name}
-          >
+          <VisibilityGate dependency={displayingDependency} form={currentForm}>
             <FormFieldWrapper
               formItemProps={{
                 extra: !descriptionTooltip && node.description ? node.description : undefined,
@@ -550,11 +556,7 @@ const FormGenerator = ({
       case 'boolean':
         return (
           <Space direction='vertical' style={{ width: '100%' }}>
-            <VisibilityGate
-              displayingDependencies={displayingDependencies}
-              form={currentForm}
-              name={name}
-            >
+            <VisibilityGate dependency={displayingDependency} form={currentForm}>
               <FormFieldWrapper
                 formItemProps={{
                   extra: !descriptionTooltip && node.description ? node.description : undefined,
@@ -612,11 +614,7 @@ const FormGenerator = ({
         })()
 
         return (
-          <VisibilityGate
-            displayingDependencies={displayingDependencies}
-            form={currentForm}
-            name={name}
-          >
+          <VisibilityGate dependency={displayingDependency} form={currentForm}>
             <FormFieldWrapper
               formItemProps={{
                 extra: !descriptionTooltip && node.description ? node.description : undefined,
@@ -646,11 +644,7 @@ const FormGenerator = ({
         }
 
         return (
-          <VisibilityGate
-            displayingDependencies={displayingDependencies}
-            form={currentForm}
-            name={name}
-          >
+          <VisibilityGate dependency={displayingDependency} form={currentForm}>
             <FormFieldWrapper
               formItemProps={{
                 extra: !descriptionTooltip && node.description ? node.description : undefined,
@@ -676,7 +670,7 @@ const FormGenerator = ({
     }
   }
 
-  const getAnchorList = (): AnchorLinkItemProps[] => {
+  const getAnchorList = (values: Store): AnchorLinkItemProps[] => {
     const parseData = (
       node: JSONSchema4,
       name = '',
@@ -697,19 +691,25 @@ const FormGenerator = ({
           ? parseData(schemaItem, currentName, isRequired)
           : []
 
-        const shouldShow = isRequired || children.length > 0 || !optionalHidden
-        if (!shouldShow) { return [] }
+        const dependency = displayingDependenciesMap.get(currentName)
+        const dependencyValue = dependency
+          ? getInitialValue(values, dependency.dependsOn.name)
+          : undefined
+
+        const isVisible = evaluateVisibility(dependency, dependencyValue)
+
+        const shouldShow = isVisible && (isRequired || children.length > 0 || !optionalHidden)
+        if (!shouldShow) {
+          return []
+        }
 
         return [
           {
             href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
             key: currentName,
-            title:
-            schemaItem.type === 'object' ? (
-              <span className={styles.anchorObjectLabel}>{key}</span>
-            ) : (
-              key
-            ),
+            title: schemaItem.type === 'object'
+              ? <span className={styles.anchorObjectLabel}>{key}</span>
+              : key,
             ...(children.length > 0 ? { children } : {}),
           },
         ]
@@ -796,7 +796,7 @@ const FormGenerator = ({
               <Anchor
                 affix={false}
                 getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
-                items={getAnchorList()}
+                items={getAnchorList(formValues ?? {})}
                 onClick={handleAnchorClick}
               />
             </Col>
