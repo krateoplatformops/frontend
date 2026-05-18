@@ -5,7 +5,7 @@ import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
 import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
-import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
+import type { Store, ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
@@ -63,6 +63,10 @@ const isObjectSchema = (property: JSONSchema4) => {
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
 
+const isOptionValue = (value: unknown): value is { label?: string; value: string | number | boolean } => {
+  return (typeof value === 'object' && value !== null && 'value' in value)
+}
+
 const getInitialValue = (object: unknown, path: string): unknown => {
   const pathParts = path.split('.')
 
@@ -76,6 +80,31 @@ const getInitialValue = (object: unknown, path: string): unknown => {
   }
 
   return value
+}
+
+const FormFieldWrapper = ({
+  children,
+  formItemProps,
+  id,
+  optionalHidden,
+  required,
+}: {
+  id: string
+  required: boolean
+  optionalHidden: boolean
+  children: React.ReactNode
+  formItemProps: React.ComponentProps<typeof Form.Item>
+}) => {
+  return (
+    <div
+      className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`}
+      id={id}
+    >
+      <Form.Item {...formItemProps} hidden={optionalHidden && !required}>
+        {children}
+      </Form.Item>
+    </div>
+  )
 }
 
 const FormGenerator = ({
@@ -318,6 +347,14 @@ const FormGenerator = ({
     return []
   }
 
+  const shouldUpdateField = (prev: Store, curr: Store, displayingDependencyPath?: string) => {
+    if (!displayingDependencyPath) {
+      return false
+    }
+
+    return (getInitialValue(prev, displayingDependencyPath) !== getInitialValue(curr, displayingDependencyPath))
+  }
+
   const renderField = (label: string, name: string, node: JSONSchema4, required: boolean, formInstance?: FormInstance) => {
     const currentForm = formInstance ?? form
 
@@ -340,6 +377,78 @@ const FormGenerator = ({
     if (node.pattern) {
       rules.push({ message: 'Insert right value', pattern: new RegExp(node.pattern) })
     }
+
+    const isVisible = (() => {
+      const dependency = displayingDependencies?.find(field => field.name === name)
+
+      if (!dependency) {
+        return true
+      }
+
+      const dependencyValue = currentForm.getFieldValue(dependency.dependsOn.name.split('.')) as unknown
+
+      if (dependency.dependsOn.conditionType === 'notEmpty') {
+        if (dependencyValue === undefined || dependencyValue === null) {
+          return false
+        }
+
+        if (typeof dependencyValue === 'string') {
+          return dependencyValue.trim().length > 0
+        }
+
+        if (Array.isArray(dependencyValue)) {
+          return dependencyValue.length > 0
+        }
+
+        return true
+      }
+
+      if (dependency.dependsOn.conditionType === 'value') {
+        const expected = dependency.dependsOn.value
+
+        if (!expected) {
+          return true
+        }
+
+        switch (expected.type) {
+          case 'string':
+            return dependencyValue === expected.stringValue
+          case 'number':
+          case 'integer':
+            return dependencyValue === expected.numberValue
+          case 'decimal':
+            return String(dependencyValue) === expected.decimalValue
+          case 'boolean':
+            return dependencyValue === expected.booleanValue
+          case 'array':
+            return JSON.stringify(dependencyValue) === JSON.stringify(expected.arrayValue)
+          case 'option': {
+            if (!isOptionValue(dependencyValue) || !expected.optionValue) {
+              return false
+            }
+
+            const expectedOption = expected.optionValue
+            const sameValue = dependencyValue.value === expectedOption.value
+            const sameLabel = expectedOption.label === undefined || dependencyValue.label === expectedOption.label
+
+            return sameValue && sameLabel
+          }
+          case 'null':
+            return dependencyValue === null
+          default:
+            return true
+        }
+      }
+
+      return true
+    })()
+
+    if (!isVisible) {
+      return null
+    }
+
+    const displayingDependency = displayingDependencies?.find(field => field.name === name)
+    const displayingDependencyPath = displayingDependency?.dependsOn.name
 
     switch (node.type) {
       case 'string': {
@@ -409,42 +518,46 @@ const FormGenerator = ({
         })()
 
         return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Form.Item
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
-              hidden={optionalHidden && !required}
-              key={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              preserve={false}
-              rules={rules}
-              tooltip={descriptionTooltip && node.description ? node.description : undefined}
-            >
-              {formItemContent}
-            </Form.Item>
-          </div>
+          <FormFieldWrapper
+            formItemProps={{
+              extra: !descriptionTooltip && node.description ? node.description : undefined,
+              label: renderLabel(name, label),
+              name: name.split('.'),
+              preserve: false,
+              rules,
+              shouldUpdate: (prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath),
+              tooltip: descriptionTooltip && node.description ? node.description : undefined,
+            }}
+            id={name}
+            optionalHidden={optionalHidden}
+            required={required}
+          >
+            {formItemContent}
+          </FormFieldWrapper>
         )
       }
 
       case 'boolean':
         return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Space direction='vertical' style={{ width: '100%' }}>
-              <Form.Item
-                extra={!descriptionTooltip && node.description ? node.description : undefined}
-                hidden={optionalHidden && !required}
-                key={name}
-                label={renderLabel(name, label)}
-                name={name.split('.')}
-                preserve={true}
-                rules={rules}
-                tooltip={descriptionTooltip && node.description ? node.description : undefined}
-                valuePropName='checked'
-              >
-                <Switch />
-              </Form.Item>
-            </Space>
-          </div>
+          <Space direction='vertical' style={{ width: '100%' }}>
+            <FormFieldWrapper
+              formItemProps={{
+                extra: !descriptionTooltip && node.description ? node.description : undefined,
+                label: renderLabel(name, label),
+                name: name.split('.'),
+                preserve: true,
+                rules,
+                shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
+                tooltip: descriptionTooltip && node.description ? node.description : undefined,
+                valuePropName: 'checked',
+              }}
+              id={name}
+              optionalHidden={optionalHidden}
+              required={required}
+            >
+              <Switch />
+            </FormFieldWrapper>
+          </Space>
         )
 
       case 'array': {
@@ -483,19 +596,21 @@ const FormGenerator = ({
         })()
 
         return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Form.Item
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
-              hidden={optionalHidden && !required}
-              key={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              rules={rules}
-              tooltip={descriptionTooltip && node.description ? node.description : undefined}
-            >
-              {formItemContent}
-            </Form.Item>
-          </div>
+          <FormFieldWrapper
+            formItemProps={{
+              extra: !descriptionTooltip && node.description ? node.description : undefined,
+              label: renderLabel(name, label),
+              name: name.split('.'),
+              rules,
+              shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
+              tooltip: descriptionTooltip && node.description ? node.description : undefined,
+            }}
+            id={name}
+            optionalHidden={optionalHidden}
+            required={required}
+          >
+            {formItemContent}
+          </FormFieldWrapper>
         )
       }
 
@@ -509,23 +624,25 @@ const FormGenerator = ({
         }
 
         return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Form.Item
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
-              hidden={optionalHidden && !required}
-              key={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              rules={rules}
-              tooltip={descriptionTooltip && node.description ? node.description : undefined}
-            >
-              {min && max && max - min < 100 ? (
-                <Slider className={styles.slider} max={max} min={min} step={1} />
-              ) : (
-                <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
-              )}
-            </Form.Item>
-          </div>
+          <FormFieldWrapper
+            formItemProps={{
+              extra: !descriptionTooltip && node.description ? node.description : undefined,
+              label: renderLabel(name, label),
+              name: name.split('.'),
+              rules,
+              shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
+              tooltip: descriptionTooltip && node.description ? node.description : undefined,
+            }}
+            id={name}
+            optionalHidden={optionalHidden}
+            required={required}
+          >
+            {min && max && max - min < 100 ? (
+              <Slider className={styles.slider} max={max} min={min} step={1} />
+            ) : (
+              <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
+            )}
+          </FormFieldWrapper>
         )
       }
     }
