@@ -79,6 +79,7 @@ spec:
     allowedResources:
       - panels
     items:
+      - resourceRefId: example-form-displaying-dependencies-panel
       - resourceRefId: example-form-missing-schema-panel
       - resourceRefId: example-form-basic-strings-panel
       - resourceRefId: example-form-basic-menu-hidden-panel
@@ -225,6 +226,12 @@ spec:
       - id: example-form-autocomplete-dependencies-array-objects-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-autocomplete-dependencies-array-objects-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-displaying-dependencies-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-displaying-dependencies-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -790,6 +797,26 @@ spec:
       - id: example-form-autocomplete-dependencies-array-objects
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-autocomplete-dependencies-array-objects
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-displaying-dependencies-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Displaying dependencies field'
+    items:
+      - resourceRefId: example-form-displaying-dependencies
+  resourcesRefs:
+    items:
+      - id: example-form-displaying-dependencies
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-displaying-dependencies
         namespace: krateo-system
         resource: forms
         verb: GET

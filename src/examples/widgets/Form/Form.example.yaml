@@ -1260,6 +1260,45 @@ spec:
         resource: restactions
         verb: GET
 ---
+# Displaying dependencies field
+# Target: validate fields whose displaying depend on the value of another field
+# Expected behavior: initially one field is rendered, with the following rendered only if the previous one is compiled
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-displaying-dependencies
+  namespace: krateo-system
+spec:
+  widgetData:
+    displayingDependencies:
+      - name: surname
+        dependsOn:
+          name: name
+          conditionType: notEmpty
+    submitActionId: submit-autocomplete
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "title": "Name" },
+          "surname": { "type": "string", "title": "Surname" }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-autocomplete
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-autocomplete
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
 # Missing action
 # Target: validate error handling when action is missing.
 # Expected behavior: an error is displayed on submit to inform that the action is not defined.

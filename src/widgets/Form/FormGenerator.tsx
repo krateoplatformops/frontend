@@ -107,6 +107,79 @@ const FormFieldWrapper = ({
   )
 }
 
+const VisibilityGate = ({
+  children,
+  displayingDependencies,
+  form,
+  name,
+}: {
+  form: FormInstance
+  name: string
+  displayingDependencies?: FormWidgetData['displayingDependencies']
+  children: React.ReactNode
+}) => {
+  const dependency = displayingDependencies?.find(field => field.name === name)
+
+  const watchedValue = Form.useWatch(
+    dependency?.dependsOn.name?.split('.') ?? [],
+    form,
+  ) as unknown
+
+  if (!dependency) { return <>{children}</> }
+
+  const dependencyValue = watchedValue
+
+  const isVisible = (() => {
+    if (dependency.dependsOn.conditionType === 'notEmpty') {
+      if (dependencyValue === undefined || dependencyValue === null) { return false }
+
+      if (typeof dependencyValue === 'string') {
+        return dependencyValue.trim().length > 0
+      }
+
+      if (Array.isArray(dependencyValue)) {
+        return dependencyValue.length > 0
+      }
+
+      return true
+    }
+
+    if (dependency.dependsOn.conditionType === 'value') {
+      const expected = dependency.dependsOn.value
+      if (!expected) { return true }
+
+      switch (expected.type) {
+        case 'string':
+          return dependencyValue === expected.stringValue
+        case 'number':
+        case 'integer':
+          return dependencyValue === expected.numberValue
+        case 'decimal':
+          return String(dependencyValue) === expected.decimalValue
+        case 'boolean':
+          return dependencyValue === expected.booleanValue
+        case 'array':
+          return JSON.stringify(dependencyValue) === JSON.stringify(expected.arrayValue)
+        case 'option':
+          return (
+            isOptionValue(dependencyValue) &&
+            dependencyValue.value === expected.optionValue?.value
+          )
+        case 'null':
+          return dependencyValue === null
+        default:
+          return true
+      }
+    }
+
+    return true
+  })()
+
+  if (!isVisible) { return null }
+
+  return <>{children}</>
+}
+
 const FormGenerator = ({
   autocomplete,
   dependencies,
@@ -378,75 +451,6 @@ const FormGenerator = ({
       rules.push({ message: 'Insert right value', pattern: new RegExp(node.pattern) })
     }
 
-    const isVisible = (() => {
-      const dependency = displayingDependencies?.find(field => field.name === name)
-
-      if (!dependency) {
-        return true
-      }
-
-      const dependencyValue = currentForm.getFieldValue(dependency.dependsOn.name.split('.')) as unknown
-
-      if (dependency.dependsOn.conditionType === 'notEmpty') {
-        if (dependencyValue === undefined || dependencyValue === null) {
-          return false
-        }
-
-        if (typeof dependencyValue === 'string') {
-          return dependencyValue.trim().length > 0
-        }
-
-        if (Array.isArray(dependencyValue)) {
-          return dependencyValue.length > 0
-        }
-
-        return true
-      }
-
-      if (dependency.dependsOn.conditionType === 'value') {
-        const expected = dependency.dependsOn.value
-
-        if (!expected) {
-          return true
-        }
-
-        switch (expected.type) {
-          case 'string':
-            return dependencyValue === expected.stringValue
-          case 'number':
-          case 'integer':
-            return dependencyValue === expected.numberValue
-          case 'decimal':
-            return String(dependencyValue) === expected.decimalValue
-          case 'boolean':
-            return dependencyValue === expected.booleanValue
-          case 'array':
-            return JSON.stringify(dependencyValue) === JSON.stringify(expected.arrayValue)
-          case 'option': {
-            if (!isOptionValue(dependencyValue) || !expected.optionValue) {
-              return false
-            }
-
-            const expectedOption = expected.optionValue
-            const sameValue = dependencyValue.value === expectedOption.value
-            const sameLabel = expectedOption.label === undefined || dependencyValue.label === expectedOption.label
-
-            return sameValue && sameLabel
-          }
-          case 'null':
-            return dependencyValue === null
-          default:
-            return true
-        }
-      }
-
-      return true
-    })()
-
-    if (!isVisible) {
-      return null
-    }
-
     const displayingDependency = displayingDependencies?.find(field => field.name === name)
     const displayingDependencyPath = displayingDependency?.dependsOn.name
 
@@ -518,45 +522,57 @@ const FormGenerator = ({
         })()
 
         return (
-          <FormFieldWrapper
-            formItemProps={{
-              extra: !descriptionTooltip && node.description ? node.description : undefined,
-              label: renderLabel(name, label),
-              name: name.split('.'),
-              preserve: false,
-              rules,
-              shouldUpdate: (prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath),
-              tooltip: descriptionTooltip && node.description ? node.description : undefined,
-            }}
-            id={name}
-            optionalHidden={optionalHidden}
-            required={required}
+          <VisibilityGate
+            displayingDependencies={displayingDependencies}
+            form={currentForm}
+            name={name}
           >
-            {formItemContent}
-          </FormFieldWrapper>
+            <FormFieldWrapper
+              formItemProps={{
+                extra: !descriptionTooltip && node.description ? node.description : undefined,
+                label: renderLabel(name, label),
+                name: name.split('.'),
+                preserve: false,
+                rules,
+                shouldUpdate: (prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath),
+                tooltip: descriptionTooltip && node.description ? node.description : undefined,
+              }}
+              id={name}
+              optionalHidden={optionalHidden}
+              required={required}
+            >
+              {formItemContent}
+            </FormFieldWrapper>
+          </VisibilityGate>
         )
       }
 
       case 'boolean':
         return (
           <Space direction='vertical' style={{ width: '100%' }}>
-            <FormFieldWrapper
-              formItemProps={{
-                extra: !descriptionTooltip && node.description ? node.description : undefined,
-                label: renderLabel(name, label),
-                name: name.split('.'),
-                preserve: true,
-                rules,
-                shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
-                tooltip: descriptionTooltip && node.description ? node.description : undefined,
-                valuePropName: 'checked',
-              }}
-              id={name}
-              optionalHidden={optionalHidden}
-              required={required}
+            <VisibilityGate
+              displayingDependencies={displayingDependencies}
+              form={currentForm}
+              name={name}
             >
-              <Switch />
-            </FormFieldWrapper>
+              <FormFieldWrapper
+                formItemProps={{
+                  extra: !descriptionTooltip && node.description ? node.description : undefined,
+                  label: renderLabel(name, label),
+                  name: name.split('.'),
+                  preserve: true,
+                  rules,
+                  shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
+                  tooltip: descriptionTooltip && node.description ? node.description : undefined,
+                  valuePropName: 'checked',
+                }}
+                id={name}
+                optionalHidden={optionalHidden}
+                required={required}
+              >
+                <Switch />
+              </FormFieldWrapper>
+            </VisibilityGate>
           </Space>
         )
 
@@ -596,21 +612,27 @@ const FormGenerator = ({
         })()
 
         return (
-          <FormFieldWrapper
-            formItemProps={{
-              extra: !descriptionTooltip && node.description ? node.description : undefined,
-              label: renderLabel(name, label),
-              name: name.split('.'),
-              rules,
-              shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
-              tooltip: descriptionTooltip && node.description ? node.description : undefined,
-            }}
-            id={name}
-            optionalHidden={optionalHidden}
-            required={required}
+          <VisibilityGate
+            displayingDependencies={displayingDependencies}
+            form={currentForm}
+            name={name}
           >
-            {formItemContent}
-          </FormFieldWrapper>
+            <FormFieldWrapper
+              formItemProps={{
+                extra: !descriptionTooltip && node.description ? node.description : undefined,
+                label: renderLabel(name, label),
+                name: name.split('.'),
+                rules,
+                shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
+                tooltip: descriptionTooltip && node.description ? node.description : undefined,
+              }}
+              id={name}
+              optionalHidden={optionalHidden}
+              required={required}
+            >
+              {formItemContent}
+            </FormFieldWrapper>
+          </VisibilityGate>
         )
       }
 
@@ -624,25 +646,31 @@ const FormGenerator = ({
         }
 
         return (
-          <FormFieldWrapper
-            formItemProps={{
-              extra: !descriptionTooltip && node.description ? node.description : undefined,
-              label: renderLabel(name, label),
-              name: name.split('.'),
-              rules,
-              shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
-              tooltip: descriptionTooltip && node.description ? node.description : undefined,
-            }}
-            id={name}
-            optionalHidden={optionalHidden}
-            required={required}
+          <VisibilityGate
+            displayingDependencies={displayingDependencies}
+            form={currentForm}
+            name={name}
           >
-            {min && max && max - min < 100 ? (
-              <Slider className={styles.slider} max={max} min={min} step={1} />
-            ) : (
-              <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
-            )}
-          </FormFieldWrapper>
+            <FormFieldWrapper
+              formItemProps={{
+                extra: !descriptionTooltip && node.description ? node.description : undefined,
+                label: renderLabel(name, label),
+                name: name.split('.'),
+                rules,
+                shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
+                tooltip: descriptionTooltip && node.description ? node.description : undefined,
+              }}
+              id={name}
+              optionalHidden={optionalHidden}
+              required={required}
+            >
+              {min && max && max - min < 100 ? (
+                <Slider className={styles.slider} max={max} min={min} step={1} />
+              ) : (
+                <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
+              )}
+            </FormFieldWrapper>
+          </VisibilityGate>
         )
       }
     }
