@@ -139,20 +139,30 @@ const evaluateVisibility = (dependency: DisplayDependency | undefined, dependenc
     switch (expected.type) {
       case 'string':
         return dependencyValue === expected.stringValue
-      case 'number':
       case 'integer':
-        return dependencyValue === expected.numberValue
-      case 'decimal':
-        return String(dependencyValue) === expected.decimalValue
+        return dependencyValue === expected.integerValue
       case 'boolean':
         return dependencyValue === expected.booleanValue
       case 'array':
         return JSON.stringify(dependencyValue) === JSON.stringify(expected.arrayValue)
-      case 'option':
-        return (
-          isOptionValue(dependencyValue) &&
-          dependencyValue.value === expected.optionValue?.value
-        )
+      case 'option': {
+        const expectedValue = expected.optionValue?.value
+
+        // { label, value }
+        if (isOptionValue(dependencyValue)) {
+          return String(dependencyValue.value) === String(expectedValue)
+        }
+
+        // ['a', 'b']
+        if (Array.isArray(dependencyValue)) {
+          return dependencyValue.some(
+            value => String(value) === String(expectedValue)
+          )
+        }
+
+        // 'a' | 1 | true
+        return String(dependencyValue) === String(expectedValue)
+      }
       case 'null':
         return dependencyValue === null
       default:

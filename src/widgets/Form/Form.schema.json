@@ -459,9 +459,7 @@
                             "type": "string",
                             "enum": [
                               "string",
-                              "number",
                               "integer",
-                              "decimal",
                               "boolean",
                               "array",
                               "option",
@@ -473,13 +471,9 @@
                             "type": "string",
                             "description": "Value if type = string"
                           },
-                          "numberValue": {
+                          "integerValue": {
                             "type": "integer",
-                            "description": "Value if type = number or integer"
-                          },
-                          "decimalValue": {
-                            "type": "string",
-                            "description": "Value if type = number or decimal"
+                            "description": "Value if type = integer"
                           },
                           "booleanValue": {
                             "type": "boolean",
@@ -493,7 +487,7 @@
                             }
                           },
                           "optionValue": {
-                            "description": "Value if type = option",
+                            "description": "Value if type = option: includes a single value or a { label, value } object",
                             "additionalProperties": false,
                             "required": ["value"],
                             "properties": {

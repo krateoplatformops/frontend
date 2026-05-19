@@ -1283,20 +1283,107 @@ spec:
         dependsOn:
           name: tags
           conditionType: notEmpty
+      - name: stringTest
+        dependsOn:
+          name: typeStringTest
+          conditionType: value
+          value:
+            type: string
+            stringValue: test
+      - name: integerTest
+        dependsOn:
+          name: typeintegerTest
+          conditionType: value
+          value:
+            type: integer
+            integerValue: 2
+      - name: booleanTest
+        dependsOn:
+          name: typeBooleanTest
+          conditionType: value
+          value:
+            type: boolean
+            booleanValue: true
+      - name: arrayTest
+        dependsOn:
+          name: typeArrayTest
+          conditionType: value
+          value:
+            type: array
+            arrayValue: ['test']
+      - name: optionRadioTest
+        dependsOn:
+          name: typeOptionRadioTest
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: "1"
+      - name: optionSelectTest
+        dependsOn:
+          name: typeOptionSelectTest
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: "1"
     submitActionId: submit-autocomplete
     stringSchema: |
       {
         "type": "object",
         "properties": {
-          "name": { "type": "string", "title": "Name" },
+          "name": {
+            "type": "string",
+            "title": "Name (tests not empty string)",
+            "description": "Type something to see two dependent fields displayed ('Middle Name' and 'Surname')"
+          },
           "middleName": { "type": "string", "title": "Middle Name" },
           "surname": { "type": "string", "title": "Surname" },
           "tags": {
             "type": "array",
-            "title": "Tags",
-            "items": { "type": "string" }
+            "title": "Tags (tests not empty array)",
+            "items": { "type": "string" },
+            "description": "Add a value to see a dependent field displayed ('Tag Description')"
           },
-          "tagDescription": { "type": "string", "title": "Tag Description" }
+          "tagDescription": { "type": "string", "title": "Tag Description" },
+          "typeStringTest": {
+            "type": "string",
+            "title": "String test (tests equality on string value)",
+            "description": "Type 'test' to see a dependent fields displayed ('String test')"
+          },
+          "stringTest": { "type": "string", "title": "String test" },
+          "typeIntegerTest": {
+            "type": "integer",
+            "title": "Integer test (tests equality on integer value)",
+            "description": "Type '2' to see a dependent fields displayed ('Integer test')"
+          },
+          "integerTest": { "type": "integer", "title": "Integer test" },
+          "typeBooleanTest": {
+            "type": "boolean",
+            "title": "Boolean test (tests equality on boolean value)",
+            "description": "Set switch to true to see a dependent field displayed ('Boolean test'"
+          },
+          "booleanTest": { "type": "boolean", "title": "Boolean test" },
+          "typeArrayTest": {
+            "type": "array",
+            "title": "Array test (tests equality on array value)",
+            "description": "Add a 'test' value to see a dependent field displayed ('Array test')"
+          },
+          "arrayTest": { "type": "array", "title": "Array test" },
+          "typeOptionRadioTest": {
+            "type": "string",
+            "title": "Option test (tests equality on option value - radio button)",
+            "enum": ["1","2","3"],
+            "description": "Select the '1' value to see a dependent field displayed ('Option radio test')"
+          },
+          "optionRadioTest": { "type": "string", "title": "Option radio test" },
+          "typeOptionSelectTest": {
+            "type": "string",
+            "title": "Option test (tests equality on option value - select)",
+            "enum": ["1","2","3","4","5"],
+            "description": "Select the '1' value to see a dependent field displayed ('Option select test')"
+          },
+          "optionSelectTest": { "type": "string", "title": "Option select test" }
         }
       }
     actions:

@@ -333,19 +333,15 @@ export interface Form {
             /**
              * Expected dependency value type.
              */
-            type: 'string' | 'number' | 'integer' | 'decimal' | 'boolean' | 'array' | 'option' | 'null'
+            type: 'string' | 'integer' | 'boolean' | 'array' | 'option' | 'null'
             /**
              * Value if type = string
              */
             stringValue?: string
             /**
-             * Value if type = number or integer
+             * Value if type = integer
              */
-            numberValue?: number
-            /**
-             * Value if type = number or decimal
-             */
-            decimalValue?: string
+            integerValue?: number
             /**
              * Value if type = boolean
              */
