@@ -1275,13 +1275,28 @@ spec:
         dependsOn:
           name: name
           conditionType: notEmpty
+      - name: middleName
+        dependsOn:
+          name: name
+          conditionType: notEmpty
+      - name: tagDescription
+        dependsOn:
+          name: tags
+          conditionType: notEmpty
     submitActionId: submit-autocomplete
     stringSchema: |
       {
         "type": "object",
         "properties": {
           "name": { "type": "string", "title": "Name" },
-          "surname": { "type": "string", "title": "Surname" }
+          "middleName": { "type": "string", "title": "Middle Name" },
+          "surname": { "type": "string", "title": "Surname" },
+          "tags": {
+            "type": "array",
+            "title": "Tags",
+            "items": { "type": "string" }
+          },
+          "tagDescription": { "type": "string", "title": "Tag Description" }
         }
       }
     actions:

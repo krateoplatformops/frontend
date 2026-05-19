@@ -200,8 +200,8 @@ const FormGenerator = ({
   const [form] = Form.useForm()
   const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
+  const [anchorValues, setAnchorValues] = useState<Store>({})
 
-  const formValues = Form.useWatch([], form) as Store
   const displayingDependenciesMap = useMemo(
     () => new Map((displayingDependencies ?? []).map(dep => [dep.name, dep])),
     [displayingDependencies],
@@ -605,9 +605,9 @@ const FormGenerator = ({
 
           return (
             <ListEditor
-              data={getInitialValue(transformedInitialValues, name) as string[] || []}
+              data={(currentForm.getFieldValue(name.split('.')) as string[] | undefined) || []}
               onChange={(values) => {
-                form.setFieldValue(name.split('.'), values)
+                currentForm.setFieldValue(name.split('.'), values)
               }}
             />
           )
@@ -670,7 +670,7 @@ const FormGenerator = ({
     }
   }
 
-  const getAnchorList = (values: Store): AnchorLinkItemProps[] => {
+  const getAnchorList = useCallback((values: Store): AnchorLinkItemProps[] => {
     const parseData = (
       node: JSONSchema4,
       name = '',
@@ -705,9 +705,9 @@ const FormGenerator = ({
 
         return [
           {
-            href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
+            href: isObjectSchema(schemaItem) ? '#' : `#${currentName}`,
             key: currentName,
-            title: schemaItem.type === 'object'
+            title: isObjectSchema(schemaItem)
               ? <span className={styles.anchorObjectLabel}>{key}</span>
               : key,
             ...(children.length > 0 ? { children } : {}),
@@ -717,7 +717,9 @@ const FormGenerator = ({
     }
 
     return parseData(schema)
-  }
+  }, [displayingDependenciesMap, optionalHidden, schema])
+
+  const anchorItems = useMemo(() => getAnchorList(anchorValues), [anchorValues, getAnchorList])
 
   const onFinishFailed = useCallback(({ errorFields }: ValidateErrorEntity) => {
     const errorField = errorFields[0].name.join('.')
@@ -785,6 +787,9 @@ const FormGenerator = ({
                   event.preventDefault()
                   setInitialValues()
                 }}
+                onValuesChange={(_, allValues) => {
+                  setAnchorValues(allValues as Store)
+                }}
               >
                 {parseData(schema)}
               </Form>
@@ -796,7 +801,7 @@ const FormGenerator = ({
               <Anchor
                 affix={false}
                 getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
-                items={getAnchorList(formValues ?? {})}
+                items={anchorItems}
                 onClick={handleAnchorClick}
               />
             </Col>
