@@ -1296,7 +1296,7 @@ spec:
             stringValue: test
       - name: integerTest
         dependsOn:
-          name: typeintegerTest
+          name: typeIntegerTest
           conditionType: value
           value:
             type: integer
