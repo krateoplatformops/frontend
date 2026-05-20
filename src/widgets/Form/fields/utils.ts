@@ -1,7 +1,6 @@
 import type { NotificationInstance } from 'antd/es/notification/interface'
 import type { DefaultOptionType } from 'antd/es/select'
 
-import { useAuth } from '../../../context/AuthContext'
 import type { Config } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
 import { getResourceRef } from '../../../utils/utils'
@@ -12,10 +11,9 @@ export const getOptionsFromResourceRefId = async (
   resourcesRefs: ResourcesRefs,
   valueKey: string | undefined,
   notification: NotificationInstance,
-  config: Config | undefined
+  config: Config | undefined,
+  accessToken: string | null
 ): Promise<DefaultOptionType[]> => {
-  const { accessToken } = useAuth()
-
   if (!resourceRefId) {
     return []
   }
