@@ -1270,6 +1270,10 @@ metadata:
   namespace: krateo-system
 spec:
   widgetData:
+    autocomplete:
+      - name: typeOptionAutocompleteTest
+      - name: regions
+        resourceRefId: get-italian-regions
     displayingDependencies:
       - name: surname
         dependsOn:
@@ -1327,6 +1331,23 @@ spec:
             type: option
             optionValue:
               value: ["1", "2"]
+      - name: optionAutocompleteTest
+        dependsOn:
+          name: typeOptionAutocompleteTest
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: "1"
+      - name: optionAutocompleteLabelTest
+        dependsOn:
+          name: regions
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: "7"
+              label: "Liguria"
     submitActionId: submit-autocomplete
     stringSchema: |
       {
@@ -1386,7 +1407,20 @@ spec:
               "enum": ["1","2","3"]
             }
           },
-          "optionSelectTest": { "type": "string", "title": "Option multi select test" }
+          "optionSelectTest": { "type": "string", "title": "Option multi select test" },
+          "typeOptionAutocompleteTest": {
+            "type": "string",
+            "title": "Option test (tests equality on option value - autocomplete)",
+            "description": "Select the '1' value to see a dependent field displayed ('Autocomplete test')",
+            "enum": ["1","2","3"]
+          },
+          "optionAutocompleteTest": { "type": "string", "title": "Autocomplete test" },
+          "regions": {
+            "type": "string",
+            "title": "Region (tests equality on option value and label - autocomplete)",
+            "description": "Select the 'Liguria' value to see a dependent field displayed ('Autocomplete with label test')"
+          },
+          "optionAutocompleteLabelTest": { "type": "string", "title": "Autocomplete with label test" }
         }
       }
     actions:
@@ -1403,6 +1437,12 @@ spec:
         namespace: krateo-system
         resource: fireworksapps
         verb: POST
+      - id: get-italian-regions
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
 ---
 # Missing action
 # Target: validate error handling when action is missing.
