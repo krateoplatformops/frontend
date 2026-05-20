@@ -1326,7 +1326,7 @@ spec:
           value:
             type: option
             optionValue:
-              value: "1"
+              value: ["1", "2"]
     submitActionId: submit-autocomplete
     stringSchema: |
       {
@@ -1378,12 +1378,15 @@ spec:
           },
           "optionRadioTest": { "type": "string", "title": "Option radio test" },
           "typeOptionSelectTest": {
-            "type": "string",
-            "title": "Option test (tests equality on option value - select)",
-            "enum": ["1","2","3","4","5"],
-            "description": "Select the '1' value to see a dependent field displayed ('Option select test')"
+            "type": "array",
+            "title": "Option test (tests equality on option value - multi select)",
+            "description": "Select the '1' and '2' value to see a dependent field displayed ('Option multi select test')",
+            "items": {
+              "type": "string",
+              "enum": ["1","2","3"]
+            }
           },
-          "optionSelectTest": { "type": "string", "title": "Option select test" }
+          "optionSelectTest": { "type": "string", "title": "Option multi select test" }
         }
       }
     actions:

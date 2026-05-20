@@ -155,8 +155,11 @@ const evaluateVisibility = (dependency: DisplayDependency | undefined, dependenc
 
         // ['a', 'b']
         if (Array.isArray(dependencyValue)) {
-          return dependencyValue.some(
-            value => String(value) === String(expectedValue)
+          const expectedValues = Array.isArray(expectedValue) ? expectedValue : [expectedValue]
+
+          return (
+            dependencyValue.length === expectedValues.length
+            && expectedValues.every(expectedItem => dependencyValue.includes(String(expectedItem)))
           )
         }
 
