@@ -327,6 +327,132 @@ const FormGenerator = ({
     return (getInitialValue(prev, displayingDependencyPath) !== getInitialValue(curr, displayingDependencyPath))
   }
 
+  const renderFieldContent = (
+    node: JSONSchema4,
+    name: string,
+    currentForm: FormInstance,
+  ) => {
+    switch (node.type) {
+      case 'string': {
+        // AsyncSelect
+        if (dependencies) {
+          const data = dependencies.find(field => field.name === name)
+
+          if (data) {
+            return (
+              <AsyncSelect
+                data={data}
+                form={currentForm}
+                initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
+                resourcesRefs={resourcesRefs}
+              />
+            )
+          }
+        }
+
+        const options = getOptionsFromEnum(node.enum)
+
+        // Autocomplete
+        if (autocomplete) {
+          const data = autocomplete.find(field => field.name === name)
+
+          if (data) {
+            return (
+              <AutoComplete
+                data={data}
+                form={currentForm}
+                initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
+                options={options}
+                resourcesRefs={resourcesRefs}
+              />
+            )
+          }
+        }
+
+        // Enum
+        if (options) {
+          const currentValue = getInitialValue(transformedInitialValues, name)
+          const optionExists = options.some(({ value }) => String(value) === String(currentValue))
+
+          if (currentValue !== undefined && !optionExists) {
+            console.warn(`Invalid initial value for "${name}"`, currentValue)
+            form.setFieldValue(name.split('.'), undefined)
+          }
+
+          if (options.length > 4) {
+            return <Select allowClear options={options} />
+          }
+
+          return (
+            <Radio.Group>
+              {options.map(({ label, value }) => (
+                <Radio key={`radio_${value}`} value={value}>
+                  {label}
+                </Radio>
+              ))}
+            </Radio.Group>
+          )
+        }
+
+        // Default
+        return <Input />
+      }
+
+      case 'boolean':
+        return (
+          <Switch />
+        )
+
+      case 'array': {
+        // objects
+        if (objectFields && node.items) {
+          const objFields = objectFields.find(({ path }) => path === name)
+          if (objFields) {
+            return (
+              <ListObjectFields
+                container={document.body}
+                displayField={objFields.displayField}
+                fields={(drawerForm: FormInstance) => parseData(node.items as JSONSchema4, [], true, drawerForm)}
+                onChange={(values) => form.setFieldValue(name.split('.'), values)}
+                schema={node.items as JSONSchema4}
+                value={(form.getFieldValue(name.split('.')) as unknown[]) || []}
+              />
+            )
+          }
+        }
+
+        // strings
+        const options = node.items && !Array.isArray(node.items) ? getOptionsFromEnum(node.items.enum) : undefined
+        if (options) {
+          return <Select allowClear mode='multiple' options={options} />
+        }
+
+        return (
+          <ListEditor
+            data={(currentForm.getFieldValue(name.split('.')) as string[] | undefined) || []}
+            onChange={(values) => {
+              currentForm.setFieldValue(name.split('.'), values)
+            }}
+          />
+        )
+      }
+
+      case 'integer': {
+        const min = node.minimum
+        const max = node.maximum
+
+        return (
+          <>
+            {min !== undefined && max !== undefined && max - min < 100
+              ? <Slider className={styles.slider} max={max ?? undefined} min={min ?? 0} step={1} />
+              : <InputNumber max={max ?? undefined} min={min ?? 0} step={1} style={{ width: '100%' }} />
+            }
+          </>
+        )
+      }
+    }
+  }
+
   const renderField = (label: string, name: string, node: JSONSchema4, required: boolean, formInstance?: FormInstance) => {
     const currentForm = formInstance ?? form
 
@@ -353,198 +479,27 @@ const FormGenerator = ({
     const displayingDependency = displayingDependenciesMap.get(name)
     const displayingDependencyPath = displayingDependency?.dependsOn.name
 
-    switch (node.type) {
-      case 'string': {
-        const formItemContent = (() => {
-          // AsyncSelect
-          if (dependencies) {
-            const data = dependencies.find(field => field.name === name)
+    const preserve = node.type === 'boolean'
 
-            if (data) {
-              return (
-                <AsyncSelect
-                  data={data}
-                  form={currentForm}
-                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
-                  resourcesRefs={resourcesRefs}
-                />
-              )
-            }
-          }
-
-          const options = getOptionsFromEnum(node.enum)
-
-          // Autocomplete
-          if (autocomplete) {
-            const data = autocomplete.find(field => field.name === name)
-
-            if (data) {
-              return (
-                <AutoComplete
-                  data={data}
-                  form={currentForm}
-                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
-                  options={options}
-                  resourcesRefs={resourcesRefs}
-                />
-              )
-            }
-          }
-
-          // Enum
-          if (options) {
-            const currentValue = getInitialValue(transformedInitialValues, name)
-            const optionExists = options.some(({ value }) => String(value) === String(currentValue))
-
-            if (currentValue !== undefined && !optionExists) {
-              console.warn(`Invalid initial value for "${name}"`, currentValue)
-              form.setFieldValue(name.split('.'), undefined)
-            }
-
-            if (options.length > 4) {
-              return <Select allowClear options={options} />
-            }
-
-            return (
-              <Radio.Group>
-                {options.map(({ label, value }) => (
-                  <Radio key={`radio_${value}`} value={value}>
-                    {label}
-                  </Radio>
-                ))}
-              </Radio.Group>
-            )
-          }
-
-          // Default
-          return <Input />
-        })()
-
-        return (
-          <FieldContainer
-            description={node.description}
-            descriptionTooltip={descriptionTooltip}
-            displayingDependency={displayingDependency}
-            form={form}
-            id={name}
-            label={renderLabel(name, label)}
-            name={name.split('.')}
-            optionalHidden={optionalHidden}
-            preserve={false}
-            required={required}
-            rules={rules}
-            shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
-          >
-            {formItemContent}
-          </FieldContainer>
-        )
-      }
-
-      case 'boolean':
-        return (
-          <Space direction='vertical' style={{ width: '100%' }}>
-            <FieldContainer
-              description={node.description}
-              descriptionTooltip={descriptionTooltip}
-              displayingDependency={displayingDependency}
-              form={form}
-              id={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              optionalHidden={optionalHidden}
-              preserve={true}
-              required={required}
-              rules={rules}
-              shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
-              valuePropName='checked'
-            >
-              <Switch />
-            </FieldContainer>
-          </Space>
-        )
-
-      case 'array': {
-        const formItemContent = (() => {
-          // objects
-          if (objectFields && node.items) {
-            const objFields = objectFields.find(({ path }) => path === name)
-            if (objFields) {
-              return (
-                <ListObjectFields
-                  container={document.body}
-                  displayField={objFields.displayField}
-                  fields={(drawerForm: FormInstance) => parseData(node.items as JSONSchema4, [], true, drawerForm)}
-                  onChange={(values) => form.setFieldValue(name.split('.'), values)}
-                  schema={node.items as JSONSchema4}
-                  value={(form.getFieldValue(name.split('.')) as unknown[]) || []}
-                />
-              )
-            }
-          }
-
-          // strings
-          const options = node.items && !Array.isArray(node.items) ? getOptionsFromEnum(node.items.enum) : undefined
-          if (options) {
-            return <Select allowClear mode='multiple' options={options} />
-          }
-
-          return (
-            <ListEditor
-              data={(currentForm.getFieldValue(name.split('.')) as string[] | undefined) || []}
-              onChange={(values) => {
-                currentForm.setFieldValue(name.split('.'), values)
-              }}
-            />
-          )
-        })()
-
-        return (
-          <FieldContainer
-            description={node.description}
-            descriptionTooltip={descriptionTooltip}
-            displayingDependency={displayingDependency}
-            form={form}
-            id={name}
-            label={renderLabel(name, label)}
-            name={name.split('.')}
-            optionalHidden={optionalHidden}
-            required={required}
-            rules={rules}
-            shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
-          >
-            {formItemContent}
-          </FieldContainer>
-        )
-      }
-
-      case 'integer': {
-        const min = node.minimum
-        const max = node.maximum
-
-        return (
-          <FieldContainer
-            description={node.description}
-            descriptionTooltip={descriptionTooltip}
-            displayingDependency={displayingDependency}
-            form={form}
-            id={name}
-            initialValue={node.minimum}
-            label={renderLabel(name, label)}
-            name={name.split('.')}
-            optionalHidden={optionalHidden}
-            required={required}
-            rules={rules}
-            shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
-          >
-            {min && max && max - min < 100 ? (
-              <Slider className={styles.slider} max={max} min={min} step={1} />
-            ) : (
-              <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
-            )}
-          </FieldContainer>
-        )
-      }
-    }
+    return (
+      <FieldContainer
+        description={node.description}
+        descriptionTooltip={descriptionTooltip}
+        displayingDependency={displayingDependency}
+        form={currentForm}
+        id={name}
+        label={renderLabel(name, label)}
+        name={name.split('.')}
+        optionalHidden={optionalHidden}
+        preserve={preserve}
+        required={required}
+        rules={rules}
+        shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
+        valuePropName={node.type === 'boolean' ? 'checked' : undefined}
+      >
+        {renderFieldContent(node, name, currentForm)}
+      </FieldContainer>
+    )
   }
 
   const getAnchorList = useCallback((values: Store): AnchorLinkItemProps[] => {
