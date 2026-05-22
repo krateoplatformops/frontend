@@ -16,7 +16,9 @@ import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
 import type { FormWidgetData } from './Form'
 import styles from './Form.module.css'
-import { getOptionsFromEnum } from './utils'
+import FormFieldWrapper from './FormFieldWrapper'
+import { evaluateVisibility, getOptionsFromEnum, isObjectSchema, isRecord } from './utils'
+import VisibilityGate from './VisibilityGate'
 
 type FormGeneratorType = {
   descriptionTooltip: boolean
@@ -31,6 +33,8 @@ type FormGeneratorType = {
   objectFields?: FormWidgetData['objectFields']
   initialValues?: FormWidgetData['initialValues']
 }
+
+export type DisplayDependency = NonNullable<FormWidgetData['displayingDependencies']>[number]
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
   const currentProperties = node.properties
@@ -55,18 +59,6 @@ const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
   return { optionalCount, totalCount }
 }
 
-const isObjectSchema = (property: JSONSchema4) => {
-  return property.type === 'object' ||
-    (Array.isArray(property.type) && property.type.includes('object')) ||
-    (!!property.properties && typeof property.properties === 'object')
-}
-
-const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
-
-const isOptionValue = (value: unknown): value is { label?: string; value: string | number | boolean } => {
-  return (typeof value === 'object' && value !== null && 'value' in value)
-}
-
 const getInitialValue = (object: unknown, path: string): unknown => {
   const pathParts = path.split('.')
 
@@ -80,121 +72,6 @@ const getInitialValue = (object: unknown, path: string): unknown => {
   }
 
   return value
-}
-
-const FormFieldWrapper = ({
-  children,
-  formItemProps,
-  id,
-  optionalHidden,
-  required,
-}: {
-  id: string
-  required: boolean
-  optionalHidden: boolean
-  children: React.ReactNode
-  formItemProps: React.ComponentProps<typeof Form.Item>
-}) => {
-  return (
-    <div
-      className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`}
-      id={id}
-    >
-      <Form.Item {...formItemProps} hidden={optionalHidden && !required}>
-        {children}
-      </Form.Item>
-    </div>
-  )
-}
-
-type DisplayDependency = NonNullable<FormWidgetData['displayingDependencies']>[number]
-
-const evaluateVisibility = (dependency: DisplayDependency | undefined, dependencyValue: unknown): boolean => {
-  if (!dependency) {
-    return true
-  }
-
-  if (dependency.dependsOn.conditionType === 'notEmpty') {
-    if (dependencyValue === undefined || dependencyValue === null) {
-      return false
-    }
-
-    if (typeof dependencyValue === 'string') {
-      return dependencyValue.trim().length > 0
-    }
-
-    if (Array.isArray(dependencyValue)) {
-      return dependencyValue.length > 0
-    }
-
-    return true
-  }
-
-  if (dependency.dependsOn.conditionType === 'value') {
-    const expected = dependency.dependsOn.value
-    if (!expected) {
-      return true
-    }
-
-    switch (expected.type) {
-      case 'string':
-        return dependencyValue === expected.stringValue
-      case 'integer':
-        return dependencyValue === expected.integerValue
-      case 'boolean':
-        return dependencyValue === expected.booleanValue
-      case 'array':
-        return JSON.stringify(dependencyValue) === JSON.stringify(expected.arrayValue)
-      case 'option': {
-        const expectedValue = expected.optionValue?.value
-
-        // { label, value }
-        if (isOptionValue(dependencyValue)) {
-          return String(dependencyValue.value) === String(expectedValue)
-        }
-
-        // ['a', 'b']
-        if (Array.isArray(dependencyValue)) {
-          const expectedValues = Array.isArray(expectedValue) ? expectedValue : [expectedValue]
-
-          return (
-            dependencyValue.length === expectedValues.length
-            && expectedValues.every(expectedItem => dependencyValue.includes(String(expectedItem)))
-          )
-        }
-
-        // 'a' | 1 | true
-        return String(dependencyValue) === String(expectedValue)
-      }
-      case 'null':
-        return dependencyValue === null
-      default:
-        return true
-    }
-  }
-
-  return true
-}
-
-const VisibilityGate = ({
-  children,
-  dependency,
-  form,
-}: {
-  form: FormInstance
-  dependency?: DisplayDependency
-  children: React.ReactNode
-}) => {
-  const watchedValue = Form.useWatch(
-    dependency?.dependsOn.name?.split('.') ?? [],
-    form,
-  ) as unknown
-
-  if (!evaluateVisibility(dependency, watchedValue)) {
-    return null
-  }
-
-  return <>{children}</>
 }
 
 const FormGenerator = ({
@@ -651,20 +528,16 @@ const FormGenerator = ({
         const min = node.minimum
         const max = node.maximum
 
-        const existing = form.getFieldValue(name.split('.')) as number | undefined
-        if (existing === undefined && min !== undefined) {
-          form.setFieldValue(name.split('.'), min)
-        }
-
         return (
           <VisibilityGate dependency={displayingDependency} form={currentForm}>
             <FormFieldWrapper
               formItemProps={{
                 extra: !descriptionTooltip && node.description ? node.description : undefined,
+                initialValue: node.minimum,
                 label: renderLabel(name, label),
                 name: name.split('.'),
                 rules,
-                shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
+                shouldUpdate: (prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath),
                 tooltip: descriptionTooltip && node.description ? node.description : undefined,
               }}
               id={name}
