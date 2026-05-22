@@ -12,13 +12,12 @@ import ListEditor from '../../components/ListEditor'
 import ListObjectFields from '../../components/ListObjectFields'
 import type { ResourcesRefs } from '../../types/Widget'
 
+import FieldContainer from './FieldContainer'
 import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
 import type { FormWidgetData } from './Form'
 import styles from './Form.module.css'
-import FormFieldWrapper from './FormFieldWrapper'
 import { evaluateVisibility, getOptionsFromEnum, isObjectSchema, isRecord } from './utils'
-import VisibilityGate from './VisibilityGate'
 
 type FormGeneratorType = {
   descriptionTooltip: boolean
@@ -422,49 +421,45 @@ const FormGenerator = ({
         })()
 
         return (
-          <VisibilityGate dependency={displayingDependency} form={currentForm}>
-            <FormFieldWrapper
-              formItemProps={{
-                extra: !descriptionTooltip && node.description ? node.description : undefined,
-                label: renderLabel(name, label),
-                name: name.split('.'),
-                preserve: false,
-                rules,
-                shouldUpdate: (prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath),
-                tooltip: descriptionTooltip && node.description ? node.description : undefined,
-              }}
-              id={name}
-              optionalHidden={optionalHidden}
-              required={required}
-            >
-              {formItemContent}
-            </FormFieldWrapper>
-          </VisibilityGate>
+          <FieldContainer
+            description={node.description}
+            descriptionTooltip={descriptionTooltip}
+            displayingDependency={displayingDependency}
+            form={form}
+            id={name}
+            label={renderLabel(name, label)}
+            name={name.split('.')}
+            optionalHidden={optionalHidden}
+            preserve={false}
+            required={required}
+            rules={rules}
+            shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
+          >
+            {formItemContent}
+          </FieldContainer>
         )
       }
 
       case 'boolean':
         return (
           <Space direction='vertical' style={{ width: '100%' }}>
-            <VisibilityGate dependency={displayingDependency} form={currentForm}>
-              <FormFieldWrapper
-                formItemProps={{
-                  extra: !descriptionTooltip && node.description ? node.description : undefined,
-                  label: renderLabel(name, label),
-                  name: name.split('.'),
-                  preserve: true,
-                  rules,
-                  shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
-                  tooltip: descriptionTooltip && node.description ? node.description : undefined,
-                  valuePropName: 'checked',
-                }}
-                id={name}
-                optionalHidden={optionalHidden}
-                required={required}
-              >
-                <Switch />
-              </FormFieldWrapper>
-            </VisibilityGate>
+            <FieldContainer
+              description={node.description}
+              descriptionTooltip={descriptionTooltip}
+              displayingDependency={displayingDependency}
+              form={form}
+              id={name}
+              label={renderLabel(name, label)}
+              name={name.split('.')}
+              optionalHidden={optionalHidden}
+              preserve={true}
+              required={required}
+              rules={rules}
+              shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
+              valuePropName='checked'
+            >
+              <Switch />
+            </FieldContainer>
           </Space>
         )
 
@@ -504,23 +499,21 @@ const FormGenerator = ({
         })()
 
         return (
-          <VisibilityGate dependency={displayingDependency} form={currentForm}>
-            <FormFieldWrapper
-              formItemProps={{
-                extra: !descriptionTooltip && node.description ? node.description : undefined,
-                label: renderLabel(name, label),
-                name: name.split('.'),
-                rules,
-                shouldUpdate: (prev, curr) => shouldUpdateField(prev as string[], curr as string[], displayingDependencyPath),
-                tooltip: descriptionTooltip && node.description ? node.description : undefined,
-              }}
-              id={name}
-              optionalHidden={optionalHidden}
-              required={required}
-            >
-              {formItemContent}
-            </FormFieldWrapper>
-          </VisibilityGate>
+          <FieldContainer
+            description={node.description}
+            descriptionTooltip={descriptionTooltip}
+            displayingDependency={displayingDependency}
+            form={form}
+            id={name}
+            label={renderLabel(name, label)}
+            name={name.split('.')}
+            optionalHidden={optionalHidden}
+            required={required}
+            rules={rules}
+            shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
+          >
+            {formItemContent}
+          </FieldContainer>
         )
       }
 
@@ -529,28 +522,26 @@ const FormGenerator = ({
         const max = node.maximum
 
         return (
-          <VisibilityGate dependency={displayingDependency} form={currentForm}>
-            <FormFieldWrapper
-              formItemProps={{
-                extra: !descriptionTooltip && node.description ? node.description : undefined,
-                initialValue: node.minimum,
-                label: renderLabel(name, label),
-                name: name.split('.'),
-                rules,
-                shouldUpdate: (prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath),
-                tooltip: descriptionTooltip && node.description ? node.description : undefined,
-              }}
-              id={name}
-              optionalHidden={optionalHidden}
-              required={required}
-            >
-              {min && max && max - min < 100 ? (
-                <Slider className={styles.slider} max={max} min={min} step={1} />
-              ) : (
-                <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
-              )}
-            </FormFieldWrapper>
-          </VisibilityGate>
+          <FieldContainer
+            description={node.description}
+            descriptionTooltip={descriptionTooltip}
+            displayingDependency={displayingDependency}
+            form={form}
+            id={name}
+            initialValue={node.minimum}
+            label={renderLabel(name, label)}
+            name={name.split('.')}
+            optionalHidden={optionalHidden}
+            required={required}
+            rules={rules}
+            shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
+          >
+            {min && max && max - min < 100 ? (
+              <Slider className={styles.slider} max={max} min={min} step={1} />
+            ) : (
+              <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
+            )}
+          </FieldContainer>
         )
       }
     }
