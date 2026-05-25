@@ -90,7 +90,7 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
 
   const queryResult = useInfiniteQuery({
     enabled: enabledFlag,
-    queryKey: ['widgets', widgetEndpoint],
+    queryKey: ['widgets', widgetEndpoint, fetchWidget],
     queryFn: ({ pageParam }) => fetchWidget(pageParam),
     initialPageParam: isCursorPagination
       ? { cursor: initialCursor, perPage: initialPerPage || 10 }
