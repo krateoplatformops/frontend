@@ -101,6 +101,7 @@ spec:
       - resourceRefId: example-form-dependencies-panel
       - resourceRefId: example-form-autocomplete-dependencies-array-objects-panel
       - resourceRefId: example-form-displaying-dependencies-panel
+      - resourceRefId: example-form-nested-displaying-dependencies-panel
   resourcesRefs:
     items:
       - id: example-form-missing-schema-panel
@@ -232,6 +233,12 @@ spec:
       - id: example-form-displaying-dependencies-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-displaying-dependencies-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-form-nested-displaying-dependencies-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-nested-displaying-dependencies-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -817,6 +824,26 @@ spec:
       - id: example-form-displaying-dependencies
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-form-displaying-dependencies
+        namespace: krateo-system
+        resource: forms
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-nested-displaying-dependencies-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Displaying dependencies in nested fields'
+    items:
+      - resourceRefId: example-form-nested-displaying-dependencies
+  resourcesRefs:
+    items:
+      - id: example-form-nested-displaying-dependencies
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-form-nested-displaying-dependencies
         namespace: krateo-system
         resource: forms
         verb: GET
