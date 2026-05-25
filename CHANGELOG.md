@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
+## Unreleased
+
+### Added
+- Added `displayingDependencies` property to `Form` widget to show / hide fields
+
 ## [1.0.25] - 2026-05-12
 
 ### Changed

@@ -80,6 +80,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
     buttonConfig,
     dependencies,
     displayMenu,
+    displayingDependencies,
     fieldDescription,
     initialValues,
     objectFields,
@@ -172,6 +173,7 @@ const Form = ({ resourcesRefs, widget, widgetData }: WidgetProps<FormWidgetData>
         dependencies={dependencies}
         descriptionTooltip={fieldDescription === 'tooltip'}
         displayMenu={displayMenu}
+        displayingDependencies={displayingDependencies}
         formId={formId}
         initialValues={initialValues}
         objectFields={objectFields}

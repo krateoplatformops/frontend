@@ -1260,6 +1260,190 @@ spec:
         resource: restactions
         verb: GET
 ---
+# Displaying dependencies field
+# Target: validate fields whose displaying depend on the value of another field
+# Expected behavior: initially one field is rendered, with the following rendered only if the previous one is compiled
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-displaying-dependencies
+  namespace: krateo-system
+spec:
+  widgetData:
+    autocomplete:
+      - name: typeOptionAutocompleteTest
+      - name: regions
+        resourceRefId: get-italian-regions
+    displayingDependencies:
+      - name: surname
+        dependsOn:
+          name: name
+          conditionType: notEmpty
+      - name: middleName
+        dependsOn:
+          name: name
+          conditionType: notEmpty
+      - name: tagDescription
+        dependsOn:
+          name: tags
+          conditionType: notEmpty
+      - name: stringTest
+        dependsOn:
+          name: typeStringTest
+          conditionType: value
+          value:
+            type: string
+            stringValue: test
+      - name: integerTest
+        dependsOn:
+          name: typeIntegerTest
+          conditionType: value
+          value:
+            type: integer
+            integerValue: 2
+      - name: booleanTest
+        dependsOn:
+          name: typeBooleanTest
+          conditionType: value
+          value:
+            type: boolean
+            booleanValue: true
+      - name: arrayTest
+        dependsOn:
+          name: typeArrayTest
+          conditionType: value
+          value:
+            type: array
+            arrayValue: ['test']
+      - name: optionRadioTest
+        dependsOn:
+          name: typeOptionRadioTest
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: "1"
+      - name: optionSelectTest
+        dependsOn:
+          name: typeOptionSelectTest
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: ["1", "2"]
+      - name: optionAutocompleteTest
+        dependsOn:
+          name: typeOptionAutocompleteTest
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: "1"
+      - name: optionAutocompleteLabelTest
+        dependsOn:
+          name: regions
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: "7"
+              label: "Liguria"
+    submitActionId: submit-autocomplete
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name (tests not empty string)",
+            "description": "Type something to see two dependent fields displayed ('Middle Name' and 'Surname')"
+          },
+          "middleName": { "type": "string", "title": "Middle Name" },
+          "surname": { "type": "string", "title": "Surname" },
+          "tags": {
+            "type": "array",
+            "title": "Tags (tests not empty array)",
+            "items": { "type": "string" },
+            "description": "Add a value to see a dependent field displayed ('Tag Description')"
+          },
+          "tagDescription": { "type": "string", "title": "Tag Description" },
+          "typeStringTest": {
+            "type": "string",
+            "title": "String test (tests equality on string value)",
+            "description": "Type 'test' to see a dependent fields displayed ('String test')"
+          },
+          "stringTest": { "type": "string", "title": "String test" },
+          "typeIntegerTest": {
+            "type": "integer",
+            "title": "Integer test (tests equality on integer value)",
+            "description": "Type '2' to see a dependent fields displayed ('Integer test')"
+          },
+          "integerTest": { "type": "integer", "title": "Integer test" },
+          "typeBooleanTest": {
+            "type": "boolean",
+            "title": "Boolean test (tests equality on boolean value)",
+            "description": "Set switch to true to see a dependent field displayed ('Boolean test'"
+          },
+          "booleanTest": { "type": "boolean", "title": "Boolean test" },
+          "typeArrayTest": {
+            "type": "array",
+            "title": "Array test (tests equality on array value)",
+            "description": "Add a 'test' value to see a dependent field displayed ('Array test')"
+          },
+          "arrayTest": { "type": "array", "title": "Array test" },
+          "typeOptionRadioTest": {
+            "type": "string",
+            "title": "Option test (tests equality on option value - radio button)",
+            "enum": ["1","2","3"],
+            "description": "Select the '1' value to see a dependent field displayed ('Option radio test')"
+          },
+          "optionRadioTest": { "type": "string", "title": "Option radio test" },
+          "typeOptionSelectTest": {
+            "type": "array",
+            "title": "Option test (tests equality on option value - multi select)",
+            "description": "Select the '1' and '2' value to see a dependent field displayed ('Option multi select test')",
+            "items": {
+              "type": "string",
+              "enum": ["1","2","3"]
+            }
+          },
+          "optionSelectTest": { "type": "string", "title": "Option multi select test" },
+          "typeOptionAutocompleteTest": {
+            "type": "string",
+            "title": "Option test (tests equality on option value - autocomplete)",
+            "description": "Select the '1' value to see a dependent field displayed ('Autocomplete test')",
+            "enum": ["1","2","3"]
+          },
+          "optionAutocompleteTest": { "type": "string", "title": "Autocomplete test" },
+          "regions": {
+            "type": "string",
+            "title": "Region (tests equality on option value and label - autocomplete)",
+            "description": "Select the 'Liguria' value to see a dependent field displayed ('Autocomplete with label test')"
+          },
+          "optionAutocompleteLabelTest": { "type": "string", "title": "Autocomplete with label test" }
+        }
+      }
+    actions:
+      rest:
+        - id: submit-autocomplete
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-autocomplete
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+      - id: get-italian-regions
+        apiVersion: templates.krateo.io/v1
+        name: get-italian-regions
+        namespace: krateo-system
+        resource: restactions
+        verb: GET
+---
 # Missing action
 # Target: validate error handling when action is missing.
 # Expected behavior: an error is displayed on submit to inform that the action is not defined.

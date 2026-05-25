@@ -7,6 +7,7 @@ import type { DefaultOptionType } from 'antd/es/select'
 import debounce from 'lodash/debounce'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { useAuth } from '../../../context/AuthContext'
 import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
 import type { FormWidgetData } from '../Form'
@@ -26,6 +27,8 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
   const { config } = useConfigContext()
   const { extra, name, resourceRefId } = data
 
+  const { accessToken } = useAuth()
+
   const [searchValue, setSearchValue] = useState<string>('')
   const [debouncedValue, setDebouncedValue] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
@@ -44,11 +47,11 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
     return () => debouncedUpdate.cancel()
   }, [searchValue, debouncedUpdate])
 
+  // eslint-disable-next-line @tanstack/query/exhaustive-deps
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(queryValue && resourceRefId && config),
     queryFn: () =>
-      getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, extra?.key, notification, config),
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+      getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, extra?.key, notification, config, accessToken),
     queryKey: ['autocomplete-options', resourceRefId, queryValue, extra?.key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,

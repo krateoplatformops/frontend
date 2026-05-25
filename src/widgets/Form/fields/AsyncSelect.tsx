@@ -5,6 +5,7 @@ import useApp from 'antd/es/app/useApp'
 import type { DefaultOptionType } from 'antd/es/select'
 import { useEffect, useMemo, useRef } from 'react'
 
+import { useAuth } from '../../../context/AuthContext'
 import { useConfigContext } from '../../../context/ConfigContext'
 import type { ResourcesRefs } from '../../../types/Widget'
 import type { FormWidgetData } from '../Form'
@@ -21,6 +22,7 @@ type AsyncSelectProps = {
 const AsyncSelect = ({ data, form, initialValue, resourcesRefs }: AsyncSelectProps) => {
   const { notification } = useApp()
   const { config } = useConfigContext()
+  const { accessToken } = useAuth()
 
   const { dependsOn, extra: { key }, name, resourceRefId } = data
 
@@ -56,10 +58,18 @@ const AsyncSelect = ({ data, form, initialValue, resourcesRefs }: AsyncSelectPro
     }
   }, [dependFieldValue, form, name])
 
+  // eslint-disable-next-line @tanstack/query/exhaustive-deps
   const { data: options = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(queryValue && config),
-    queryFn: () => getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, key, notification, config),
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryFn: () => getOptionsFromResourceRefId(
+      queryValue as string,
+      resourceRefId,
+      resourcesRefs,
+      key,
+      notification,
+      config,
+      accessToken
+    ),
     queryKey: ['async-select-options', resourceRefId, dependFieldValue, key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
