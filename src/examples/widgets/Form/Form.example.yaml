@@ -1444,6 +1444,123 @@ spec:
         resource: restactions
         verb: GET
 ---
+# Displaying dependencies in nested fields
+# Target: validate fields whose displaying depend on the value of another field with nested fields
+# Expected behavior: initially one field is rendered, with the following rendered only if the previous one is compiled
+kind: Form
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-form-nested-displaying-dependencies
+  namespace: krateo-system
+spec:
+  widgetData:
+    displayingDependencies:
+      - name: user.surname
+        dependsOn:
+          name: user.name
+          conditionType: notEmpty
+      - name: user.details.nickname
+        dependsOn:
+          name: user.surname
+          conditionType: notEmpty
+      - name: user.details.secretCode
+        dependsOn:
+          name: user.details.isAdmin
+          conditionType: value
+          value:
+            type: boolean
+            booleanValue: true
+      - name: user.address.province
+        dependsOn:
+          name: user.address.region
+          conditionType: value
+          value:
+            type: option
+            optionValue:
+              value: liguria
+    submitActionId: submit-autocomplete
+    stringSchema: |
+      {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "title": "User",
+
+            "properties": {
+              "name": {
+                "type": "string",
+                "title": "Name",
+                "description": "Fill this field to display 'Surname'"
+              },
+
+              "surname": {
+                "type": "string",
+                "title": "Surname",
+                "description": "Fill this field to display nested field 'Nickname'"
+              },
+
+              "details": {
+                "type": "object",
+                "title": "Details",
+
+                "properties": {
+                  "nickname": {
+                    "type": "string",
+                    "title": "Nickname"
+                  },
+
+                  "isAdmin": {
+                    "type": "boolean",
+                    "title": "Administrator",
+                    "description": "Enable this switch to display 'Secret Code'"
+                  },
+
+                  "secretCode": {
+                    "type": "string",
+                    "title": "Secret Code"
+                  }
+                }
+              },
+
+              "address": {
+                "type": "object",
+                "title": "Address",
+
+                "properties": {
+                  "region": {
+                    "type": "string",
+                    "title": "Region",
+                    "enum": ["lombardy", "liguria", "veneto"],
+                    "description": "Select 'liguria' to display the province field"
+                  },
+
+                  "province": {
+                    "type": "string",
+                    "title": "Province"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+    actions:
+      rest:
+        - id: submit-example
+          type: rest
+          resourceRefId: resource-ref-1
+          headers: []
+  resourcesRefs:
+    items:
+      - id: resource-ref-1
+        apiVersion: composition.krateo.io/v1
+        name: submit-example
+        namespace: krateo-system
+        resource: fireworksapps
+        verb: POST
+---
 # Missing action
 # Target: validate error handling when action is missing.
 # Expected behavior: an error is displayed on submit to inform that the action is not defined.
