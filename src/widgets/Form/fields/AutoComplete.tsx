@@ -47,11 +47,12 @@ const AutoComplete = ({ data, form, initialValue, options, resourcesRefs }: Auto
     return () => debouncedUpdate.cancel()
   }, [searchValue, debouncedUpdate])
 
+  // eslint-disable-next-line @tanstack/query/exhaustive-deps
   const { data: queriedOptions = [], isLoading } = useQuery<DefaultOptionType[]>({
     enabled: !!(queryValue && resourceRefId && config),
     queryFn: () =>
       getOptionsFromResourceRefId(queryValue as string, resourceRefId, resourcesRefs, extra?.key, notification, config, accessToken),
-    queryKey: ['autocomplete-options', resourceRefId, queryValue, extra?.key, resourcesRefs, notification, config, accessToken],
+    queryKey: ['autocomplete-options', resourceRefId, queryValue, extra?.key],
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,
   })

@@ -79,7 +79,6 @@ spec:
     allowedResources:
       - panels
     items:
-      - resourceRefId: example-form-displaying-dependencies-panel
       - resourceRefId: example-form-missing-schema-panel
       - resourceRefId: example-form-basic-strings-panel
       - resourceRefId: example-form-basic-menu-hidden-panel
@@ -101,6 +100,7 @@ spec:
       - resourceRefId: example-form-autocomplete-restaction-parameter-panel
       - resourceRefId: example-form-dependencies-panel
       - resourceRefId: example-form-autocomplete-dependencies-array-objects-panel
+      - resourceRefId: example-form-displaying-dependencies-panel
   resourcesRefs:
     items:
       - id: example-form-missing-schema-panel
