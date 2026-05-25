@@ -5,18 +5,19 @@ import type { AnchorLinkItemProps } from 'antd/es/anchor/Anchor'
 import type { Rule } from 'antd/es/form'
 import type { DefaultOptionType } from 'antd/es/select'
 import type { JSONSchema4 } from 'json-schema'
-import type { ValidateErrorEntity } from 'rc-field-form/lib/interface'
+import type { Store, ValidateErrorEntity } from 'rc-field-form/lib/interface'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ListEditor from '../../components/ListEditor'
 import ListObjectFields from '../../components/ListObjectFields'
 import type { ResourcesRefs } from '../../types/Widget'
 
+import FieldContainer from './FieldContainer'
 import AsyncSelect from './fields/AsyncSelect'
 import AutoComplete from './fields/AutoComplete'
 import type { FormWidgetData } from './Form'
 import styles from './Form.module.css'
-import { getOptionsFromEnum } from './utils'
+import { evaluateVisibility, getOptionsFromEnum, isObjectSchema, isRecord } from './utils'
 
 type FormGeneratorType = {
   descriptionTooltip: boolean
@@ -26,10 +27,13 @@ type FormGeneratorType = {
   schema: JSONSchema4
   autocomplete?: FormWidgetData['autocomplete']
   dependencies?: FormWidgetData['dependencies']
+  displayingDependencies?: FormWidgetData['displayingDependencies']
   displayMenu?: FormWidgetData['displayMenu']
   objectFields?: FormWidgetData['objectFields']
   initialValues?: FormWidgetData['initialValues']
 }
+
+export type DisplayDependency = NonNullable<FormWidgetData['displayingDependencies']>[number]
 
 const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
   const currentProperties = node.properties
@@ -54,14 +58,6 @@ const getOptionalCount = (node: JSONSchema4, requiredFields: string[]) => {
   return { optionalCount, totalCount }
 }
 
-const isObjectSchema = (property: JSONSchema4) => {
-  return property.type === 'object' ||
-    (Array.isArray(property.type) && property.type.includes('object')) ||
-    (!!property.properties && typeof property.properties === 'object')
-}
-
-const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
-
 const getInitialValue = (object: unknown, path: string): unknown => {
   const pathParts = path.split('.')
 
@@ -82,6 +78,7 @@ const FormGenerator = ({
   dependencies,
   descriptionTooltip = false,
   displayMenu = true,
+  displayingDependencies,
   formId,
   initialValues,
   objectFields,
@@ -92,6 +89,12 @@ const FormGenerator = ({
   const [form] = Form.useForm()
   const requiredFields: string[] = Array.isArray(schema.required) ? schema.required : []
   const [optionalHidden, setOptionalHidden] = useState<boolean>(false)
+  const [anchorValues, setAnchorValues] = useState<Store>({})
+
+  const displayingDependenciesMap = useMemo(
+    () => new Map((displayingDependencies ?? []).map(dep => [dep.name, dep])),
+    [displayingDependencies],
+  )
 
   const [transformedInitialValues, setTransformedInitialValues] = useState<FormWidgetData['initialValues'] | undefined>(undefined)
 
@@ -316,6 +319,140 @@ const FormGenerator = ({
     return []
   }
 
+  const shouldUpdateField = (prev: Store, curr: Store, displayingDependencyPath?: string) => {
+    if (!displayingDependencyPath) {
+      return false
+    }
+
+    return (getInitialValue(prev, displayingDependencyPath) !== getInitialValue(curr, displayingDependencyPath))
+  }
+
+  const renderFieldContent = (
+    node: JSONSchema4,
+    name: string,
+    currentForm: FormInstance,
+  ) => {
+    switch (node.type) {
+      case 'string': {
+        // AsyncSelect
+        if (dependencies) {
+          const data = dependencies.find(field => field.name === name)
+
+          if (data) {
+            return (
+              <AsyncSelect
+                data={data}
+                form={currentForm}
+                initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
+                resourcesRefs={resourcesRefs}
+              />
+            )
+          }
+        }
+
+        const options = getOptionsFromEnum(node.enum)
+
+        // Autocomplete
+        if (autocomplete) {
+          const data = autocomplete.find(field => field.name === name)
+
+          if (data) {
+            return (
+              <AutoComplete
+                data={data}
+                form={currentForm}
+                initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
+                options={options}
+                resourcesRefs={resourcesRefs}
+              />
+            )
+          }
+        }
+
+        // Enum
+        if (options) {
+          const currentValue = getInitialValue(transformedInitialValues, name)
+          const optionExists = options.some(({ value }) => String(value) === String(currentValue))
+
+          if (currentValue !== undefined && !optionExists) {
+            console.warn(`Invalid initial value for "${name}"`, currentValue)
+            form.setFieldValue(name.split('.'), undefined)
+          }
+
+          if (options.length > 4) {
+            return <Select allowClear options={options} />
+          }
+
+          return (
+            <Radio.Group>
+              {options.map(({ label, value }) => (
+                <Radio key={`radio_${value}`} value={value}>
+                  {label}
+                </Radio>
+              ))}
+            </Radio.Group>
+          )
+        }
+
+        // Default
+        return <Input />
+      }
+
+      case 'boolean':
+        return (
+          <Switch />
+        )
+
+      case 'array': {
+        // objects
+        if (objectFields && node.items) {
+          const objFields = objectFields.find(({ path }) => path === name)
+          if (objFields) {
+            return (
+              <ListObjectFields
+                container={document.body}
+                displayField={objFields.displayField}
+                fields={(drawerForm: FormInstance) => parseData(node.items as JSONSchema4, [], true, drawerForm)}
+                onChange={(values) => form.setFieldValue(name.split('.'), values)}
+                schema={node.items as JSONSchema4}
+                value={(form.getFieldValue(name.split('.')) as unknown[]) || []}
+              />
+            )
+          }
+        }
+
+        // strings
+        const options = node.items && !Array.isArray(node.items) ? getOptionsFromEnum(node.items.enum) : undefined
+        if (options) {
+          return <Select allowClear mode='multiple' options={options} />
+        }
+
+        return (
+          <ListEditor
+            data={(currentForm.getFieldValue(name.split('.')) as string[] | undefined) || []}
+            onChange={(values) => {
+              currentForm.setFieldValue(name.split('.'), values)
+            }}
+          />
+        )
+      }
+
+      case 'integer': {
+        const min = node.minimum
+        const max = node.maximum
+
+        return (
+          <>
+            {min !== undefined && max !== undefined && max - min < 100
+              ? <Slider className={styles.slider} max={max ?? undefined} min={min ?? 0} step={1} />
+              : <InputNumber max={max ?? undefined} min={min ?? 0} step={1} style={{ width: '100%' }} />
+            }
+          </>
+        )
+      }
+    }
+  }
+
   const renderField = (label: string, name: string, node: JSONSchema4, required: boolean, formInstance?: FormInstance) => {
     const currentForm = formInstance ?? form
 
@@ -339,197 +476,33 @@ const FormGenerator = ({
       rules.push({ message: 'Insert right value', pattern: new RegExp(node.pattern) })
     }
 
-    switch (node.type) {
-      case 'string': {
-        const formItemContent = (() => {
-          // AsyncSelect
-          if (dependencies) {
-            const data = dependencies.find(field => field.name === name)
+    const displayingDependency = displayingDependenciesMap.get(name)
+    const displayingDependencyPath = displayingDependency?.dependsOn.name
 
-            if (data) {
-              return (
-                <AsyncSelect
-                  data={data}
-                  form={currentForm}
-                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
-                  resourcesRefs={resourcesRefs}
-                />
-              )
-            }
-          }
+    const preserve = node.type === 'boolean'
 
-          const options = getOptionsFromEnum(node.enum)
-
-          // Autocomplete
-          if (autocomplete) {
-            const data = autocomplete.find(field => field.name === name)
-
-            if (data) {
-              return (
-                <AutoComplete
-                  data={data}
-                  form={currentForm}
-                  initialValue={getInitialValue(transformedInitialValues, name) as DefaultOptionType | undefined}
-                  options={options}
-                  resourcesRefs={resourcesRefs}
-                />
-              )
-            }
-          }
-
-          // Enum
-          if (options) {
-            const currentValue = getInitialValue(transformedInitialValues, name)
-            const optionExists = options.some(({ value }) => String(value) === String(currentValue))
-
-            if (currentValue !== undefined && !optionExists) {
-              console.warn(`Invalid initial value for "${name}"`, currentValue)
-              form.setFieldValue(name.split('.'), undefined)
-            }
-
-            if (options.length > 4) {
-              return <Select allowClear options={options} />
-            }
-
-            return (
-              <Radio.Group>
-                {options.map(({ label, value }) => (
-                  <Radio key={`radio_${value}`} value={value}>
-                    {label}
-                  </Radio>
-                ))}
-              </Radio.Group>
-            )
-          }
-
-          // Default
-          return <Input />
-        })()
-
-        return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Form.Item
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
-              hidden={optionalHidden && !required}
-              key={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              preserve={false}
-              rules={rules}
-              tooltip={descriptionTooltip && node.description ? node.description : undefined}
-            >
-              {formItemContent}
-            </Form.Item>
-          </div>
-        )
-      }
-
-      case 'boolean':
-        return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Space direction='vertical' style={{ width: '100%' }}>
-              <Form.Item
-                extra={!descriptionTooltip && node.description ? node.description : undefined}
-                hidden={optionalHidden && !required}
-                key={name}
-                label={renderLabel(name, label)}
-                name={name.split('.')}
-                preserve={true}
-                rules={rules}
-                tooltip={descriptionTooltip && node.description ? node.description : undefined}
-                valuePropName='checked'
-              >
-                <Switch />
-              </Form.Item>
-            </Space>
-          </div>
-        )
-
-      case 'array': {
-        const formItemContent = (() => {
-          // objects
-          if (objectFields && node.items) {
-            const objFields = objectFields.find(({ path }) => path === name)
-            if (objFields) {
-              return (
-                <ListObjectFields
-                  container={document.body}
-                  displayField={objFields.displayField}
-                  fields={(drawerForm: FormInstance) => parseData(node.items as JSONSchema4, [], true, drawerForm)}
-                  onChange={(values) => form.setFieldValue(name.split('.'), values)}
-                  schema={node.items as JSONSchema4}
-                  value={(form.getFieldValue(name.split('.')) as unknown[]) || []}
-                />
-              )
-            }
-          }
-
-          // strings
-          const options = node.items && !Array.isArray(node.items) ? getOptionsFromEnum(node.items.enum) : undefined
-          if (options) {
-            return <Select allowClear mode='multiple' options={options} />
-          }
-
-          return (
-            <ListEditor
-              data={getInitialValue(transformedInitialValues, name) as string[] || []}
-              onChange={(values) => {
-                form.setFieldValue(name.split('.'), values)
-              }}
-            />
-          )
-        })()
-
-        return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Form.Item
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
-              hidden={optionalHidden && !required}
-              key={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              rules={rules}
-              tooltip={descriptionTooltip && node.description ? node.description : undefined}
-            >
-              {formItemContent}
-            </Form.Item>
-          </div>
-        )
-      }
-
-      case 'integer': {
-        const min = node.minimum
-        const max = node.maximum
-
-        const existing = form.getFieldValue(name.split('.')) as number | undefined
-        if (existing === undefined && min !== undefined) {
-          form.setFieldValue(name.split('.'), min)
-        }
-
-        return (
-          <div className={`${styles.formField} ${optionalHidden && !required ? styles.hidden : 'auto'}`} id={name}>
-            <Form.Item
-              extra={!descriptionTooltip && node.description ? node.description : undefined}
-              hidden={optionalHidden && !required}
-              key={name}
-              label={renderLabel(name, label)}
-              name={name.split('.')}
-              rules={rules}
-              tooltip={descriptionTooltip && node.description ? node.description : undefined}
-            >
-              {min && max && max - min < 100 ? (
-                <Slider className={styles.slider} max={max} min={min} step={1} />
-              ) : (
-                <InputNumber max={max ? max : undefined} min={min ? min : 0} step={1} style={{ width: '100%' }} />
-              )}
-            </Form.Item>
-          </div>
-        )
-      }
-    }
+    return (
+      <FieldContainer
+        description={node.description}
+        descriptionTooltip={descriptionTooltip}
+        displayingDependency={displayingDependency}
+        form={currentForm}
+        id={name}
+        label={renderLabel(name, label)}
+        name={name.split('.')}
+        optionalHidden={optionalHidden}
+        preserve={preserve}
+        required={required}
+        rules={rules}
+        shouldUpdate={(prev, curr) => shouldUpdateField(prev as Store, curr as Store, displayingDependencyPath)}
+        valuePropName={node.type === 'boolean' ? 'checked' : undefined}
+      >
+        {renderFieldContent(node, name, currentForm)}
+      </FieldContainer>
+    )
   }
 
-  const getAnchorList = (): AnchorLinkItemProps[] => {
+  const getAnchorList = useCallback((values: Store): AnchorLinkItemProps[] => {
     const parseData = (
       node: JSONSchema4,
       name = '',
@@ -550,19 +523,25 @@ const FormGenerator = ({
           ? parseData(schemaItem, currentName, isRequired)
           : []
 
-        const shouldShow = isRequired || children.length > 0 || !optionalHidden
-        if (!shouldShow) { return [] }
+        const dependency = displayingDependenciesMap.get(currentName)
+        const dependencyValue = dependency
+          ? getInitialValue(values, dependency.dependsOn.name)
+          : undefined
+
+        const isVisible = evaluateVisibility(dependency, dependencyValue)
+
+        const shouldShow = isVisible && (isRequired || children.length > 0 || !optionalHidden)
+        if (!shouldShow) {
+          return []
+        }
 
         return [
           {
-            href: schemaItem.type === 'object' ? '#' : `#${currentName}`,
+            href: isObjectSchema(schemaItem) ? '#' : `#${currentName}`,
             key: currentName,
-            title:
-            schemaItem.type === 'object' ? (
-              <span className={styles.anchorObjectLabel}>{key}</span>
-            ) : (
-              key
-            ),
+            title: isObjectSchema(schemaItem)
+              ? <span className={styles.anchorObjectLabel}>{key}</span>
+              : key,
             ...(children.length > 0 ? { children } : {}),
           },
         ]
@@ -570,7 +549,9 @@ const FormGenerator = ({
     }
 
     return parseData(schema)
-  }
+  }, [displayingDependenciesMap, optionalHidden, schema])
+
+  const anchorItems = useMemo(() => getAnchorList(anchorValues), [anchorValues, getAnchorList])
 
   const onFinishFailed = useCallback(({ errorFields }: ValidateErrorEntity) => {
     const errorField = errorFields[0].name.join('.')
@@ -638,6 +619,9 @@ const FormGenerator = ({
                   event.preventDefault()
                   setInitialValues()
                 }}
+                onValuesChange={(_, allValues) => {
+                  setAnchorValues(allValues as Store)
+                }}
               >
                 {parseData(schema)}
               </Form>
@@ -649,7 +633,7 @@ const FormGenerator = ({
               <Anchor
                 affix={false}
                 getContainer={() => document.getElementById('anchor-content') as HTMLDivElement}
-                items={getAnchorList()}
+                items={anchorItems}
                 onClick={handleAnchorClick}
               />
             </Col>
