@@ -10,6 +10,14 @@ This feature is useful when building progressive or guided forms, where some fie
 
 The goal is to reduce visual noise and improve the user experience by displaying only the fields that are currently relevant.
 
+Example of Form before inserting values:
+
+![displaying dependencies before](./img/displaying-dependencies-before.png)
+
+Example of Form after inserting values:
+
+![displaying dependencies after](./img/displaying-dependencies-after.png)
+
 ---
 
 ## Displaying Dependencies
@@ -212,11 +220,7 @@ dependsOn:
 
 ### Option
 
-Useful for fields using:
-- `Select`
-- `Radio.Group`
-- `Autocomplete`
-- dependency-based async selects
+Useful for fields using options (such as fields configured using the `autocomplete` or `dependencies` properties).
 
 ```yaml
 dependsOn:
