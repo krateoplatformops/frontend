@@ -1,4 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons'
+import { CopilotKit } from '@copilotkit/react-core/v2'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
@@ -58,7 +59,9 @@ const App: React.FC = () => {
       <ConfigProvider>
         <RoutesProvider>
           <AuthProvider>
-            <AppInitializer />
+            <CopilotKit agent='memoryagent' enableInspector={false} runtimeUrl='/api/copilotkit'>
+              <AppInitializer />
+            </CopilotKit>
           </AuthProvider>
         </RoutesProvider>
         <ReactQueryDevtools initialIsOpen={false} />
