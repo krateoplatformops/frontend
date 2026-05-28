@@ -1,11 +1,11 @@
 import { RobotOutlined } from '@ant-design/icons'
-import { CopilotChat } from '@copilotkit/react-core/v2'
 import { Button, Drawer } from 'antd'
 import { Header as AntdHeader } from 'antd/es/layout/layout'
 import { useState } from 'react'
 
 import { useConfigContext } from '../../context/ConfigContext'
 import Breadcrumb from '../Breadcrumb'
+import CopilotChatDrawer from '../CopilotChatDrawer/CopilotChatDrawer'
 import UserMenu from '../UserMenu'
 import WidgetRenderer from '../WidgetRenderer'
 
@@ -17,7 +17,6 @@ type HeaderProps = {
 
 const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
   const [copilotOpen, setCopilotOpen] = useState(false)
-
   const { config } = useConfigContext()
 
   return (
@@ -27,9 +26,10 @@ const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
         open={copilotOpen}
         placement='right'
         size='large'
+        styles={{ body: { padding: 0 } }}
         title='Autopilot'
       >
-        <CopilotChat />
+        <CopilotChatDrawer open={copilotOpen} />
       </Drawer>
 
       <div className={styles.content}>
@@ -49,7 +49,6 @@ const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
         </div>
       </div>
     </AntdHeader>
-
   )
 }
 
