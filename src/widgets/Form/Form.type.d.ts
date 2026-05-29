@@ -73,6 +73,10 @@ export interface Form {
              * message to display while waiting for the event
              */
             loadingMessage?: string
+            /**
+             * navigate (default): closes drawer and redirects on event. notification: closes drawer immediately, shows a persistent notification with loader until event is received
+             */
+            mode?: 'navigate' | 'notification'
           }
           /**
            * type of action to execute
@@ -351,7 +355,7 @@ export interface Form {
              */
             arrayValue?: string[]
             /**
-             * Value if type = option
+             * Value if type = option: includes a single value or a { label, value } object
              */
             optionValue?: {
               /**
