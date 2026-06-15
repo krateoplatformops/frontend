@@ -272,6 +272,7 @@ export const useHandleAction = () => {
               const defaultLoadingMessage = mode === 'notification'
                 ? 'Waiting for resource...'
                 : 'Waiting for resource and redirecting...'
+
               const loadingMessage = onEventNavigateTo.loadingMessage
                 ? await resolveJq(onEventNavigateTo.loadingMessage, { json: payload, response: jsonResponse })
                 : defaultLoadingMessage
@@ -385,7 +386,7 @@ export const useHandleAction = () => {
                         ),
                         duration: 0,
                         key: notificationKey,
-                        message: 'Action executed successfully',
+                        message: `Successfully executed action`,
                         placement: 'topRight',
                       })
                     })()
