@@ -269,13 +269,53 @@ export const useHandleAction = () => {
                 withCredentials: false,
               })
 
+              const defaultLoadingMessage = mode === 'notification'
+                ? 'Waiting for resource...'
+                : 'Waiting for resource and redirecting...'
+              const loadingMessage = onEventNavigateTo.loadingMessage
+                ? await resolveJq(onEventNavigateTo.loadingMessage, { json: payload, response: jsonResponse })
+                : defaultLoadingMessage
+
+              const resolveErrorDescription = async () => {
+                let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
+                if (errorMessage) {
+                  description = errorMessage.startsWith('${')
+                    ? await resolveJq(errorMessage, { json: payload, response: jsonResponse })
+                    : errorMessage
+                }
+                return description
+              }
+
+              const resolveRedirectUrl = async (eventData: EventsApiResource) => {
+                if (onEventNavigateTo.url.startsWith('${')) {
+                  return resolveJq(onEventNavigateTo.url, {
+                    event: eventData as unknown as Record<string, unknown>,
+                    json: payload,
+                    response: jsonResponse,
+                  })
+                }
+                if (customPayload) {
+                  return interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                }
+                return onEventNavigateTo.url
+              }
+
+              const resolveSuccessDescription = async (eventData: EventsApiResource) => {
+                if (successMessage) {
+                  return successMessage.startsWith('${')
+                    ? resolveJq(successMessage, {
+                      event: eventData as unknown as Record<string, unknown>,
+                      json: payload,
+                      response: jsonResponse,
+                    })
+                    : successMessage
+                }
+                return 'The action has been executed successfully'
+              }
+
               // eslint-disable-next-line max-depth
               if (mode === 'notification') {
                 const notificationKey = `event-${onEventNavigateTo.eventReason}-${Date.now()}`
-
-                const loadingMessage = onEventNavigateTo.loadingMessage
-                  ? await resolveJq(onEventNavigateTo.loadingMessage, { json: payload, response: jsonResponse })
-                  : 'Waiting for resource...'
 
                 setIsActionLoading(false)
                 closeDrawer()
@@ -293,16 +333,8 @@ export const useHandleAction = () => {
                   void (async () => {
                     if (!eventReceived) {
                       eventSource.close()
-
-                      let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
-                      if (errorMessage) {
-                        description = errorMessage.startsWith('${')
-                          ? await resolveJq(errorMessage, { json: payload, response: jsonResponse })
-                          : errorMessage
-                      }
-
                       notification.error({
-                        description,
+                        description: await resolveErrorDescription(),
                         duration: 0,
                         key: notificationKey,
                         message: 'Error while executing the action',
@@ -328,56 +360,29 @@ export const useHandleAction = () => {
                     clearTimeout(timeoutId)
 
                     void (async () => {
-                      let redirectUrl: string | null | undefined
-
-                      if (onEventNavigateTo.url.startsWith('${')) {
-                        redirectUrl = await resolveJq(onEventNavigateTo.url, {
-                          event: eventData as unknown as Record<string, unknown>,
-                          json: payload,
-                          response: jsonResponse,
-                        })
-                      } else if (customPayload) {
-                        redirectUrl = interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
-                      } else {
-                        redirectUrl = onEventNavigateTo.url
-                      }
+                      const redirectUrl = await resolveRedirectUrl(eventData)
 
                       if (!redirectUrl) {
-                        message.destroy()
                         notification.error({
                           description: 'Impossible to redirect, the route contains an undefined value',
                           message: 'Error while redirecting',
                           placement: 'bottomLeft',
                         })
-
                         return
                       }
 
-                      let description = 'The action has been executed successfully'
-                      if (successMessage) {
-                        description = successMessage.startsWith('${')
-                          ? await resolveJq(successMessage, {
-                            event: eventData as unknown as Record<string, unknown>,
-                            json: payload,
-                            response: jsonResponse,
-                          })
-                          : successMessage
-                      }
-
                       notification.success({
-                        description: redirectUrl
-                          ? createElement(
-                            'span',
-                            null,
-                            description,
-                            ' — ',
-                            createElement(
-                              'a',
-                              { href: redirectUrl, onClick: () => { notification.destroy(notificationKey) } },
-                              'Go to resource'
-                            )
+                        description: createElement(
+                          'span',
+                          null,
+                          await resolveSuccessDescription(eventData),
+                          ' — ',
+                          createElement(
+                            'a',
+                            { href: redirectUrl, onClick: () => { notification.destroy(notificationKey) } },
+                            'Go to resource'
                           )
-                          : description,
+                        ),
                         duration: 0,
                         key: notificationKey,
                         message: 'Action executed successfully',
@@ -387,35 +392,23 @@ export const useHandleAction = () => {
                   }
                 }) as EventListener)
               } else {
-                let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
-                // eslint-disable-next-line max-depth
-                if (errorMessage) {
-                  description = errorMessage.startsWith('${')
-                    ? await resolveJq(errorMessage, {
-                      json: payload,
-                      response: jsonResponse,
-                    })
-                    : errorMessage
-                }
-
                 const timeoutId = setTimeout(() => {
                   if (!eventReceived) {
                     setIsActionLoading(false)
                     eventSource.close()
-                    notification.error({
-                      description,
-                      message: 'Error while executing the action',
-                      placement: 'bottomLeft',
-                    })
+                    void (async () => {
+                      notification.error({
+                        description: await resolveErrorDescription(),
+                        message: 'Error while executing the action',
+                        placement: 'bottomLeft',
+                      })
+                    })()
                   }
                   message.destroy()
                 }, onEventNavigateTo.timeout! * 1000)
 
-                const loadingMessage = onEventNavigateTo.loadingMessage
-                  ? await resolveJq(onEventNavigateTo.loadingMessage, { json: payload, response: jsonResponse })
-                  : 'Waiting for resource and redirecting...'
-
                 message.loading(loadingMessage, onEventNavigateTo.timeout)
+
                 eventSource.addEventListener('krateo', ((event: MessageEvent) => {
                   if (!resourceUid) { return }
 
@@ -432,19 +425,7 @@ export const useHandleAction = () => {
                     clearTimeout(timeoutId)
 
                     void (async () => {
-                      let redirectUrl: string | null | undefined
-
-                      if (onEventNavigateTo.url.startsWith('${')) {
-                        redirectUrl = await resolveJq(onEventNavigateTo.url, {
-                          event: eventData as unknown as Record<string, unknown>,
-                          json: payload,
-                          response: jsonResponse,
-                        })
-                      } else if (customPayload) {
-                        redirectUrl = interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
-                      } else {
-                        redirectUrl = onEventNavigateTo.url
-                      }
+                      const redirectUrl = await resolveRedirectUrl(eventData)
 
                       if (!redirectUrl) {
                         message.destroy()
@@ -453,24 +434,12 @@ export const useHandleAction = () => {
                           message: 'Error while redirecting',
                           placement: 'bottomLeft',
                         })
-
                         return
-                      }
-
-                      let description = 'The action has been executed successfully'
-                      if (successMessage) {
-                        description = successMessage.startsWith('${')
-                          ? await resolveJq(successMessage, {
-                            event: eventData as unknown as Record<string, unknown>,
-                            json: payload,
-                            response: jsonResponse,
-                          })
-                          : successMessage
                       }
 
                       message.destroy()
                       notification.success({
-                        description,
+                        description: await resolveSuccessDescription(eventData),
                         message: `Successfully executed action`,
                         placement: 'bottomLeft',
                       })
