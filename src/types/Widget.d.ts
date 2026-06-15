@@ -62,6 +62,7 @@ export type WidgetActions = {
       timeout?: number
       reloadRoutes?: boolean
       loadingMessage?: string
+      mode?: 'navigate' | 'notification'
     }
     payloadToOverride?: {
       name: string
