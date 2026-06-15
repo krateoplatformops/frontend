@@ -56,7 +56,7 @@ export const useWidgetQuery = (widgetEndpoint: string, options?: { enabled: bool
     }
   }, [widgetFullUrl])
 
-  const enabledFlag = (options?.enabled ?? true) && requestUrl !== null
+  const enabledFlag = (options?.enabled ?? true) && requestUrl !== null && !!widgetEndpoint
 
   async function fetchWidget({ cursor, page, perPage }: PageParam): Promise<Widget> {
     if (!requestUrl) {
