@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Previous changes not listed in this document can be traced using Git history.
 
-## Unreleased
+## [1.0.26] - 2026-06-16
 
 ### Added
+- Added `mode` property to `onEventNavigateTo` action to enable notification driven redirect
 - Added `displayingDependencies` property to `Form` widget to show / hide fields
 
 ## [1.0.25] - 2026-05-12
