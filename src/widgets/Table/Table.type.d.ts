@@ -63,6 +63,10 @@ export interface Table {
              * message to display while waiting for the event
              */
             loadingMessage?: string
+            /**
+             * navigate (default): closes drawer and redirects on event. notification: closes drawer immediately, shows a persistent notification with loader until event is received
+             */
+            mode?: 'navigate' | 'notification'
           }
           /**
            * type of action to execute

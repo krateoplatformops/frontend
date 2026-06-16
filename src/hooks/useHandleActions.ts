@@ -1,9 +1,10 @@
+import { LoadingOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import useApp from 'antd/es/app/useApp'
 import type { EventListener, MessageEvent } from 'event-source-polyfill'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { merge, set } from 'lodash'
-import { useState } from 'react'
+import { createElement, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import { useAuth } from '../context/AuthContext'
@@ -257,6 +258,8 @@ export const useHandleAction = () => {
             let eventReceived = false
 
             if (onEventNavigateTo) {
+              const mode = onEventNavigateTo.mode ?? 'navigate'
+
               const eventsEndpoint = `${config!.api.EVENTS_PUSH_API_BASE_URL}/notifications`
 
               const eventSource = new EventSourcePolyfill(eventsEndpoint, {
@@ -266,100 +269,189 @@ export const useHandleAction = () => {
                 withCredentials: false,
               })
 
-              let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
-              // eslint-disable-next-line max-depth
-              if (errorMessage) {
-                description = errorMessage.startsWith('${')
-                  ? await resolveJq(errorMessage, {
-                    json: payload,
-                    response: jsonResponse,
-                  })
-                  : errorMessage
-              }
-
-              const timeoutId = setTimeout(() => {
-                if (!eventReceived) {
-                  setIsActionLoading(false)
-                  eventSource.close()
-                  notification.error({
-                    description,
-                    message: 'Error while executing the action',
-                    placement: 'bottomLeft',
-                  })
-                }
-                message.destroy()
-              }, onEventNavigateTo.timeout! * 1000)
+              const defaultLoadingMessage = mode === 'notification'
+                ? 'Waiting for resource...'
+                : 'Waiting for resource and redirecting...'
 
               const loadingMessage = onEventNavigateTo.loadingMessage
                 ? await resolveJq(onEventNavigateTo.loadingMessage, { json: payload, response: jsonResponse })
-                : 'Waiting for resource and redirecting...'
+                : defaultLoadingMessage
 
-              message.loading(loadingMessage, onEventNavigateTo.timeout)
-              eventSource.addEventListener('krateo', ((event: MessageEvent) => {
-                if (!resourceUid) { return }
+              const resolveErrorDescription = async () => {
+                let description = `Timeout waiting for event ${onEventNavigateTo.eventReason}`
+                if (errorMessage) {
+                  description = errorMessage.startsWith('${')
+                    ? await resolveJq(errorMessage, { json: payload, response: jsonResponse })
+                    : errorMessage
+                }
+                return description
+              }
 
-                const eventData = JSON.parse(event.data as string) as EventsApiResource
+              const resolveRedirectUrl = async (eventData: EventsApiResource) => {
+                if (onEventNavigateTo.url.startsWith('${')) {
+                  return resolveJq(onEventNavigateTo.url, {
+                    event: eventData as unknown as Record<string, unknown>,
+                    json: payload,
+                    response: jsonResponse,
+                  })
+                }
+                if (customPayload) {
+                  return interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
+                }
+                return onEventNavigateTo.url
+              }
 
-                if (eventData.reason === onEventNavigateTo.eventReason && eventData.involved_object_uid === resourceUid) {
-                  eventReceived = true
+              const resolveSuccessDescription = async (eventData: EventsApiResource) => {
+                if (successMessage) {
+                  return successMessage.startsWith('${')
+                    ? resolveJq(successMessage, {
+                      event: eventData as unknown as Record<string, unknown>,
+                      json: payload,
+                      response: jsonResponse,
+                    })
+                    : successMessage
+                }
+                return 'The action has been executed successfully'
+              }
 
-                  if (onEventNavigateTo.reloadRoutes !== false) {
-                    void reloadRoutes()
-                  }
+              // eslint-disable-next-line max-depth
+              if (mode === 'notification') {
+                const notificationKey = `event-${onEventNavigateTo.eventReason}-${Date.now()}`
 
-                  eventSource.close()
-                  clearTimeout(timeoutId)
+                setIsActionLoading(false)
+                closeDrawer()
 
+                notification.info({
+                  description: loadingMessage,
+                  duration: 0,
+                  icon: createElement(LoadingOutlined, { spin: true }),
+                  key: notificationKey,
+                  message: 'Action in progress',
+                  placement: 'topRight',
+                })
+
+                const timeoutId = setTimeout(() => {
                   void (async () => {
-                    let redirectUrl: string | null | undefined
-
-                    if (onEventNavigateTo.url.startsWith('${')) {
-                      redirectUrl = await resolveJq(onEventNavigateTo.url, {
-                        event: eventData as unknown as Record<string, unknown>,
-                        json: payload,
-                        response: jsonResponse,
+                    if (!eventReceived) {
+                      eventSource.close()
+                      notification.error({
+                        description: await resolveErrorDescription(),
+                        duration: 0,
+                        key: notificationKey,
+                        message: 'Error while executing the action',
+                        placement: 'topRight',
                       })
-                    } else if (customPayload) {
-                      redirectUrl = interpolateRedirectUrl(customPayload, onEventNavigateTo.url)
-                    } else {
-                      redirectUrl = onEventNavigateTo.url
+                    }
+                  })()
+                }, onEventNavigateTo.timeout! * 1000)
+
+                eventSource.addEventListener('krateo', ((event: MessageEvent) => {
+                  if (!resourceUid) { return }
+
+                  const eventData = JSON.parse(event.data as string) as EventsApiResource
+
+                  if (eventData.reason === onEventNavigateTo.eventReason && eventData.involved_object_uid === resourceUid) {
+                    eventReceived = true
+
+                    if (onEventNavigateTo.reloadRoutes !== false) {
+                      void reloadRoutes()
                     }
 
-                    if (!redirectUrl) {
-                      message.destroy()
+                    eventSource.close()
+                    clearTimeout(timeoutId)
+
+                    void (async () => {
+                      const redirectUrl = await resolveRedirectUrl(eventData)
+
+                      if (!redirectUrl) {
+                        notification.error({
+                          description: 'Impossible to redirect, the route contains an undefined value',
+                          message: 'Error while redirecting',
+                          placement: 'bottomLeft',
+                        })
+                        return
+                      }
+
+                      notification.success({
+                        description: createElement(
+                          'span',
+                          null,
+                          await resolveSuccessDescription(eventData),
+                          ' — ',
+                          createElement(
+                            'a',
+                            { href: redirectUrl, onClick: () => { notification.destroy(notificationKey) } },
+                            'Go to resource'
+                          )
+                        ),
+                        duration: 0,
+                        key: notificationKey,
+                        message: `Successfully executed action`,
+                        placement: 'topRight',
+                      })
+                    })()
+                  }
+                }) as EventListener)
+              } else {
+                const timeoutId = setTimeout(() => {
+                  if (!eventReceived) {
+                    setIsActionLoading(false)
+                    eventSource.close()
+                    void (async () => {
                       notification.error({
-                        description: 'Impossible to redirect, the route contains an undefined value',
-                        message: 'Error while redirecting',
+                        description: await resolveErrorDescription(),
+                        message: 'Error while executing the action',
+                        placement: 'bottomLeft',
+                      })
+                    })()
+                  }
+                  message.destroy()
+                }, onEventNavigateTo.timeout! * 1000)
+
+                message.loading(loadingMessage, onEventNavigateTo.timeout)
+
+                eventSource.addEventListener('krateo', ((event: MessageEvent) => {
+                  if (!resourceUid) { return }
+
+                  const eventData = JSON.parse(event.data as string) as EventsApiResource
+
+                  if (eventData.reason === onEventNavigateTo.eventReason && eventData.involved_object_uid === resourceUid) {
+                    eventReceived = true
+
+                    if (onEventNavigateTo.reloadRoutes !== false) {
+                      void reloadRoutes()
+                    }
+
+                    eventSource.close()
+                    clearTimeout(timeoutId)
+
+                    void (async () => {
+                      const redirectUrl = await resolveRedirectUrl(eventData)
+
+                      if (!redirectUrl) {
+                        message.destroy()
+                        notification.error({
+                          description: 'Impossible to redirect, the route contains an undefined value',
+                          message: 'Error while redirecting',
+                          placement: 'bottomLeft',
+                        })
+                        return
+                      }
+
+                      message.destroy()
+                      notification.success({
+                        description: await resolveSuccessDescription(eventData),
+                        message: `Successfully executed action`,
                         placement: 'bottomLeft',
                       })
 
-                      return
-                    }
-
-                    let description = 'The action has been executed successfully'
-                    if (successMessage) {
-                      description = successMessage.startsWith('${')
-                        ? await resolveJq(successMessage, {
-                          event: eventData as unknown as Record<string, unknown>,
-                          json: payload,
-                          response: jsonResponse,
-                        })
-                        : successMessage
-                    }
-
-                    message.destroy()
-                    notification.success({
-                      description,
-                      message: `Successfully executed action`,
-                      placement: 'bottomLeft',
-                    })
-
-                    setIsActionLoading(false)
-                    closeDrawer()
-                    void navigate(redirectUrl)
-                  })()
-                }
-              }) as EventListener)
+                      setIsActionLoading(false)
+                      closeDrawer()
+                      void navigate(redirectUrl)
+                    })()
+                  }
+                }) as EventListener)
+              }
             }
 
             const updatedUrl = customPayload

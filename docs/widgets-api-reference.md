@@ -47,6 +47,7 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
+| actions.rest[].onEventNavigateTo.mode | no | navigate (default): closes drawer and redirects on event. notification: closes drawer immediately, shows a persistent notification with loader until event is received | `navigate` \| `notification` |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
@@ -287,6 +288,7 @@ name of the k8s Custom Resource
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
+| actions.rest[].onEventNavigateTo.mode | no | navigate (default): closes drawer and redirects on event. notification: closes drawer immediately, shows a persistent notification with loader until event is received | `navigate` \| `notification` |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -346,6 +348,18 @@ name of the k8s Custom Resource
 | dependencies[].extra.key | yes | the key of the additional parameter | string |
 | dependencies[].name | yes | the name of the autocomplete field | string |
 | dependencies[].resourceRefId | yes | the identifier of the RESTAction that should be called to retrieve dependency data | string |
+| displayingDependencies | no | Configuration for the form fields whose displaying is dependent from other form fields. | array |
+| displayingDependencies[].name | yes | the name of the field | string |
+| displayingDependencies[].dependsOn | yes | the field on which this field depends on | object |
+| displayingDependencies[].dependsOn.name | yes | the name of the field on which this field depends on | string |
+| displayingDependencies[].dependsOn.conditionType | yes | `notEmpty` (default) indicates that the current field is displayed if the dependency field has a non-empty value. `value` indicates that the current field is displayed only when the dependency field matches a specific value. | `notEmpty` \| `value` |
+| displayingDependencies[].dependsOn.value | no | Expected value used when `type = value`. | object |
+| displayingDependencies[].dependsOn.value.type | yes | Expected dependency value type. | `string` \| `integer` \| `boolean` \| `array` \| `option` \| `null` |
+| displayingDependencies[].dependsOn.value.stringValue | no | Value if type = string | string |
+| displayingDependencies[].dependsOn.value.integerValue | no | Value if type = integer | integer |
+| displayingDependencies[].dependsOn.value.booleanValue | no | Value if type = boolean | boolean |
+| displayingDependencies[].dependsOn.value.arrayValue | no | Value if type = array | array |
+| displayingDependencies[].dependsOn.value.optionValue | no | Value if type = option: includes a single value or a { label, value } object | unknown |
 | objectFields | no | configuration for object fields in the form | array |
 | objectFields[].path | yes | the path of the object field | string |
 | objectFields[].displayField | yes | the field to display in the objects list | string |
@@ -435,6 +449,23 @@ NavMenuItem represents a single item in the navigation menu and links to a speci
 
 ---
 
+### Notifications
+
+Notifications renders messages coming from a Kubernetes cluster
+
+#### Props
+
+| Property | Required | Description | Type |
+|----------|----------|-------------|------|
+| queryParams | no | list of query parameters to add to the notifications call | array |
+| queryParams[].name | yes | the name of the query parameter | string |
+| queryParams[].value | yes | the value of the query parameter | string |
+
+
+[Examples](../src/examples/widgets/Notifications/Notifications.example.yaml)
+
+---
+
 ### Page
 
 Page is a wrapper component, placed at the top of the component tree, that wraps and renders all nested components.
@@ -474,6 +505,7 @@ Panel is a container to display information
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
+| actions.rest[].onEventNavigateTo.mode | no | navigate (default): closes drawer and redirects on event. notification: closes drawer immediately, shows a persistent notification with loader until event is received | `navigate` \| `notification` |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].payload | no | static payload sent with the request | object |
 | actions.rest[].payloadToOverride | no | list of payload fields to override dynamically | array |
@@ -633,6 +665,7 @@ Table displays structured data with customizable columns and pagination
 | actions.rest[].onEventNavigateTo.timeout | no | the timeout in seconds to wait for the event | integer |
 | actions.rest[].onEventNavigateTo.reloadRoutes | no |  | boolean |
 | actions.rest[].onEventNavigateTo.loadingMessage | no | message to display while waiting for the event | string |
+| actions.rest[].onEventNavigateTo.mode | no | navigate (default): closes drawer and redirects on event. notification: closes drawer immediately, shows a persistent notification with loader until event is received | `navigate` \| `notification` |
 | actions.rest[].type | yes | type of action to execute | `rest` |
 | actions.rest[].headers | yes | array of headers as strings, format 'key: value' | array |
 | actions.rest[].payload | no | static payload sent with the request | object |
