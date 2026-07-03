@@ -433,3 +433,48 @@ spec:
         namespace: krateo-system
         resource: yamlviewers
         verb: GET
+---
+# externalNavigate — static URL, opens in new tab
+# Target: clicking the panel opens an external URL in a new browser tab.
+# Expected behavior: window.open is called with the static URL and target "_blank".
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-external-navigate-static
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Open Grafana
+    clickActionId: open-grafana-panel
+    items: []
+    actions:
+      externalNavigate:
+        - id: open-grafana-panel
+          type: externalNavigate
+          url: https://grafana.example.com/dashboards
+          target: _blank
+  resourcesRefs:
+    items: []
+---
+# externalNavigate — JQ-interpolated URL using widget metadata
+# Target: the URL is built at click time using the widget's own metadata.
+# JQ context: { json: customPayload, widget } — widget metadata is at .widget.metadata.
+# Expected behavior: the JQ expression resolves the widget name and opens the constructed URL.
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-external-navigate-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: View in Argo CD
+    clickActionId: open-argocd-panel
+    items: []
+    actions:
+      externalNavigate:
+        - id: open-argocd-panel
+          type: externalNavigate
+          url: ${ "https://argocd.example.com/applications/" + .widget.metadata.name }
+          target: _blank
+  resourcesRefs:
+    items: []

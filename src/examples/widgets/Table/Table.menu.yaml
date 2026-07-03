@@ -58,6 +58,7 @@ spec:
       - resourceRefId: example-table-restaction-panel
       - resourceRefId: example-table-actions-panel
       - resourceRefId: example-table-actions-dynamic-panel
+      - resourceRefId: example-table-external-navigate-panel
   resourcesRefs:
     items:
       - id: example-table-empty-columns-panel
@@ -131,8 +132,14 @@ spec:
         name: example-table-actions-dynamic-panel
         namespace: krateo-system
         resource: panels
-        verb: GET 
-      
+        verb: GET
+      - id: example-table-external-navigate-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-external-navigate-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -377,6 +384,26 @@ spec:
       - id: example-table-actions-dynamic
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-actions-dynamic
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-external-navigate-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - Per-row external URL via JQ'
+    items:
+      - resourceRefId: example-table-external-navigate
+  resourcesRefs:
+    items:
+      - id: example-table-external-navigate
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-external-navigate
         namespace: krateo-system
         resource: tables
         verb: GET

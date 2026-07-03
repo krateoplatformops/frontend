@@ -139,6 +139,8 @@ spec:
       - resourceRefId: example-panel-open-modal-large-panel
       - resourceRefId: example-panel-open-modal-custom-panel
       - resourceRefId: example-panel-open-modal-fullscreen-panel
+      - resourceRefId: example-panel-external-navigate-static-panel
+      - resourceRefId: example-panel-external-navigate-jq-panel
   resourcesRefs:
     items:
       - id: example-panel-no-action-panel
@@ -210,6 +212,18 @@ spec:
       - id: example-panel-open-modal-fullscreen-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-panel-open-modal-fullscreen-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-external-navigate-static-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-external-navigate-static-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-external-navigate-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-external-navigate-jq-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -550,6 +564,46 @@ spec:
       - id: example-panel-open-modal-fullscreen
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-panel-open-modal-fullscreen
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-external-navigate-static-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - Static URL, opens in new tab'
+    items:
+      - resourceRefId: example-panel-external-navigate-static
+  resourcesRefs:
+    items:
+      - id: example-panel-external-navigate-static
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-external-navigate-static
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-external-navigate-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - JQ-interpolated URL'
+    items:
+      - resourceRefId: example-panel-external-navigate-jq
+  resourcesRefs:
+    items:
+      - id: example-panel-external-navigate-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-external-navigate-jq
         namespace: krateo-system
         resource: panels
         verb: GET

@@ -107,14 +107,25 @@ export type WidgetActions = {
     customWidth?: string
     size?: 'custom' | 'default' | 'fullscreen' | 'large'
   }[]
+  externalNavigate?: {
+    id: string
+    type: 'externalNavigate'
+    url: string
+    target?: '_blank' | '_parent' | '_self' | '_top'
+    requireConfirmation?: boolean
+    loading?: {
+      display: boolean
+    }
+  }[]
 }
 
 type RestAction = NonNullable<WidgetActions['rest']>[number]
 type NavigateAction = NonNullable<WidgetActions['navigate']>[number]
 type OpenDrawerAction = NonNullable<WidgetActions['openDrawer']>[number]
 type OpenModalAction = NonNullable<WidgetActions['openModal']>[number]
+type ExternalNavigateAction = NonNullable<WidgetActions['externalNavigate']>[number]
 
-export type WidgetAction = RestAction | NavigateAction | OpenDrawerAction | OpenModalAction
+export type WidgetAction = RestAction | NavigateAction | OpenDrawerAction | OpenModalAction | ExternalNavigateAction
 
 export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs

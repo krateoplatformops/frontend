@@ -14,6 +14,7 @@ import { useRoutesContext } from '../context/RoutesContext'
 import type { ResourcesRefs, Widget, WidgetAction } from '../types/Widget'
 import { useResolveJqExpression } from '../utils/jq-expression'
 
+import { handleExternalNavigateAction } from './actionHandlers/externalNavigate.handler'
 import { handleNavigateAction } from './actionHandlers/navigate.handler'
 import { handleOpenDrawerAction } from './actionHandlers/openDrawer.handler'
 import { handleOpenModalAction } from './actionHandlers/openModal.handler'
@@ -79,6 +80,9 @@ export const useHandleAction = () => {
           break
         case 'rest':
           await handleRestAction(action, resourcesRefs, customPayload, widget, context)
+          break
+        case 'externalNavigate':
+          await handleExternalNavigateAction(action, customPayload, widget, context)
           break
       }
     } catch (error) {

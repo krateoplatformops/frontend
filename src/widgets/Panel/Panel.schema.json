@@ -284,6 +284,50 @@
                     },
                     "required": ["id", "type", "resourceRefId"]
                   }
+                },
+                "externalNavigate": {
+                  "type": "array",
+                  "description": "actions to navigate to an external URL",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "unique identifier for the action"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["externalNavigate"],
+                        "description": "type of action to execute"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "the external URL to navigate to; supports JQ expressions using ${ } syntax"
+                      },
+                      "target": {
+                        "type": "string",
+                        "enum": ["_blank", "_self", "_parent", "_top"],
+                        "default": "_blank",
+                        "description": "specifies where to open the URL (default: _blank)"
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before navigating"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["id", "type", "url"]
+                  }
                 }
               },
               "additionalProperties": false

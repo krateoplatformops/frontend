@@ -686,3 +686,50 @@ spec:
         (.markdowns.items
         | map(select(.metadata.name | startswith("example-markdown"))))
     }
+---
+# externalNavigate — open a per-row external URL from a table action
+# Target: each row exposes an action button that opens a row-specific external URL.
+# Expected behavior: clicking the button resolves the JQ URL with that row's data and opens it in a new tab.
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-external-navigate
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions:
+      externalNavigate:
+        - id: open-grafana-row
+          type: externalNavigate
+          url: ${ "https://grafana.example.com/d/" + .json.rowId }
+          target: _blank
+    allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: rowId
+        title: Row ID
+        hidden: true
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service A"
+        - valueKey: rowId
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-a"
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service B"
+        - valueKey: rowId
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-b"
+    tableActions:
+      - clickActionId: open-grafana-row
+        button:
+          label: Open in Grafana
+  resourcesRefs:
+    items: []
