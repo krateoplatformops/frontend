@@ -117,6 +117,16 @@ export type WidgetActions = {
       display: boolean
     }
   }[]
+  refresh?: {
+    id: string
+    type: 'refresh'
+    resourcesRefsIds?: string[]
+    widgetKinds?: string[]
+    requireConfirmation?: boolean
+    loading?: {
+      display: boolean
+    }
+  }[]
 }
 
 type RestAction = NonNullable<WidgetActions['rest']>[number]
@@ -124,8 +134,9 @@ type NavigateAction = NonNullable<WidgetActions['navigate']>[number]
 type OpenDrawerAction = NonNullable<WidgetActions['openDrawer']>[number]
 type OpenModalAction = NonNullable<WidgetActions['openModal']>[number]
 type ExternalNavigateAction = NonNullable<WidgetActions['externalNavigate']>[number]
+type RefreshAction = NonNullable<WidgetActions['refresh']>[number]
 
-export type WidgetAction = RestAction | NavigateAction | OpenDrawerAction | OpenModalAction | ExternalNavigateAction
+export type WidgetAction = RestAction | NavigateAction | OpenDrawerAction | OpenModalAction | ExternalNavigateAction | RefreshAction
 
 export type WidgetProps<T = unknown> = {
   resourcesRefs: ResourcesRefs

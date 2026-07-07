@@ -478,3 +478,115 @@ spec:
           target: _blank
   resourcesRefs:
     items: []
+---
+# refresh — companion table used to visually confirm that refresh actions re-fetch data
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-refresh-companion-table
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    allowedResources: []
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: status
+        title: Status
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-alpha"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Running"
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-beta"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Pending"
+  resourcesRefs:
+    items: []
+---
+# refresh — invalidate all cached queries on panel click
+# Target: clicking the panel triggers a full TanStack Query cache invalidation.
+# Expected behavior: all widgets on the page are re-fetched; the companion table below
+# visibly enters a loading state before rendering again.
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-refresh-all
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Refresh All Data
+    clickActionId: refresh-all-panel
+    items: []
+    actions:
+      refresh:
+        - id: refresh-all-panel
+          type: refresh
+          loading:
+            display: true
+  resourcesRefs:
+    items: []
+---
+# refresh — scoped invalidation via resourcesRefsIds
+# Target: clicking the panel only re-fetches the companion table referenced by resourcesRefsIds.
+# Expected behavior: only the companion table reloads; other widgets stay cached.
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-refresh-by-resource-ref
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Refresh Companion Table
+    clickActionId: refresh-by-resource-ref-panel
+    items: []
+    actions:
+      refresh:
+        - id: refresh-by-resource-ref-panel
+          type: refresh
+          resourcesRefsIds:
+            - companion-table
+          loading:
+            display: true
+  resourcesRefs:
+    items:
+      - id: companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+# refresh — kind-level invalidation via widgetKinds
+# Target: clicking the panel re-fetches all Table widgets on the page.
+# Expected behavior: the companion table below reloads; Panel and Button widgets stay cached.
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-refresh-by-kind
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Refresh All Tables
+    clickActionId: refresh-by-kind-panel
+    items: []
+    actions:
+      refresh:
+        - id: refresh-by-kind-panel
+          type: refresh
+          widgetKinds:
+            - Table
+          loading:
+            display: true
+  resourcesRefs:
+    items: []

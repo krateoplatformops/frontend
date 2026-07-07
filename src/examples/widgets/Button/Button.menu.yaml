@@ -179,6 +179,9 @@ spec:
       - resourceRefId: example-button-external-navigate-jq-panel
       - resourceRefId: example-button-external-navigate-confirm-panel
       - resourceRefId: example-button-external-navigate-self-panel
+      - resourceRefId: example-button-refresh-all-panel
+      - resourceRefId: example-button-refresh-by-resource-ref-panel
+      - resourceRefId: example-button-refresh-by-kind-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -364,6 +367,24 @@ spec:
       - id: example-button-external-navigate-self-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-external-navigate-self-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-refresh-all-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-all-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-refresh-by-resource-ref-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-resource-ref-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-refresh-by-kind-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-kind-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -1146,4 +1167,85 @@ spec:
         name: example-button-external-navigate-self
         namespace: krateo-system
         resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-all-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Invalidate all cached queries'
+    items:
+      - resourceRefId: example-button-refresh-all
+      - resourceRefId: example-button-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-button-refresh-all
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-all
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: example-button-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-resource-ref-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Scoped invalidation via resourcesRefsIds'
+    items:
+      - resourceRefId: example-button-refresh-by-resource-ref
+      - resourceRefId: example-button-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-button-refresh-by-resource-ref
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-resource-ref
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: example-button-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-kind-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Kind-level invalidation via widgetKinds'
+    items:
+      - resourceRefId: example-button-refresh-by-kind
+      - resourceRefId: example-button-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-button-refresh-by-kind
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-kind
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: example-button-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
         verb: GET

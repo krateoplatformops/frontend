@@ -84,6 +84,22 @@ Button represents an interactive component which, when clicked, triggers a speci
 | actions.openModal[].loading.display | yes |  | boolean |
 | actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
 | actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
+| actions.externalNavigate | no | actions to navigate to an external URL | array |
+| actions.externalNavigate[].id | yes | unique identifier for the action | string |
+| actions.externalNavigate[].type | yes | type of action to execute | `externalNavigate` |
+| actions.externalNavigate[].url | yes | the external URL to navigate to; supports JQ expressions using ${ } syntax | string |
+| actions.externalNavigate[].target | no | specifies where to open the URL (default: _blank) | `_blank` \| `_self` \| `_parent` \| `_top` |
+| actions.externalNavigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.externalNavigate[].loading | no |  | object |
+| actions.externalNavigate[].loading.display | yes |  | boolean |
+| actions.refresh | no | actions to invalidate and reload cached data | array |
+| actions.refresh[].id | yes | unique identifier for the action | string |
+| actions.refresh[].type | yes | type of action to execute | `refresh` |
+| actions.refresh[].resourcesRefsIds | no | list of resourcesRefs item IDs whose widget queries should be invalidated; each ID must match an entry in resourcesRefs.items | array |
+| actions.refresh[].widgetKinds | no | list of widget kind names (e.g. Table, Panel) whose queries should be invalidated; all widgets of those kinds on the page are re-fetched | array |
+| actions.refresh[].requireConfirmation | no | whether user confirmation is required before refreshing | boolean |
+| actions.refresh[].loading | no |  | object |
+| actions.refresh[].loading.display | yes |  | boolean |
 | backgroundColor | no | the background color of the button | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |
 | color | no | ***DEPRECATED*** the color of the button | `default` \| `primary` \| `danger` \| `blue` \| `purple` \| `cyan` \| `green` \| `magenta` \| `pink` \| `red` \| `orange` \| `yellow` \| `volcano` \| `geekblue` \| `lime` \| `gold` |
 | label | no | the label of the button | string |
@@ -324,6 +340,22 @@ name of the k8s Custom Resource
 | actions.openModal[].loading.display | yes |  | boolean |
 | actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
 | actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
+| actions.externalNavigate | no | actions to navigate to an external URL | array |
+| actions.externalNavigate[].id | yes | unique identifier for the action | string |
+| actions.externalNavigate[].type | yes | type of action to execute | `externalNavigate` |
+| actions.externalNavigate[].url | yes | the external URL to navigate to; supports JQ expressions using ${ } syntax | string |
+| actions.externalNavigate[].target | no | specifies where to open the URL (default: _blank) | `_blank` \| `_self` \| `_parent` \| `_top` |
+| actions.externalNavigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.externalNavigate[].loading | no |  | object |
+| actions.externalNavigate[].loading.display | yes |  | boolean |
+| actions.refresh | no | actions to invalidate and reload cached data | array |
+| actions.refresh[].id | yes | unique identifier for the action | string |
+| actions.refresh[].type | yes | type of action to execute | `refresh` |
+| actions.refresh[].resourcesRefsIds | no | list of resourcesRefs item IDs whose widget queries should be invalidated; each ID must match an entry in resourcesRefs.items | array |
+| actions.refresh[].widgetKinds | no | list of widget kind names (e.g. Table, Panel) whose queries should be invalidated; all widgets of those kinds on the page are re-fetched | array |
+| actions.refresh[].requireConfirmation | no | whether user confirmation is required before refreshing | boolean |
+| actions.refresh[].loading | no |  | object |
+| actions.refresh[].loading.display | yes |  | boolean |
 | buttonConfig | no | custom labels and icons for form buttons | object |
 | buttonConfig.primary | no | primary button configuration | object |
 | buttonConfig.primary.label | no | text label for primary button | string |
@@ -541,6 +573,22 @@ Panel is a container to display information
 | actions.openModal[].loading.display | yes |  | boolean |
 | actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
 | actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
+| actions.externalNavigate | no | actions to navigate to an external URL | array |
+| actions.externalNavigate[].id | yes | unique identifier for the action | string |
+| actions.externalNavigate[].type | yes | type of action to execute | `externalNavigate` |
+| actions.externalNavigate[].url | yes | the external URL to navigate to; supports JQ expressions using ${ } syntax | string |
+| actions.externalNavigate[].target | no | specifies where to open the URL (default: _blank) | `_blank` \| `_self` \| `_parent` \| `_top` |
+| actions.externalNavigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.externalNavigate[].loading | no |  | object |
+| actions.externalNavigate[].loading.display | yes |  | boolean |
+| actions.refresh | no | actions to invalidate and reload cached data | array |
+| actions.refresh[].id | yes | unique identifier for the action | string |
+| actions.refresh[].type | yes | type of action to execute | `refresh` |
+| actions.refresh[].resourcesRefsIds | no | list of resourcesRefs item IDs whose widget queries should be invalidated; each ID must match an entry in resourcesRefs.items | array |
+| actions.refresh[].widgetKinds | no | list of widget kind names (e.g. Table, Panel) whose queries should be invalidated; all widgets of those kinds on the page are re-fetched | array |
+| actions.refresh[].requireConfirmation | no | whether user confirmation is required before refreshing | boolean |
+| actions.refresh[].loading | no |  | object |
+| actions.refresh[].loading.display | yes |  | boolean |
 | clickActionId | no | the id of the action to be executed when the panel is clicked | string |
 | footer | no | footer section of the panel containing additional items | array |
 | footer[].resourceRefId | yes | the identifier of the k8s custom resource that should be represented, usually a widget | string |
@@ -702,6 +750,22 @@ Table displays structured data with customizable columns and pagination
 | actions.openModal[].loading.display | yes |  | boolean |
 | actions.openModal[].customWidth | no | the custom width of the value, which should be used by setting the 'custom' value inside the 'size' property | string |
 | actions.openModal[].size | no | sets the Modal size, 'default' is 520px, 'large' is 80% of the screen width, 'fullscreen' is 100% of the screen width, 'custom' should be used with the 'customWidth' property | `default` \| `large` \| `fullscreen` \| `custom` |
+| actions.externalNavigate | no | actions to navigate to an external URL | array |
+| actions.externalNavigate[].id | yes | unique identifier for the action | string |
+| actions.externalNavigate[].type | yes | type of action to execute | `externalNavigate` |
+| actions.externalNavigate[].url | yes | the external URL to navigate to; supports JQ expressions using ${ } syntax | string |
+| actions.externalNavigate[].target | no | specifies where to open the URL (default: _blank) | `_blank` \| `_self` \| `_parent` \| `_top` |
+| actions.externalNavigate[].requireConfirmation | no | whether user confirmation is required before navigating | boolean |
+| actions.externalNavigate[].loading | no |  | object |
+| actions.externalNavigate[].loading.display | yes |  | boolean |
+| actions.refresh | no | actions to invalidate and reload cached data | array |
+| actions.refresh[].id | yes | unique identifier for the action | string |
+| actions.refresh[].type | yes | type of action to execute | `refresh` |
+| actions.refresh[].resourcesRefsIds | no | list of resourcesRefs item IDs whose widget queries should be invalidated; each ID must match an entry in resourcesRefs.items | array |
+| actions.refresh[].widgetKinds | no | list of widget kind names (e.g. Table, Panel) whose queries should be invalidated; all widgets of those kinds on the page are re-fetched | array |
+| actions.refresh[].requireConfirmation | no | whether user confirmation is required before refreshing | boolean |
+| actions.refresh[].loading | no |  | object |
+| actions.refresh[].loading.display | yes |  | boolean |
 | allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
 | columns | yes | configuration of the table's columns | array |
 | columns[].color | no | the color of the value (or the icon) to be represented | `blue` \| `darkBlue` \| `orange` \| `gray` \| `red` \| `green` \| `violet` |

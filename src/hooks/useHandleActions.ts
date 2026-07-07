@@ -18,6 +18,7 @@ import { handleExternalNavigateAction } from './actionHandlers/externalNavigate.
 import { handleNavigateAction } from './actionHandlers/navigate.handler'
 import { handleOpenDrawerAction } from './actionHandlers/openDrawer.handler'
 import { handleOpenModalAction } from './actionHandlers/openModal.handler'
+import { handleRefreshAction } from './actionHandlers/refresh.handler'
 import { handleRestAction } from './actionHandlers/rest.handler'
 
 export interface ActionHandlerContext {
@@ -83,6 +84,9 @@ export const useHandleAction = () => {
           break
         case 'externalNavigate':
           await handleExternalNavigateAction(action, customPayload, widget, context)
+          break
+        case 'refresh':
+          await handleRefreshAction(action, resourcesRefs, context)
           break
       }
     } catch (error) {

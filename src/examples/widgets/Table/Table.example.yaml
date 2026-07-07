@@ -733,3 +733,166 @@ spec:
           label: Open in Grafana
   resourcesRefs:
     items: []
+---
+# refresh — companion panel used to visually confirm that refresh actions re-fetch data
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-refresh-companion-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    title: Companion Panel (re-fetches on refresh)
+    actions: {}
+    items: []
+  resourcesRefs:
+    items: []
+---
+# refresh — invalidate all cached queries from a table row action
+# Target: each row exposes an action button that triggers a full TanStack Query cache invalidation.
+# Expected behavior: clicking the button refetches all cached queries on the page; the companion
+# panel above visibly enters a loading state before rendering again.
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-refresh-all
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions:
+      refresh:
+        - id: refresh-row
+          type: refresh
+          loading:
+            display: true
+    allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: status
+        title: Status
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service A"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Running"
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service B"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Pending"
+    tableActions:
+      - clickActionId: refresh-row
+        button:
+          label: Refresh
+  resourcesRefs:
+    items: []
+---
+# refresh — scoped invalidation via resourcesRefsIds from a table row action
+# Target: each row action only re-fetches the companion panel referenced by resourcesRefsIds.
+# Expected behavior: only the companion panel reloads; other widgets stay cached.
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-refresh-by-resource-ref
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions:
+      refresh:
+        - id: refresh-row-by-resource-ref
+          type: refresh
+          resourcesRefsIds:
+            - companion-panel
+          loading:
+            display: true
+    allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: status
+        title: Status
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service A"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Running"
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service B"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Pending"
+    tableActions:
+      - clickActionId: refresh-row-by-resource-ref
+        button:
+          label: Refresh Panel
+  resourcesRefs:
+    items:
+      - id: companion-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-companion-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+---
+# refresh — kind-level invalidation via widgetKinds from a table row action
+# Target: each row action re-fetches all Panel widgets on the page.
+# Expected behavior: the companion panel above reloads; Table and Button widgets stay cached.
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-refresh-by-kind
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions:
+      refresh:
+        - id: refresh-row-by-kind
+          type: refresh
+          widgetKinds:
+            - Panel
+          loading:
+            display: true
+    allowedResources: [barcharts, buttons, filters, flowcharts, linecharts, markdowns, paragraphs, piecharts, yamlviewers]
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: status
+        title: Status
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service A"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Running"
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Service B"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Pending"
+    tableActions:
+      - clickActionId: refresh-row-by-kind
+        button:
+          label: Refresh All Panels
+  resourcesRefs:
+    items: []

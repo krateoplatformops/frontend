@@ -1251,3 +1251,122 @@ spec:
           target: _self
   resourcesRefs:
     items: []
+---
+# refresh — companion table used to visually confirm that refresh actions re-fetch data
+# This widget is included alongside refresh buttons in example panels so the loading
+# state is visible when a refresh action fires.
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-companion-table
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    allowedResources: []
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: status
+        title: Status
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-alpha"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Running"
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-beta"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Pending"
+  resourcesRefs:
+    items: []
+---
+# refresh — invalidate all cached queries
+# Target: clicking the button triggers a full TanStack Query cache invalidation.
+# Expected behavior: all widgets on the page are re-fetched; the companion table below
+# visibly enters a loading state before rendering again.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-all
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Refresh All
+    icon: fa-rotate-right
+    type: default
+    clickActionId: refresh-all
+    actions:
+      refresh:
+        - id: refresh-all
+          type: refresh
+          loading:
+            display: true
+  resourcesRefs:
+    items: []
+---
+# refresh — scoped invalidation via resourcesRefsIds
+# Target: invalidate only the query for the specific widget referenced by `resourcesRefsIds`.
+# Expected behavior: only the companion table below is re-fetched; other widgets on the
+# page remain cached and do not reload.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-resource-ref
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Refresh Companion Table
+    icon: fa-rotate-right
+    type: default
+    clickActionId: refresh-by-resource-ref
+    actions:
+      refresh:
+        - id: refresh-by-resource-ref
+          type: refresh
+          resourcesRefsIds:
+            - companion-table
+          loading:
+            display: true
+  resourcesRefs:
+    items:
+      - id: companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+# refresh — kind-level invalidation via widgetKinds
+# Target: invalidate all widget queries of the specified kinds on the page.
+# Expected behavior: every Table widget on the page is re-fetched (including the companion
+# table below); widgets of other kinds stay cached.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-kind
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Refresh All Tables
+    icon: fa-rotate-right
+    type: default
+    clickActionId: refresh-by-kind
+    actions:
+      refresh:
+        - id: refresh-by-kind
+          type: refresh
+          widgetKinds:
+            - Table
+          loading:
+            display: true
+  resourcesRefs:
+    items: []

@@ -141,6 +141,9 @@ spec:
       - resourceRefId: example-panel-open-modal-fullscreen-panel
       - resourceRefId: example-panel-external-navigate-static-panel
       - resourceRefId: example-panel-external-navigate-jq-panel
+      - resourceRefId: example-panel-refresh-all-panel
+      - resourceRefId: example-panel-refresh-by-resource-ref-panel
+      - resourceRefId: example-panel-refresh-by-kind-panel
   resourcesRefs:
     items:
       - id: example-panel-no-action-panel
@@ -224,6 +227,24 @@ spec:
       - id: example-panel-external-navigate-jq-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-panel-external-navigate-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-refresh-all-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-all-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-refresh-by-resource-ref-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-by-resource-ref-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-refresh-by-kind-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-by-kind-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -606,4 +627,85 @@ spec:
         name: example-panel-external-navigate-jq
         namespace: krateo-system
         resource: panels
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-refresh-all-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Invalidate all cached queries'
+    items:
+      - resourceRefId: example-panel-refresh-all
+      - resourceRefId: example-panel-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-panel-refresh-all
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-all
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-refresh-by-resource-ref-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Scoped invalidation via resourcesRefsIds'
+    items:
+      - resourceRefId: example-panel-refresh-by-resource-ref
+      - resourceRefId: example-panel-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-panel-refresh-by-resource-ref
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-by-resource-ref
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-panel-refresh-by-kind-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Kind-level invalidation via widgetKinds'
+    items:
+      - resourceRefId: example-panel-refresh-by-kind
+      - resourceRefId: example-panel-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-panel-refresh-by-kind
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-by-kind
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-panel-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-panel-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
         verb: GET

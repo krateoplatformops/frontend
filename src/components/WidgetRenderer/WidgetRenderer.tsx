@@ -214,7 +214,7 @@ const WidgetRenderer = ({
     }
   }, [isLoading, onLoadingChange])
 
-  if (isLoading) {
+  if (isFetching || isLoading) {
     return (
       <div className={styles.loading}>
         <Skeleton active />
