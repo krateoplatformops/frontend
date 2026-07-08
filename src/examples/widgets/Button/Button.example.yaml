@@ -1157,3 +1157,216 @@ spec:
         name: my-sample-nginx-pod-event-navigation-success
         namespace: krateo-system
         verb: POST
+---
+# externalNavigate — static URL, opens in new tab (default)
+# Target: clicking the button opens an external URL in a new browser tab.
+# Expected behavior: window.open is called with the static URL and target "_blank".
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-static
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open Grafana
+    icon: fa-chart-line
+    type: primary
+    clickActionId: open-grafana
+    actions:
+      externalNavigate:
+        - id: open-grafana
+          type: externalNavigate
+          url: https://grafana.example.com/dashboards
+          target: _blank
+  resourcesRefs:
+    items: []
+---
+# externalNavigate — JQ-interpolated URL using widget metadata
+# Target: the URL is built at runtime using the widget's own metadata.
+# JQ context: { json: customPayload, widget } — widget metadata is at .widget.metadata.
+# Expected behavior: the JQ expression resolves the widget name and opens the constructed URL.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-jq
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: View in Argo CD
+    icon: fa-external-link-alt
+    type: default
+    clickActionId: open-argocd
+    actions:
+      externalNavigate:
+        - id: open-argocd
+          type: externalNavigate
+          url: ${ "https://argocd.example.com/applications/" + .widget.metadata.name }
+          target: _blank
+  resourcesRefs:
+    items: []
+---
+# externalNavigate — requires confirmation before opening
+# Target: user must confirm the navigation before the external URL is opened.
+# Expected behavior: a confirm dialog appears; URL opens only if user confirms.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-confirm
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Open External Resource
+    icon: fa-arrow-up-right-from-square
+    type: primary
+    clickActionId: open-external-confirm
+    actions:
+      externalNavigate:
+        - id: open-external-confirm
+          type: externalNavigate
+          url: https://external.example.com/resource
+          target: _blank
+          requireConfirmation: true
+  resourcesRefs:
+    items: []
+---
+# externalNavigate — open in same tab (_self)
+# Target: the URL replaces the current browser tab instead of opening a new one.
+# Expected behavior: window.open is called with target "_self", replacing the current page.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-self
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Go to Docs
+    icon: fa-book
+    type: link
+    clickActionId: open-docs-self
+    actions:
+      externalNavigate:
+        - id: open-docs-self
+          type: externalNavigate
+          url: https://docs.krateo.io
+          target: _self
+  resourcesRefs:
+    items: []
+---
+# refresh — companion table used to visually confirm that refresh actions re-fetch data
+# This widget is included alongside refresh buttons in example panels so the loading
+# state is visible when a refresh action fires.
+kind: Table
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-companion-table
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    allowedResources: []
+    columns:
+      - valueKey: name
+        title: Name
+      - valueKey: status
+        title: Status
+    data:
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-alpha"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Running"
+      - - valueKey: name
+          kind: jsonSchemaType
+          type: string
+          stringValue: "service-beta"
+        - valueKey: status
+          kind: jsonSchemaType
+          type: string
+          stringValue: "Pending"
+  resourcesRefs:
+    items: []
+---
+# refresh — invalidate all cached queries
+# Target: clicking the button triggers a full TanStack Query cache invalidation.
+# Expected behavior: all widgets on the page are re-fetched; the companion table below
+# visibly enters a loading state before rendering again.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-all
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Refresh All
+    icon: fa-rotate-right
+    type: default
+    clickActionId: refresh-all
+    actions:
+      refresh:
+        - id: refresh-all
+          type: refresh
+          loading:
+            display: true
+  resourcesRefs:
+    items: []
+---
+# refresh — scoped invalidation via resourcesRefsIds
+# Target: invalidate only the query for the specific widget referenced by `resourcesRefsIds`.
+# Expected behavior: only the companion table below is re-fetched; other widgets on the
+# page remain cached and do not reload.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-resource-ref
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Refresh Companion Table
+    icon: fa-rotate-right
+    type: default
+    clickActionId: refresh-by-resource-ref
+    actions:
+      refresh:
+        - id: refresh-by-resource-ref
+          type: refresh
+          resourcesRefsIds:
+            - companion-table
+          loading:
+            display: true
+  resourcesRefs:
+    items:
+      - id: companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+# refresh — kind-level invalidation via widgetKinds
+# Target: invalidate all widget queries of the specified kinds on the page.
+# Expected behavior: every Table widget on the page is re-fetched (including the companion
+# table below); widgets of other kinds stay cached.
+kind: Button
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-kind
+  namespace: krateo-system
+spec:
+  widgetData:
+    label: Refresh All Tables
+    icon: fa-rotate-right
+    type: default
+    clickActionId: refresh-by-kind
+    actions:
+      refresh:
+        - id: refresh-by-kind
+          type: refresh
+          widgetKinds:
+            - Table
+          loading:
+            display: true
+  resourcesRefs:
+    items: []

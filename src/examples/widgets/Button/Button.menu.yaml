@@ -175,6 +175,13 @@ spec:
       - resourceRefId: example-button-rest-success-redirect-jq-panel
       - resourceRefId: example-button-rest-event-navigation-fail-panel
       - resourceRefId: example-button-rest-event-navigation-success-panel
+      - resourceRefId: example-button-external-navigate-static-panel
+      - resourceRefId: example-button-external-navigate-jq-panel
+      - resourceRefId: example-button-external-navigate-confirm-panel
+      - resourceRefId: example-button-external-navigate-self-panel
+      - resourceRefId: example-button-refresh-all-panel
+      - resourceRefId: example-button-refresh-by-resource-ref-panel
+      - resourceRefId: example-button-refresh-by-kind-panel
   resourcesRefs:
     items:
       - id: example-button-no-action-panel
@@ -336,6 +343,48 @@ spec:
       - id: example-button-rest-event-navigation-success-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-button-rest-event-navigation-success-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-external-navigate-static-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-static-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-external-navigate-jq-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-jq-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-external-navigate-confirm-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-confirm-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-external-navigate-self-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-self-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-refresh-all-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-all-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-refresh-by-resource-ref-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-resource-ref-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-button-refresh-by-kind-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-kind-panel
         namespace: krateo-system
         resource: panels
         verb: GET
@@ -1038,4 +1087,165 @@ spec:
         name: example-button-rest-event-navigation-success
         namespace: krateo-system
         resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-static-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - Static URL, opens in new tab'
+    items:
+      - resourceRefId: example-button-external-navigate-static
+  resourcesRefs:
+    items:
+      - id: example-button-external-navigate-static
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-static
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-jq-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - JQ-interpolated URL'
+    items:
+      - resourceRefId: example-button-external-navigate-jq
+  resourcesRefs:
+    items:
+      - id: example-button-external-navigate-jq
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-jq
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-confirm-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - Requires confirmation'
+    items:
+      - resourceRefId: example-button-external-navigate-confirm
+  resourcesRefs:
+    items:
+      - id: example-button-external-navigate-confirm
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-confirm
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-external-navigate-self-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - Open in same tab (_self)'
+    items:
+      - resourceRefId: example-button-external-navigate-self
+  resourcesRefs:
+    items:
+      - id: example-button-external-navigate-self
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-external-navigate-self
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-all-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Invalidate all cached queries'
+    items:
+      - resourceRefId: example-button-refresh-all
+      - resourceRefId: example-button-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-button-refresh-all
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-all
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: example-button-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-resource-ref-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Scoped invalidation via resourcesRefsIds'
+    items:
+      - resourceRefId: example-button-refresh-by-resource-ref
+      - resourceRefId: example-button-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-button-refresh-by-resource-ref
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-resource-ref
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: example-button-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-button-refresh-by-kind-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Kind-level invalidation via widgetKinds'
+    items:
+      - resourceRefId: example-button-refresh-by-kind
+      - resourceRefId: example-button-refresh-companion-table
+  resourcesRefs:
+    items:
+      - id: example-button-refresh-by-kind
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-by-kind
+        namespace: krateo-system
+        resource: buttons
+        verb: GET
+      - id: example-button-refresh-companion-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-button-refresh-companion-table
+        namespace: krateo-system
+        resource: tables
         verb: GET

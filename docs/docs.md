@@ -183,12 +183,14 @@ Actions define widget behavior and user interactions.
 
 The currently supported actions are:
 
-- **`rest`**: triggers an HTTP request to a referenced resource
 - **`navigate`**: navigates to a different route or referenced resource
 - **`openDrawer`**: displays another widget inside a drawer (side panel)
 - **`openModal`**: displays another widget inside a modal
+- **`rest`**: triggers an HTTP request to a referenced resource
+- **`externalNavigate`**: opens an external URL in the browser
+- **`refresh`**: invalidates cached widget data to trigger a re-fetch
 
-Actions are defined inside `widgetData`. A complete list of widgets supporting actions and their available properties can be found in the [Widgets API Reference](./widgets-api-reference.md).
+Actions are defined inside `widgetData`. Full documentation for each action type — properties, behavior, and examples — is available in the [Actions reference](./actions.md). A complete list of widgets supporting actions and their available properties can also be found in the [Widgets API Reference](./widgets-api-reference.md).
 
 ---
 

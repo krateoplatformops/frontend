@@ -285,6 +285,98 @@
                     },
                     "required": ["id", "type", "resourceRefId"]
                   }
+                },
+                "externalNavigate": {
+                  "type": "array",
+                  "description": "actions to navigate to an external URL",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "unique identifier for the action"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["externalNavigate"],
+                        "description": "type of action to execute"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "the external URL to navigate to; supports JQ expressions using ${ } syntax"
+                      },
+                      "target": {
+                        "type": "string",
+                        "enum": ["_blank", "_self", "_parent", "_top"],
+                        "default": "_blank",
+                        "description": "specifies where to open the URL (default: _blank)"
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before navigating"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["id", "type", "url"]
+                  }
+                },
+                "refresh": {
+                  "type": "array",
+                  "description": "actions to invalidate and reload cached data",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "unique identifier for the action"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["refresh"],
+                        "description": "type of action to execute"
+                      },
+                      "resourcesRefsIds": {
+                        "type": "array",
+                        "description": "list of resourcesRefs item IDs whose widget queries should be invalidated; each ID must match an entry in resourcesRefs.items",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "widgetKinds": {
+                        "type": "array",
+                        "description": "list of widget kind names (e.g. Table, Panel) whose queries should be invalidated; all widgets of those kinds on the page are re-fetched",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "requireConfirmation": {
+                        "type": "boolean",
+                        "description": "whether user confirmation is required before refreshing"
+                      },
+                      "loading": {
+                        "type": "object",
+                        "properties": {
+                          "display": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["display"],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["id", "type"]
+                  }
                 }
               },
               "additionalProperties": false

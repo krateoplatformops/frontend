@@ -28,23 +28,56 @@ metadata:
 spec:
   widgetData:
     allowedResources:
-      - barcharts
-      - buttons
-      - columns
-      - datagrids
-      - eventlists
-      - filters
-      - flowcharts
-      - forms
-      - linecharts
-      - markdowns
-      - panels
-      - paragraphs
-      - tables
-      - rows
-      - tables
       - tablists
-      - yamlviewers
+    items:
+      - resourceRefId: example-table-tablist
+  resourcesRefs:
+    items:
+      - id: example-table-tablist
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-tablist
+        namespace: krateo-system
+        resource: tablists
+        verb: GET
+---
+kind: TabList
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-tablist
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - columns
+    items:
+      - label: Examples
+        resourceRefId: example-table-examples-column
+      - label: Actions
+        resourceRefId: example-table-actions-column
+  resourcesRefs:
+    items:
+      - id: example-table-examples-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-examples-column
+        namespace: krateo-system
+        resource: columns
+        verb: GET
+      - id: example-table-actions-column
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-actions-column
+        namespace: krateo-system
+        resource: columns
+        verb: GET
+---
+kind: Column
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-examples-column
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
     items:
       - resourceRefId: example-table-empty-columns-panel
       - resourceRefId: example-table-empty-data-panel
@@ -56,8 +89,6 @@ spec:
       - resourceRefId: example-table-with-filter-panel
       - resourceRefId: example-table-with-pagination-panel
       - resourceRefId: example-table-restaction-panel
-      - resourceRefId: example-table-actions-panel
-      - resourceRefId: example-table-actions-dynamic-panel
   resourcesRefs:
     items:
       - id: example-table-empty-columns-panel
@@ -65,25 +96,25 @@ spec:
         name: example-table-empty-columns-panel
         namespace: krateo-system
         resource: panels
-        verb: GET  
+        verb: GET
       - id: example-table-empty-data-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-empty-data-panel
         namespace: krateo-system
         resource: panels
-        verb: GET  
+        verb: GET
       - id: example-table-basic-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-basic-panel
         namespace: krateo-system
         resource: panels
-        verb: GET      
+        verb: GET
       - id: example-table-mixed-types-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-mixed-types-panel
         namespace: krateo-system
         resource: panels
-        verb: GET       
+        verb: GET
       - id: example-table-icons-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-icons-panel
@@ -120,19 +151,62 @@ spec:
         namespace: krateo-system
         resource: panels
         verb: GET
+---
+kind: Column
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-actions-column
+  namespace: krateo-system
+spec:
+  widgetData:
+    allowedResources:
+      - panels
+    items:
+      - resourceRefId: example-table-actions-panel
+      - resourceRefId: example-table-actions-dynamic-panel
+      - resourceRefId: example-table-external-navigate-panel
+      - resourceRefId: example-table-refresh-all-panel
+      - resourceRefId: example-table-refresh-by-resource-ref-panel
+      - resourceRefId: example-table-refresh-by-kind-panel
+  resourcesRefs:
+    items:
       - id: example-table-actions-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-actions-panel
         namespace: krateo-system
         resource: panels
-        verb: GET 
+        verb: GET
       - id: example-table-actions-dynamic-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-actions-dynamic-panel
         namespace: krateo-system
         resource: panels
-        verb: GET 
-      
+        verb: GET
+      - id: example-table-external-navigate-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-external-navigate-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-table-refresh-all-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-all-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-table-refresh-by-resource-ref-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-by-resource-ref-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-table-refresh-by-kind-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-by-kind-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+
 ---
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
@@ -377,6 +451,107 @@ spec:
       - id: example-table-actions-dynamic
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-table-actions-dynamic
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-external-navigate-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'externalNavigate - Per-row external URL via JQ'
+    items:
+      - resourceRefId: example-table-external-navigate
+  resourcesRefs:
+    items:
+      - id: example-table-external-navigate
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-external-navigate
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-refresh-all-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Invalidate all cached queries from a row action'
+    items:
+      - resourceRefId: example-table-refresh-companion-panel
+      - resourceRefId: example-table-refresh-all
+  resourcesRefs:
+    items:
+      - id: example-table-refresh-companion-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-companion-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-table-refresh-all
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-all
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-refresh-by-resource-ref-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Scoped invalidation via resourcesRefsIds from a row action'
+    items:
+      - resourceRefId: example-table-refresh-companion-panel
+      - resourceRefId: example-table-refresh-by-resource-ref
+  resourcesRefs:
+    items:
+      - id: example-table-refresh-companion-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-companion-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-table-refresh-by-resource-ref
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-by-resource-ref
+        namespace: krateo-system
+        resource: tables
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-table-refresh-by-kind-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'refresh - Kind-level invalidation via widgetKinds from a row action'
+    items:
+      - resourceRefId: example-table-refresh-companion-panel
+      - resourceRefId: example-table-refresh-by-kind
+  resourcesRefs:
+    items:
+      - id: example-table-refresh-companion-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-companion-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
+      - id: example-table-refresh-by-kind
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-table-refresh-by-kind
         namespace: krateo-system
         resource: tables
         verb: GET
