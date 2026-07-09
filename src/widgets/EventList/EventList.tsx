@@ -125,6 +125,11 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   }
 
+  const eventTypeColor: Record<string, string> = {
+    Normal: 'blue',
+    Warning: 'orange',
+  }
+
   return (
     <div className={styles.container} onScroll={handleScroll}>
       {filteredEventList.map(
@@ -139,7 +144,7 @@ const EventList = ({ uid, widgetData }: WidgetProps<EventListWidgetData>) => {
           resource_name: name,
         }) => (
           <RichRow
-            color={type === 'Normal' ? 'blue' : 'orange'}
+            color={eventTypeColor[type] ?? 'grey'}
             icon={'fa-ellipsis-h'}
             key={`${uid}-${rowUid}`}
             primaryText={

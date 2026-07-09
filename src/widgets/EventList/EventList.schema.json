@@ -59,8 +59,7 @@
                   },
                   "event_type": {
                     "type": "string",
-                    "enum": ["Normal", "Warning"],
-                    "description": "type of the event, e.g., normal or warning"
+                    "description": "type of the event, e.g., Normal, Warning, or Error"
                   },
                   "reason": {
                     "type": "string",

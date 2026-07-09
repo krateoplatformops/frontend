@@ -49,6 +49,7 @@ spec:
       - resourceRefId: example-eventlist-empty-panel
       - resourceRefId: example-eventlist-basic-panel
       - resourceRefId: example-eventlist-with-prefix-panel
+      - resourceRefId: example-eventlist-mixed-types-panel
       - resourceRefId: example-eventlist-sse-panel
   resourcesRefs:
     items:
@@ -57,19 +58,25 @@ spec:
         name: example-eventlist-empty-panel
         namespace: krateo-system
         resource: panels
-        verb: GET  
+        verb: GET
       - id: example-eventlist-basic-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-eventlist-basic-panel
         namespace: krateo-system
         resource: panels
-        verb: GET  
+        verb: GET
       - id: example-eventlist-with-prefix-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-eventlist-with-prefix-panel
         namespace: krateo-system
         resource: panels
-        verb: GET      
+        verb: GET
+      - id: example-eventlist-mixed-types-panel
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-eventlist-mixed-types-panel
+        namespace: krateo-system
+        resource: panels
+        verb: GET
       - id: example-eventlist-sse-panel
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: example-eventlist-sse-panel
@@ -147,6 +154,26 @@ spec:
 kind: Panel
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
+  name: example-eventlist-mixed-types-panel
+  namespace: krateo-system
+spec:
+  widgetData:
+    actions: {}
+    title: 'Mixed event types (Normal, Warning, Error)'
+    items:
+      - resourceRefId: example-eventlist-mixed-types
+  resourcesRefs:
+    items:
+      - id: example-eventlist-mixed-types
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: example-eventlist-mixed-types
+        namespace: krateo-system
+        resource: eventlists
+        verb: GET
+---
+kind: Panel
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
   name: example-eventlist-sse-panel
   namespace: krateo-system
 spec:
@@ -162,4 +189,4 @@ spec:
         name: example-eventlist-sse
         namespace: krateo-system
         resource: eventlists
-        verb: GET  
+        verb: GET
