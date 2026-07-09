@@ -89,6 +89,48 @@ spec:
         - resource_name
         type: string
 ---
+# Mixed event types including non-standard type
+# Expected behavior: Displays three events with different event_type values — Normal (blue), Warning (orange), and Error (grey).
+# Verifies that unknown event types do not cause errors and fall back to the default grey color.
+kind: EventList
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: example-eventlist-mixed-types
+  namespace: krateo-system
+spec:
+  widgetData:
+    events:
+      - global_uid: "mock-cluster-1:event-normal"
+        cluster_name: "mock-cluster-1"
+        namespace: "default"
+        resource_kind: "Pod"
+        resource_name: "nginx-pod"
+        event_type: "Normal"
+        reason: "Started"
+        message: "Started container nginx"
+        created_at: "2024-04-21T08:20:00Z"
+        raw: ""
+      - global_uid: "mock-cluster-1:event-warning"
+        cluster_name: "mock-cluster-1"
+        namespace: "default"
+        resource_kind: "Pod"
+        resource_name: "my-pod"
+        event_type: "Warning"
+        reason: "FailedScheduling"
+        message: "0/1 nodes are available: 1 Insufficient memory."
+        created_at: "2024-04-20T12:34:56Z"
+        raw: ""
+      - global_uid: "mock-cluster-1:event-error"
+        cluster_name: "mock-cluster-1"
+        namespace: "default"
+        resource_kind: "Deployment"
+        resource_name: "my-deployment"
+        event_type: "Error"
+        reason: "BackoffLimitExceeded"
+        message: "Job has reached the specified backoff limit"
+        created_at: "2024-04-22T09:15:00Z"
+        raw: ""
+---
 # Live updates via SSE
 # Expected behavior: The widget connects to the provided SSE endpoint and updates in real time as new events are received.
 # Use this configuration to test streaming behavior from a live backend.

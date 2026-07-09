@@ -202,6 +202,62 @@ export interface Button {
            */
           size?: 'default' | 'large' | 'fullscreen' | 'custom'
         }[]
+        /**
+         * actions to navigate to an external URL
+         */
+        externalNavigate?: {
+          /**
+           * unique identifier for the action
+           */
+          id: string
+          /**
+           * type of action to execute
+           */
+          type: 'externalNavigate'
+          /**
+           * the external URL to navigate to; supports JQ expressions using ${ } syntax
+           */
+          url: string
+          /**
+           * specifies where to open the URL (default: _blank)
+           */
+          target?: '_blank' | '_self' | '_parent' | '_top'
+          /**
+           * whether user confirmation is required before navigating
+           */
+          requireConfirmation?: boolean
+          loading?: {
+            display: boolean
+          }
+        }[]
+        /**
+         * actions to invalidate and reload cached data
+         */
+        refresh?: {
+          /**
+           * unique identifier for the action
+           */
+          id: string
+          /**
+           * type of action to execute
+           */
+          type: 'refresh'
+          /**
+           * list of resourcesRefs item IDs whose widget queries should be invalidated; each ID must match an entry in resourcesRefs.items
+           */
+          resourcesRefsIds?: string[]
+          /**
+           * list of widget kind names (e.g. Table, Panel) whose queries should be invalidated; all widgets of those kinds on the page are re-fetched
+           */
+          widgetKinds?: string[]
+          /**
+           * whether user confirmation is required before refreshing
+           */
+          requireConfirmation?: boolean
+          loading?: {
+            display: boolean
+          }
+        }[]
       }
       /**
        * the background color of the button
