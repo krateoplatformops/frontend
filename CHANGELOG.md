@@ -11,6 +11,7 @@ Previous changes not listed in this document can be traced using Git history.
 
 ### Added
 
+- Added persistence of active tab in `TabList`
 - Added `externalNavigate` and `refresh` actions
 
 ## [1.0.26] - 2026-06-16
