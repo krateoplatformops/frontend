@@ -14,6 +14,21 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
+const readStoredJSON = <T, >(key: string): T | null => {
+  const raw = localStorage.getItem(key)
+
+  if (!raw) {
+    return null
+  }
+
+  try {
+    return JSON.parse(raw) as T
+  } catch {
+    localStorage.removeItem(key)
+    return null
+  }
+}
+
 export const useAuth = () => {
   const ctx = useContext(AuthContext)
   if (!ctx) { throw new Error('AuthContext missing') }
@@ -28,24 +43,21 @@ export const AuthProvider = ({ children }) => {
     return stored ?? null
   })
 
-  const [groups, setGroups] = useState(() => {
-    const stored = localStorage.getItem('K_groups')
-    return stored ? JSON.parse(stored) as AuthResponseType['groups'] : null
-  })
+  const [groups, setGroups] = useState(() => readStoredJSON<AuthResponseType['groups']>('K_groups'))
 
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem('K_user')
-    return stored ? JSON.parse(stored) as AuthResponseType['user'] : null
-  })
+  const [user, setUser] = useState(() => readStoredJSON<AuthResponseType['user']>('K_user'))
 
   const login = (data: AuthResponseType) => {
+    const user = data.user ?? null
+    const groups = data.groups ?? []
+
     localStorage.setItem('K_accessToken', data.accessToken)
-    localStorage.setItem('K_user', JSON.stringify(data.user))
-    localStorage.setItem('K_groups', JSON.stringify(data.groups))
+    localStorage.setItem('K_user', JSON.stringify(user))
+    localStorage.setItem('K_groups', JSON.stringify(groups))
 
     setAccessToken(data.accessToken)
-    setGroups(data.groups)
-    setUser(data.user)
+    setGroups(groups)
+    setUser(user)
   }
 
   const logout = async () => {

@@ -1,7 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Result, Space, Spin, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 
 import { useAuth } from '../../context/AuthContext'
@@ -16,6 +16,7 @@ const Auth = () => {
 
   const [searchParams] = useSearchParams()
   const [showError, setShowError] = useState<boolean>(false)
+  const hasSubmittedAuth = useRef(false)
 
   const code = searchParams.get('code')
   const state = searchParams.get('state')
@@ -83,13 +84,15 @@ const Auth = () => {
 
     if (!isSocialAuthError && isMethodSuccess) {
       const methodData = methods
-        ?.find((el) => (el.kind === kind) && el.extensions?.redirectURL && (el.extensions.redirectURL.indexOf(window.location.protocol) > -1))
+        ?.find((el) => (el.kind === kind) && el.extensions?.redirectURL?.startsWith(window.location.origin))
 
       if (methodData?.extensions?.authCodeURL && (methodData.extensions.authCodeURL.indexOf('&state=') > -1)) {
-        if (state === localStorage.getItem('KrateoSL') && code && methodData) {
+        if (state === localStorage.getItem('KrateoSL') && code && methodData && !hasSubmittedAuth.current) {
+          hasSubmittedAuth.current = true
           void socialAuth(code, methodData)
         }
-      } else if (code && methodData) {
+      } else if (code && methodData && !hasSubmittedAuth.current) {
+        hasSubmittedAuth.current = true
         void socialAuth(code, methodData)
       }
     }
