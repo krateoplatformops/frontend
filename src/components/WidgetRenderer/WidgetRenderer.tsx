@@ -27,8 +27,6 @@ import Markdown from '../../widgets/Markdown'
 import type { MarkdownWidgetData } from '../../widgets/Markdown/Markdown'
 import type { NavMenuWidgetData } from '../../widgets/NavMenu/NavMenu'
 import { NavMenu } from '../../widgets/NavMenu/NavMenu'
-import type { NotificationsWidgetData } from '../../widgets/Notifications/Notifications'
-import Notifications from '../../widgets/Notifications/Notifications'
 import { Page, type PageWidgetData } from '../../widgets/Page/Page'
 import type { PanelWidgetData } from '../../widgets/Panel/Panel'
 import Panel from '../../widgets/Panel/Panel'
@@ -133,8 +131,6 @@ const parseWidget = (
       return <Markdown {...props} widgetData={widgetData as MarkdownWidgetData} />
     case 'NavMenu':
       return <NavMenu {...props} widgetData={widgetData as NavMenuWidgetData} />
-    case 'Notifications':
-      return <Notifications {...props} widgetData={widgetData as NotificationsWidgetData} />
     case 'Page':
       return <Page {...props} widgetData={widgetData as PageWidgetData} />
     case 'Panel':
@@ -248,10 +244,6 @@ const WidgetRenderer = ({
           },
           'notification'
         )
-      }
-
-      if (code === 403 && message?.includes('notifications')) {
-        return null
       }
 
       if (code === 404 && wasEverLoaded) {

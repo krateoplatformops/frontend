@@ -481,23 +481,6 @@ NavMenuItem represents a single item in the navigation menu and links to a speci
 
 ---
 
-### Notifications
-
-Notifications renders messages coming from a Kubernetes cluster
-
-#### Props
-
-| Property | Required | Description | Type |
-|----------|----------|-------------|------|
-| queryParams | no | list of query parameters to add to the notifications call | array |
-| queryParams[].name | yes | the name of the query parameter | string |
-| queryParams[].value | yes | the value of the query parameter | string |
-
-
-[Examples](../src/examples/widgets/Notifications/Notifications.example.yaml)
-
----
-
 ### Page
 
 Page is a wrapper component, placed at the top of the component tree, that wraps and renders all nested components.

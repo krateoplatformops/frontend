@@ -14,8 +14,13 @@ Previous changes not listed in this document can be traced using Git history.
 - Added persistence of active tab in `TabList`
 - Added `externalNavigate` and `refresh` actions
 
+### Changed
+
+- `Notifications` is a built-in header component again, no longer a widget: it needs neither the `NOTIFICATIONS_WIDGET` configuration entry nor a `Notifications` custom resource
+
 ### Fixed
 
+- Fixed `Notifications` not being displayed in the header
 - Removed `enum` constraint on `event_type` in `EventList` to allow non-standard Kubernetes event types (e.g. `Error`)
 
 ## [1.0.26] - 2026-06-16
