@@ -1,4 +1,5 @@
-FROM node:24.2.0-alpine3.22 as react-build
+# dist/ is static, so build it on the native arch instead of emulating the target
+FROM --platform=$BUILDPLATFORM node:24.2.0-alpine3.22 AS react-build
 LABEL maintainer "Krateo <contact@krateo.io>"
 
 ARG VERSION
