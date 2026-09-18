@@ -1,9 +1,8 @@
 import { Header as AntdHeader } from 'antd/es/layout/layout'
 
-import { useConfigContext } from '../../context/ConfigContext'
 import Breadcrumb from '../Breadcrumb'
+import Notifications from '../Notifications'
 import UserMenu from '../UserMenu'
-import WidgetRenderer from '../WidgetRenderer'
 
 import styles from './Header.module.css'
 
@@ -12,8 +11,6 @@ type HeaderProps = {
 }
 
 const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
-  const { config } = useConfigContext()
-
   return (
     <AntdHeader className={styles.header}>
       <div className={styles.content}>
@@ -21,7 +18,7 @@ const Header = ({ breadcrumbVisible = true }: HeaderProps) => {
           {breadcrumbVisible && <Breadcrumb />}
         </div>
         <div className={styles.right}>
-          <WidgetRenderer widgetEndpoint={config!.api.NOTIFICATIONS_WIDGET} />
+          <Notifications />
           <UserMenu />
         </div>
       </div>
