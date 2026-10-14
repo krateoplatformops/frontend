@@ -301,7 +301,7 @@ const FormGenerator = ({
     if (properties) {
       const requiredFields = Array.isArray(required) ? required : []
 
-      return Object.keys(properties).flatMap((key) => {
+      return Object.keys(properties).flatMap<React.ReactNode>((key) => {
         const currentPath = [...name, key]
         const property = properties[key]
 
