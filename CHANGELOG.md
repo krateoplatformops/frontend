@@ -9,6 +9,9 @@ Previous changes not listed in this document can be traced using Git history.
 
 ## [1.0.30] - 2026-10-14
 
+### Added
+- Added `displayingDependencies` property to `Form` widget to show / hide fields
+
 ### Fixed
 - Fixed `Form` `autocomplete` and `dependencies` fields never loading their options
 
