@@ -10,6 +10,19 @@ export interface RoutesLoader {
        * the list of resources that are allowed to be children of this widget or referenced by it
        */
       allowedResources: 'routes'[]
+      /**
+       * routes registered directly, each opening the resourcesRefs item with the same id; resourcesRefs items not listed here are loaded as Route widgets
+       */
+      routes?: {
+        /**
+         * the id of the resourcesRefs item this route opens
+         */
+        id: string
+        /**
+         * the url path that loads the resource
+         */
+        path: string
+      }[]
     }
     apiRef?: {
       name: string

@@ -587,6 +587,9 @@ RoutesLoader loads the Route widgets it doesn't render anything by itself
 | Property | Required | Description | Type |
 |----------|----------|-------------|------|
 | allowedResources | yes | the list of resources that are allowed to be children of this widget or referenced by it | array |
+| routes | no | routes registered directly, each opening the resourcesRefs item with the same id; resourcesRefs items not listed here are loaded as Route widgets | array |
+| routes[].id | yes | the id of the resourcesRefs item this route opens | string |
+| routes[].path | yes | the url path that loads the resource | string |
 
 ---
 

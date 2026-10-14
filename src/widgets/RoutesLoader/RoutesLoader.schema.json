@@ -25,6 +25,25 @@
                 "type": "string",
                 "enum": ["routes"]
               }
+            },
+            "routes": {
+              "description": "routes registered directly, each opening the resourcesRefs item with the same id; resourcesRefs items not listed here are loaded as Route widgets",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description": "the id of the resourcesRefs item this route opens",
+                    "type": "string"
+                  },
+                  "path": {
+                    "description": "the url path that loads the resource",
+                    "type": "string"
+                  }
+                },
+                "required": ["id", "path"],
+                "additionalProperties": false
+              }
             }
           },
           "required": ["allowedResources"]
